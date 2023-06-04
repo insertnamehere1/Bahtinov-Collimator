@@ -127,9 +127,9 @@
             this.menuStrip1.Size = new System.Drawing.Size(595, 24);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.MenuActivate += new System.EventHandler(this.menuStrip1_MenuActivate);
-            this.menuStrip1.MenuDeactivate += new System.EventHandler(this.menuStrip1_MenuDeactivate);
-            this.menuStrip1.MouseEnter += new System.EventHandler(this.menuStrip1_MouseEnter);
+            this.menuStrip1.MenuActivate += new System.EventHandler(this.MenuStrip1_MenuActivate);
+            this.menuStrip1.MenuDeactivate += new System.EventHandler(this.MenuStrip1_MenuDeactivate);
+            this.menuStrip1.MouseEnter += new System.EventHandler(this.MenuStrip1_MouseEnter);
             // 
             // fileToolStripMenuItem
             // 
@@ -154,28 +154,28 @@
             this.capturedImageToolStripMenuItem.Name = "capturedImageToolStripMenuItem";
             this.capturedImageToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.capturedImageToolStripMenuItem.Text = "Captured Image";
-            this.capturedImageToolStripMenuItem.Click += new System.EventHandler(this.capturedImageToolStripMenuItem_Click);
+            this.capturedImageToolStripMenuItem.Click += new System.EventHandler(this.CapturedImageToolStripMenuItem_Click);
             // 
             // annotatedImageToolStripMenuItem
             // 
             this.annotatedImageToolStripMenuItem.Name = "annotatedImageToolStripMenuItem";
             this.annotatedImageToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.annotatedImageToolStripMenuItem.Text = "Annotated Image";
-            this.annotatedImageToolStripMenuItem.Click += new System.EventHandler(this.annotatedImageToolStripMenuItem_Click);
+            this.annotatedImageToolStripMenuItem.Click += new System.EventHandler(this.AnnotatedImageToolStripMenuItem_Click);
             // 
             // quitToolStripMenuItem2
             // 
             this.quitToolStripMenuItem2.Name = "quitToolStripMenuItem2";
             this.quitToolStripMenuItem2.Size = new System.Drawing.Size(134, 22);
             this.quitToolStripMenuItem2.Text = "Quit";
-            this.quitToolStripMenuItem2.Click += new System.EventHandler(this.quitToolStripMenuItem2_Click);
+            this.quitToolStripMenuItem2.Click += new System.EventHandler(this.QuitToolStripMenuItem2_Click);
             // 
             // settingsToolStripMenuItem1
             // 
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
             this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem1.Text = "Settings";
-            this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.settingsToolStripMenuItem1_Click);
+            this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.SettingsToolStripMenuItem1_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -193,21 +193,21 @@
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.helpToolStripMenuItem.Text = "Help";
-            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem1
             // 
             this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
             this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(205, 22);
             this.aboutToolStripMenuItem1.Text = "Check for Update";
-            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
+            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.AboutToolStripMenuItem1_Click);
             // 
             // aboutToolStripMenuItem2
             // 
             this.aboutToolStripMenuItem2.Name = "aboutToolStripMenuItem2";
             this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(205, 22);
             this.aboutToolStripMenuItem2.Text = "About";
-            this.aboutToolStripMenuItem2.Click += new System.EventHandler(this.aboutToolStripMenuItem2_Click);
+            this.aboutToolStripMenuItem2.Click += new System.EventHandler(this.AboutToolStripMenuItem2_Click);
             // 
             // AbsoluteFocusErrorLabel1
             // 
@@ -486,7 +486,7 @@
             this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
             this.donateToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
             this.donateToolStripMenuItem.Text = "If you like, please Donate";
-            this.donateToolStripMenuItem.Click += new System.EventHandler(this.donateToolStripMenuItem_Click);
+            this.donateToolStripMenuItem.Click += new System.EventHandler(this.DonateToolStripMenuItem_Click);
             // 
             // pictureBox
             // 

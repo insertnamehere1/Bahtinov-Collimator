@@ -17,7 +17,7 @@ namespace Bahtinov_Collimator
             BlueCheckBox.Checked = Properties.Settings.Default.BlueChannel;
         }
 
-        private void okButton_Click(object sender, EventArgs e)
+        private void OkButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace Bahtinov_Collimator
             this.Close();
         }
 
-        private void cancelButton_Click(object sender, EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();

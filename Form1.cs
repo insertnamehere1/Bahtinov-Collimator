@@ -35,32 +35,28 @@ namespace Bahtinov_Collimator
     {
         private const float ErrorMarkerScalingValue = 20.0f;
 
-        private int yOffset = 1;
-        private float error;
-        private static int errorCountMax = 150;
-        private float[] errorvalues = new float[errorCountMax];
-        private int errorcounter;
-        private int updateinterval = 100;
+        private const int yOffset = 1;
+        private const int updateinterval = 100;
         private Bitmap bufferedPicture;
         private Bitmap currentPicture;
-        private ScreenCap screenCapture;
+        private readonly ScreenCap screenCapture;
         private bool screenCaptureRunningFlag = false;
         private bool showRedFocus = true;
         private bool showGreenFocus = true;
         private bool showBlueFocus = true;
         private bool forceUpdate = false;
-        private System.Windows.Forms.GroupBox[] groupBoxes;
+        private readonly System.Windows.Forms.GroupBox[] groupBoxes;
         private const int lineCount = 9;          // lines for a tri-bahtinov mask
         private BahtinovData lineData;
         private float lastFocusErrorValue = 0.0f;
-        private Timer mousePositionTimer;
-        private Rectangle RedGroupBoxScreenBounds;
-        private Rectangle GreenGroupBoxScreenBounds;
+        private readonly Timer mousePositionTimer;
+        private readonly Rectangle RedGroupBoxScreenBounds;
+        private readonly Rectangle GreenGroupBoxScreenBounds;
         private Rectangle BlueGroupBoxScreenBounds;
         private bool menuActive = false;
 
         // settings
-        private Settings settingsDialog;
+        private readonly Settings settingsDialog;
         private int apertureSetting;
         private int focalLengthSetting;
         private double pixelSizeSetting;
@@ -73,8 +69,7 @@ namespace Bahtinov_Collimator
 
             UpdateTimer.Interval = updateinterval;
 
-            mousePositionTimer = new Timer();
-            mousePositionTimer.Interval = 100; // Interval in milliseconds
+            mousePositionTimer = new Timer() { Interval = 100 };
             mousePositionTimer.Tick += MousePositionTimer_Tick;
             mousePositionTimer.Start();
 
@@ -82,7 +77,7 @@ namespace Bahtinov_Collimator
             GreenGroupBoxScreenBounds = GreenGroupBox.Bounds;
             BlueGroupBoxScreenBounds = BlueGroupBox.Bounds;
 
-            loadSettings();
+            LoadSettings();
 
             // turn off Green and Blue GroupBoxes
             GreenGroupBox.Visible = false;
@@ -94,7 +89,7 @@ namespace Bahtinov_Collimator
             groupBoxes = new System.Windows.Forms.GroupBox[] { RedGroupBox, GreenGroupBox, BlueGroupBox };
         }
 
-        private void loadSettings()
+        private void LoadSettings()
         {
             // load settings
             apertureSetting = Properties.Settings.Default.Aperture;
@@ -102,10 +97,10 @@ namespace Bahtinov_Collimator
             pixelSizeSetting = Properties.Settings.Default.PixelSize;
         }
 
-        private void restart()
+        private void Reset()
         {
             UpdateTimer.Stop();
-            loadSettings();
+            LoadSettings();
             bufferedPicture = null;
             screenCaptureRunningFlag = false;
             StartButton.Text = "Start";
@@ -133,14 +128,14 @@ namespace Bahtinov_Collimator
             {
                 bufferedPicture = new Bitmap(currentPicture);
                 paddedImage = new Bitmap(ImageProcessing.PadAndCenterBitmap(currentPicture, pictureBox));
-                lineData = ImageProcessing.findBrightestLines(paddedImage, lineCount);
+                lineData = ImageProcessing.FindBrightestLines(paddedImage, lineCount);
                 lineData.Sort();
             }
             else
             {
                 bufferedPicture = new Bitmap(currentPicture);
                 paddedImage = new Bitmap(ImageProcessing.PadAndCenterBitmap(currentPicture, pictureBox));
-                lineData = ImageProcessing.findSubpixelLines(paddedImage, lineData.LineValue.Length, lineData);
+                lineData = ImageProcessing.FindSubpixelLines(paddedImage, lineData.LineValue.Length, lineData);
             }
 
             if (lineData.LineAngles.Length > 3)
@@ -190,7 +185,7 @@ namespace Bahtinov_Collimator
                     DisplayLines(lineData, paddedImage, 0);
                 else
                 {
-                    restart();
+                    Reset();
                     MessageBox.Show("Unable to detect Bahtinov image lines", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
@@ -251,17 +246,12 @@ namespace Bahtinov_Collimator
             float second_lineEnd_Y = 0.0f;
 
             int penWidth = 1;
-            Pen dashPen = new Pen(Color.Yellow, (float)penWidth);
-            dashPen.DashStyle = DashStyle.Dash;
-            Graphics graphics = Graphics.FromImage(pictureBox.Image);
-
+            Pen dashPen = new Pen(Color.Yellow, (float)penWidth) { DashStyle = DashStyle.Dash };
             penWidth = 2;
-            Pen largeDashPen = new Pen(Color.Yellow, (float)penWidth);
-            largeDashPen.DashStyle = DashStyle.Dash;
+            Pen largeDashPen = new Pen(Color.Black, penWidth) { DashStyle = DashStyle.Dash };
+            Pen largeSolidPen = new Pen(Color.Yellow, (float)penWidth) { DashStyle = DashStyle.Solid };
 
-            Pen largeSolidPen = new Pen(Color.Yellow, (float)penWidth);
-            largeSolidPen.DashStyle = DashStyle.Solid;
-
+            Graphics graphics = Graphics.FromImage(pictureBox.Image);
 
             // check first line is not vertical this will cause computation issues later as the slope is aproaching infinity
             if (bahtinovLines.LineAngles[0] < 1.5708 && bahtinovLines.LineAngles[0] > 1.5707)
@@ -383,7 +373,7 @@ namespace Bahtinov_Collimator
                                              ((double)x_intersectionOfLines1and3 - (double)line2_X_Perpendicular) + ((double)y_intersectionOfLines1and3 -
                                              (double)line2_Y_Perpendicular) * ((double)y_intersectionOfLines1and3 - (double)line2_Y_Perpendicular));
 
-            float errorSign = 0.0f;
+            float errorSign;
 
             // calculate x and y distances of the error line 
             float X_ErrorDistance = x_intersectionOfLines1and3 - line2_X_Perpendicular;
@@ -401,15 +391,10 @@ namespace Bahtinov_Collimator
             catch
             {
                 lastFocusErrorValue = 0.0f;
-                loadImageLost();
-                restart();
+                LoadImageLost();
+                Reset();
                 return;
             }
-
-            // store the errors into the error array and count them
-            error = errorSign * line2ToIntersectDistance;
-            errorvalues[errorcounter % errorCountMax] = error;
-            ++errorcounter;
 
             // selected groupbox
             System.Windows.Forms.GroupBox selectedGroupBox = groupBoxes[group];
@@ -559,8 +544,8 @@ namespace Bahtinov_Collimator
             if (lastFocusErrorValue != 0.0f && Math.Abs(lastFocusErrorValue - x_intersectionOfLines1and3) > 100)
             {
                 lastFocusErrorValue = 0.0f;
-                loadImageLost();
-                restart();
+                LoadImageLost();
+                Reset();
                 return;
             }
             lastFocusErrorValue = x_intersectionOfLines1and3;
@@ -579,23 +564,23 @@ namespace Bahtinov_Collimator
             return;
         }
 
-        private void loadImageLost()
+        private void LoadImageLost()
         {
             Bitmap imageLost = new Bitmap(Properties.Resources.imageLost);
             pictureBox.Image = imageLost;
         }
 
-        private void quitToolStripMenuItem2_Click(object sender, EventArgs e)
+        private void QuitToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void menuStrip1_MouseEnter(object sender, EventArgs e)
+        private void MenuStrip1_MouseEnter(object sender, EventArgs e)
         {
             Activate();
         }
 
-        private void capturedImageToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CapturedImageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (currentPicture != null)
             {
@@ -618,7 +603,7 @@ namespace Bahtinov_Collimator
             }
         }
 
-        private void annotatedImageToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AnnotatedImageToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (pictureBox.Image != null)
             {
@@ -643,26 +628,20 @@ namespace Bahtinov_Collimator
             }
         }
 
-        private void settingsToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void SettingsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             // Settings
             DialogResult result = settingsDialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                loadSettings();
+                LoadSettings();
                 forceUpdate = true;
             }
         }
 
         private void MousePositionTimer_Tick(object sender, EventArgs e)
         {
-            if (menuStrip1.ContainsFocus)
-            {
-                int temp = 12;
-            }
-
-
             if (this.ContainsFocus && !menuActive)
             {
                 Point mousePosition = PointToClient(Control.MousePosition); // Get the current mouse position in screen coordinates
@@ -712,30 +691,30 @@ namespace Bahtinov_Collimator
             
         }
 
-        private void menuStrip1_MenuActivate(object sender, EventArgs e)
+        private void MenuStrip1_MenuActivate(object sender, EventArgs e)
         {
             menuActive = true;
         }
 
-        private void menuStrip1_MenuDeactivate(object sender, EventArgs e)
+        private void MenuStrip1_MenuDeactivate(object sender, EventArgs e)
         {
             menuActive = false;
         }
 
-        private void aboutToolStripMenuItem2_Click(object sender, EventArgs e)
+        private void AboutToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             AboutBox aboutBox = new AboutBox();
             aboutBox.ShowDialog();
 
         }
 
-        private void donateToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DonateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Donate donate = new Donate();
             donate.ShowDialog();
         }
 
-        private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void AboutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             ApplicationDeployment updateCheck = ApplicationDeployment.CurrentDeployment;
             UpdateCheckInfo info = updateCheck.CheckForDetailedUpdate();
@@ -743,12 +722,12 @@ namespace Bahtinov_Collimator
             if (info.UpdateAvailable)
             {
                 updateCheck.Update();
-                MessageBox.Show("The application has been upgraded, and will now restart.");
+                MessageBox.Show("The application has been upgraded, and will now Reset.");
                 Application.Restart();
             }
         }
 
-        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Not yet implemented");
         }

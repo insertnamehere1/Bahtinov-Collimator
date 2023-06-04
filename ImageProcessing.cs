@@ -59,7 +59,7 @@ namespace Bahtinov_Collimator
             return hashA.SequenceEqual(hashB);
         }
 
-        public static BahtinovData findBrightestLines(Bitmap starImage, int lineCount)
+        public static BahtinovData FindBrightestLines(Bitmap starImage, int lineCount)
         {
             Rectangle rect = new Rectangle(0, 0, starImage.Width, starImage.Height);
             BahtinovData result = new BahtinovData(lineCount, rect);
@@ -336,7 +336,7 @@ namespace Bahtinov_Collimator
             return result;
         }
 
-        public static BahtinovData findSubpixelLines(Bitmap starImage, int lineCount, BahtinovData bahtinovLines)
+        public static BahtinovData FindSubpixelLines(Bitmap starImage, int lineCount, BahtinovData bahtinovLines)
         {
             Rectangle rect = new Rectangle(0, 0, starImage.Width, starImage.Height);
 

@@ -20,7 +20,7 @@ namespace Bahtinov_Collimator
             richTextBox.Text = "If you've found this app useful, or it has helped improve your images, please consider donating. \n\nYour contribution is appreciated.";
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
             string url = "";
 
@@ -42,7 +42,7 @@ namespace Bahtinov_Collimator
             Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             this.Close();
         }

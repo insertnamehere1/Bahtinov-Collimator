@@ -44,7 +44,7 @@
             this.RedCheckBox = new System.Windows.Forms.CheckBox();
             this.GreenCheckBox = new System.Windows.Forms.CheckBox();
             this.okButton = new System.Windows.Forms.Button();
-            this.cancelButton = new System.Windows.Forms.Button();
+            this.CancelSettingsButton = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -204,24 +204,24 @@
             this.okButton.TabIndex = 13;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
-            this.okButton.Click += new System.EventHandler(this.okButton_Click);
+            this.okButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
-            // cancelButton
+            // CancelSettingsButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(135, 259);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 23);
-            this.cancelButton.TabIndex = 14;
-            this.cancelButton.Text = "Cancel";
-            this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            this.CancelSettingsButton.Location = new System.Drawing.Point(135, 259);
+            this.CancelSettingsButton.Name = "CancelSettingsButton";
+            this.CancelSettingsButton.Size = new System.Drawing.Size(75, 23);
+            this.CancelSettingsButton.TabIndex = 14;
+            this.CancelSettingsButton.Text = "Cancel";
+            this.CancelSettingsButton.UseVisualStyleBackColor = true;
+            this.CancelSettingsButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(247, 295);
-            this.Controls.Add(this.cancelButton);
+            this.Controls.Add(this.CancelSettingsButton);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
@@ -254,7 +254,7 @@
         private System.Windows.Forms.CheckBox RedCheckBox;
         private System.Windows.Forms.CheckBox GreenCheckBox;
         private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.Button CancelSettingsButton;
         private System.Windows.Forms.TextBox ApertureTextBox;
         private System.Windows.Forms.TextBox PixelSizeTextBox;
         private System.Windows.Forms.TextBox FocalLengthTextBox;
