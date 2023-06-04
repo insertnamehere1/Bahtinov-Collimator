@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Coded by Chris")]
 [assembly: AssemblyProduct("Bahtinov Collimator")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("GNU General Public License v3.0")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
