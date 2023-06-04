@@ -716,15 +716,15 @@ namespace Bahtinov_Collimator
 
         private void AboutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            ApplicationDeployment updateCheck = ApplicationDeployment.CurrentDeployment;
-            UpdateCheckInfo info = updateCheck.CheckForDetailedUpdate();
+//            ApplicationDeployment updateCheck = ApplicationDeployment.CurrentDeployment;
+//            UpdateCheckInfo info = updateCheck.CheckForDetailedUpdate();
             //
-            if (info.UpdateAvailable)
-            {
-                updateCheck.Update();
-                MessageBox.Show("The application has been upgraded, and will now Reset.");
-                Application.Restart();
-            }
+//            if (info.UpdateAvailable)
+//            {
+//                updateCheck.Update();
+//                MessageBox.Show("The application has been upgraded, and will now Reset.");
+//                Application.Restart();
+//            }
         }
 
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
