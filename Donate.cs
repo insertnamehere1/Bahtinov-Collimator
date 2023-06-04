@@ -17,7 +17,7 @@ namespace Bahtinov_Collimator
             InitializeComponent();
 
             // Set the label text
-            richTextBox.Text = "If you've found this app useful, or it has helped improve your images, please consider donating. \n\nYour contribution is appreciated.";
+            richTextBox.Text = "If you've found this app useful and it has helped improve your images, please consider donating. \n\nYour contribution is appreciated.";
         }
 
         private void Button1_Click(object sender, EventArgs e)
