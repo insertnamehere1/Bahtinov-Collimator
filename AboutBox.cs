@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Deployment.Application;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -16,7 +17,7 @@ namespace Bahtinov_Collimator
             InitializeComponent();
             this.Text = String.Format("About {0}", AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
-            this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
+            this.labelVersion.Text = GetVersion();
             this.labelCopyright.Text = AssemblyCopyright;
             this.labelCompanyName.Text = AssemblyCompany;
             this.textBoxDescription.Text = AssemblyDescription;
@@ -101,5 +102,20 @@ namespace Bahtinov_Collimator
             }
         }
         #endregion
+
+        private void OkButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private string GetVersion()
+        {
+            if (ApplicationDeployment.IsNetworkDeployed)
+            {
+                return ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
+            }
+
+            return String.Format("Version {0}", AssemblyVersion); ;
+        }
     }
 }
