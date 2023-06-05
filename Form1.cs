@@ -338,13 +338,9 @@ namespace Bahtinov_Collimator
 
                 // draw line on image
                 if (index == 0 || index == 2)
-                {
                     graphics.DrawLine(dashPen, lineStart_X, (float)height - lineStart_Y + (float)yOffset, lineEnd_X, (float)height - lineEnd_Y + (float)yOffset);
-                }
                 else
-                {
                     graphics.DrawLine(largeDashPen, lineStart_X, (float)height - lineStart_Y + (float)yOffset, lineEnd_X, (float)height - lineEnd_Y + (float)yOffset);
-                }
             }
 
             // calculate the line intersections
@@ -373,8 +369,6 @@ namespace Bahtinov_Collimator
                                              ((double)x_intersectionOfLines1and3 - (double)line2_X_Perpendicular) + ((double)y_intersectionOfLines1and3 -
                                              (double)line2_Y_Perpendicular) * ((double)y_intersectionOfLines1and3 - (double)line2_Y_Perpendicular));
 
-            float errorSign;
-
             // calculate x and y distances of the error line 
             float X_ErrorDistance = x_intersectionOfLines1and3 - line2_X_Perpendicular;
             float Y_ErrorDistance = y_intersectionOfLines1and3 - line2_Y_Perpendicular;
@@ -382,6 +376,8 @@ namespace Bahtinov_Collimator
             // calculate the x and y lengths of line2
             float line2_X_Distance = second_lineEnd_X - second_lineStart_X;
             float line2_Y_Distance = second_lineEnd_Y - second_lineStart_Y;
+
+            float errorSign;
 
             try
             {
@@ -644,51 +640,21 @@ namespace Bahtinov_Collimator
         {
             if (this.ContainsFocus && !menuActive)
             {
-                Point mousePosition = PointToClient(Control.MousePosition); // Get the current mouse position in screen coordinates
+                Point mousePosition = PointToClient(Control.MousePosition);
 
-                if (RedGroupBoxScreenBounds.Contains(mousePosition))
-                {
-                    RedGroupBox.BackColor = Color.LightGray;
-                    showRedFocus = true;
-                    showGreenFocus = false;
-                    showBlueFocus = false;
-                    forceUpdate = true;
-                    GreenGroupBox.BackColor = SystemColors.Control;
-                    BlueGroupBox.BackColor = SystemColors.Control;
-                }
-                else if (GreenGroupBoxScreenBounds.Contains(mousePosition))
-                {
-                    GreenGroupBox.BackColor = Color.LightGray;
-                    showRedFocus = false;
-                    showGreenFocus = true;
-                    showBlueFocus = false;
-                    forceUpdate = true;
-                    RedGroupBox.BackColor = SystemColors.Control;
-                    BlueGroupBox.BackColor = SystemColors.Control;
-                }
-                else if (BlueGroupBoxScreenBounds.Contains(mousePosition))
-                {
-                    BlueGroupBox.BackColor = Color.LightGray;
-                    showRedFocus = false;
-                    showGreenFocus = false;
-                    showBlueFocus = true;
-                    forceUpdate = true;
-                    RedGroupBox.BackColor = SystemColors.Control;
-                    GreenGroupBox.BackColor = SystemColors.Control;
-                }
-                else if (showRedFocus == false || showGreenFocus == false || showBlueFocus == false)
-                {
+                bool isRedFocused = RedGroupBoxScreenBounds.Contains(mousePosition);
+                bool isGreenFocused = GreenGroupBoxScreenBounds.Contains(mousePosition);
+                bool isBlueFocused = BlueGroupBoxScreenBounds.Contains(mousePosition);
 
-                    RedGroupBox.BackColor = SystemColors.Control;
-                    GreenGroupBox.BackColor = SystemColors.Control;
-                    BlueGroupBox.BackColor = SystemColors.Control;
-                    showRedFocus = true;
-                    showGreenFocus = true;
-                    showBlueFocus = true;
-                    forceUpdate = true;
-                }
+                RedGroupBox.BackColor = isRedFocused ? Color.LightGray : SystemColors.Control;
+                GreenGroupBox.BackColor = isGreenFocused ? Color.LightGray : SystemColors.Control;
+                BlueGroupBox.BackColor = isBlueFocused ? Color.LightGray : SystemColors.Control;
+
+                showRedFocus = isRedFocused || !isRedFocused && !isGreenFocused && !isBlueFocused;
+                showGreenFocus = isGreenFocused || !isRedFocused && !isGreenFocused && !isBlueFocused;
+                showBlueFocus = isBlueFocused || !isRedFocused && !isGreenFocused && !isBlueFocused;
+                forceUpdate = true;
             }
-            
         }
 
         private void MenuStrip1_MenuActivate(object sender, EventArgs e)

@@ -614,22 +614,14 @@ namespace Bahtinov_Collimator
                         byte* originalPixel = originalRow + (x * pixelSize);
                         byte* modifiedPixel = modifiedRow + (x * pixelSize);
 
-                        byte blue = originalPixel[0];
-                        byte green = originalPixel[1];
-                        byte red = originalPixel[2];
+                        int newR = originalPixel[2] - meanColor.R;
+                        int newG = originalPixel[1] - meanColor.G;
+                        int newB = originalPixel[0] - meanColor.B;
 
-                        int newR = red - meanColor.R;
-                        int newG = green - meanColor.G;
-                        int newB = blue - meanColor.B;
+                        newR = Math.Max(newR, 0);
+                        newG = Math.Max(newG, 0);
+                        newB = Math.Max(newB, 0);
 
-                        if (newR < 0)
-                            newR = 0;
-                        if (newG < 0)
-                            newG = 0;
-                        if (newB < 0)
-                            newB = 0;
-
-                        // Update the modified pixel values
                         modifiedPixel[0] = (byte)newB;
                         modifiedPixel[1] = (byte)newG;
                         modifiedPixel[2] = (byte)newR;
