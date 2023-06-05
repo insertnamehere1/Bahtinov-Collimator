@@ -27,7 +27,7 @@
     <UpdateUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/master/published/</UpdateUrl>
     <ProductName>Bahtinov Collimator</ProductName>
     <PublisherName>Chris</PublisherName>
-    <ApplicationRevision>5</ApplicationRevision>
+    <ApplicationRevision>6</ApplicationRevision>
     <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -103,7 +103,7 @@
     <ApplicationIcon>focusIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>F739E2DD10A86EBD075B14A82DF03FB44D519AD5</ManifestCertificateThumbprint>
@@ -113,6 +113,12 @@
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Bahtinov Collimator_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -227,33 +233,13 @@
     <Content Include="published\.gitattributes" />
   </ItemGroup>
   <ItemGroup>
-    <PublishFile Include="Bahtinov Collimator.exe.config">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Auto</PublishState>
-      <IncludeHash>False</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Bahtinov Collimator.exe.manifest">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Auto</PublishState>
-      <IncludeHash>False</IncludeHash>
-      <FileType>ManifestEntryPoint</FileType>
-    </PublishFile>
     <PublishFile Include="focusIcon.ico">
       <Visible>False</Visible>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Auto</PublishState>
+      <PublishState>Exclude</PublishState>
       <IncludeHash>False</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
@@ -263,7 +249,7 @@
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Auto</PublishState>
+      <PublishState>Exclude</PublishState>
       <IncludeHash>False</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
@@ -273,7 +259,7 @@
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Auto</PublishState>
+      <PublishState>Exclude</PublishState>
       <IncludeHash>False</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
@@ -283,7 +269,7 @@
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Auto</PublishState>
+      <PublishState>Exclude</PublishState>
       <IncludeHash>False</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
@@ -293,7 +279,7 @@
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Auto</PublishState>
+      <PublishState>Exclude</PublishState>
       <IncludeHash>False</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
