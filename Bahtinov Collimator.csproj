@@ -13,7 +13,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <PublishUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/tree/master/published/</PublishUrl>
+    <PublishUrl>C:\Users\chris\OneDrive\Documents\Visual Studio 2022\Projects\Bahtinov Collimator\published\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
