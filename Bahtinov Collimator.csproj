@@ -222,6 +222,7 @@
     <Content Include="Images\focusIcon.ico" />
     <Content Include="Images\focusIcon.png" />
     <Content Include="Images\paypal.png" />
+    <Content Include="published\.gitattributes" />
   </ItemGroup>
   <ItemGroup>
     <PublishFile Include="Bahtinov Collimator.exe.config">
