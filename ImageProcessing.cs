@@ -502,16 +502,9 @@ namespace Bahtinov_Collimator
                 // calculate the sub pixel location of the line
                 float subPixelLineNumber = (float)PolynomialCurveFit.FindMaxValueIndex(rowTotals, (int)lineNumberOfLargestValue, 2);
 
-                try
-                {
-                    // save the accurate line number and the line brightness value
-                    subpixelLineNumbers[index1] = subPixelLineNumber;
-                    brightestLineValues[index1] = LargestValueForThisRotation;
-                }
-                catch
-                {
-                    MessageBox.Show("Why do you have a try/catch block here (no2)?");
-                }
+                // save the accurate line number and the line brightness value
+                subpixelLineNumbers[index1] = subPixelLineNumber;
+                brightestLineValues[index1] = LargestValueForThisRotation;
             });
 
             // copy final 3 brightest lines and the accurate line number
