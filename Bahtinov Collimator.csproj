@@ -12,17 +12,19 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>C:\Users\chris\OneDrive\Documents\Visual Studio 2022\Publish\</PublishUrl>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <PublishUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/tree/master/published/</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Background</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/tree/master/published/</InstallUrl>
+    <UpdateUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/tree/master/published/</UpdateUrl>
     <ProductName>Bahtinov Collimator</ProductName>
     <PublisherName>Chris</PublisherName>
     <ApplicationRevision>2</ApplicationRevision>
@@ -276,6 +278,16 @@
       <FileType>File</FileType>
     </PublishFile>
     <PublishFile Include="Images\paypal.png">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Auto</PublishState>
+      <IncludeHash>False</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="published\.gitattributes">
       <Visible>False</Visible>
       <Group>
       </Group>
