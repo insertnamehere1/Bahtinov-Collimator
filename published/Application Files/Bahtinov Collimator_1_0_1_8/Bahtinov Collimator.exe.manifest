@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="Bahtinov Collimator.exe" version="1.0.1.8" publicKeyToken="a7e8abb366e7e905" language="neutral" processorArchitecture="amd64" type="win32" />
+  <description asmv2:iconFile="focusIcon.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="Bahtinov Collimator" version="1.0.1.0" publicKeyToken="A7E8ABB366E7E905" language="neutral" processorArchitecture="amd64" />
+    <commandLine file="Bahtinov Collimator.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          UAC Manifest Options
+          If you want to change the Windows User Account Control level replace the
+          requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+         If you want to utilize File and Registry Virtualization for backward
+         compatibility then delete the requestedExecutionLevel node.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Bahtinov Collimator.exe" size="1054648">
+      <assemblyIdentity name="Bahtinov Collimator" version="1.0.1.0" publicKeyToken="A7E8ABB366E7E905" language="neutral" processorArchitecture="amd64" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>cPygszEpx0aor4T2PbPBTaC3bMSH/T0JBe0kAHur3/c=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MathNet.Numerics.dll" size="1590272">
+      <assemblyIdentity name="MathNet.Numerics" version="5.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>hcuqLAo3uNVRfDOTACe+JsU98FaryJv253GGk3ILolQ=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="Bahtinov Collimator.exe.config" size="1196">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>/fdYrg0XR8XE/Xx7ZJjfVKqR7Otiv2AtwxK0+d/p6AQ=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="focusIcon.ico" size="4286">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>ldw8RmdmJG7BvuCVSUXxdkDipX54Mnh/U7/tbR42Kmc=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Images\focusIcon.ico" size="4286">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>ldw8RmdmJG7BvuCVSUXxdkDipX54Mnh/U7/tbR42Kmc=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Images\focusIcon.png" size="10351">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>L1lQZiMIhDIQG68xTU1P2S6ilrUsWI9pvppqVuSj5og=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Images\paypal.png" size="51200">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>R7vq91ukGJTZjL/YtTkXrocSTeDPiDLpS9TEtGjBWI0=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=CHRIS-PC\chris" issuerKeyHash="e9d15299e5f1198582deb6ac4474b1334e8db741" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>tA+VwMRNSUz+pBy2tNeAGaxt4A/pT9ivsdNSav1DCoM=</DigestValue></Reference></SignedInfo><SignatureValue>uoOEsn7buM3XGFgPL2eLA2NlrVNXczBa/pkeuol+B6x3GN7CiamS9ff2hZ1xu4Yx4zaFx23RRO852P/h99QW1LpjyhojBtbRS/ULSmKFsQD3A2s91bZfMwyZC8iG0tGihm83HUBwGtNRqTNroSevhWCF6XacXFvkni81+5ze+yc=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>0A0AYjQddlhhMWujXwdyu1l1Dwv6VKQdp67Xl2FITafzbShYho4fecnJPODDbVsQ6AXFkmhYzcpdQ7TjlAm1C2e1Pf/vqxot1nC+LdnWqwXf54ihKXvUa5Wg6cb1FPjnn29tefbsJLmio48IWKTpO+q3cG5713s+JAGWq8MwImk=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="830a43fd6a52d3b1afd84fe90fe06dac1980d7b4b61ca4fe4c494dc4c0950fb4" Description="" Url=""><as:assemblyIdentity name="Bahtinov Collimator.exe" version="1.0.1.8" publicKeyToken="a7e8abb366e7e905" language="neutral" processorArchitecture="amd64" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=CHRIS-PC\chris</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>s1L+JbX2nO8eRHLHtzt9K6A3W2JunmEH3HmQWN8O3KI=</DigestValue></Reference></SignedInfo><SignatureValue>D2mkcykXFAgXDYbvkronL5GLQ9q67JPKc55sFFRxe6e3JTQpGx3PgDPQlrV/K5J+kc146yf4UsL3SEtCAVovGBmpeHmc9o8S4QY3wnowpsI3BBVQGyuV4vNZxv0C6b2EqWOl/VRkrh6kdFXk85w8K9IJ/+qQQKx2Onmmetq8Ua8=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>0A0AYjQddlhhMWujXwdyu1l1Dwv6VKQdp67Xl2FITafzbShYho4fecnJPODDbVsQ6AXFkmhYzcpdQ7TjlAm1C2e1Pf/vqxot1nC+LdnWqwXf54ihKXvUa5Wg6cb1FPjnn29tefbsJLmio48IWKTpO+q3cG5713s+JAGWq8MwImk=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB0TCCATqgAwIBAgIQK6DyNIdPtoZHRJmxEfkKojANBgkqhkiG9w0BAQsFADAnMSUwIwYDVQQDHhwAQwBIAFIASQBTAC0AUABDAFwAYwBoAHIAaQBzMB4XDTIzMDYwNDA3NDIwMFoXDTI0MDYwMzEzNDIwMFowJzElMCMGA1UEAx4cAEMASABSAEkAUwAtAFAAQwBcAGMAaAByAGkAczCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEA0A0AYjQddlhhMWujXwdyu1l1Dwv6VKQdp67Xl2FITafzbShYho4fecnJPODDbVsQ6AXFkmhYzcpdQ7TjlAm1C2e1Pf/vqxot1nC+LdnWqwXf54ihKXvUa5Wg6cb1FPjnn29tefbsJLmio48IWKTpO+q3cG5713s+JAGWq8MwImkCAwEAATANBgkqhkiG9w0BAQsFAAOBgQDKWvIBafjWzZ52KG3LA6hVQm2pORjGAq9ioSuiXg32CbyjPbTUA0e4KeeoGR2MFh9e5sl5ApoCGp4AYY2n87G/xPWCeZDbUPHIIwUnderAgN0clGGHjpKSUIqPEzs27oA1UtDXs68E2rYmYrDbbKwNuDOgVVMoJA8UiI/2VVUgRQ==</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
