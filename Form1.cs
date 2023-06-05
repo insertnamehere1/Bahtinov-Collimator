@@ -718,9 +718,9 @@ namespace Bahtinov_Collimator
             catch (Exception)
             {
                 MessageBox.Show("Unable to connect to the update server", "Network Problem", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
             }
         }
-
     }
 }
 
