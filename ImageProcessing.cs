@@ -484,7 +484,6 @@ namespace Bahtinov_Collimator
                     rowCount += 1;
                 }
 
-
                 float LargestValueForThisRotation = -1f;
                 float lineNumberOfLargestValue = -1f;
 
