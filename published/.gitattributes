@@ -1,4 +1,5 @@
 *.manifest binary
 *.application binary
 *.deploy binary
+*[[:space:]]*.application binary
 *  -text
