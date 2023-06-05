@@ -1,4 +1,8 @@
 *.manifest binary
 *.application binary
 *.deploy binary
+*[[:space:]]*.application binary
+*[[:blank:]]*.application binary
+Bahtinov%20Collimator.application binary
+"Bahtinov Collimator".application binary
 *  -text
