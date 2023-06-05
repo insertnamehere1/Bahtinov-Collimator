@@ -63,11 +63,6 @@ namespace Bahtinov_Collimator
         {
             Rectangle rect = new Rectangle(0, 0, starImage.Width, starImage.Height);
             BahtinovData result = new BahtinovData(lineCount, rect);
-
-            bool redChannelSetting = Properties.Settings.Default.RedChannel;
-            bool greenChannelSetting = Properties.Settings.Default.GreenChannel;
-            bool blueChannelSetting = Properties.Settings.Default.BlueChannel;
-
             BitmapData bitmapdata = starImage.LockBits(rect, ImageLockMode.ReadWrite, starImage.PixelFormat);
 
             IntPtr scan0 = bitmapdata.Scan0;
@@ -95,11 +90,6 @@ namespace Bahtinov_Collimator
             int topEdge = (int)(0.5 * ((double)height - (double)edgeOffset));
             int bottomEdge = (int)(0.5 * ((double)height + (double)edgeOffset));
 
-            // The checkboxes determine if the value of that color pixel in the starImage is used
-            float redCheckboxChecked = redChannelSetting ? 1f : 0.0f;
-            float greenCheckBoxChecked = greenChannelSetting ? 1f : 0.0f;
-            float blueCheckboxChecked = blueChannelSetting ? 1f : 0.0f;
-
             // create a new 2D array of floats the size of the star Image
             float[,] starArray2D = new float[width, height];
 
@@ -122,7 +112,7 @@ namespace Bahtinov_Collimator
                     byte greenValue = starImageArray[pixelIndex + 1];
                     byte blueValue = starImageArray[pixelIndex + 2];
 
-                    starArray2D[x, y] = redCheckboxChecked * redValue + greenCheckBoxChecked * greenValue + blueCheckboxChecked * blueValue;
+                    starArray2D[x, y] = redValue + greenValue + blueValue;
                     starArray2D[x, y] *= divisionFactor;
                     starArray2D[x, y] = (float)Math.Sqrt(starArray2D[x, y]);
                     pixelValueTotal += starArray2D[x, y];
@@ -340,11 +330,6 @@ namespace Bahtinov_Collimator
         {
             Rectangle rect = new Rectangle(0, 0, starImage.Width, starImage.Height);
 
-            // get channel settings
-            bool redChannelSetting = Properties.Settings.Default.RedChannel;
-            bool greenChannelSetting = Properties.Settings.Default.GreenChannel;
-            bool blueChannelSetting = Properties.Settings.Default.BlueChannel;
-
             // copy the star image pixels into an array 
             BitmapData bitmapdata = starImage.LockBits(rect, ImageLockMode.ReadWrite, starImage.PixelFormat);
 
@@ -379,11 +364,6 @@ namespace Bahtinov_Collimator
 
             float divisionFactor = 3f / byte.MaxValue;
 
-            // The checkboxes determine if the value of that color pixel in the starImage is used
-            float redCheckboxChecked = redChannelSetting ? 1f : 0.0f;
-            float greenCheckBoxChecked = greenChannelSetting ? 1f : 0.0f;
-            float blueCheckboxChecked = blueChannelSetting ? 1f : 0.0f;
-
             // create a new 2D array of floats the size of the star Image
             float[,] starArray2D = new float[width, height];
 
@@ -405,7 +385,7 @@ namespace Bahtinov_Collimator
                     byte greenValue = starImageArray[pixelIndex + 1];
                     byte blueValue = starImageArray[pixelIndex + 2];
 
-                    starArray2D[x, y] = redCheckboxChecked * redValue + greenCheckBoxChecked * greenValue + blueCheckboxChecked * blueValue;
+                    starArray2D[x, y] =  redValue + greenValue + blueValue;
                     starArray2D[x, y] *= divisionFactor;
                     starArray2D[x, y] = (float)Math.Sqrt(starArray2D[x, y]);
                     pixelValueTotal += starArray2D[x, y];

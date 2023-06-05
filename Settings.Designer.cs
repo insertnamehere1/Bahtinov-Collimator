@@ -39,14 +39,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.BlueCheckBox = new System.Windows.Forms.CheckBox();
-            this.RedCheckBox = new System.Windows.Forms.CheckBox();
-            this.GreenCheckBox = new System.Windows.Forms.CheckBox();
             this.okButton = new System.Windows.Forms.Button();
             this.CancelSettingsButton = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox2
@@ -148,57 +143,9 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Aperture";
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.BlueCheckBox);
-            this.groupBox1.Controls.Add(this.RedCheckBox);
-            this.groupBox1.Controls.Add(this.GreenCheckBox);
-            this.groupBox1.Location = new System.Drawing.Point(16, 132);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(112, 114);
-            this.groupBox1.TabIndex = 9;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Filter Selection";
-            // 
-            // BlueCheckBox
-            // 
-            this.BlueCheckBox.AutoSize = true;
-            this.BlueCheckBox.Checked = true;
-            this.BlueCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.BlueCheckBox.Location = new System.Drawing.Point(6, 76);
-            this.BlueCheckBox.Name = "BlueCheckBox";
-            this.BlueCheckBox.Size = new System.Drawing.Size(89, 17);
-            this.BlueCheckBox.TabIndex = 3;
-            this.BlueCheckBox.Text = "Blue Channel";
-            this.BlueCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // RedCheckBox
-            // 
-            this.RedCheckBox.AutoSize = true;
-            this.RedCheckBox.Checked = true;
-            this.RedCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.RedCheckBox.Location = new System.Drawing.Point(6, 28);
-            this.RedCheckBox.Name = "RedCheckBox";
-            this.RedCheckBox.Size = new System.Drawing.Size(88, 17);
-            this.RedCheckBox.TabIndex = 1;
-            this.RedCheckBox.Text = "Red Channel";
-            this.RedCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // GreenCheckBox
-            // 
-            this.GreenCheckBox.AutoSize = true;
-            this.GreenCheckBox.Checked = true;
-            this.GreenCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.GreenCheckBox.Location = new System.Drawing.Point(6, 52);
-            this.GreenCheckBox.Name = "GreenCheckBox";
-            this.GreenCheckBox.Size = new System.Drawing.Size(97, 17);
-            this.GreenCheckBox.TabIndex = 2;
-            this.GreenCheckBox.Text = "Green Channel";
-            this.GreenCheckBox.UseVisualStyleBackColor = true;
-            // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(35, 259);
+            this.okButton.Location = new System.Drawing.Point(35, 144);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 13;
@@ -208,7 +155,7 @@
             // 
             // CancelSettingsButton
             // 
-            this.CancelSettingsButton.Location = new System.Drawing.Point(135, 259);
+            this.CancelSettingsButton.Location = new System.Drawing.Point(135, 144);
             this.CancelSettingsButton.Name = "CancelSettingsButton";
             this.CancelSettingsButton.Size = new System.Drawing.Size(75, 23);
             this.CancelSettingsButton.TabIndex = 14;
@@ -220,10 +167,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(247, 295);
+            this.ClientSize = new System.Drawing.Size(247, 181);
             this.Controls.Add(this.CancelSettingsButton);
             this.Controls.Add(this.okButton);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -234,8 +180,6 @@
             this.Text = "Settings";
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -249,10 +193,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox BlueCheckBox;
-        private System.Windows.Forms.CheckBox RedCheckBox;
-        private System.Windows.Forms.CheckBox GreenCheckBox;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button CancelSettingsButton;
         private System.Windows.Forms.TextBox ApertureTextBox;

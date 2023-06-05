@@ -11,14 +11,5 @@
     <Setting Name="PixelSize" Type="System.Double" Scope="User">
       <Value Profile="(Default)">4.76</Value>
     </Setting>
-    <Setting Name="RedChannel" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="GreenChannel" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="BlueChannel" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

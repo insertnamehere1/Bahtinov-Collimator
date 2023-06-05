@@ -58,41 +58,5 @@ namespace Bahtinov_Collimator.Properties {
                 this["PixelSize"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool RedChannel {
-            get {
-                return ((bool)(this["RedChannel"]));
-            }
-            set {
-                this["RedChannel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool GreenChannel {
-            get {
-                return ((bool)(this["GreenChannel"]));
-            }
-            set {
-                this["GreenChannel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool BlueChannel {
-            get {
-                return ((bool)(this["BlueChannel"]));
-            }
-            set {
-                this["BlueChannel"] = value;
-            }
-        }
     }
 }
