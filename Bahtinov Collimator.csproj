@@ -27,7 +27,7 @@
     <UpdateUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/master/published/</UpdateUrl>
     <ProductName>Bahtinov Collimator</ProductName>
     <PublisherName>Chris</PublisherName>
-    <ApplicationRevision>9</ApplicationRevision>
+    <ApplicationRevision>10</ApplicationRevision>
     <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
