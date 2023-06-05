@@ -16,15 +16,16 @@
     <PublishUrl>C:\Users\chris\OneDrive\Documents\Visual Studio 2022\Publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateEnabled>false</UpdateEnabled>
     <UpdateMode>Background</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <UpdateUrl>http://localhost/Bahtinov Collimator/</UpdateUrl>
-    <ApplicationRevision>11</ApplicationRevision>
+    <ProductName>Bahtinov Collimator</ProductName>
+    <PublisherName>Chris</PublisherName>
+    <ApplicationRevision>14</ApplicationRevision>
     <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
