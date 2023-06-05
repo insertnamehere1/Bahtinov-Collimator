@@ -210,21 +210,10 @@ namespace Bahtinov_Collimator
                 {
                     if (lineAngles[j] > lineAngles[j + 1])
                     {
-                        // Swap elements in array1
-                        float temp1 = lineAngles[j];
-                        lineAngles[j] = lineAngles[j + 1];
-                        lineAngles[j + 1] = temp1;
-
-                        // Swap elements in array2
-                        float temp2 = lineIndex[j];
-                        lineIndex[j] = lineIndex[j + 1];
-                        lineIndex[j + 1] = temp2;
-
-                        // Swap elements in array2
-                        float temp3 = lineValue[j];
-                        lineValue[j] = lineValue[j + 1];
-                        lineValue[j + 1] = temp3;
-
+                        // Swap elements
+                        (lineAngles[j], lineAngles[j + 1]) = (lineAngles[j + 1], lineAngles[j]);
+                        (lineIndex[j], lineIndex[j + 1]) = (lineIndex[j + 1], lineIndex[j]);
+                        (lineValue[j], lineValue[j + 1]) = (lineValue[j + 1], lineValue[j]);
                         swapped = true;
                     }
                 }
