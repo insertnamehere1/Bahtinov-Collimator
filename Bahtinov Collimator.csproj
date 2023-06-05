@@ -18,14 +18,18 @@
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
     <UpdateMode>Background</UpdateMode>
+    <UpdateMode>Foreground</UpdateMode>
+=========
+    <UpdateMode>Background</UpdateMode>
+>>>>>>>>> Temporary merge branch 2
     <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
     <ProductName>Bahtinov Collimator</ProductName>
     <PublisherName>Chris</PublisherName>
     <ApplicationRevision>14</ApplicationRevision>
+    <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
+=========
+    <ApplicationRevision>11</ApplicationRevision>
+>>>>>>>>> Temporary merge branch 2
     <ApplicationVersion>1.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
