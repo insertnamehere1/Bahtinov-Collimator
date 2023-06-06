@@ -120,9 +120,6 @@ namespace Bahtinov_Collimator
                 }
             }
 
-            //why is this here?        // not used, possibly not needed. Created during testing?
-            float MEAN_pixelValue = pixelValueTotal / pixelsCounted;
-
             // centre pixels for X and Y in the starImage
             float starImage_X_Centre = (float)(((double)width + 1.0) / 2.0);
             float starImage_Y_Centre = (float)(((double)height + 1.0) / 2.0);
@@ -246,8 +243,6 @@ namespace Bahtinov_Collimator
                     // clear saved totals only from the rows inside the bounding box
                     tempTotals[rowIndex] = 0.0f;
 
-                    // this doesnt do anything when constant_1 is 1. 
-                    // this was possibly meant to average rows either side of the current row 
                     for (int index4 = -(constant_1 - 1) / 2; index4 <= (constant_1 - 1) / 2; ++index4)
                         tempTotals[rowIndex] += rowTotals[rowIndex + index4] / (float)constant_1;
                 }
@@ -255,9 +250,6 @@ namespace Bahtinov_Collimator
                 // copy back to rowTotals
                 for (int index3 = 0; index3 < height; ++index3)
                     rowTotals[index3] = tempTotals[index3];
-
-                // the whole block above from constant_1 does not do anything
-                // when constant_1 is not equal to 3 or 6
 
                 // largest values found
                 float LargestValueForThisRotation = -1f;
@@ -315,7 +307,7 @@ namespace Bahtinov_Collimator
                 int deg_5 = 5; // (int)(0.0872664600610733 / (double)radiansPerDegree);  // rad/deg 0.0174532925
 
                 // clears any lines within +/- 5 degrees of the current brightest line
-                for (int index2 = currentBrightestLineCount - deg_5; index2 < currentBrightestLineCount + deg_5; ++index2)
+                for (int index2 = currentBrightestLineCount - deg_5; index2 <= currentBrightestLineCount + deg_5; ++index2)
                 {
                     // set the lines withing 5 degrees to 0.0
                     int index3 = (index2 + degrees180) % degrees180;
