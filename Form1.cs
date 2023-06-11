@@ -22,11 +22,13 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
+using Microsoft.Win32;
 using System;
 using System.Deployment.Application;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace Bahtinov_Collimator
@@ -54,6 +56,7 @@ namespace Bahtinov_Collimator
         private readonly Rectangle GreenGroupBoxScreenBounds;
         private Rectangle BlueGroupBoxScreenBounds;
         private bool menuActive = false;
+        private bool nightEnable = false;
 
         // settings
         private readonly Settings settingsDialog;
@@ -106,9 +109,55 @@ namespace Bahtinov_Collimator
             StartButton.Text = "Start";
         }
 
+        private static bool IsNightLightEnabled()
+        { 
+            const string BlueLightReductionStateValue = @"SOFTWARE\Microsoft\Windows\CurrentVersion\CloudStore\Store\DefaultAccount\Current\default$windows.data.bluelightreduction.settings\windows.data.bluelightreduction.settings";
+            const string BlueLightReductionStateKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\CloudStore\Store\DefaultAccount\Current\default$windows.data.bluelightreduction.bluelightreductionstate\windows.data.bluelightreduction.bluelightreductionstate";
+
+            using (var key = Registry.CurrentUser.OpenSubKey(BlueLightReductionStateKey))
+            {
+                var data = key?.GetValue("Data");
+        
+                if (data is null)
+                    return false;
+
+                var byteData = (byte[])data;
+
+                if (byteData.Length > 24 && byteData[23] == 0x10 && byteData[24] == 0x00)
+                {
+                    using (var key2 = Registry.CurrentUser.OpenSubKey(BlueLightReductionStateValue))
+                    {
+                        var data2 = key2?.GetValue("Data");
+
+                        if (data2 is null)
+                            return false;
+
+                        var byteData2 = (byte[])data2;
+
+                        // is the blue reduction > 50%
+                        if (byteData2.Length > 36 && byteData2[36] < 0x32)
+                            return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            // ShowLines(currentPicture);
+            // check for nightlight settings in windows
+            if (!nightEnable && IsNightLightEnabled())
+            {
+                forceUpdate = true;
+                nightEnable = true;
+            }
+            else if (nightEnable && !IsNightLightEnabled())
+            {
+                nightEnable = false;
+                forceUpdate = true;
+            }
+
             ProcessAndDisplay();
         }
 
@@ -142,7 +191,7 @@ namespace Bahtinov_Collimator
             {
                 GreenGroupBox.Visible = true;
                 BlueGroupBox.Visible = true;
-                RedGroupBox.ForeColor = Color.Red;
+                RedGroupBox.ForeColor = nightEnable ?  Color.Black : Color.Red;
             }
             else
             {
@@ -247,6 +296,7 @@ namespace Bahtinov_Collimator
 
             int penWidth = 1;
             Pen dashPen = new Pen(Color.Yellow, (float)penWidth) { DashStyle = DashStyle.Dash };
+
             penWidth = 2;
             Pen largeDashPen = new Pen(Color.Black, penWidth) { DashStyle = DashStyle.Dash };
             Pen largeSolidPen = new Pen(Color.Yellow, (float)penWidth) { DashStyle = DashStyle.Solid };
@@ -323,16 +373,16 @@ namespace Bahtinov_Collimator
                 switch (group)
                 {
                     case 0:
-                        dashPen.Color = Color.Red;
-                        largeDashPen.Color = Color.Red;
+                        dashPen.Color = nightEnable ? Color.Red : Color.Red;
+                        largeDashPen.Color = nightEnable ? Color.Red : Color.Red;
                         break;
                     case 1:
-                        dashPen.Color = Color.Green;
-                        largeDashPen.Color = Color.Green;
+                        dashPen.Color = nightEnable ? Color.Red : Color.Green;
+                        largeDashPen.Color = nightEnable ? Color.Red : Color.Green;
                         break;
                     case 2:
-                        dashPen.Color = Color.Blue;
-                        largeDashPen.Color = Color.Blue;
+                        dashPen.Color = nightEnable ? Color.Red : Color.Blue;
+                        largeDashPen.Color = nightEnable ? Color.Red : Color.Blue;
                         break;
                 }
 
@@ -430,12 +480,12 @@ namespace Bahtinov_Collimator
 
             if (withinCriticalFocus)
             {
-                withinCriticalFocusLabel.ForeColor = Color.Green;
+                withinCriticalFocusLabel.ForeColor = nightEnable ? Color.Black : Color.Green; ;
                 withinCriticalFocusLabel.Text = "Yes";
             }
             else
             {
-                withinCriticalFocusLabel.ForeColor = Color.Red;
+                withinCriticalFocusLabel.ForeColor = nightEnable ? Color.Black : Color.Red;
                 withinCriticalFocusLabel.Text = "No";
             }
 
@@ -453,16 +503,16 @@ namespace Bahtinov_Collimator
             switch (group)
             {
                 case 0:
-                    errorPen.Color = Color.Red;
+                    errorPen.Color = nightEnable ? Color.Red : Color.Red;
                     break;
                 case 1:
-                    errorPen.Color = Color.Green;
+                    errorPen.Color = nightEnable ? Color.Red : Color.Green;
                     break;
                 case 2:
-                    errorPen.Color = Color.Blue;
+                    errorPen.Color = nightEnable ? Color.Red : Color.Blue;
                     break;
                 default:
-                    errorPen.Color = Color.Green;
+                    errorPen.Color = nightEnable ? Color.White : Color.Green;
                     break;
             }
 
