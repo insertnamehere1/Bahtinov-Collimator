@@ -143,7 +143,6 @@ namespace Bahtinov_Collimator
             }
         }
 
-
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
             // check for nightlight settings in windows
