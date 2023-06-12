@@ -40,6 +40,7 @@
             this.capturedImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.annotatedImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.cheatSheetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,7 +83,7 @@
             // 
             // StartButton
             // 
-            this.StartButton.Location = new System.Drawing.Point(41, 363);
+            this.StartButton.Location = new System.Drawing.Point(41, 359);
             this.StartButton.Name = "StartButton";
             this.StartButton.Size = new System.Drawing.Size(100, 39);
             this.StartButton.TabIndex = 0;
@@ -120,11 +121,12 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.cheatSheetToolStripMenuItem,
             this.settingsToolStripMenuItem1,
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(595, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(589, 24);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.MenuActivate += new System.EventHandler(this.MenuStrip1_MenuActivate);
@@ -170,6 +172,13 @@
             this.quitToolStripMenuItem2.Text = "Quit";
             this.quitToolStripMenuItem2.Click += new System.EventHandler(this.QuitToolStripMenuItem2_Click);
             // 
+            // cheatSheetToolStripMenuItem
+            // 
+            this.cheatSheetToolStripMenuItem.Name = "cheatSheetToolStripMenuItem";
+            this.cheatSheetToolStripMenuItem.Size = new System.Drawing.Size(86, 20);
+            this.cheatSheetToolStripMenuItem.Text = "Adjust Assist";
+            this.cheatSheetToolStripMenuItem.Click += new System.EventHandler(this.cheatSheetToolStripMenuItem_Click);
+            // 
             // settingsToolStripMenuItem1
             // 
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
@@ -191,28 +200,28 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.helpToolStripMenuItem.Text = "Help";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
             // checkForUpdatesToolStripMenuItem
             // 
             this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.checkForUpdatesToolStripMenuItem.Text = "Check for Updates";
             this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
             // 
             // donateToolStripMenuItem
             // 
             this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
-            this.donateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.donateToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.donateToolStripMenuItem.Text = "Buy me a Coffee?";
             this.donateToolStripMenuItem.Click += new System.EventHandler(this.DonateToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem2
             // 
             this.aboutToolStripMenuItem2.Name = "aboutToolStripMenuItem2";
-            this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(171, 22);
             this.aboutToolStripMenuItem2.Text = "About";
             this.aboutToolStripMenuItem2.Click += new System.EventHandler(this.AboutToolStripMenuItem2_Click);
             // 
@@ -240,7 +249,7 @@
             this.RedGroupBox.Controls.Add(this.AbsoluteFocusErrorLabel1);
             this.RedGroupBox.Controls.Add(this.FocusErrorLabel1);
             this.RedGroupBox.ForeColor = System.Drawing.Color.Brown;
-            this.RedGroupBox.Location = new System.Drawing.Point(12, 43);
+            this.RedGroupBox.Location = new System.Drawing.Point(12, 27);
             this.RedGroupBox.Name = "RedGroupBox";
             this.RedGroupBox.Size = new System.Drawing.Size(166, 93);
             this.RedGroupBox.TabIndex = 21;
@@ -303,7 +312,7 @@
             this.GreenGroupBox.Controls.Add(this.AbsoluteFocusErrorLabel2);
             this.GreenGroupBox.Controls.Add(this.FocusErrorLabel2);
             this.GreenGroupBox.ForeColor = System.Drawing.Color.DarkGreen;
-            this.GreenGroupBox.Location = new System.Drawing.Point(12, 147);
+            this.GreenGroupBox.Location = new System.Drawing.Point(12, 130);
             this.GreenGroupBox.Name = "GreenGroupBox";
             this.GreenGroupBox.Size = new System.Drawing.Size(166, 93);
             this.GreenGroupBox.TabIndex = 26;
@@ -401,7 +410,7 @@
             this.BlueGroupBox.Controls.Add(this.AbsoluteFocusErrorLabel3);
             this.BlueGroupBox.Controls.Add(this.FocusErrorLabel3);
             this.BlueGroupBox.ForeColor = System.Drawing.Color.DarkBlue;
-            this.BlueGroupBox.Location = new System.Drawing.Point(12, 251);
+            this.BlueGroupBox.Location = new System.Drawing.Point(12, 233);
             this.BlueGroupBox.Name = "BlueGroupBox";
             this.BlueGroupBox.Size = new System.Drawing.Size(166, 93);
             this.BlueGroupBox.TabIndex = 26;
@@ -492,7 +501,7 @@
             // 
             this.pictureBox.BackColor = System.Drawing.Color.Black;
             this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox.Location = new System.Drawing.Point(184, 12);
+            this.pictureBox.Location = new System.Drawing.Point(184, 31);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(400, 400);
             this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -503,7 +512,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(595, 421);
+            this.ClientSize = new System.Drawing.Size(589, 436);
             this.Controls.Add(this.BlueGroupBox);
             this.Controls.Add(this.GreenGroupBox);
             this.Controls.Add(this.RedGroupBox);
@@ -514,8 +523,8 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(611, 460);
-            this.MinimumSize = new System.Drawing.Size(611, 460);
+            this.MaximumSize = new System.Drawing.Size(605, 475);
+            this.MinimumSize = new System.Drawing.Size(605, 475);
             this.Name = "Form1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Bahtinov Collimator";
@@ -578,6 +587,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ToolStripMenuItem donateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cheatSheetToolStripMenuItem;
     }
 }
 
