@@ -155,6 +155,18 @@
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
     <Compile Include="BahtinovData.cs" />
+    <Compile Include="CSheet\CheatSheet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CSheet\CheatSheet.Designer.cs">
+      <DependentUpon>CheatSheet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CSheet\CustomPicture.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CSheet\CustomPicture.Designer.cs">
+      <DependentUpon>CustomPicture.cs</DependentUpon>
+    </Compile>
     <Compile Include="Donate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -182,6 +194,12 @@
     </Compile>
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CSheet\CheatSheet.resx">
+      <DependentUpon>CheatSheet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CSheet\CustomPicture.resx">
+      <DependentUpon>CustomPicture.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Donate.resx">
       <DependentUpon>Donate.cs</DependentUpon>
@@ -235,6 +253,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="focusIcon.ico" />
+    <Content Include="Images\Adjustments.png" />
+    <Content Include="Images\arrow.png" />
     <Content Include="Images\focusIcon.ico" />
     <Content Include="Images\focusIcon.png" />
     <Content Include="Images\paypal.png" />
