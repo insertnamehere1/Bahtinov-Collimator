@@ -22,14 +22,13 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
-using Microsoft.Win32;
+using Bahtinov_Collimator.CSheet;
 using System;
 using System.Deployment.Application;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Windows.Forms;
-using static System.Windows.Forms.AxHost;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace Bahtinov_Collimator
 {
@@ -43,9 +42,7 @@ namespace Bahtinov_Collimator
         private Bitmap currentPicture;
         private readonly ScreenCap screenCapture;
         private bool screenCaptureRunningFlag = false;
-        private bool showRedFocus = true;
-        private bool showGreenFocus = true;
-        private bool showBlueFocus = true;
+        private bool[] showFocus = new bool[3];
         private bool forceUpdate = false;
         private readonly System.Windows.Forms.GroupBox[] groupBoxes;
         private const int lineCount = 9;          // lines for a tri-bahtinov mask
@@ -57,6 +54,10 @@ namespace Bahtinov_Collimator
         private Rectangle BlueGroupBoxScreenBounds;
         private bool menuActive = false;
         private bool nightEnable = false;
+        private float[] errorValues = new float[3];
+        private int imageCount;
+        private CSheet.CheatSheet cheatSheet;
+
 
         // settings
         private readonly Settings settingsDialog;
@@ -86,10 +87,16 @@ namespace Bahtinov_Collimator
             GreenGroupBox.Visible = false;
             BlueGroupBox.Visible = false;
 
+            cheatSheetToolStripMenuItem.Visible = false;
+
             // set red Group Box to Black text
             RedGroupBox.ForeColor = Color.Black;
 
             groupBoxes = new System.Windows.Forms.GroupBox[] { RedGroupBox, GreenGroupBox, BlueGroupBox };
+
+            // initialize showFocus to true
+            showFocus = Enumerable.Repeat(true, showFocus.Length).ToArray();
+            imageCount = 0;
         }
 
         private void LoadSettings()
@@ -104,8 +111,10 @@ namespace Bahtinov_Collimator
         {
             UpdateTimer.Stop();
             LoadSettings();
+            imageCount = 0;
             bufferedPicture = null;
             screenCaptureRunningFlag = false;
+            cheatSheetToolStripMenuItem.Visible = false;
             StartButton.Text = "Start";
         }
 
@@ -171,6 +180,9 @@ namespace Bahtinov_Collimator
                 return;
             }
 
+            // accumulating images
+            imageCount++;
+
             // is this the first pass?
             if (bufferedPicture == null)
             {
@@ -203,39 +215,33 @@ namespace Bahtinov_Collimator
 
             if (lineData.LineAngles.Length > 3)
             {
-                Rectangle rect = new Rectangle(0, 0, paddedImage.Width, paddedImage.Height);
+                cheatSheetToolStripMenuItem.Visible = true;
 
-                BahtinovData data1 = new BahtinovData(3, rect);
-                BahtinovData data2 = new BahtinovData(3, rect);
-                BahtinovData data3 = new BahtinovData(3, rect);
+                Rectangle rect = new Rectangle(0, 0, paddedImage.Width, paddedImage.Height);
+                BahtinovData data = new BahtinovData(3, rect);
 
                 for (int i = 0; i < 3; i++)
                 {
-                    data1.LineAngles[i] = lineData.LineAngles[i];
-                    data2.LineAngles[i] = lineData.LineAngles[i + 3];
-                    data3.LineAngles[i] = lineData.LineAngles[i + 6];
+                    int startIndex = 3 * i;
+                    Array.Copy(lineData.LineAngles, startIndex, data.LineAngles, 0, 3);
+                    Array.Copy(lineData.LineIndex, startIndex, data.LineIndex, 0, 3);
 
-                    data1.LineIndex[i] = lineData.LineIndex[i];
-                    data2.LineIndex[i] = lineData.LineIndex[i + 3];
-                    data3.LineIndex[i] = lineData.LineIndex[i + 6];
+                    if (!DisplayLines(data, paddedImage, i, showFocus[1]))
+                        break;
                 }
-
-                if (showRedFocus && bufferedPicture != null)
-                    DisplayLines(data1, paddedImage, 0);
-                if (showGreenFocus && bufferedPicture != null)
-                    DisplayLines(data2, paddedImage, 1);
-                if (showBlueFocus && bufferedPicture != null)
-                    DisplayLines(data3, paddedImage, 2);
             }
             else
             {
                 if (lineData.LineAngles.Length == 3)
-                    DisplayLines(lineData, paddedImage, 0);
+                {
+                    DisplayLines(lineData, paddedImage, 0, true);
+                    cheatSheetToolStripMenuItem.Visible = false;
+                }
                 else
                 {
                     Reset();
                     MessageBox.Show("Unable to detect Bahtinov image lines", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                }
+                } 
             }
 
             forceUpdate = false;
@@ -268,16 +274,28 @@ namespace Bahtinov_Collimator
             else
             {
                 UpdateTimer.Stop();
+                cheatSheetToolStripMenuItem.Visible = false;
                 screenCaptureRunningFlag = false;
                 StartButton.Text = "Start";
                 pictureBox.Image = null;
             }
         }
 
-        private void DisplayLines(BahtinovData bahtinovLines, Bitmap starImage, int group)
+        private bool DisplayLines(BahtinovData bahtinovLines, Bitmap starImage, int group, bool calculateOnly)
         {
             int width = starImage.Width;
             int height = starImage.Height;
+
+            // check for stray LineIndex values
+            // this can happen when the image moves quickly or is occulted by another window
+            foreach (float lineIndex in bahtinovLines.LineIndex)
+            {
+                // Check if x-coordinate is outside the image bounds
+                if (lineIndex < 0 || lineIndex >= height)
+                {
+                    return false; // Line angle is outside x-axis range
+                }
+            }
 
             // centre pixels for X and Y in the starImage
             float starImage_X_Centre = (float)(((double)width + 1.0) / 2.0);
@@ -386,10 +404,13 @@ namespace Bahtinov_Collimator
                 }
 
                 // draw line on image
-                if (index == 0 || index == 2)
-                    graphics.DrawLine(dashPen, lineStart_X, (float)height - lineStart_Y + (float)yOffset, lineEnd_X, (float)height - lineEnd_Y + (float)yOffset);
-                else
-                    graphics.DrawLine(largeDashPen, lineStart_X, (float)height - lineStart_Y + (float)yOffset, lineEnd_X, (float)height - lineEnd_Y + (float)yOffset);
+                if (showFocus[group] == true)
+                {
+                    if (index == 0 || index == 2)
+                        graphics.DrawLine(dashPen, lineStart_X, (float)height - lineStart_Y + (float)yOffset, lineEnd_X, (float)height - lineEnd_Y + (float)yOffset);
+                    else
+                        graphics.DrawLine(largeDashPen, lineStart_X, (float)height - lineStart_Y + (float)yOffset, lineEnd_X, (float)height - lineEnd_Y + (float)yOffset);
+                }
             }
 
             // calculate the line intersections
@@ -438,7 +459,7 @@ namespace Bahtinov_Collimator
                 lastFocusErrorValue = 0.0f;
                 LoadImageLost();
                 Reset();
-                return;
+                return false;
             }
 
             // selected groupbox
@@ -451,6 +472,9 @@ namespace Bahtinov_Collimator
             // display Focus Error value
             string str1 = (errorSign * line2ToIntersectDistance).ToString("F1");
             focusError.Text = str1;
+
+            // store error values for Cheat Sheet display
+            errorValues[group] = errorSign * line2ToIntersectDistance;
 
             // calculate the bahtinov mask angle in degrees
             float radianPerDegree = (float)Math.PI / 180f;
@@ -518,7 +542,9 @@ namespace Bahtinov_Collimator
             // draw the circular error marker
             errorPen.Width = (float)penWidth * 2;
             int circleRadius = penWidth * 32;
-            graphics.DrawEllipse(errorPen, errorMarker_X - (float)circleRadius, (float)height - errorMarker_Y - (float)circleRadius + (float)yOffset, (float)(circleRadius * 2), (float)(circleRadius * 2));
+
+            if (showFocus[group] == true)
+                graphics.DrawEllipse(errorPen, errorMarker_X - (float)circleRadius, (float)height - errorMarker_Y - (float)circleRadius + (float)yOffset, (float)(circleRadius * 2), (float)(circleRadius * 2));
 
             // Calculate the line coordinates
             float lineX1 = errorMarker_X + circleRadius;
@@ -547,7 +573,8 @@ namespace Bahtinov_Collimator
             rotatedY2 += height - errorMarker_Y;
 
             // Draw the rotated error line in the error circle
-            graphics.DrawLine(errorPen, rotatedX1, rotatedY1, rotatedX2, rotatedY2);
+            if (showFocus[group] == true)
+                graphics.DrawLine(errorPen, rotatedX1, rotatedY1, rotatedX2, rotatedY2);
 
             float CentrePoint1 = Math.Min(starImage_X_Centre, starImage_Y_Centre);
 
@@ -583,7 +610,9 @@ namespace Bahtinov_Collimator
             }
 
             Point textLocation = group == 1 ? textEndPoint : textStartPoint;
-            graphics.DrawString((errorSign * line2ToIntersectDistance).ToString("F1"), font2, (Brush)solidBrush, (PointF)textLocation);
+
+            if (showFocus[group] == true)
+                graphics.DrawString((errorSign * line2ToIntersectDistance).ToString("F1"), font2, (Brush)solidBrush, (PointF)textLocation);
 
             // check if the images has moved substantially indicating the image has been lost
             if (lastFocusErrorValue != 0.0f && Math.Abs(lastFocusErrorValue - x_intersectionOfLines1and3) > 100)
@@ -591,7 +620,7 @@ namespace Bahtinov_Collimator
                 lastFocusErrorValue = 0.0f;
                 LoadImageLost();
                 Reset();
-                return;
+                return false;
             }
             lastFocusErrorValue = x_intersectionOfLines1and3;
 
@@ -606,7 +635,7 @@ namespace Bahtinov_Collimator
 
                 screenCapture.SetImageCoordinates(imageArea);
             }
-            return;
+            return true;
         }
 
         private void LoadImageLost()
@@ -687,7 +716,7 @@ namespace Bahtinov_Collimator
 
         private void MousePositionTimer_Tick(object sender, EventArgs e)
         {
-            if (this.ContainsFocus && !menuActive)
+            if (this.ContainsFocus && !menuActive && lineData != null)
             {
                 Point mousePosition = PointToClient(Control.MousePosition);
 
@@ -695,14 +724,29 @@ namespace Bahtinov_Collimator
                 bool isGreenFocused = GreenGroupBoxScreenBounds.Contains(mousePosition);
                 bool isBlueFocused = BlueGroupBoxScreenBounds.Contains(mousePosition);
 
+                // Store the previous showFocus states
+                bool prevRedFocus = showFocus[0];
+                bool prevGreenFocus = showFocus[1];
+                bool prevBlueFocus = showFocus[2];
+
                 RedGroupBox.BackColor = isRedFocused ? Color.LightGray : SystemColors.Control;
                 GreenGroupBox.BackColor = isGreenFocused ? Color.LightGray : SystemColors.Control;
                 BlueGroupBox.BackColor = isBlueFocused ? Color.LightGray : SystemColors.Control;
 
-                showRedFocus = isRedFocused || !isRedFocused && !isGreenFocused && !isBlueFocused;
-                showGreenFocus = isGreenFocused || !isRedFocused && !isGreenFocused && !isBlueFocused;
-                showBlueFocus = isBlueFocused || !isRedFocused && !isGreenFocused && !isBlueFocused;
-                forceUpdate = true;
+                if (lineData.LineAngles.Length != 3)
+                {
+                    showFocus[0] = isRedFocused || (!isRedFocused && !isGreenFocused && !isBlueFocused);
+                    showFocus[1] = isGreenFocused || (!isRedFocused && !isGreenFocused && !isBlueFocused);
+                    showFocus[2] = isBlueFocused || (!isRedFocused && !isGreenFocused && !isBlueFocused);
+                }
+                else
+                {
+                    showFocus[0] = true;
+                }
+
+                // Check if the state of showFocus has changed for any group box
+                if ((showFocus[0] != prevRedFocus) || (showFocus[1] != prevGreenFocus) || (showFocus[2] != prevBlueFocus))
+                    forceUpdate = true;
             }
         }
 
@@ -770,6 +814,39 @@ namespace Bahtinov_Collimator
 
             }
         }
+
+        private void cheatSheetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (cheatSheet == null || cheatSheet.IsDisposed)
+            {
+                cheatSheet = new CSheet.CheatSheet(this);
+                cheatSheet.errorValues(errorValues);
+                cheatSheet.Show(this);
+                cheatSheet.FormClosed += CheatSheet_FormClosed;
+            }
+        }
+
+        private void CheatSheet_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            // Set cheatSheet instance to null when the form is closed
+            cheatSheet = null;
+        }
+
+        public float[] getErrorValues() 
+        { 
+            return errorValues;
+        }
+
+        public bool isScreenCaptureRunning()
+        {
+            return screenCaptureRunningFlag;
+        }
+
+        public int getImageCount()
+        {
+            return imageCount;
+        }
+
     }
 }
 
