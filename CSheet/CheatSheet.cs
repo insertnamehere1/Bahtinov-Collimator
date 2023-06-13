@@ -33,6 +33,7 @@ namespace Bahtinov_Collimator.CSheet
         private float blueError = 0.0f;
         private Timer updateTimer;
         private Form1 parentForm;
+        private int lastImageCount = 0;
 
         // settings
         private int rotationSetting;
@@ -102,18 +103,17 @@ namespace Bahtinov_Collimator.CSheet
                 greenArrow = GetArrow(greenError, greenReverseBox.Checked);
                 blueArrow = GetArrow(blueError, blueReverseBox.Checked);
 
-                DrawSmallCircle(g, centerX, centerY, circleRadius, -90, Color.Red, redArrow);
-                //DrawArrow(g, centerX, centerY, circleRadius, -90, Color.Red, false);
+                DrawSmallCircle(g, centerX, centerY, circleRadius, -90, Color.Red, redArrow, redError);
 
                 if (swapGreenCheckbox.Checked == true)
                 {
-                    DrawSmallCircle(g, centerX, centerY, circleRadius, -210, Color.Green, greenArrow);
-                    DrawSmallCircle(g, centerX, centerY, circleRadius, -330, Color.Blue, blueArrow);
+                    DrawSmallCircle(g, centerX, centerY, circleRadius, -210, Color.Green, greenArrow, greenError);
+                    DrawSmallCircle(g, centerX, centerY, circleRadius, -330, Color.Blue, blueArrow, blueError);
                 }
                 else
                 {
-                    DrawSmallCircle(g, centerX, centerY, circleRadius, -210, Color.Blue, blueArrow);
-                    DrawSmallCircle(g, centerX, centerY, circleRadius, -330, Color.Green, greenArrow);
+                    DrawSmallCircle(g, centerX, centerY, circleRadius, -210, Color.Blue, blueArrow, blueError);
+                    DrawSmallCircle(g, centerX, centerY, circleRadius, -330, Color.Green, greenArrow, greenError);
                 }
             }
         }
@@ -130,7 +130,7 @@ namespace Bahtinov_Collimator.CSheet
                 return Arrow.None;
         }
 
-        private void DrawSmallCircle(Graphics g, int centerX, int centerY, int circleRadi, int angle, Color color, Arrow arrowType)
+        private void DrawSmallCircle(Graphics g, int centerX, int centerY, int circleRadi, int angle, Color color, Arrow arrowType, float errorValue)
         {
             int circleRadius = (int)(circleRadi * 0.65);
             double radians = (angle + rotationAngle) * Math.PI / 180.0;
@@ -144,20 +144,34 @@ namespace Bahtinov_Collimator.CSheet
             }
 
             DrawArrow(g, arrowType, x, y);
+            WriteValue(g, x, y, errorValue.ToString("F1"));
         }
 
+        public static void WriteValue(Graphics graphics, int x, int y, string value)
+        {
+            // adjust position of the text
+            x =  (float.Parse(value) < 0.0) ? x - 17 : x - 13;
+            y += 15;
+
+            Font font = new Font("Arial", 12, FontStyle.Bold); // Specify the font for the text
+
+            Brush brush = Brushes.Black;
+
+            // Draw the value on the screen at the specified coordinates
+            graphics.DrawString(value, font, brush, x, y);
+        }
 
         public void DrawArrow(Graphics graphics, Arrow arrow, int centerX, int centerY)
         {
             // minor corrections for arrow image placement
             if(arrow == Arrow.Right)
             {
-                centerX += 4;
+                centerX += 2;
                 centerY -= 10;
             }
             else
             {
-                centerX -= 4;   
+                centerX -= 3;   
                 centerY -= 10;
             }
 
@@ -165,7 +179,7 @@ namespace Bahtinov_Collimator.CSheet
             Image originalImage = Properties.Resources.arrow;
 
             // Calculate the size based on the arrow type
-            Size imageSize = arrow == Arrow.None ? originalImage.Size : new Size(70, 40);
+            Size imageSize = arrow == Arrow.None ? originalImage.Size : new Size(57, 32);
 
             // Calculate the top-left corner of the image based on the center coordinates
             int imageX = centerX - imageSize.Width / 2;
@@ -242,21 +256,29 @@ namespace Bahtinov_Collimator.CSheet
             if (parentForm.isScreenCaptureRunning() == false)
                 this.Close();
 
-            float[] errorValues = parentForm.getErrorValues();
-            redError = errorValues[0];
-            greenError = errorValues[1];
-            blueError = errorValues[2];
+            int imageCount = parentForm.getImageCount();
 
-            redErrorLabel.Text = redError.ToString("F1");
-            greenErrorLabel.Text = greenError.ToString("F1");
-            blueErrorLabel.Text = blueError.ToString("F1");
+            // only update if we have a new image
+            if (imageCount > lastImageCount)
+            {
+                float[] errorValues = parentForm.getErrorValues();
+                redError = errorValues[0];
+                greenError = errorValues[1];
+                blueError = errorValues[2];
 
-            pictureBox1.Invalidate();
+                pictureBox1.Invalidate();
+                lastImageCount = imageCount;
+            }
         }
 
         private void CheatSheet_FormClosed(object sender, FormClosedEventArgs e)
         {
             updateTimer.Stop();
+        }
+
+        private void reverseBox_CheckedChanged(object sender, EventArgs e)
+        {
+            pictureBox1.Invalidate();
         }
     }
 }

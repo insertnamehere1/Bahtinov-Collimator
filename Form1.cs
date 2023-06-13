@@ -53,6 +53,8 @@ namespace Bahtinov_Collimator
         private Rectangle BlueGroupBoxScreenBounds;
         private bool menuActive = false;
         private float[] errorValues = new float[3];
+        private int imageCount;
+
 
         // settings
         private readonly Settings settingsDialog;
@@ -91,6 +93,7 @@ namespace Bahtinov_Collimator
 
             // initialize showFocus to true
             showFocus = Enumerable.Repeat(true, showFocus.Length).ToArray();
+            imageCount = 0;
         }
 
         private void LoadSettings()
@@ -105,6 +108,7 @@ namespace Bahtinov_Collimator
         {
             UpdateTimer.Stop();
             LoadSettings();
+            imageCount = 0;
             bufferedPicture = null;
             screenCaptureRunningFlag = false;
             cheatSheetToolStripMenuItem.Visible = false;
@@ -127,6 +131,9 @@ namespace Bahtinov_Collimator
             {
                 return;
             }
+
+            // accumulating images
+            imageCount++;
 
             // is this the first pass?
             if (bufferedPicture == null)
@@ -230,6 +237,17 @@ namespace Bahtinov_Collimator
         {
             int width = starImage.Width;
             int height = starImage.Height;
+
+            // check for stray LineIndex values
+            // this can happen when the image moves quickly or is occulted by another window
+            foreach (float lineIndex in bahtinovLines.LineIndex)
+            {
+                // Check if x-coordinate is outside the image bounds
+                if (lineIndex < 0 || lineIndex >= height)
+                {
+                    return false; // Line angle is outside x-axis range
+                }
+            }
 
             // centre pixels for X and Y in the starImage
             float starImage_X_Centre = (float)(((double)width + 1.0) / 2.0);
@@ -657,21 +675,29 @@ namespace Bahtinov_Collimator
                 bool isGreenFocused = GreenGroupBoxScreenBounds.Contains(mousePosition);
                 bool isBlueFocused = BlueGroupBoxScreenBounds.Contains(mousePosition);
 
+                // Store the previous showFocus states
+                bool prevRedFocus = showFocus[0];
+                bool prevGreenFocus = showFocus[1];
+                bool prevBlueFocus = showFocus[2];
+
                 RedGroupBox.BackColor = isRedFocused ? Color.LightGray : SystemColors.Control;
                 GreenGroupBox.BackColor = isGreenFocused ? Color.LightGray : SystemColors.Control;
                 BlueGroupBox.BackColor = isBlueFocused ? Color.LightGray : SystemColors.Control;
 
                 if (lineData.LineAngles.Length != 3)
                 {
-                    showFocus[0] = isRedFocused || !isRedFocused && !isGreenFocused && !isBlueFocused;
-                    showFocus[1] = isGreenFocused || !isRedFocused && !isGreenFocused && !isBlueFocused;
-                    showFocus[2] = isBlueFocused || !isRedFocused && !isGreenFocused && !isBlueFocused;
+                    showFocus[0] = isRedFocused || (!isRedFocused && !isGreenFocused && !isBlueFocused);
+                    showFocus[1] = isGreenFocused || (!isRedFocused && !isGreenFocused && !isBlueFocused);
+                    showFocus[2] = isBlueFocused || (!isRedFocused && !isGreenFocused && !isBlueFocused);
                 }
                 else
                 {
                     showFocus[0] = true;
                 }
-                forceUpdate = true;
+
+                // Check if the state of showFocus has changed for any group box
+                if ((showFocus[0] != prevRedFocus) || (showFocus[1] != prevGreenFocus) || (showFocus[2] != prevBlueFocus))
+                    forceUpdate = true;
             }
         }
 
@@ -756,6 +782,12 @@ namespace Bahtinov_Collimator
         {
             return screenCaptureRunningFlag;
         }
+
+        public int getImageCount()
+        {
+            return imageCount;
+        }
+
     }
 }
 
