@@ -86,9 +86,19 @@ namespace Bahtinov_Collimator.CSheet
             int centerX = pictureBox1.Width / 2;
             int centerY = pictureBox1.Height / 2;
 
-            using (SolidBrush bgBrush = new SolidBrush(Color.Black))
+            // Define the colors for the shading effect
+            Color startColor = Color.White;
+            Color endColor = Color.Gray;
+
+            // Create a linear gradient brush to apply shading
+            Brush shadingBrush = new LinearGradientBrush(
+                new Point(centerX - circleRadius, centerY - circleRadius),
+                new Point(centerX + circleRadius, centerY + circleRadius),
+                startColor, endColor);
+
+            using (SolidBrush bgBrush = new SolidBrush(SystemColors.Control))
             using (SolidBrush circleBrush = new SolidBrush(Color.DarkGray))
-            using (Pen circlePen = new Pen(Color.DarkGray))
+            using (Pen circlePen = new Pen(Color.Black,2.0f))
             {
                 g.FillRectangle(bgBrush, ClientRectangle);
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
@@ -96,7 +106,7 @@ namespace Bahtinov_Collimator.CSheet
                 int circleSize = circleRadius * 2;
                 int circleX = centerX - circleRadius;
                 int circleY = centerY - circleRadius;
-                g.FillEllipse(circleBrush, circleX, circleY, circleSize, circleSize);
+                g.FillEllipse(shadingBrush, circleX, circleY, circleSize, circleSize);
                 g.DrawEllipse(circlePen, circleX, circleY, circleSize, circleSize);
 
                 redArrow = GetArrow(redError, redReverseBox.Checked);
@@ -138,9 +148,19 @@ namespace Bahtinov_Collimator.CSheet
             int x = (int)(centerX + circleRadius * Math.Cos(radians));
             int y = (int)(centerY + circleRadius * Math.Sin(radians));
 
+            int hexSize = 7;
+
+            using (Pen circlePen = new Pen(Color.Black, 1.0f))
             using (SolidBrush brush = new SolidBrush(color))
             {
                 g.FillEllipse(brush, x - smallerCircleRadius, y - smallerCircleRadius, smallerCircleRadius * 2, smallerCircleRadius * 2);
+                g.DrawEllipse(circlePen, x - smallerCircleRadius, y - smallerCircleRadius, smallerCircleRadius * 2, smallerCircleRadius * 2);
+                // Define the points of the hexagon
+                Point[] hexagonPoints = GetHexagonPoints(x, y, hexSize);
+
+                // Draw the hexagon
+                Brush fillBrush = Brushes.Black;
+                g.FillPolygon(fillBrush, hexagonPoints);
             }
 
             DrawArrow(g, arrowType, x, y);
@@ -209,6 +229,20 @@ namespace Bahtinov_Collimator.CSheet
             // Dispose of the created objects
             originalImage.Dispose();
             bitmap.Dispose();
+        }
+
+        private Point[] GetHexagonPoints(int x, int y, int size)
+        {
+            Point[] points = new Point[6];
+
+            points[0] = new Point(x + size, y); // Top-right
+            points[1] = new Point(x + size / 2, y + (int)(size * Math.Sqrt(3) / 2)); // Bottom-right
+            points[2] = new Point(x - size / 2, y + (int)(size * Math.Sqrt(3) / 2)); // Bottom-left
+            points[3] = new Point(x - size, y); // Top-left
+            points[4] = new Point(x - size / 2, y - (int)(size * Math.Sqrt(3) / 2)); // Top-bottom
+            points[5] = new Point(x + size / 2, y - (int)(size * Math.Sqrt(3) / 2)); // Top-right
+
+            return points;
         }
 
         private void closeButton_Click(object sender, EventArgs e)

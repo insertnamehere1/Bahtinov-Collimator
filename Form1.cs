@@ -22,6 +22,7 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
+using Bahtinov_Collimator.CSheet;
 using System;
 using System.Deployment.Application;
 using System.Drawing;
@@ -54,6 +55,7 @@ namespace Bahtinov_Collimator
         private bool menuActive = false;
         private float[] errorValues = new float[3];
         private int imageCount;
+        private CSheet.CheatSheet cheatSheet;
 
 
         // settings
@@ -768,9 +770,19 @@ namespace Bahtinov_Collimator
 
         private void cheatSheetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CSheet.CheatSheet cheatSheet = new CSheet.CheatSheet(this);
-            cheatSheet.errorValues(errorValues);
-            cheatSheet.Show(this);
+            if (cheatSheet == null || cheatSheet.IsDisposed)
+            {
+                cheatSheet = new CSheet.CheatSheet(this);
+                cheatSheet.errorValues(errorValues);
+                cheatSheet.Show(this);
+                cheatSheet.FormClosed += CheatSheet_FormClosed;
+            }
+        }
+
+        private void CheatSheet_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            // Set cheatSheet instance to null when the form is closed
+            cheatSheet = null;
         }
 
         public float[] getErrorValues() 
