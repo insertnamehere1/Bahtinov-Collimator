@@ -63,7 +63,7 @@ namespace Bahtinov_Collimator
             ArrangeTribahtinovAngles();
 
             // check if this is a single or triple bahtinov pattern
-            if (CheckAngleBetween(LineAngles[1], this.LineAngles[4], 55.0f, 65.0f) &&
+            if (CheckAngleBetween(LineAngles[1], LineAngles[4], 55.0f, 65.0f) &&
                 CheckAngleBetween(lineAngles[4], lineAngles[7], 55.0f, 65.0f))
             {
                 // it is a tribahtinov mask just return, nothing else to do
@@ -109,7 +109,7 @@ namespace Bahtinov_Collimator
             this.BubbleSort();
 
             // check first lines and reverse if needed 
-            if (!CheckAngleDifference(this.LineAngles[0], this.lineAngles[2], 50.0f))
+            if (!CheckAngleDifference(this.LineAngles[0], this.lineAngles[2], 40.0f))
             {
                 if (CheckAngleDifference(this.LineAngles[0], this.lineAngles[1], 25.0f))
                     ReverseAngle(this.LineAngles.Length - 1);
