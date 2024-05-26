@@ -83,7 +83,7 @@
             // 
             // StartButton
             // 
-            this.StartButton.Location = new System.Drawing.Point(41, 359);
+            this.StartButton.Location = new System.Drawing.Point(41, 362);
             this.StartButton.Name = "StartButton";
             this.StartButton.Size = new System.Drawing.Size(100, 39);
             this.StartButton.TabIndex = 0;
@@ -523,8 +523,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(605, 475);
-            this.MinimumSize = new System.Drawing.Size(605, 475);
             this.Name = "Form1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Bahtinov Collimator";

@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
     namespace Bahtinov_Collimator
@@ -78,6 +79,17 @@ using System.Windows.Forms;
             isDragging = false;
             Invalidate();
             this.Close();
+        }
+
+        public static float GetScalingFactor()
+        {
+            using (Graphics graphics = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                // Get the current DPI
+                float dpiX = graphics.DpiX;
+                // Calculate the scaling factor
+                return dpiX / 96f;
+            }
         }
 
         public static Bitmap GetScreenImage()

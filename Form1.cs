@@ -29,6 +29,7 @@ using System.Deployment.Application;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
@@ -66,9 +67,14 @@ namespace Bahtinov_Collimator
         private int focalLengthSetting;
         private double pixelSizeSetting;
 
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern bool SetProcessDPIAware();
+
         public Form1()
         {
+            SetProcessDPIAware();
             InitializeComponent();
+
             screenCapture = new ScreenCap();
             settingsDialog = new Settings();
 
@@ -98,6 +104,13 @@ namespace Bahtinov_Collimator
             // initialize showFocus to true
             showFocus = Enumerable.Repeat(true, showFocus.Length).ToArray();
             imageCount = 0;
+
+            // rescale form for different windows scaling values
+            float scalingFactor = ScreenCap.GetScalingFactor();
+
+            int newHeight = pictureBox.Location.Y + pictureBox.Height + (int)(50 * scalingFactor);
+            int newWidth = pictureBox.Location.X + pictureBox.Width + (int)(25 * scalingFactor);
+            this.Size = new System.Drawing.Size(newWidth, newHeight);
         }
 
         private void LoadSettings()
@@ -847,7 +860,6 @@ namespace Bahtinov_Collimator
         {
             return imageCount;
         }
-
     }
 }
 
