@@ -69,7 +69,7 @@
             // 
             this.logoPictureBox.BackColor = System.Drawing.Color.White;
             this.logoPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.logoPictureBox.Image = global::Bahtinov_Collimator.Properties.Resources.focusIcon;
+            this.logoPictureBox.Image = global::Bahtinov_Collimator.Properties.Resources.focusImage;
             this.logoPictureBox.Location = new System.Drawing.Point(3, 3);
             this.logoPictureBox.Name = "logoPictureBox";
             this.tableLayoutPanel.SetRowSpan(this.logoPictureBox, 6);
