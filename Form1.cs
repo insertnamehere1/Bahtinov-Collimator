@@ -860,6 +860,11 @@ namespace Bahtinov_Collimator
         {
             return imageCount;
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 
