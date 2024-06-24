@@ -201,14 +201,14 @@ namespace Bahtinov_Collimator
             if (bufferedPicture == null)
             {
                 bufferedPicture = new Bitmap(currentPicture);
-                paddedImage = new Bitmap(ImageProcessing.PadAndCenterBitmap(currentPicture, pictureBox));
+                paddedImage = new Bitmap(ImageProcessing.PadAndCenterCircularBitmap(currentPicture, pictureBox));
                 lineData = ImageProcessing.FindBrightestLines(paddedImage, lineCount);
                 lineData.Sort();
             }
             else
             {
                 bufferedPicture = new Bitmap(currentPicture);
-                paddedImage = new Bitmap(ImageProcessing.PadAndCenterBitmap(currentPicture, pictureBox));
+                paddedImage = new Bitmap(ImageProcessing.PadAndCenterCircularBitmap(currentPicture, pictureBox));
                 lineData = ImageProcessing.FindSubpixelLines(paddedImage, lineData.LineValue.Length, lineData);
             }
 
@@ -632,8 +632,6 @@ namespace Bahtinov_Collimator
             if (lastFocusErrorValue != 0.0f && Math.Abs(lastFocusErrorValue - x_intersectionOfLines1and3) > 100)
             {
                 lastFocusErrorValue = 0.0f;
-                LoadImageLost();
-                Reset();
                 return false;
             }
             lastFocusErrorValue = x_intersectionOfLines1and3;
@@ -643,7 +641,7 @@ namespace Bahtinov_Collimator
             {
                 // recentre image using the X,Y location of the intersection
                 Rectangle imageArea = screenCapture.GetImageCoordinates();
-
+                
                 imageArea.X -= (int)((((double)(starImage.Width / 2) - ((double)x_intersectionOfLines1and3 + (double)line2_X_Perpendicular) / 2.0)));
                 imageArea.Y += (int)((((double)(starImage.Height / 2) - ((double)y_intersectionOfLines1and3 + (double)line2_Y_Perpendicular) / 2.0)));
 

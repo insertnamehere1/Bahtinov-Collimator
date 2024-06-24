@@ -30,9 +30,9 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Threading;
 using System.Security.Cryptography;
 using System.Linq;
+using System.Drawing.Drawing2D;
 
 namespace Bahtinov_Collimator
 {
@@ -377,7 +377,7 @@ namespace Bahtinov_Collimator
                     byte greenValue = starImageArray[pixelIndex + 1];
                     byte blueValue = starImageArray[pixelIndex + 2];
 
-                    starArray2D[x, y] =  redValue + greenValue + blueValue;
+                    starArray2D[x, y] = redValue + greenValue + blueValue;
                     starArray2D[x, y] *= divisionFactor;
                     starArray2D[x, y] = (float)Math.Sqrt(starArray2D[x, y]);
                     pixelValueTotal += starArray2D[x, y];
@@ -434,11 +434,21 @@ namespace Bahtinov_Collimator
                         // This line calculates the interpolated value at the current position (index2 and rowIndex) using the surrounding values in the starArray2D. It performs bilinear interpolation
                         // to estimate the value based on the fractional parts (rotatedXFraction and rotatedYFraction) and the four surrounding integer indices (rotatedXRoundedDown, rotatedXRoundedUp,
                         // rotatedYRoundedDown, and rotatedYRoundedUp).
-                        imageArray[index2, index3] = (float)(starArray2D[rotatedXRoundedDown, rotatedYRoundedDown] * (1.0 - (double)rotatedXFraction) *
-                                                        (1.0 - rotatedYFraction) + starArray2D[rotatedXRoundedUp, rotatedYRoundedDown] *
-                                                        rotatedXFraction * (1.0 - rotatedYFraction) + starArray2D[rotatedXRoundedUp, rotatedYRoundedUp] *
-                                                        rotatedXFraction * rotatedYFraction + starArray2D[rotatedXRoundedDown, rotatedYRoundedUp] *
-                                                        (1.0 - rotatedXFraction) * rotatedYFraction);
+                        float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
+                        float value2 = starArray2D[rotatedXRoundedUp, rotatedYRoundedDown];
+                        float value3 = starArray2D[rotatedXRoundedUp, rotatedYRoundedUp];
+                        float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedUp];
+                        double xFraction = rotatedXFraction;
+                        double yFraction = rotatedYFraction;
+                        double oneMinusXFraction = 1.0 - rotatedXFraction;
+                        double oneMinusYFraction = 1.0 - rotatedYFraction;
+
+                        imageArray[index2, index3] = (float)(
+                            value1 * oneMinusXFraction * oneMinusYFraction +
+                            value2 * xFraction * oneMinusYFraction +
+                            value3 * xFraction * yFraction +
+                            value4 * oneMinusXFraction * yFraction
+                        );
 
                         index3++;  // next column
                     }
@@ -508,130 +518,18 @@ namespace Bahtinov_Collimator
             return bahtinovLines;
         }
 
-        public static Color CalculateBorderAverage(Bitmap bitmap)
-        {
-            int borderSize = 10;
-            int width = bitmap.Width;
-            int height = bitmap.Height;
-
-            int totalPixels = (2 * width + 2 * (height - 2)) * borderSize; // Total number of pixels in the border
-
-            int redSum = 0;
-            int greenSum = 0;
-            int blueSum = 0;
-
-            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-
-            int stride = bitmapData.Stride;
-            IntPtr scan0 = bitmapData.Scan0;
-
-            // Calculate the border region bounds
-            int topBorder = borderSize;
-            int bottomBorder = height - borderSize;
-            int leftBorder = borderSize;
-            int rightBorder = width - borderSize;
-
-            Parallel.For(0, height, y =>
-            {
-                unsafe
-                {
-                    byte* p = (byte*)(void*)scan0;
-
-                    for (int x = 0; x < width; x++)
-                    {
-                        // Check if the pixel is on the border
-                        if (y < topBorder || y >= bottomBorder || (x < leftBorder && y >= leftBorder && y < rightBorder) || (x >= rightBorder && y >= leftBorder && y < rightBorder))
-                        {
-                            // Calculate the pixel position
-                            int offset = y * stride + x * 4;
-
-                            // Read the RGB values directly from memory
-                            byte blue = p[offset];
-                            byte green = p[offset + 1];
-                            byte red = p[offset + 2];
-
-                            // Accumulate the color sums
-                            Interlocked.Add(ref blueSum, blue);
-                            Interlocked.Add(ref greenSum, green);
-                            Interlocked.Add(ref redSum, red);
-                        }
-                    }
-                }
-            });
-
-            bitmap.UnlockBits(bitmapData);
-
-            // Calculate the average values for red, green, and blue
-            int redAverage = redSum / totalPixels;
-            int greenAverage = greenSum / totalPixels;
-            int blueAverage = blueSum / totalPixels;
-
-            return Color.FromArgb(redAverage, greenAverage, blueAverage);
-        }
-
-        public static Bitmap SubtractMeanFromImage(Color meanColor, Bitmap image)
-        {
-            Bitmap modifiedImage = new Bitmap(image.Width, image.Height);
-
-            // Lock the bitmap data of the original and modified images
-            BitmapData originalData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-            BitmapData modifiedData = modifiedImage.LockBits(new Rectangle(0, 0, modifiedImage.Width, modifiedImage.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-
-            // Calculate the byte size of a single pixel (4 bytes for ARGB)
-            int pixelSize = 4;
-
-            unsafe
-            {
-                byte* originalPtr = (byte*)originalData.Scan0;
-                byte* modifiedPtr = (byte*)modifiedData.Scan0;
-
-                int originalStride = originalData.Stride;
-                int modifiedStride = modifiedData.Stride;
-
-                for(int y = 0; y < image.Height; y++)
-                {
-                    byte* originalRow = originalPtr + (y * originalStride);
-                    byte* modifiedRow = modifiedPtr + (y * modifiedStride);
-
-                    Parallel.For(0, image.Width, x =>
-                    {
-                        byte* originalPixel = originalRow + (x * pixelSize);
-                        byte* modifiedPixel = modifiedRow + (x * pixelSize);
-
-                        int newR = originalPixel[2] - meanColor.R;
-                        int newG = originalPixel[1] - meanColor.G;
-                        int newB = originalPixel[0] - meanColor.B;
-
-                        newR = Math.Max(newR, 0);
-                        newG = Math.Max(newG, 0);
-                        newB = Math.Max(newB, 0);
-
-                        modifiedPixel[0] = (byte)newB;
-                        modifiedPixel[1] = (byte)newG;
-                        modifiedPixel[2] = (byte)newR;
-                        modifiedPixel[3] = originalPixel[3]; // Preserve the alpha channel
-                    });
-                }
-            }
-
-            image.UnlockBits(originalData);
-            modifiedImage.UnlockBits(modifiedData);
-
-            return modifiedImage;
-        }
-
-        public static Bitmap PadAndCenterBitmap(Bitmap originalBitmap, PictureBox pictureBox)
+        public static Bitmap PadAndCenterCircularBitmap(Bitmap originalBitmap, PictureBox pictureBox)
         {
             Color fillValue;
 
-            // do we need padding
+            // Check if padding is needed
             if ((originalBitmap.Width < pictureBox.Width) || (originalBitmap.Height < pictureBox.Height))
             {
-                fillValue = CalculateBorderAverage(originalBitmap);
+                fillValue = CalculateCircularBorderAverage(originalBitmap);
                 originalBitmap = SubtractMeanFromImage(fillValue, originalBitmap);
             }
-            
-            fillValue = CalculateBorderAverage(originalBitmap);
+
+            fillValue = CalculateCircularBorderAverage(originalBitmap);
 
             Brush brush = new SolidBrush(fillValue);
 
@@ -640,17 +538,100 @@ namespace Bahtinov_Collimator
 
             using (Graphics graphics = Graphics.FromImage(paddedBitmap))
             {
+                // Fill the entire background with the average color
                 graphics.FillRectangle(brush, 0, 0, paddedBitmap.Width, paddedBitmap.Height);
 
                 // Calculate padding values
                 int horizontalPadding = (paddedBitmap.Width - originalBitmap.Width) / 2;
                 int verticalPadding = (paddedBitmap.Height - originalBitmap.Height) / 2;
 
-                // Draw original bitmap onto larger bitmap with padding
-                graphics.DrawImage(originalBitmap, horizontalPadding, verticalPadding);
+                // Draw the original circular bitmap onto the larger bitmap with padding
+                using (GraphicsPath path = new GraphicsPath())
+                {
+                    path.AddEllipse(horizontalPadding, verticalPadding, originalBitmap.Width, originalBitmap.Height);
+                    graphics.SetClip(path);
+                    graphics.DrawImage(originalBitmap, horizontalPadding, verticalPadding, originalBitmap.Width, originalBitmap.Height);
+                    graphics.ResetClip();
+                }
             }
 
             return paddedBitmap;
+        }
+
+        private static Color CalculateCircularBorderAverage(Bitmap bitmap)
+        {
+            float totalBrightness = 0;
+            int pixelCount = 0;
+            int width = bitmap.Width;
+            int height = bitmap.Height;
+
+            int centerX = width / 2;
+            int centerY = height / 2;
+            int radius = Math.Min(centerX, centerY) - 2;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (IsOnCircleBorder(centerX, centerY, radius, x, y))
+                    {
+                        Color pixelColor = bitmap.GetPixel(x, y);
+                        totalBrightness += pixelColor.GetBrightness();
+                        pixelCount++;
+                    }
+                }
+            }
+
+            float averageBrightness = totalBrightness / pixelCount;
+            int averageGrayValue = (int)(averageBrightness * 255);
+            return Color.FromArgb(averageGrayValue, averageGrayValue, averageGrayValue);
+        }
+
+        private static bool IsOnCircleBorder(int centerX, int centerY, int radius, int x, int y)
+        {
+            int dx = x - centerX;
+            int dy = y - centerY;
+            double distance = Math.Sqrt(dx * dx + dy * dy);
+            return Math.Abs(distance - radius) <= 1; // Adjust the tolerance as needed
+        }
+
+        private static Bitmap SubtractMeanFromImage(Color meanColor, Bitmap bitmap)
+        {
+            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
+            Bitmap newBitmap = new Bitmap(bitmap.Width, bitmap.Height, bitmap.PixelFormat);
+
+            unsafe
+            {
+                int bytesPerPixel = Bitmap.GetPixelFormatSize(bitmap.PixelFormat) / 8;
+                int heightInPixels = bitmapData.Height;
+                int widthInBytes = bitmapData.Width * bytesPerPixel;
+                byte* ptr = (byte*)bitmapData.Scan0;
+
+                for (int y = 0; y < heightInPixels; y++)
+                {
+                    byte* currentLine = ptr + (y * bitmapData.Stride);
+
+                    for (int x = 0; x < widthInBytes; x += bytesPerPixel)
+                    {
+                        int b = currentLine[x];
+                        int g = currentLine[x + 1];
+                        int r = currentLine[x + 2];
+
+                        // Subtract mean color components
+                        r = Math.Max(0, r - meanColor.R);
+                        g = Math.Max(0, g - meanColor.G);
+                        b = Math.Max(0, b - meanColor.B);
+
+                        currentLine[x] = (byte)b;
+                        currentLine[x + 1] = (byte)g;
+                        currentLine[x + 2] = (byte)r;
+                    }
+                }
+            }
+
+            bitmap.UnlockBits(bitmapData);
+
+            return bitmap;
         }
     }
 }
