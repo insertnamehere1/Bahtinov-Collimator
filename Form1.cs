@@ -28,9 +28,11 @@ using System;
 using System.Deployment.Application;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Bahtinov_Collimator
 {
@@ -59,7 +61,7 @@ namespace Bahtinov_Collimator
         private float[] errorValues = new float[3];
         private int imageCount;
         private CSheet.CheatSheet cheatSheet;
-
+        private Point currentCentre;
 
         // settings
         private readonly Settings settingsDialog;
@@ -193,6 +195,9 @@ namespace Bahtinov_Collimator
             {
                 return;
             }
+
+            // re centre the image if the star has moved
+            currentCentre = RecentreImage(currentPicture);
 
             // accumulating images
             imageCount++;
@@ -629,25 +634,94 @@ namespace Bahtinov_Collimator
                 graphics.DrawString((errorSign * line2ToIntersectDistance).ToString("F1"), font2, (Brush)solidBrush, (PointF)textLocation);
 
             // check if the images has moved substantially indicating the image has been lost
-            if (lastFocusErrorValue != 0.0f && Math.Abs(lastFocusErrorValue - x_intersectionOfLines1and3) > 100)
+            if (lastFocusErrorValue != 0.0f && Math.Abs(lastFocusErrorValue - x_intersectionOfLines1and3) > 200)
             {
                 lastFocusErrorValue = 0.0f;
                 return false;
             }
             lastFocusErrorValue = x_intersectionOfLines1and3;
 
+            return true;
+        }
+
+        private Point RecentreImage(Bitmap image)
+        {
             // centre the image around the intersection of line group 0
-            if (group == 0)
+            // recentre image using the X,Y location of the intersection
+            Rectangle imageArea = screenCapture.GetImageCoordinates();
+
+            Point boxPoint = FindBrightestAreaCenter(image, 5);
+            int delta_X = (int)(image.Width / 2.0) - boxPoint.X;
+            int delta_Y = (int)(image.Height / 2.0) - boxPoint.Y;
+
+            if (delta_X > 10 || delta_Y > 10 || delta_X < -10 || delta_Y < -10)
             {
-                // recentre image using the X,Y location of the intersection
-                Rectangle imageArea = screenCapture.GetImageCoordinates();
-                
-                imageArea.X -= (int)((((double)(starImage.Width / 2) - ((double)x_intersectionOfLines1and3 + (double)line2_X_Perpendicular) / 2.0)));
-                imageArea.Y += (int)((((double)(starImage.Height / 2) - ((double)y_intersectionOfLines1and3 + (double)line2_Y_Perpendicular) / 2.0)));
+
+                imageArea.X -= delta_X;
+                imageArea.Y -= delta_Y;
 
                 screenCapture.SetImageCoordinates(imageArea);
             }
-            return true;
+
+            return boxPoint;
+        }
+
+        public Point FindBrightestAreaCenter(Bitmap bitmap, int blockSize = 10)
+        {
+            int width = bitmap.Width;
+            int height = bitmap.Height;
+            int bestX = 0, bestY = 0;
+            float maxIntensity = float.MinValue;
+
+            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+            int stride = bitmapData.Stride;
+            IntPtr scan0 = bitmapData.Scan0;
+
+            unsafe
+            {
+                byte* p = (byte*)(void*)scan0;
+
+                for (int y = 0; y < height; y += blockSize)
+                {
+                    for (int x = 0; x < width; x += blockSize)
+                    {
+                        float intensity = CalculateBlockIntensity(p, x, y, blockSize, width, height, stride);
+                        if (intensity > maxIntensity)
+                        {
+                            maxIntensity = intensity;
+                            bestX = x;
+                            bestY = y;
+                        }
+                    }
+                }
+            }
+
+            bitmap.UnlockBits(bitmapData);
+
+            // Calculate the center point of the brightest block
+            int centerX = bestX + blockSize / 2;
+            int centerY = bestY + blockSize / 2;
+
+            return new Point(centerX, centerY);
+        }
+
+        private static unsafe float CalculateBlockIntensity(byte* p, int startX, int startY, int blockSize, int width, int height, int stride)
+        {
+            float totalIntensity = 0;
+            int count = 0;
+
+            for (int y = startY; y < startY + blockSize && y < height; y++)
+            {
+                for (int x = startX; x < startX + blockSize && x < width; x++)
+                {
+                    byte* pixel = p + y * stride + x * 3;
+                    float intensity = (pixel[2] + pixel[1] + pixel[0]) / 3.0f; // RGB order
+                    totalIntensity += intensity;
+                    count++;
+                }
+            }
+
+            return totalIntensity / count;
         }
 
         private void LoadImageLost()
@@ -857,11 +931,6 @@ namespace Bahtinov_Collimator
         public int getImageCount()
         {
             return imageCount;
-        }
-
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

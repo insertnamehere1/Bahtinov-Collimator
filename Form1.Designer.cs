@@ -74,7 +74,6 @@
             this.AbsoluteFocusErrorLabel3 = new System.Windows.Forms.Label();
             this.FocusErrorLabel3 = new System.Windows.Forms.Label();
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.label14 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.RedGroupBox.SuspendLayout();
             this.GreenGroupBox.SuspendLayout();
@@ -119,7 +118,6 @@
             // 
             // UpdateTimer
             // 
-            this.UpdateTimer.Interval = 10;
             this.UpdateTimer.Tick += new System.EventHandler(this.UpdateTimer_Tick);
             // 
             // menuStrip1
@@ -202,7 +200,7 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
             this.aboutToolStripMenuItem.Text = "Help";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+
             // 
             // helpToolStripMenuItem
             // 
@@ -544,21 +542,11 @@
             this.pictureBox.TabIndex = 6;
             this.pictureBox.TabStop = false;
             // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(55, 509);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(51, 16);
-            this.label14.TabIndex = 27;
-            this.label14.Text = "label14";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(785, 537);
-            this.Controls.Add(this.label14);
             this.Controls.Add(this.BlueGroupBox);
             this.Controls.Add(this.GreenGroupBox);
             this.Controls.Add(this.RedGroupBox);
@@ -633,7 +621,6 @@
         private System.Windows.Forms.ToolStripMenuItem donateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cheatSheetToolStripMenuItem;
-        private System.Windows.Forms.Label label14;
     }
 }
 
