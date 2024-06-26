@@ -83,8 +83,8 @@
             // 
             // StartButton
             // 
-            this.StartButton.Location = new System.Drawing.Point(55, 446);
-            this.StartButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.StartButton.Location = new System.Drawing.Point(54, 519);
+            this.StartButton.Margin = new System.Windows.Forms.Padding(4);
             this.StartButton.Name = "StartButton";
             this.StartButton.Size = new System.Drawing.Size(133, 48);
             this.StartButton.TabIndex = 0;
@@ -200,33 +200,32 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
             this.aboutToolStripMenuItem.Text = "Help";
-
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.helpToolStripMenuItem.Text = "Help";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
             // checkForUpdatesToolStripMenuItem
             // 
             this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.checkForUpdatesToolStripMenuItem.Text = "Check for Updates";
             this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
             // 
             // donateToolStripMenuItem
             // 
             this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
-            this.donateToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+            this.donateToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.donateToolStripMenuItem.Text = "Buy me a Coffee?";
             this.donateToolStripMenuItem.Click += new System.EventHandler(this.DonateToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem2
             // 
             this.aboutToolStripMenuItem2.Name = "aboutToolStripMenuItem2";
-            this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(213, 26);
+            this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(224, 26);
             this.aboutToolStripMenuItem2.Text = "About";
             this.aboutToolStripMenuItem2.Click += new System.EventHandler(this.AboutToolStripMenuItem2_Click);
             // 
@@ -256,9 +255,9 @@
             this.RedGroupBox.Controls.Add(this.FocusErrorLabel1);
             this.RedGroupBox.ForeColor = System.Drawing.Color.Brown;
             this.RedGroupBox.Location = new System.Drawing.Point(16, 33);
-            this.RedGroupBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.RedGroupBox.Margin = new System.Windows.Forms.Padding(4);
             this.RedGroupBox.Name = "RedGroupBox";
-            this.RedGroupBox.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.RedGroupBox.Padding = new System.Windows.Forms.Padding(4);
             this.RedGroupBox.Size = new System.Drawing.Size(221, 114);
             this.RedGroupBox.TabIndex = 21;
             this.RedGroupBox.TabStop = false;
@@ -326,9 +325,9 @@
             this.GreenGroupBox.Controls.Add(this.FocusErrorLabel2);
             this.GreenGroupBox.ForeColor = System.Drawing.Color.DarkGreen;
             this.GreenGroupBox.Location = new System.Drawing.Point(16, 160);
-            this.GreenGroupBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.GreenGroupBox.Margin = new System.Windows.Forms.Padding(4);
             this.GreenGroupBox.Name = "GreenGroupBox";
-            this.GreenGroupBox.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.GreenGroupBox.Padding = new System.Windows.Forms.Padding(4);
             this.GreenGroupBox.Size = new System.Drawing.Size(221, 114);
             this.GreenGroupBox.TabIndex = 26;
             this.GreenGroupBox.TabStop = false;
@@ -434,9 +433,9 @@
             this.BlueGroupBox.Controls.Add(this.FocusErrorLabel3);
             this.BlueGroupBox.ForeColor = System.Drawing.Color.DarkBlue;
             this.BlueGroupBox.Location = new System.Drawing.Point(16, 287);
-            this.BlueGroupBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BlueGroupBox.Margin = new System.Windows.Forms.Padding(4);
             this.BlueGroupBox.Name = "BlueGroupBox";
-            this.BlueGroupBox.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BlueGroupBox.Padding = new System.Windows.Forms.Padding(4);
             this.BlueGroupBox.Size = new System.Drawing.Size(221, 114);
             this.BlueGroupBox.TabIndex = 26;
             this.BlueGroupBox.TabStop = false;
@@ -535,9 +534,9 @@
             this.pictureBox.BackColor = System.Drawing.Color.Black;
             this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox.Location = new System.Drawing.Point(245, 38);
-            this.pictureBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(533, 492);
+            this.pictureBox.Size = new System.Drawing.Size(533, 567);
             this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox.TabIndex = 6;
             this.pictureBox.TabStop = false;
@@ -546,7 +545,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(785, 537);
+            this.ClientSize = new System.Drawing.Size(785, 614);
             this.Controls.Add(this.BlueGroupBox);
             this.Controls.Add(this.GreenGroupBox);
             this.Controls.Add(this.RedGroupBox);
@@ -556,11 +555,12 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Bahtinov Collimator";
+            this.MouseEnter += new System.EventHandler(this.Form1_MouseEnter);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.RedGroupBox.ResumeLayout(false);

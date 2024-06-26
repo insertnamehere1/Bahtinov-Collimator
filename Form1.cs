@@ -23,6 +23,7 @@
 //SOFTWARE.
 
 using Bahtinov_Collimator.CSheet;
+using Bahtinov_Collimator.Sound;
 using Microsoft.Win32;
 using System;
 using System.Deployment.Application;
@@ -30,9 +31,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Bahtinov_Collimator
 {
@@ -62,6 +61,15 @@ namespace Bahtinov_Collimator
         private int imageCount;
         private CSheet.CheatSheet cheatSheet;
         private Point currentCentre;
+        private bool lastRedFocus = false;
+
+        private Timer soundTimer;
+        private int lastSoundOut = 0;
+        private SoundControl soundOut;
+
+        private bool redSoundPlayed = false;
+        private bool greenSoundPlayed = false;
+        private bool blueSoundPlayed = false;
 
         // settings
         private readonly Settings settingsDialog;
@@ -86,9 +94,15 @@ namespace Bahtinov_Collimator
             mousePositionTimer.Tick += MousePositionTimer_Tick;
             mousePositionTimer.Start();
 
+            // sound setup
+            soundOut = new SoundControl();
+            soundTimer = new Timer();
+            soundTimer.Interval = 2000; // 2000 milliseconds
+            soundTimer.Tick += SoundTimer_Tick;
+            
             RedGroupBoxScreenBounds = RedGroupBox.Bounds;
             GreenGroupBoxScreenBounds = GreenGroupBox.Bounds;
-            BlueGroupBoxScreenBounds = BlueGroupBox.Bounds;
+            BlueGroupBoxScreenBounds = BlueGroupBox.Bounds; 
 
             LoadSettings();
 
@@ -121,6 +135,13 @@ namespace Bahtinov_Collimator
             apertureSetting = Properties.Settings.Default.Aperture;
             focalLengthSetting = Properties.Settings.Default.FocalLength;
             pixelSizeSetting = Properties.Settings.Default.PixelSize;
+
+            if (Properties.Settings.Default.VoiceEnabled)
+            {
+                SoundOnOff(true);
+            }
+            else
+                SoundOnOff(false);
         }
 
         private void Reset()
@@ -135,14 +156,14 @@ namespace Bahtinov_Collimator
         }
 
         private static bool IsNightLightEnabled()
-        { 
+        {
             const string BlueLightReductionStateValue = @"SOFTWARE\Microsoft\Windows\CurrentVersion\CloudStore\Store\DefaultAccount\Current\default$windows.data.bluelightreduction.settings\windows.data.bluelightreduction.settings";
             const string BlueLightReductionStateKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\CloudStore\Store\DefaultAccount\Current\default$windows.data.bluelightreduction.bluelightreductionstate\windows.data.bluelightreduction.bluelightreductionstate";
 
             using (var key = Registry.CurrentUser.OpenSubKey(BlueLightReductionStateKey))
             {
                 var data = key?.GetValue("Data");
-        
+
                 if (data is null)
                     return false;
 
@@ -221,7 +242,7 @@ namespace Bahtinov_Collimator
             {
                 GreenGroupBox.Visible = true;
                 BlueGroupBox.Visible = true;
-                RedGroupBox.ForeColor = nightEnable ?  Color.Black : Color.Red;
+                RedGroupBox.ForeColor = nightEnable ? Color.Black : Color.Red;
             }
             else
             {
@@ -260,7 +281,7 @@ namespace Bahtinov_Collimator
                 {
                     Reset();
                     MessageBox.Show("Unable to detect Bahtinov image lines", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                } 
+                }
             }
 
             forceUpdate = false;
@@ -286,12 +307,17 @@ namespace Bahtinov_Collimator
                     return;
                 }
 
+                soundTimer.Start();
+                imageCount = 0;
+                lastSoundOut = 0;
                 screenCaptureRunningFlag = true;
                 UpdateTimer.Start();
                 StartButton.Text = "Stop";
             }
             else
             {
+                soundTimer.Stop();
+                soundOut.StopAndFlush();
                 UpdateTimer.Stop();
                 cheatSheetToolStripMenuItem.Visible = false;
                 screenCaptureRunningFlag = false;
@@ -330,10 +356,9 @@ namespace Bahtinov_Collimator
             float second_lineEnd_X = 0.0f;
             float second_lineEnd_Y = 0.0f;
 
-            int penWidth = 1;
+            int penWidth = 2;
             Pen dashPen = new Pen(Color.Yellow, (float)penWidth) { DashStyle = DashStyle.Dash };
 
-            penWidth = 2;
             Pen largeDashPen = new Pen(Color.Black, penWidth) { DashStyle = DashStyle.Dash };
             Pen largeSolidPen = new Pen(Color.Yellow, (float)penWidth) { DashStyle = DashStyle.Solid };
 
@@ -477,7 +502,6 @@ namespace Bahtinov_Collimator
             {
                 lastFocusErrorValue = 0.0f;
                 LoadImageLost();
-                Reset();
                 return false;
             }
 
@@ -548,19 +572,19 @@ namespace Bahtinov_Collimator
                     errorPen.Color = nightEnable ? Color.Red : Color.Red;
                     break;
                 case 1:
-                    errorPen.Color = nightEnable ? Color.Red : Color.Green;
+                    errorPen.Color = nightEnable ? Color.Green : Color.Green;
                     break;
                 case 2:
-                    errorPen.Color = nightEnable ? Color.Red : Color.Blue;
+                    errorPen.Color = nightEnable ? Color.Blue : Color.Blue;
                     break;
                 default:
-                    errorPen.Color = nightEnable ? Color.White : Color.Green;
+                    errorPen.Color = nightEnable ? Color.White : Color.White;
                     break;
             }
 
             // draw the circular error marker
-            errorPen.Width = (float)penWidth * 2;
-            int circleRadius = penWidth * 32;
+            errorPen.Width = 5;
+            int circleRadius = 64;
 
             if (showFocus[group] == true)
                 graphics.DrawEllipse(errorPen, errorMarker_X - (float)circleRadius, (float)height - errorMarker_Y - (float)circleRadius + (float)yOffset, (float)(circleRadius * 2), (float)(circleRadius * 2));
@@ -810,29 +834,38 @@ namespace Bahtinov_Collimator
                 bool isGreenFocused = GreenGroupBoxScreenBounds.Contains(mousePosition);
                 bool isBlueFocused = BlueGroupBoxScreenBounds.Contains(mousePosition);
 
-                // Store the previous showFocus states
-                bool prevRedFocus = showFocus[0];
-                bool prevGreenFocus = showFocus[1];
-                bool prevBlueFocus = showFocus[2];
-
-                RedGroupBox.BackColor = isRedFocused ? Color.LightGray : SystemColors.Control;
-                GreenGroupBox.BackColor = isGreenFocused ? Color.LightGray : SystemColors.Control;
-                BlueGroupBox.BackColor = isBlueFocused ? Color.LightGray : SystemColors.Control;
-
+                // tri-bahtinov mask
                 if (lineData.LineAngles.Length != 3)
                 {
+                    // Store the previous showFocus states
+                    bool prevRedFocus = showFocus[0];
+                    bool prevGreenFocus = showFocus[1];
+                    bool prevBlueFocus = showFocus[2];
+
+                    RedGroupBox.BackColor = isRedFocused ? Color.LightGray : SystemColors.Control;
+                    GreenGroupBox.BackColor = isGreenFocused ? Color.LightGray : SystemColors.Control;
+                    BlueGroupBox.BackColor = isBlueFocused ? Color.LightGray : SystemColors.Control;
+
+                    // this is a tri-bahtinov mask
                     showFocus[0] = isRedFocused || (!isRedFocused && !isGreenFocused && !isBlueFocused);
                     showFocus[1] = isGreenFocused || (!isRedFocused && !isGreenFocused && !isBlueFocused);
                     showFocus[2] = isBlueFocused || (!isRedFocused && !isGreenFocused && !isBlueFocused);
+
+                    // Check if the state of showFocus has changed for any group box
+                    if ((showFocus[0] != prevRedFocus) || (showFocus[1] != prevGreenFocus) || (showFocus[2] != prevBlueFocus))
+                        forceUpdate = true;
                 }
+                // bahtinov mask
                 else
                 {
+                    RedGroupBox.BackColor = isRedFocused ? Color.LightGray : SystemColors.Control;
                     showFocus[0] = true;
-                }
 
-                // Check if the state of showFocus has changed for any group box
-                if ((showFocus[0] != prevRedFocus) || (showFocus[1] != prevGreenFocus) || (showFocus[2] != prevBlueFocus))
-                    forceUpdate = true;
+                    if (isRedFocused && !lastRedFocus)
+                        forceUpdate = true;
+
+                    lastRedFocus = isRedFocused;
+                }
             }
         }
 
@@ -876,7 +909,6 @@ namespace Bahtinov_Collimator
                 if (ApplicationDeployment.IsNetworkDeployed)
                 {
                     ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
-
                     UpdateCheckInfo info = ad.CheckForDetailedUpdate();
 
                     if (info.UpdateAvailable)
@@ -887,17 +919,14 @@ namespace Bahtinov_Collimator
                             MessageBox.Show("New updates have been downloaded. Restart the application to install", "Update Available", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         else
                             MessageBox.Show("The update download failed, please try again", "Update Available", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
                     }
                     else
                         MessageBox.Show("No new updates are available", "No Updates", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
                 }
             }
             catch (Exception)
             {
                 MessageBox.Show("Unable to connect to the update server", "Network Problem", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
             }
         }
 
@@ -918,8 +947,8 @@ namespace Bahtinov_Collimator
             cheatSheet = null;
         }
 
-        public float[] getErrorValues() 
-        { 
+        public float[] getErrorValues()
+        {
             return errorValues;
         }
 
@@ -932,8 +961,69 @@ namespace Bahtinov_Collimator
         {
             return imageCount;
         }
+
+        private void SoundOnOff(bool enable)
+        {
+            if (enable)
+            {
+                soundOut.Play("voice enabled");
+                soundTimer.Start();
+            }
+            else
+            {
+                soundOut.StopAndFlush();
+                soundTimer.Stop();
+            }
+        }
+
+        private void SoundTimer_Tick(object sender, EventArgs e)
+        {
+            if (imageCount > lastSoundOut)
+            {
+                Point mousePosition = PointToClient(Control.MousePosition);
+                bool tribatMask = lineData.LineAngles.Length > 3;
+
+                if (RedGroupBoxScreenBounds.Contains(mousePosition))
+                {
+                    if (!redSoundPlayed)
+                    {
+                        soundOut.Play("Red");
+                        redSoundPlayed = true;
+                        greenSoundPlayed = false; // Reset other flags to allow re-triggering if needed
+                        blueSoundPlayed = false;
+                    }
+                    soundOut.Play(errorValues[0].ToString("F1"));
+                }
+                else if (GreenGroupBoxScreenBounds.Contains(mousePosition) && tribatMask)
+                {
+                    if (!greenSoundPlayed)
+                    {
+                        soundOut.Play("Green");
+                        greenSoundPlayed = true;
+                        redSoundPlayed = false; // Reset other flags to allow re-triggering if needed
+                        blueSoundPlayed = false;
+                    }
+                    soundOut.Play(errorValues[1].ToString("F1"));
+                }
+                else if (BlueGroupBoxScreenBounds.Contains(mousePosition) && tribatMask)
+                {
+                    if (!blueSoundPlayed)
+                    {
+                        soundOut.Play("Blue");
+                        blueSoundPlayed = true;
+                        redSoundPlayed = false; // Reset other flags to allow re-triggering if needed
+                        greenSoundPlayed = false;
+                    }
+                    soundOut.Play(errorValues[2].ToString("F1"));
+                }
+
+                lastSoundOut = imageCount;
+            }
+        }
+
+        private void Form1_MouseEnter(object sender, EventArgs e)
+        {
+            this.Activate();
+        }
     }
 }
-
-
-

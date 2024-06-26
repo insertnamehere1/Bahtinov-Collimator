@@ -12,6 +12,7 @@ namespace Bahtinov_Collimator
             ApertureTextBox.Text = Properties.Settings.Default.Aperture.ToString("F0");
             FocalLengthTextBox.Text = Properties.Settings.Default.FocalLength.ToString("F0");
             PixelSizeTextBox.Text = Properties.Settings.Default.PixelSize.ToString("F2");
+            VoiceCheckBox.Checked = Properties.Settings.Default.VoiceEnabled;
         }
 
         private void OkButton_Click(object sender, EventArgs e)
@@ -21,6 +22,7 @@ namespace Bahtinov_Collimator
                 Properties.Settings.Default.Aperture = int.Parse(ApertureTextBox.Text);
                 Properties.Settings.Default.FocalLength = int.Parse(FocalLengthTextBox.Text);
                 Properties.Settings.Default.PixelSize = float.Parse(PixelSizeTextBox.Text);
+                Properties.Settings.Default.VoiceEnabled = VoiceCheckBox.Checked;
             }
             catch 
             {
