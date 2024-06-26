@@ -1,18 +1,8 @@
-﻿using MathNet.Numerics.Random;
+﻿using Bahtinov_Collimator.Sound;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace Bahtinov_Collimator.CSheet
 {
@@ -98,7 +88,7 @@ namespace Bahtinov_Collimator.CSheet
 
             using (SolidBrush bgBrush = new SolidBrush(SystemColors.Control))
             using (SolidBrush circleBrush = new SolidBrush(Color.DarkGray))
-            using (Pen circlePen = new Pen(Color.Black,2.0f))
+            using (Pen circlePen = new Pen(Color.Black, 2.0f))
             {
                 g.FillRectangle(bgBrush, ClientRectangle);
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
@@ -129,7 +119,7 @@ namespace Bahtinov_Collimator.CSheet
         }
 
         private Arrow GetArrow(float error, bool isReverse)
-        {   
+        {
             float value = float.Parse(error.ToString("F1"));
 
             if (value > 0)
@@ -170,7 +160,7 @@ namespace Bahtinov_Collimator.CSheet
         public static void WriteValue(Graphics graphics, int x, int y, string value)
         {
             // adjust position of the text
-            x =  (float.Parse(value) < 0.0) ? x - 17 : x - 13;
+            x = (float.Parse(value) < 0.0) ? x - 17 : x - 13;
             y += 15;
 
             Font font = new Font("Arial", 12, FontStyle.Bold); // Specify the font for the text
@@ -184,14 +174,14 @@ namespace Bahtinov_Collimator.CSheet
         public void DrawArrow(Graphics graphics, Arrow arrow, int centerX, int centerY)
         {
             // minor corrections for arrow image placement
-            if(arrow == Arrow.Right)
+            if (arrow == Arrow.Right)
             {
                 centerX += 2;
                 centerY -= 10;
             }
             else
             {
-                centerX -= 3;   
+                centerX -= 3;
                 centerY -= 10;
             }
 
@@ -250,7 +240,7 @@ namespace Bahtinov_Collimator.CSheet
             updateTimer.Stop();
             this.Close();
         }
-        
+
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             pictureBox1.Invalidate();
@@ -281,7 +271,7 @@ namespace Bahtinov_Collimator.CSheet
         internal void errorValues(float[] errorValues)
         {
             redError = errorValues[0];
-            greenError = errorValues[1];    
+            greenError = errorValues[1];
             blueError = errorValues[2];
         }
 
