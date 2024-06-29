@@ -217,26 +217,19 @@ namespace Bahtinov_Collimator
                 return;
             }
 
-            // re centre the image if the star has moved
-            currentCentre = RecentreImage(currentPicture);
-
-            // accumulating images
+            // count accumulating images
             imageCount++;
 
-            // is this the first pass?
+            paddedImage = new Bitmap(ImageProcessing.PadAndCenterCircularBitmap(currentPicture, pictureBox));
+
             if (bufferedPicture == null)
             {
-                bufferedPicture = new Bitmap(currentPicture);
-                paddedImage = new Bitmap(ImageProcessing.PadAndCenterCircularBitmap(currentPicture, pictureBox));
                 lineData = ImageProcessing.FindBrightestLines(paddedImage, lineCount);
                 lineData.Sort();
             }
-            else
-            {
-                bufferedPicture = new Bitmap(currentPicture);
-                paddedImage = new Bitmap(ImageProcessing.PadAndCenterCircularBitmap(currentPicture, pictureBox));
-                lineData = ImageProcessing.FindSubpixelLines(paddedImage, lineData.LineValue.Length, lineData);
-            }
+            
+            lineData = ImageProcessing.FindSubpixelLines(paddedImage, lineData.LineValue.Length, lineData);
+            bufferedPicture = new Bitmap(currentPicture);
 
             if (lineData.LineAngles.Length > 3)
             {
@@ -283,6 +276,9 @@ namespace Bahtinov_Collimator
                     MessageBox.Show("Unable to detect Bahtinov image lines", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
             }
+
+            // re centre the image if the star has moved
+            currentCentre = RecentreImage(currentPicture);
 
             forceUpdate = false;
         }
