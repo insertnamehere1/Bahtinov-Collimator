@@ -31,6 +31,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
@@ -127,6 +128,8 @@ namespace Bahtinov_Collimator
             int newHeight = pictureBox.Location.Y + pictureBox.Height + (int)(50 * scalingFactor);
             int newWidth = pictureBox.Location.X + pictureBox.Width + (int)(25 * scalingFactor);
             this.Size = new System.Drawing.Size(newWidth, newHeight);
+
+            SetWindowTitleWithVersion();
         }
 
         private void LoadSettings()
@@ -1020,6 +1023,16 @@ namespace Bahtinov_Collimator
         private void Form1_MouseEnter(object sender, EventArgs e)
         {
             this.Activate();
+        }
+
+        private void SetWindowTitleWithVersion()
+        {
+            // Get the version number of the assembly
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            // Create the version string
+            string versionString = $"V {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            // Set the form's title
+            this.Text = $"Bahtinov Collimator - {versionString}";
         }
     }
 }
