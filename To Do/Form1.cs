@@ -26,6 +26,7 @@ using Bahtinov_Collimator.CSheet;
 using Bahtinov_Collimator.Sound;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Deployment.Application;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -33,6 +34,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using static Bahtinov_Collimator.Helper;
 
 namespace Bahtinov_Collimator
 {
@@ -48,7 +50,7 @@ namespace Bahtinov_Collimator
         private bool screenCaptureRunningFlag = false;
         private bool[] showFocus = new bool[3];
         private bool forceUpdate = false;
-        private readonly System.Windows.Forms.GroupBox[] groupBoxes;
+        private readonly GroupBox[] groupBoxes;
         private const int lineCount = 9;          // lines for a tri-bahtinov mask
         private BahtinovData lineData;
         private float lastFocusErrorValue = 0.0f;
@@ -58,7 +60,7 @@ namespace Bahtinov_Collimator
         private Rectangle BlueGroupBoxScreenBounds;
         private bool menuActive = false;
         private bool nightEnable = false;
-        private float[] errorValues = new float[3];
+        public static float[] errorValues { get; set; } = new float[3]; 
         private int imageCount;
         private CSheet.CheatSheet cheatSheet;
         private Point currentCentre;
@@ -73,7 +75,6 @@ namespace Bahtinov_Collimator
         private bool blueSoundPlayed = false;
 
         // settings
-        private readonly Settings settingsDialog;
         private int apertureSetting;
         private int focalLengthSetting;
         private double pixelSizeSetting;
@@ -87,7 +88,6 @@ namespace Bahtinov_Collimator
             InitializeComponent();
 
             screenCapture = new ScreenCap();
-            settingsDialog = new Settings();
 
             UpdateTimer.Interval = updateinterval;
 
@@ -100,10 +100,10 @@ namespace Bahtinov_Collimator
             soundTimer = new Timer();
             soundTimer.Interval = 2000; // 2000 milliseconds
             soundTimer.Tick += SoundTimer_Tick;
-
-            RedGroupBoxScreenBounds = RedGroupBox.Bounds;
+            
+            RedGroupBoxScreenBounds   = RedGroupBox.Bounds;
             GreenGroupBoxScreenBounds = GreenGroupBox.Bounds;
-            BlueGroupBoxScreenBounds = BlueGroupBox.Bounds;
+            BlueGroupBoxScreenBounds  = BlueGroupBox.Bounds; 
 
             LoadSettings();
 
@@ -230,7 +230,7 @@ namespace Bahtinov_Collimator
                 lineData = ImageProcessing.FindBrightestLines(paddedImage, lineCount);
                 lineData.Sort();
             }
-
+            
             lineData = ImageProcessing.FindSubpixelLines(paddedImage, lineData.LineValue.Length, lineData);
             bufferedPicture = new Bitmap(currentPicture);
 
@@ -325,7 +325,34 @@ namespace Bahtinov_Collimator
             }
         }
 
-        private bool DisplayLines(BahtinovData bahtinovLines, Bitmap starImage, int group, bool calculateOnly)
+
+        private bool DisplayLines(BahtinovData bahtinovLines, Bitmap starImage, int group, bool showLines)
+        {
+            Helper helper = new Helper();
+
+            if (!helper.AreLineIndicesValid(bahtinovLines, starImage.Height)) return false;
+
+            var starImageCentre = helper.GetImageCentre(starImage);
+            var graphics = Graphics.FromImage(pictureBox.Image);
+
+            helper.SwapFirstAndThirdLinesIfNeeded(bahtinovLines);
+
+            var lines = helper.CalculateLineCoordinates(bahtinovLines, starImageCentre);
+
+            if (showLines)
+            {
+                helper.DisplayCalculatedValues(lines, group, graphics, groupBoxes, bahtinovLines.LineAngles[0], bahtinovLines.LineAngles[2], apertureSetting, focalLengthSetting, (float)pixelSizeSetting);
+                helper.DrawLines(lines, group, graphics, showFocus);
+                helper.DrawErrorCircle(lines, group, graphics);
+                helper.UpdateFocusLabels(lines, group);
+            }
+
+            return true;
+        }
+
+ 
+
+        private bool DisplayLines2(BahtinovData bahtinovLines, Bitmap starImage, int group, bool calculateOnly)
         {
             int width = starImage.Width;
             int height = starImage.Height;
@@ -813,6 +840,8 @@ namespace Bahtinov_Collimator
 
         private void SettingsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            Settings settingsDialog = new Settings();
+
             // Settings
             DialogResult result = settingsDialog.ShowDialog();
 
