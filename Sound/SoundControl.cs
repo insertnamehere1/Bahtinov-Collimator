@@ -6,11 +6,20 @@ namespace Bahtinov_Collimator.Sound
 {
     public class SoundControl
     {
+        #region Fields
+
         private readonly SpeechSynthesizer synthesizer;
         private readonly Queue<string> messageQueue;
         private readonly object lockObject;
         private bool isPlaying;
 
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SoundControl"/> class.
+        /// </summary>
         public SoundControl()
         {
             synthesizer = new SpeechSynthesizer();
@@ -22,6 +31,14 @@ namespace Bahtinov_Collimator.Sound
             synthesizer.SelectVoice("Microsoft Zira Desktop");
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Adds a message to the queue and starts playing it if not already in progress.
+        /// </summary>
+        /// <param name="message">The message to be spoken.</param>
         public void Play(string message)
         {
             lock (lockObject)
@@ -36,6 +53,9 @@ namespace Bahtinov_Collimator.Sound
             }
         }
 
+        /// <summary>
+        /// Plays the next message in the queue.
+        /// </summary>
         private void PlayNextMessage()
         {
             lock (lockObject)
@@ -52,6 +72,9 @@ namespace Bahtinov_Collimator.Sound
             }
         }
 
+        /// <summary>
+        /// Stops the current message and clears the queue.
+        /// </summary>
         public void StopAndFlush()
         {
             lock (lockObject)
@@ -66,18 +89,24 @@ namespace Bahtinov_Collimator.Sound
                 }
                 else
                 {
-                    // If no message is currently playing, we can stop the voice immediately
+                    // If no message is currently playing, stop the voice immediately
                     StopVoice();
                 }
             }
         }
 
+        /// <summary>
+        /// Cancels all currently speaking messages.
+        /// </summary>
         private void StopVoice()
         {
             synthesizer.SpeakAsyncCancelAll();
             isPlaying = false;
         }
 
+        /// <summary>
+        /// Handles the completion of speech synthesis and continues with the next message if available.
+        /// </summary>
         private void Synthesizer_SpeakCompleted(object sender, SpeakCompletedEventArgs e)
         {
             Thread.Sleep(10); // Delay between messages (adjust as needed)
@@ -94,5 +123,7 @@ namespace Bahtinov_Collimator.Sound
                 }
             }
         }
+
+        #endregion
     }
 }

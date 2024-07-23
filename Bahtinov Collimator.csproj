@@ -103,7 +103,8 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>focusIcon2.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -160,69 +161,61 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBox.cs">
+    <Compile Include="Dialogs\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AboutBox.Designer.cs">
+    <Compile Include="Dialogs\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="BahtinovData.cs" />
-    <Compile Include="CSheet\CheatSheet.cs">
+    <Compile Include="Image Processing\BahtinovData.cs" />
+    <Compile Include="Dialogs\CheatSheet.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CSheet\CheatSheet.Designer.cs">
+    <Compile Include="Dialogs\CheatSheet.Designer.cs">
       <DependentUpon>CheatSheet.cs</DependentUpon>
     </Compile>
-    <Compile Include="CSheet\CustomPicture.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CSheet\CustomPicture.Designer.cs">
-      <DependentUpon>CustomPicture.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Donate.cs">
+    <Compile Include="Dialogs\Donate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Donate.Designer.cs">
+    <Compile Include="Dialogs\Donate.Designer.cs">
       <DependentUpon>Donate.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImageProcessing.cs" />
+    <Compile Include="To Do\Helper.cs" />
+    <Compile Include="To Do\ImageProcessing.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ScreenCapture.cs">
+    <Compile Include="To Do\ScreenCapture.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.cs">
+    <Compile Include="To Do\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
+    <Compile Include="To Do\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="PolynomialCurveFit.cs" />
+    <Compile Include="Utilities\PolynomialCurveFit.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs">
+    <Compile Include="Dialogs\Settings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Settings.Designer.cs">
+    <Compile Include="Dialogs\Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="Sound\SoundControl.cs" />
-    <EmbeddedResource Include="AboutBox.resx">
+    <EmbeddedResource Include="Dialogs\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CSheet\CheatSheet.resx">
+    <EmbeddedResource Include="Dialogs\CheatSheet.resx">
       <DependentUpon>CheatSheet.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CSheet\CustomPicture.resx">
-      <DependentUpon>CustomPicture.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Donate.resx">
+    <EmbeddedResource Include="Dialogs\Donate.resx">
       <DependentUpon>Donate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
+    <EmbeddedResource Include="To Do\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -230,7 +223,7 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Settings.resx">
+    <EmbeddedResource Include="Dialogs\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Bahtinov Collimator_TemporaryKey.pfx" />
@@ -262,16 +255,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\imageLost.bmp" />
+    <None Include="Icons\imageLost.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="focusIcon.ico" />
-    <Content Include="focusIcon2.ico" />
-    <Content Include="Images\Adjustments.png" />
-    <Content Include="Images\arrow.png" />
-    <None Include="Images\focusImage.png" />
-    <Content Include="Images\focusIcon2.ico" />
-    <Content Include="Images\paypal.png" />
+    <Content Include="Icons\Adjustments.png" />
+    <Content Include="Icons\arrow.png" />
+    <None Include="Icons\focusImage.png" />
+    <Content Include="Icons\focusIcon2.ico" />
+    <Content Include="Icons\paypal.png" />
     <Content Include="published\.gitattributes" />
   </ItemGroup>
   <ItemGroup>
