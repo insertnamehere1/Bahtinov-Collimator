@@ -42,11 +42,11 @@
             this.okButton = new System.Windows.Forms.Button();
             this.CancelSettingsButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.VoiceCheckBox = new System.Windows.Forms.CheckBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.VoiceCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -73,30 +73,33 @@
             // 
             // PixelSizeTextBox
             // 
+            this.PixelSizeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PixelSizeTextBox.Location = new System.Drawing.Point(137, 94);
             this.PixelSizeTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.PixelSizeTextBox.Name = "PixelSizeTextBox";
-            this.PixelSizeTextBox.Size = new System.Drawing.Size(87, 22);
+            this.PixelSizeTextBox.Size = new System.Drawing.Size(87, 26);
             this.PixelSizeTextBox.TabIndex = 17;
             this.PixelSizeTextBox.TabStop = false;
             this.PixelSizeTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // FocalLengthTextBox
             // 
+            this.FocalLengthTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FocalLengthTextBox.Location = new System.Drawing.Point(137, 62);
             this.FocalLengthTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.FocalLengthTextBox.Name = "FocalLengthTextBox";
-            this.FocalLengthTextBox.Size = new System.Drawing.Size(87, 22);
+            this.FocalLengthTextBox.Size = new System.Drawing.Size(87, 26);
             this.FocalLengthTextBox.TabIndex = 16;
             this.FocalLengthTextBox.TabStop = false;
             this.FocalLengthTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // ApertureTextBox
             // 
+            this.ApertureTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ApertureTextBox.Location = new System.Drawing.Point(136, 30);
             this.ApertureTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.ApertureTextBox.Name = "ApertureTextBox";
-            this.ApertureTextBox.Size = new System.Drawing.Size(87, 22);
+            this.ApertureTextBox.Size = new System.Drawing.Size(87, 26);
             this.ApertureTextBox.TabIndex = 15;
             this.ApertureTextBox.TabStop = false;
             this.ApertureTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -104,7 +107,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(232, 97);
+            this.label7.Location = new System.Drawing.Point(225, 95);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(25, 16);
@@ -124,7 +127,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(232, 65);
+            this.label4.Location = new System.Drawing.Point(225, 63);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(29, 16);
@@ -134,7 +137,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(232, 33);
+            this.label3.Location = new System.Drawing.Point(225, 31);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 16);
@@ -163,7 +166,7 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(37, 310);
+            this.okButton.Location = new System.Drawing.Point(37, 321);
             this.okButton.Margin = new System.Windows.Forms.Padding(4);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(100, 28);
@@ -174,7 +177,7 @@
             // 
             // CancelSettingsButton
             // 
-            this.CancelSettingsButton.Location = new System.Drawing.Point(192, 310);
+            this.CancelSettingsButton.Location = new System.Drawing.Point(192, 321);
             this.CancelSettingsButton.Margin = new System.Windows.Forms.Padding(4);
             this.CancelSettingsButton.Name = "CancelSettingsButton";
             this.CancelSettingsButton.Size = new System.Drawing.Size(100, 28);
@@ -194,10 +197,47 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(300, 124);
+            this.groupBox1.Size = new System.Drawing.Size(300, 131);
             this.groupBox1.TabIndex = 35;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Sound";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(41, 97);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(78, 16);
+            this.label10.TabIndex = 37;
+            this.label10.Text = "that channel";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(40, 80);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(219, 16);
+            this.label9.TabIndex = 36;
+            this.label9.Text = "text box to activate voice callouts for";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(41, 64);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(220, 16);
+            this.label8.TabIndex = 35;
+            this.label8.Text = "your mouse over the Focus Channel";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(41, 47);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(208, 16);
+            this.label5.TabIndex = 34;
+            this.label5.Text = "Enable voice guidance and hover";
             // 
             // VoiceCheckBox
             // 
@@ -210,48 +250,11 @@
             this.VoiceCheckBox.Text = "Voice Guidance";
             this.VoiceCheckBox.UseVisualStyleBackColor = true;
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(41, 47);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(208, 16);
-            this.label5.TabIndex = 34;
-            this.label5.Text = "Enable voice guidance and hover";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(41, 64);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(220, 16);
-            this.label8.TabIndex = 35;
-            this.label8.Text = "your mouse over the Focus Channel";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(40, 80);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(219, 16);
-            this.label9.TabIndex = 36;
-            this.label9.Text = "text box to activate voice callouts for";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(41, 97);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(78, 16);
-            this.label10.TabIndex = 37;
-            this.label10.Text = "that channel";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 365);
+            this.ClientSize = new System.Drawing.Size(329, 378);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.CancelSettingsButton);
             this.Controls.Add(this.okButton);

@@ -1,10 +1,19 @@
 ﻿using System;
+using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace Bahtinov_Collimator
 {
     public partial class Settings : Form
     {
+        [DllImport("dwmapi.dll", PreserveSig = true)]
+        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
+        // Constants
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
+
         #region Constructor
 
         /// <summary>
@@ -14,11 +23,67 @@ namespace Bahtinov_Collimator
         {
             InitializeComponent();
             LoadSettings();
+            SetColorScheme();
         }
 
         #endregion
 
         #region Methods
+
+        private void SetColorScheme()
+        {
+            // main form
+            this.ForeColor = UITheme.DarkForeground;
+            this.BackColor = UITheme.DarkBackground;
+
+            // OK button
+            okButton.BackColor = UITheme.ButtonDarkBackground;
+            okButton.ForeColor = UITheme.ButtonDarkForeground;
+            okButton.FlatStyle = FlatStyle.Popup;
+
+            // Cancel button
+            CancelSettingsButton.BackColor = UITheme.ButtonDarkBackground;
+            CancelSettingsButton.ForeColor = UITheme.ButtonDarkForeground;
+            CancelSettingsButton.FlatStyle = FlatStyle.Popup;
+
+            // Titlebar
+            var color = UITheme.DarkBackground;
+            int colorValue = color.R | (color.G << 8) | (color.B << 16);
+            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
+
+            // Group Boxes
+            ChangeLabelColors(groupBox1, UITheme.MenuDarkForeground);
+            ChangeLabelColors(groupBox2, UITheme.MenuDarkForeground);
+            groupBox1.ForeColor = UITheme.MenuDarkForeground;
+            groupBox2.ForeColor = UITheme.MenuDarkForeground;
+
+            ChangeTextBoxColors(groupBox2);
+        }
+
+        private void ChangeTextBoxColors(Control parent)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is TextBox textBox)
+                {
+                    textBox.ForeColor = UITheme.TextBoxForeground;
+                    textBox.BackColor = UITheme.TextBoxBackground;
+                    textBox.BorderStyle = BorderStyle.None;
+
+                }
+            }
+        }
+
+        private void ChangeLabelColors(Control parent, Color color)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is Label label)
+                {
+                    label.ForeColor = color;
+                }
+            }
+        }
 
         /// <summary>
         /// Loads settings from application settings and displays them in the form.

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Bahtinov_Collimator.Sound;
+using System.Collections.Generic;
 using System.Speech.Synthesis;
 using System.Threading;
 
@@ -127,3 +128,98 @@ namespace Bahtinov_Collimator.Sound
         #endregion
     }
 }
+
+
+
+
+
+//private void SoundTimer_Tick(object sender, EventArgs e)
+//{
+//    if (imageCount > lastSoundOut)
+//    {
+//        Point mousePosition = PointToClient(Control.MousePosition);
+//        bool tribatMask = bahtinovLineData.LineAngles.Length > 3;
+
+//        if (RedGroupBoxScreenBounds.Contains(mousePosition))
+//        {
+//            if (!redSoundPlayed)
+//            {
+//                soundOut.Play("Red");
+//                redSoundPlayed = true;
+//                greenSoundPlayed = false; // Reset other flags to allow re-triggering if needed
+//                blueSoundPlayed = false;
+//            }
+//            soundOut.Play(errorValues[0].ToString("F1"));
+//        }
+//        else if (GreenGroupBoxScreenBounds.Contains(mousePosition) && tribatMask)
+//        {
+//            if (!greenSoundPlayed)
+//            {
+//                soundOut.Play("Green");
+//                greenSoundPlayed = true;
+//                redSoundPlayed = false; // Reset other flags to allow re-triggering if needed
+//                blueSoundPlayed = false;
+//            }
+//            soundOut.Play(errorValues[1].ToString("F1"));
+//        }
+//        else if (BlueGroupBoxScreenBounds.Contains(mousePosition) && tribatMask)
+//        {
+//            if (!blueSoundPlayed)
+//            {
+//                soundOut.Play("Blue");
+//                blueSoundPlayed = true;
+//                redSoundPlayed = false; // Reset other flags to allow re-triggering if needed
+//                greenSoundPlayed = false;
+//            }
+//            soundOut.Play(errorValues[2].ToString("F1"));
+//        }
+
+//        lastSoundOut = imageCount;
+//    }
+//}
+
+
+//private Timer soundTimer;
+//private int lastSoundOut = 0;
+//private SoundControl soundOut;
+
+//private bool redSoundPlayed = false;
+//private bool greenSoundPlayed = false;
+//private bool blueSoundPlayed = false;
+
+
+//private void SoundOnOff(bool enable)
+//{
+//    if (enable)
+//    {
+//        soundOut.Play("voice enabled");
+//        soundTimer.Start();
+//    }
+//    else
+//    {
+//        soundOut.StopAndFlush();
+//        soundTimer.Stop();
+//    }
+//}
+
+
+
+//private void LoadSettings()
+//{
+//    if (Properties.Settings.Default.VoiceEnabled)
+//    {
+//        SoundOnOff(true);
+//    }
+//    else
+//        SoundOnOff(false);
+//}
+
+
+//private void SoundSettings()
+//{
+//    // sound setup
+//    soundOut = new SoundControl();
+//    soundTimer = new Timer();
+//    soundTimer.Interval = 2000; // 2000 milliseconds
+//                                //          soundTimer.Tick += SoundTimer_Tick;
+//}

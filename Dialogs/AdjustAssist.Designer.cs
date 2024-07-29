@@ -1,6 +1,6 @@
-﻿namespace Bahtinov_Collimator.CSheet
+﻿namespace Bahtinov_Collimator.AdjustAssistant
 {
-    partial class CheatSheet
+    partial class AdjustAssist
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CheatSheet));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdjustAssist));
             this.saveButton = new System.Windows.Forms.Button();
             this.closeButton = new System.Windows.Forms.Button();
             this.swapGreenCheckbox = new System.Windows.Forms.CheckBox();
@@ -147,7 +147,7 @@
             this.trackBar1.TabIndex = 32;
             this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
             // 
-            // CheatSheet
+            // AdjustAssist
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -161,7 +161,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
-            this.Name = "CheatSheet";
+            this.Name = "AdjustAssist";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Adjustment Assistant";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CheatSheet_FormClosed);

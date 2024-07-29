@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace Bahtinov_Collimator.CSheet
+namespace Bahtinov_Collimator.AdjustAssistant
 {
     public enum Arrow
     {
@@ -13,7 +13,7 @@ namespace Bahtinov_Collimator.CSheet
         None
     }
 
-    public partial class CheatSheet : Form
+    public partial class AdjustAssist : Form
     {
         #region Fields
 
@@ -39,10 +39,10 @@ namespace Bahtinov_Collimator.CSheet
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CheatSheet"/> class.
+        /// Initializes a new instance of the <see cref="AdjustAssist"/> class.
         /// </summary>
         /// <param name="parent">The parent form.</param>
-        public CheatSheet(Form1 parent)
+        public AdjustAssist(Form1 parent)
         {
             InitializeComponent();
 
@@ -358,26 +358,26 @@ namespace Bahtinov_Collimator.CSheet
         /// </summary>
         private void updateTimer_Tick(object sender, EventArgs e)
         {
-            if (parentForm.isScreenCaptureRunning() == false)
-                this.Close();
+//            if (parentForm.isScreenCaptureRunning() == false)
+//                this.Close();
 
-            int imageCount = parentForm.getImageCount();
+ //           int imageCount = parentForm.getImageCount();
 
             // Only update if we have a new image
-            if (imageCount > lastImageCount)
+ //           if (imageCount > lastImageCount)
             {
-                float[] errorValues = parentForm.getErrorValues();
-                redError = errorValues[0];
-                greenError = errorValues[1];
-                blueError = errorValues[2];
+ //               float[] errorValues = parentForm.getErrorValues();
+ //               redError = errorValues[0];
+ //               greenError = errorValues[1];
+ //               blueError = errorValues[2];
 
                 pictureBox1.Invalidate();
-                lastImageCount = imageCount;
+   //             lastImageCount = imageCount;
             }
         }
 
         /// <summary>
-        /// Handles the FormClosed event of the CheatSheet form.
+        /// Handles the FormClosed event of the AdjustAssist form.
         /// </summary>
         private void CheatSheet_FormClosed(object sender, FormClosedEventArgs e)
         {
