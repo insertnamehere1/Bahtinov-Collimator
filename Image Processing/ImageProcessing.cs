@@ -32,6 +32,7 @@ using System.Windows.Forms;
 using System.Security.Cryptography;
 using System.Linq;
 using System.Drawing.Drawing2D;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Bahtinov_Collimator
 {
@@ -498,322 +499,340 @@ namespace Bahtinov_Collimator
 
 
 
-        public bool DisplayLines(BahtinovData bahtinovLines, Bitmap starImage, int group)
+        public bool DisplayLines(BahtinovData lines, Bitmap starImage)
         {
-            int width = starImage.Width;
-            int height = starImage.Height;
+            int numberOfLines = lines.LineAngles.Length;
 
-            // check for stray LineIndex values
-            // this can happen when the image moves quickly or is occulted by another window
-            foreach (float lineIndex in bahtinovLines.LineIndex)
+            if(numberOfLines != 3 && numberOfLines != 9 )
             {
-                // Check if x-coordinate is outside the image bounds
-                if (lineIndex < 0 || lineIndex >= height)
-                {
-                    return false; // Line angle is outside x-axis range
-                }
+ //               ShowWarningMessage("Unable to detect Bahtinov image lines");
             }
 
-            // centre pixels for X and Y in the starImage
-            float starImage_X_Centre = (float)(((double)width + 1.0) / 2.0);
-            float starImage_Y_Centre = (float)(((double)height + 1.0) / 2.0);
+            int numberOfGroups = numberOfLines / 3;
 
-            float first_lineSlope = 0.0f;
-            float third_lineSlope = 0.0f;
-            float first_calculatedY_for_XStart = 0.0f;
-            float third_calculatedY_for_XStart = 0.0f;
+            Rectangle rect = new Rectangle(0, 0, starImage.Width, starImage.Height);
+            BahtinovData bahtinovLines = new BahtinovData(3, rect);
 
-            float second_lineStart_X = 0.0f;
-            float second_lineStart_Y = 0.0f;
-            float second_lineEnd_X = 0.0f;
-            float second_lineEnd_Y = 0.0f;
-
-            int penWidth = 2;
-            Pen dashPen = new Pen(Color.Yellow, (float)penWidth) { DashStyle = DashStyle.Dash };
-
-            Pen largeDashPen = new Pen(Color.Black, penWidth) { DashStyle = DashStyle.Dash };
-            Pen largeSolidPen = new Pen(Color.Yellow, (float)penWidth) { DashStyle = DashStyle.Solid };
-
-            //            Graphics graphics = Graphics.FromImage(pictureBox.Image);
-
-            // check first line is not vertical this will cause computation issues later as the slope is aproaching infinity
-            if (bahtinovLines.LineAngles[0] < 1.5708 && bahtinovLines.LineAngles[0] > 1.5707)
+            for (int group = 0; group < numberOfGroups; group++)
             {
-                //reverse the lines
-                float tmp = bahtinovLines.LineAngles[0];
-                float tmp2 = bahtinovLines.LineIndex[0];
-                bahtinovLines.LineAngles[0] = bahtinovLines.LineAngles[2];
-                bahtinovLines.LineIndex[0] = bahtinovLines.LineIndex[2];
-                bahtinovLines.LineAngles[2] = tmp;
-                bahtinovLines.LineIndex[2] = tmp2;
-            }
+                int startIndex = 3 * group;
+                Array.Copy(lines.LineAngles, startIndex, bahtinovLines.LineAngles, 0, 3);
+                Array.Copy(lines.LineIndex, startIndex, bahtinovLines.LineIndex, 0, 3);
 
-            // for each Bahtinov angle in this line group draw the line on the image
-            for (int index = 0; index < bahtinovLines.LineAngles.Length; ++index)
-            {
-                // set to the smaller value of the centre point, either x or y
-                float CentrePoint = Math.Min(starImage_X_Centre, starImage_Y_Centre);
+                int width = starImage.Width;
+                int height = starImage.Height;
 
-                // calculate the start and end X/Y point for the line
-                float lineStart_X = starImage_X_Centre + -CentrePoint * (float)Math.Cos((double)bahtinovLines.LineAngles[index]) +
-                                  (bahtinovLines.LineIndex[index] - starImage_Y_Centre) * (float)Math.Sin((double)bahtinovLines.LineAngles[index]);
-
-                float lineEnd_X = starImage_X_Centre + CentrePoint * (float)Math.Cos((double)bahtinovLines.LineAngles[index]) +
-                                  (bahtinovLines.LineIndex[index] - starImage_Y_Centre) * (float)Math.Sin((double)bahtinovLines.LineAngles[index]);
-
-                float lineStart_Y = starImage_Y_Centre + -CentrePoint * (float)Math.Sin((double)bahtinovLines.LineAngles[index]) + (float)-((double)bahtinovLines.LineIndex[index] -
-                                  (double)starImage_Y_Centre) * (float)Math.Cos((double)bahtinovLines.LineAngles[index]);
-
-                float lineEnd_Y = starImage_Y_Centre + CentrePoint * (float)Math.Sin((double)bahtinovLines.LineAngles[index]) + (float)-((double)bahtinovLines.LineIndex[index] -
-                                  (double)starImage_Y_Centre) * (float)Math.Cos((double)bahtinovLines.LineAngles[index]);
-
-                // if this is the first line
-                if (index == 0)
+                // check for stray LineIndex values
+                // this can happen when the image moves quickly or is occulted by another window
+                foreach (float lineIndex in bahtinovLines.LineIndex)
                 {
-                    float first_lineStart_X = lineStart_X;
-                    float first_lineEnd_X = lineEnd_X;
-                    float first_lineStart_Y = lineStart_Y;
-                    float first_lineEnd_Y = lineEnd_Y;
-
-                    first_lineSlope = (float)(((double)first_lineEnd_Y - (double)first_lineStart_Y) / ((double)first_lineEnd_X - (double)first_lineStart_X));
-                    first_calculatedY_for_XStart = (float)(-(double)first_lineStart_X * (((double)first_lineEnd_Y - (double)first_lineStart_Y) /
-                                                   ((double)first_lineEnd_X - (double)first_lineStart_X))) + first_lineStart_Y;
+                    // Check if x-coordinate is outside the image bounds
+                    if (lineIndex < 0 || lineIndex >= height)
+                    {
+                        return false; // Line angle is outside x-axis range
+                    }
                 }
 
-                // if this is the middle line
-                else if (index == 1)
+                // centre pixels for X and Y in the starImage
+                float starImage_X_Centre = (float)(((double)width + 1.0) / 2.0);
+                float starImage_Y_Centre = (float)(((double)height + 1.0) / 2.0);
+
+                float first_lineSlope = 0.0f;
+                float third_lineSlope = 0.0f;
+                float first_calculatedY_for_XStart = 0.0f;
+                float third_calculatedY_for_XStart = 0.0f;
+
+                float second_lineStart_X = 0.0f;
+                float second_lineStart_Y = 0.0f;
+                float second_lineEnd_X = 0.0f;
+                float second_lineEnd_Y = 0.0f;
+
+                int penWidth = 2;
+                Pen dashPen = new Pen(Color.Yellow, (float)penWidth) { DashStyle = DashStyle.Dash };
+
+                Pen largeDashPen = new Pen(Color.Black, penWidth) { DashStyle = DashStyle.Dash };
+                Pen largeSolidPen = new Pen(Color.Yellow, (float)penWidth) { DashStyle = DashStyle.Solid };
+
+                //            Graphics graphics = Graphics.FromImage(pictureBox.Image);
+
+                // check first line is not vertical this will cause computation issues later as the slope is aproaching infinity
+                if (bahtinovLines.LineAngles[0] < 1.5708 && bahtinovLines.LineAngles[0] > 1.5707)
                 {
-                    second_lineStart_X = lineStart_X;
-                    second_lineEnd_X = lineEnd_X;
-                    second_lineStart_Y = lineStart_Y;
-                    second_lineEnd_Y = lineEnd_Y;
+                    //reverse the lines
+                    float tmp = bahtinovLines.LineAngles[0];
+                    float tmp2 = bahtinovLines.LineIndex[0];
+                    bahtinovLines.LineAngles[0] = bahtinovLines.LineAngles[2];
+                    bahtinovLines.LineIndex[0] = bahtinovLines.LineIndex[2];
+                    bahtinovLines.LineAngles[2] = tmp;
+                    bahtinovLines.LineIndex[2] = tmp2;
                 }
 
-                // if this is the last line
-                else if (index == 2)
+                // for each Bahtinov angle in this line group draw the line on the image
+                for (int index = 0; index < bahtinovLines.LineAngles.Length; ++index)
                 {
-                    float third_lineStart_X = lineStart_X;
-                    float third_lineEnd_X = lineEnd_X;
-                    float third_lineStart_Y = lineStart_Y;
-                    float third_lineEnd_Y = lineEnd_Y;
+                    // set to the smaller value of the centre point, either x or y
+                    float CentrePoint = Math.Min(starImage_X_Centre, starImage_Y_Centre);
 
-                    third_lineSlope = (float)(((double)third_lineEnd_Y - (double)third_lineStart_Y) / ((double)third_lineEnd_X - (double)third_lineStart_X));
-                    third_calculatedY_for_XStart = (float)(-(double)third_lineStart_X * (((double)third_lineEnd_Y -
-                                                   (double)third_lineStart_Y) / ((double)third_lineEnd_X - (double)third_lineStart_X))) + third_lineStart_Y;
+                    // calculate the start and end X/Y point for the line
+                    float lineStart_X = starImage_X_Centre + -CentrePoint * (float)Math.Cos((double)bahtinovLines.LineAngles[index]) +
+                                      (bahtinovLines.LineIndex[index] - starImage_Y_Centre) * (float)Math.Sin((double)bahtinovLines.LineAngles[index]);
+
+                    float lineEnd_X = starImage_X_Centre + CentrePoint * (float)Math.Cos((double)bahtinovLines.LineAngles[index]) +
+                                      (bahtinovLines.LineIndex[index] - starImage_Y_Centre) * (float)Math.Sin((double)bahtinovLines.LineAngles[index]);
+
+                    float lineStart_Y = starImage_Y_Centre + -CentrePoint * (float)Math.Sin((double)bahtinovLines.LineAngles[index]) + (float)-((double)bahtinovLines.LineIndex[index] -
+                                      (double)starImage_Y_Centre) * (float)Math.Cos((double)bahtinovLines.LineAngles[index]);
+
+                    float lineEnd_Y = starImage_Y_Centre + CentrePoint * (float)Math.Sin((double)bahtinovLines.LineAngles[index]) + (float)-((double)bahtinovLines.LineIndex[index] -
+                                      (double)starImage_Y_Centre) * (float)Math.Cos((double)bahtinovLines.LineAngles[index]);
+
+                    // if this is the first line
+                    if (index == 0)
+                    {
+                        float first_lineStart_X = lineStart_X;
+                        float first_lineEnd_X = lineEnd_X;
+                        float first_lineStart_Y = lineStart_Y;
+                        float first_lineEnd_Y = lineEnd_Y;
+
+                        first_lineSlope = (float)(((double)first_lineEnd_Y - (double)first_lineStart_Y) / ((double)first_lineEnd_X - (double)first_lineStart_X));
+                        first_calculatedY_for_XStart = (float)(-(double)first_lineStart_X * (((double)first_lineEnd_Y - (double)first_lineStart_Y) /
+                                                       ((double)first_lineEnd_X - (double)first_lineStart_X))) + first_lineStart_Y;
+                    }
+
+                    // if this is the middle line
+                    else if (index == 1)
+                    {
+                        second_lineStart_X = lineStart_X;
+                        second_lineEnd_X = lineEnd_X;
+                        second_lineStart_Y = lineStart_Y;
+                        second_lineEnd_Y = lineEnd_Y;
+                    }
+
+                    // if this is the last line
+                    else if (index == 2)
+                    {
+                        float third_lineStart_X = lineStart_X;
+                        float third_lineEnd_X = lineEnd_X;
+                        float third_lineStart_Y = lineStart_Y;
+                        float third_lineEnd_Y = lineEnd_Y;
+
+                        third_lineSlope = (float)(((double)third_lineEnd_Y - (double)third_lineStart_Y) / ((double)third_lineEnd_X - (double)third_lineStart_X));
+                        third_calculatedY_for_XStart = (float)(-(double)third_lineStart_X * (((double)third_lineEnd_Y -
+                                                       (double)third_lineStart_Y) / ((double)third_lineEnd_X - (double)third_lineStart_X))) + third_lineStart_Y;
+                    }
+
+                    // select pen colour for the lines
+                    switch (group)
+                    {
+                        case 0:
+                            dashPen.Color = Color.Red;
+                            largeDashPen.Color = Color.Red;
+                            break;
+                        case 1:
+                            dashPen.Color = Color.Green;
+                            largeDashPen.Color = Color.Green;
+                            break;
+                        case 2:
+                            dashPen.Color = Color.Blue;
+                            largeDashPen.Color = Color.Blue;
+                            break;
+                    }
                 }
 
-                // select pen colour for the lines
+
+                // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> send line info for line 0, line1 and line2 from here.
+
+
+
+
+                // calculate the line intersections
+
+                // this code calculates the x-coordinate of a point of intersection between two lines. line1 and line3
+                float x_intersectionOfLines1and3 = (float)(-((double)first_calculatedY_for_XStart - (double)third_calculatedY_for_XStart) / ((double)first_lineSlope - (double)third_lineSlope));
+
+                // this code calculates the y-coordinate of a point of intersection between two lines. line1 and line3
+                float y_intersectionOfLines1and3 = first_lineSlope * x_intersectionOfLines1and3 + first_calculatedY_for_XStart;
+
+                // this code calculates the point on line 2 that is perpendicular to the intersection point
+                // we start by finding the length along the line 2 where the perpendicular intersects 
+                float line2_PerpendicularDistance = (float)(((double)x_intersectionOfLines1and3 - (double)second_lineStart_X) *
+                                                    ((double)second_lineEnd_X - (double)second_lineStart_X) + ((double)y_intersectionOfLines1and3 -
+                                                    (double)second_lineStart_Y) * ((double)second_lineEnd_Y - (double)second_lineStart_Y)) /
+                                                    (float)(((double)second_lineEnd_X - (double)second_lineStart_X) * ((double)second_lineEnd_X -
+                                                    (double)second_lineStart_X) + ((double)second_lineEnd_Y - (double)second_lineStart_Y) *
+                                                    ((double)second_lineEnd_Y - (double)second_lineStart_Y));
+
+                // then using this distance calculate the X and Y location on line 2
+                float line2_X_Perpendicular = second_lineStart_X + line2_PerpendicularDistance * (second_lineEnd_X - second_lineStart_X);
+                float line2_Y_Perpendicular = second_lineStart_Y + line2_PerpendicularDistance * (second_lineEnd_Y - second_lineStart_Y);
+
+                // we then use the line2 perpendicular point and the intersect point and calculate the distance between them 
+                float line2ToIntersectDistance = (float)Math.Sqrt(((double)x_intersectionOfLines1and3 - (double)line2_X_Perpendicular) *
+                                                 ((double)x_intersectionOfLines1and3 - (double)line2_X_Perpendicular) + ((double)y_intersectionOfLines1and3 -
+                                                 (double)line2_Y_Perpendicular) * ((double)y_intersectionOfLines1and3 - (double)line2_Y_Perpendicular));
+
+                // calculate x and y distances of the error line 
+                float X_ErrorDistance = x_intersectionOfLines1and3 - line2_X_Perpendicular;
+                float Y_ErrorDistance = y_intersectionOfLines1and3 - line2_Y_Perpendicular;
+
+                // calculate the x and y lengths of line2
+                float line2_X_Distance = second_lineEnd_X - second_lineStart_X;
+                float line2_Y_Distance = second_lineEnd_Y - second_lineStart_Y;
+
+                float errorSign;
+
+                try
+                {
+                    // determines if the error value is positive or negative
+                    errorSign = (float)-Math.Sign((float)((double)X_ErrorDistance * (double)line2_Y_Distance - (double)Y_ErrorDistance * (double)line2_X_Distance));
+                }
+                catch
+                {
+                    lastFocusErrorValue = 0.0f;
+                    //                LoadImageLost();
+                    return false;
+                }
+
+
+
+
+
+
+
+
+                // Calculate the Bahtinov Mask Image Offset in Pixels
+                double bahtinovOffset = errorSign * line2ToIntersectDistance;
+
+                // calculate the bahtinov mask angle in degrees
+                float radianPerDegree = (float)Math.PI / 180f;
+
+                float bahtinovAngle = Math.Abs((float)(((double)bahtinovLines.LineAngles[2] - (double)bahtinovLines.LineAngles[0]) / 2.0));
+
+                // calculate focus error in microns
+                float pixelsPerMicron = (float)(9.0 / 32.0 * (((double)(float)apertureSetting / 1000.0) /
+                                          ((double)((float)focalLengthSetting / 1000) *
+                                          (double)(float)pixelSizeSetting)) *
+                                          (1.0 + Math.Cos(45.0 * (double)radianPerDegree) *
+                                          (1.0 + Math.Tan((double)bahtinovAngle))));
+
+                //           float focusErrorInMicrons = errorSign * line2ToIntersectDistance / pixelsPerMicron;
+                double focusErrorInMicrons = line2ToIntersectDistance / pixelsPerMicron;
+
+
+
+                // calculate if Within Critical Focus 
+                float criticalFocusValue = (float)(8.99999974990351E-07 * ((double)((float)focalLengthSetting / 1000) /
+                                           (double)((float)apertureSetting / 1000)) * ((double)((float)focalLengthSetting / 1000) /
+                                           (double)((float)apertureSetting / 1000)));
+
+                bool withinCriticalFocus = Math.Abs((double)focusErrorInMicrons * 1E-06) < (double)Math.Abs(criticalFocusValue);
+
+                FocusData fd = new FocusData
+                {
+                    BahtinovOffset = bahtinovOffset,
+                    DefocusError = focusErrorInMicrons,
+                    InsideFocus = withinCriticalFocus,
+                    Id = group
+                };
+
+                FocusDataEvent?.Invoke(null, new FocusDataEventArgs(fd));
+
+
+
+
+
+
+
+                // the error marker x,y position
+                float errorMarker_X = x_intersectionOfLines1and3 + (float)(((double)line2_X_Perpendicular - (double)x_intersectionOfLines1and3) * ErrorMarkerScalingValue);
+                float errorMarker_Y = y_intersectionOfLines1and3 + (float)(((double)line2_Y_Perpendicular - (double)y_intersectionOfLines1and3) * ErrorMarkerScalingValue);
+
+                Pen errorPen;
+                if (withinCriticalFocus)
+                    errorPen = largeSolidPen;
+                else
+                    errorPen = dashPen;
+
+                // select pen colour
                 switch (group)
                 {
                     case 0:
-                        dashPen.Color = Color.Red;
-                        largeDashPen.Color = Color.Red;
+                        errorPen.Color = Color.Red;
                         break;
                     case 1:
-                        dashPen.Color = Color.Green;
-                        largeDashPen.Color = Color.Green;
+                        errorPen.Color = Color.Green;
                         break;
                     case 2:
-                        dashPen.Color = Color.Blue;
-                        largeDashPen.Color = Color.Blue;
+                        errorPen.Color = Color.Blue;
+                        break;
+                    default:
+                        errorPen.Color = Color.White;
                         break;
                 }
-            }
+
+                // draw the circular error marker
+                errorPen.Width = 5;
+                int circleRadius = 64;
 
 
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> send line info for line 0, line1 and line2 from here.
-
-
-
-
-            // calculate the line intersections
-
-            // this code calculates the x-coordinate of a point of intersection between two lines. line1 and line3
-            float x_intersectionOfLines1and3 = (float)(-((double)first_calculatedY_for_XStart - (double)third_calculatedY_for_XStart) / ((double)first_lineSlope - (double)third_lineSlope));
-
-            // this code calculates the y-coordinate of a point of intersection between two lines. line1 and line3
-            float y_intersectionOfLines1and3 = first_lineSlope * x_intersectionOfLines1and3 + first_calculatedY_for_XStart;
-
-            // this code calculates the point on line 2 that is perpendicular to the intersection point
-            // we start by finding the length along the line 2 where the perpendicular intersects 
-            float line2_PerpendicularDistance = (float)(((double)x_intersectionOfLines1and3 - (double)second_lineStart_X) *
-                                                ((double)second_lineEnd_X - (double)second_lineStart_X) + ((double)y_intersectionOfLines1and3 -
-                                                (double)second_lineStart_Y) * ((double)second_lineEnd_Y - (double)second_lineStart_Y)) /
-                                                (float)(((double)second_lineEnd_X - (double)second_lineStart_X) * ((double)second_lineEnd_X -
-                                                (double)second_lineStart_X) + ((double)second_lineEnd_Y - (double)second_lineStart_Y) *
-                                                ((double)second_lineEnd_Y - (double)second_lineStart_Y));
-
-            // then using this distance calculate the X and Y location on line 2
-            float line2_X_Perpendicular = second_lineStart_X + line2_PerpendicularDistance * (second_lineEnd_X - second_lineStart_X);
-            float line2_Y_Perpendicular = second_lineStart_Y + line2_PerpendicularDistance * (second_lineEnd_Y - second_lineStart_Y);
-
-            // we then use the line2 perpendicular point and the intersect point and calculate the distance between them 
-            float line2ToIntersectDistance = (float)Math.Sqrt(((double)x_intersectionOfLines1and3 - (double)line2_X_Perpendicular) *
-                                             ((double)x_intersectionOfLines1and3 - (double)line2_X_Perpendicular) + ((double)y_intersectionOfLines1and3 -
-                                             (double)line2_Y_Perpendicular) * ((double)y_intersectionOfLines1and3 - (double)line2_Y_Perpendicular));
-
-            // calculate x and y distances of the error line 
-            float X_ErrorDistance = x_intersectionOfLines1and3 - line2_X_Perpendicular;
-            float Y_ErrorDistance = y_intersectionOfLines1and3 - line2_Y_Perpendicular;
-
-            // calculate the x and y lengths of line2
-            float line2_X_Distance = second_lineEnd_X - second_lineStart_X;
-            float line2_Y_Distance = second_lineEnd_Y - second_lineStart_Y;
-
-            float errorSign;
-
-            try
-            {
-                // determines if the error value is positive or negative
-                errorSign = (float)-Math.Sign((float)((double)X_ErrorDistance * (double)line2_Y_Distance - (double)Y_ErrorDistance * (double)line2_X_Distance));
-            }
-            catch
-            {
-                lastFocusErrorValue = 0.0f;
-//                LoadImageLost();
-                return false;
-            }
+                // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> send Error Cirle from here.
 
 
 
+                //            graphics.DrawEllipse(errorPen, errorMarker_X - (float)circleRadius, (float)height - errorMarker_Y - (float)circleRadius + (float)yOffset, (float)(circleRadius * 2), (float)(circleRadius * 2));
 
-
-
-
-
-            // Calculate the Bahtinov Mask Image Offset in Pixels
-            double bahtinovOffset = errorSign * line2ToIntersectDistance;
-
-            // calculate the bahtinov mask angle in degrees
-            float radianPerDegree = (float)Math.PI / 180f;
-
-            float bahtinovAngle = Math.Abs((float)(((double)bahtinovLines.LineAngles[2] - (double)bahtinovLines.LineAngles[0]) / 2.0));
-
-            // calculate focus error in microns
-            float pixelsPerMicron = (float)(9.0 / 32.0 * (((double)(float)apertureSetting / 1000.0) /
-                                      ((double)((float)focalLengthSetting / 1000) *
-                                      (double)(float)pixelSizeSetting)) *
-                                      (1.0 + Math.Cos(45.0 * (double)radianPerDegree) *
-                                      (1.0 + Math.Tan((double)bahtinovAngle))));
-
-            //           float focusErrorInMicrons = errorSign * line2ToIntersectDistance / pixelsPerMicron;
-            double focusErrorInMicrons = line2ToIntersectDistance / pixelsPerMicron;
-
-
-
-            // calculate if Within Critical Focus 
-            float criticalFocusValue = (float)(8.99999974990351E-07 * ((double)((float)focalLengthSetting / 1000) /
-                                       (double)((float)apertureSetting / 1000)) * ((double)((float)focalLengthSetting / 1000) /
-                                       (double)((float)apertureSetting / 1000)));
-
-            bool withinCriticalFocus = Math.Abs((double)focusErrorInMicrons * 1E-06) < (double)Math.Abs(criticalFocusValue);
-
-            FocusData fd = new FocusData
-            {
-                BahtinovOffset = bahtinovOffset,
-                DefocusError = focusErrorInMicrons,
-                InsideFocus = withinCriticalFocus,
-                Id = group
-            };
-
-            FocusDataEvent?.Invoke(null, new FocusDataEventArgs(fd));
-
-
-
-
-
-
-
-            // the error marker x,y position
-            float errorMarker_X = x_intersectionOfLines1and3 + (float)(((double)line2_X_Perpendicular - (double)x_intersectionOfLines1and3) * ErrorMarkerScalingValue);
-            float errorMarker_Y = y_intersectionOfLines1and3 + (float)(((double)line2_Y_Perpendicular - (double)y_intersectionOfLines1and3) * ErrorMarkerScalingValue);
-
-            Pen errorPen;
-            if (withinCriticalFocus)
-                errorPen = largeSolidPen;
-            else
-                errorPen = dashPen;
-
-            // select pen colour
-            switch (group)
-            {
-                case 0:
-                    errorPen.Color = Color.Red;
-                    break;
-                case 1:
-                    errorPen.Color = Color.Green;
-                    break;
-                case 2:
-                    errorPen.Color = Color.Blue;
-                    break;
-                default:
-                    errorPen.Color = Color.White;
-                    break;
-            }
-
-            // draw the circular error marker
-            errorPen.Width = 5;
-            int circleRadius = 64;
-
-
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> send Error Cirle from here.
-
-
-
-            //            graphics.DrawEllipse(errorPen, errorMarker_X - (float)circleRadius, (float)height - errorMarker_Y - (float)circleRadius + (float)yOffset, (float)(circleRadius * 2), (float)(circleRadius * 2));
-
-            // Calculate the line coordinates
-            float lineX1 = errorMarker_X + circleRadius;
-                            float lineY1 = height - errorMarker_Y;
-                            float lineX2 = errorMarker_X - circleRadius;
-                            float lineY2 = height - errorMarker_Y;
+                // Calculate the line coordinates
+                float lineX1 = errorMarker_X + circleRadius;
+                float lineY1 = height - errorMarker_Y;
+                float lineX2 = errorMarker_X - circleRadius;
+                float lineY2 = height - errorMarker_Y;
 
                 // Error circle internal line
 
                 // Translate the line to the origin
-                            lineX1 -= errorMarker_X;
-                            lineY1 -= height - errorMarker_Y;
-                            lineX2 -= errorMarker_X;
-                            lineY2 -= height - errorMarker_Y;
+                lineX1 -= errorMarker_X;
+                lineY1 -= height - errorMarker_Y;
+                lineX2 -= errorMarker_X;
+                lineY2 -= height - errorMarker_Y;
 
                 // Rotate the line
-                            float rotatedX1 = (float)(lineX1 * Math.Cos(-bahtinovLines.LineAngles[1]) - lineY1 * Math.Sin(-bahtinovLines.LineAngles[1]));
-                            float rotatedY1 = (float)(lineX1 * Math.Sin(-bahtinovLines.LineAngles[1]) + lineY1 * Math.Cos(-bahtinovLines.LineAngles[1]));
-                            float rotatedX2 = (float)(lineX2 * Math.Cos(-bahtinovLines.LineAngles[1]) - lineY2 * Math.Sin(-bahtinovLines.LineAngles[1]));
-                            float rotatedY2 = (float)(lineX2 * Math.Sin(-bahtinovLines.LineAngles[1]) + lineY2 * Math.Cos(-bahtinovLines.LineAngles[1]));
+                float rotatedX1 = (float)(lineX1 * Math.Cos(-bahtinovLines.LineAngles[1]) - lineY1 * Math.Sin(-bahtinovLines.LineAngles[1]));
+                float rotatedY1 = (float)(lineX1 * Math.Sin(-bahtinovLines.LineAngles[1]) + lineY1 * Math.Cos(-bahtinovLines.LineAngles[1]));
+                float rotatedX2 = (float)(lineX2 * Math.Cos(-bahtinovLines.LineAngles[1]) - lineY2 * Math.Sin(-bahtinovLines.LineAngles[1]));
+                float rotatedY2 = (float)(lineX2 * Math.Sin(-bahtinovLines.LineAngles[1]) + lineY2 * Math.Cos(-bahtinovLines.LineAngles[1]));
 
                 // Translate the line back to its original position
-                            rotatedX1 += errorMarker_X;
-                            rotatedY1 += height - errorMarker_Y;
-                            rotatedX2 += errorMarker_X;
-                            rotatedY2 += height - errorMarker_Y;
+                rotatedX1 += errorMarker_X;
+                rotatedY1 += height - errorMarker_Y;
+                rotatedX2 += errorMarker_X;
+                rotatedY2 += height - errorMarker_Y;
 
                 // Draw the rotated error line in the error circle
- //               graphics.DrawLine(errorPen, rotatedX1, rotatedY1, rotatedX2, rotatedY2);
+                //               graphics.DrawLine(errorPen, rotatedX1, rotatedY1, rotatedX2, rotatedY2);
 
-                            float CentrePoint1 = Math.Min(starImage_X_Centre, starImage_Y_Centre);
+                float CentrePoint1 = Math.Min(starImage_X_Centre, starImage_Y_Centre);
 
-                            float lineStart_X1 = starImage_X_Centre + -CentrePoint1 * (float)Math.Cos((double)bahtinovLines.LineAngles[1]) +
+                float lineStart_X1 = starImage_X_Centre + -CentrePoint1 * (float)Math.Cos((double)bahtinovLines.LineAngles[1]) +
+                        (bahtinovLines.LineIndex[1] - starImage_Y_Centre) * (float)Math.Sin((double)bahtinovLines.LineAngles[1]);
+
+                float lineEnd_X1 = starImage_X_Centre + CentrePoint1 * (float)Math.Cos((double)bahtinovLines.LineAngles[1]) +
                                     (bahtinovLines.LineIndex[1] - starImage_Y_Centre) * (float)Math.Sin((double)bahtinovLines.LineAngles[1]);
 
-                            float lineEnd_X1 = starImage_X_Centre + CentrePoint1 * (float)Math.Cos((double)bahtinovLines.LineAngles[1]) +
-                                                (bahtinovLines.LineIndex[1] - starImage_Y_Centre) * (float)Math.Sin((double)bahtinovLines.LineAngles[1]);
+                float lineStart_Y1 = starImage_Y_Centre + -CentrePoint1 * (float)Math.Sin((double)bahtinovLines.LineAngles[1]) + (float)-((double)bahtinovLines.LineIndex[1] -
+                                    (double)starImage_Y_Centre) * (float)Math.Cos((double)bahtinovLines.LineAngles[1]);
 
-                            float lineStart_Y1 = starImage_Y_Centre + -CentrePoint1 * (float)Math.Sin((double)bahtinovLines.LineAngles[1]) + (float)-((double)bahtinovLines.LineIndex[1] -
-                                                (double)starImage_Y_Centre) * (float)Math.Cos((double)bahtinovLines.LineAngles[1]);
-
-                            float lineEnd_Y1 = starImage_Y_Centre + CentrePoint1 * (float)Math.Sin((double)bahtinovLines.LineAngles[1]) + (float)-((double)bahtinovLines.LineIndex[1] -
-                                                (double)starImage_Y_Centre) * (float)Math.Cos((double)bahtinovLines.LineAngles[1]);
+                float lineEnd_Y1 = starImage_Y_Centre + CentrePoint1 * (float)Math.Sin((double)bahtinovLines.LineAngles[1]) + (float)-((double)bahtinovLines.LineIndex[1] -
+                                    (double)starImage_Y_Centre) * (float)Math.Cos((double)bahtinovLines.LineAngles[1]);
 
                 // display the error value in the pictureBox
-                            Font font2 = new Font("Arial", 16f);
-                            SolidBrush solidBrush = new SolidBrush(Color.White);
+                Font font2 = new Font("Arial", 16f);
+                SolidBrush solidBrush = new SolidBrush(Color.White);
 
- //                           Point textStartPoint = new Point((int)lineStart_X1, (int)((float)height - lineStart_Y1 + (float)yOffset));
- //                           Point textEndPoint = new Point((int)lineEnd_X1, (int)((float)height - lineEnd_Y1 + (float)yOffset));
+                //                           Point textStartPoint = new Point((int)lineStart_X1, (int)((float)height - lineStart_Y1 + (float)yOffset));
+                //                           Point textEndPoint = new Point((int)lineEnd_X1, (int)((float)height - lineEnd_Y1 + (float)yOffset));
 
                 //            if (textStartPoint.X > pictureBox.Width - 50 || textStartPoint.Y > pictureBox.Height - 50)
-                 //           {
+                //           {
                 //                textStartPoint.X = Math.Min(textStartPoint.X, pictureBox.Width - 50);
                 //                textStartPoint.Y = Math.Min(textStartPoint.Y, pictureBox.Height - 50);
                 //            }
@@ -835,19 +854,9 @@ namespace Bahtinov_Collimator
                     lastFocusErrorValue = 0.0f;
                     return false;
                 }
-            lastFocusErrorValue = x_intersectionOfLines1and3;
-
+                lastFocusErrorValue = x_intersectionOfLines1and3;
+            }
             return true;
         }
-
-
-
-
-
-
-
-
-
-
     }
 }

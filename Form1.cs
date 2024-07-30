@@ -164,27 +164,9 @@ namespace Bahtinov_Collimator
             Task.Run(() => ProcessAndDisplay(e.Image));
         }
 
-        // this is just for testing - remove when able
-        private void UpdateCount()
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => UpdateCount()));
-            }
-            else
-            {
-                int count = int.Parse(label1.Text);
-                count++;
-                label1.Text = count.ToString();
-            }
-        }
-
         private void ProcessAndDisplay(Bitmap original)
         {
             Bitmap image = new Bitmap(original);
-
-            // tests only
-            UpdateCount();
 
             // Find the Bahtinov lines
             if (!firstPassCompleted)
@@ -201,45 +183,10 @@ namespace Bahtinov_Collimator
 
             if (!firstPassCompleted)
             {
-                UpdateUI(numberOfLines);
+                UpdateFocusGroup(numberOfLines);
             }
 
-            if (numberOfLines > 3)
-            {
-                ProcessTriBahtinovLines(image, bahtinovLineData);
-            }
-            else
-            {
-                ProcessBahtinovLines(image, bahtinovLineData);
-            }
-        }
-
-        private void ProcessTriBahtinovLines(Bitmap image, BahtinovData lineData)
-        {
-            Rectangle rect = new Rectangle(0, 0, image.Width, image.Height);
-            BahtinovData data = new BahtinovData(3, rect);
-
-            for (int i = 0; i < 3; i++)
-            {
-                int startIndex = 3 * i;
-                Array.Copy(lineData.LineAngles, startIndex, data.LineAngles, 0, 3);
-                Array.Copy(lineData.LineIndex, startIndex, data.LineIndex, 0, 3);
-
-                if (!imageProcessing.DisplayLines(data, image, i))
-                    break;
-            }
-        }
-
-        private void ProcessBahtinovLines(Bitmap image, BahtinovData lineData)
-        {
-            if (lineData.LineAngles.Length == 3)
-            {
-                imageProcessing.DisplayLines(lineData, image, 0);
-            }
-            else
-            {
-                ShowWarningMessage("Unable to detect Bahtinov image lines");
-            }
+            imageProcessing.DisplayLines(bahtinovLineData, image);
         }
 
         private void ShowWarningMessage(string message)
@@ -255,11 +202,11 @@ namespace Bahtinov_Collimator
             }
         }
 
-        private void UpdateUI(int numberOfLines)
+        private void UpdateFocusGroup(int numberOfLines)
         {
             if (InvokeRequired)
             {
-                Invoke(new Action(() => UpdateUI(numberOfLines)));
+                Invoke(new Action(() => UpdateFocusGroup(numberOfLines)));
             }
             else
             {
