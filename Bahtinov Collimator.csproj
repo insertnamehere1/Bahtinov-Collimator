@@ -196,6 +196,12 @@
     <Compile Include="Custom Components\ImageDisplayComponent.Designer.cs">
       <DependentUpon>ImageDisplayComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\DarkMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\DarkMessageBox.Designer.cs">
+      <DependentUpon>DarkMessageBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\Helper.cs" />
     <Compile Include="Image Processing\ImageProcessing.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -248,6 +254,9 @@
     <EmbeddedResource Include="Dialogs\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Utilities\DarkMessageBox.resx">
+      <DependentUpon>DarkMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Bahtinov Collimator_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
@@ -290,12 +299,12 @@
   <ItemGroup>
     <PublishFile Include="published\.gitattributes">
       <Visible>False</Visible>
-      <PublishState>Exclude</PublishState>
-      <IncludeHash>False</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>False</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>

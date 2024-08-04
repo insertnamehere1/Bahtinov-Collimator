@@ -185,7 +185,7 @@ namespace Bahtinov_Collimator
                     FocusErrorLabel.Text = e.focusData.BahtinovOffset.ToString("F1");
                     AbsoluteFocusErrorLabel.Text = e.focusData.DefocusError.ToString("F1");
                     WithinCriticalFocusLabel.Text = e.focusData.InsideFocus ? "YES" : "NO";
-                    insideCriticalFocusColor = e.focusData.InsideFocus ? UITheme.GetGroupBoxTextColor(groupID) : Color.Red;
+                    insideCriticalFocusColor = e.focusData.InsideFocus ? UITheme.GetGroupBoxTextColor(groupID) : UITheme.GetGroupBoxCriticalColor;
                 }
                 else
                 {

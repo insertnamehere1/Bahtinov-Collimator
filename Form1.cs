@@ -24,11 +24,13 @@
 
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bahtinov_Collimator.AdjustAssistant;
+using static Bahtinov_Collimator.BahtinovLineDataEventArgs;
 
 namespace Bahtinov_Collimator
 {
@@ -349,5 +351,6 @@ namespace Bahtinov_Collimator
                 base.OnRenderItemText(e);
             }
         }
+
     }
 }

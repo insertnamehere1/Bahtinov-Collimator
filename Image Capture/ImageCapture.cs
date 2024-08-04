@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace Bahtinov_Collimator
 {
@@ -100,14 +103,18 @@ namespace Bahtinov_Collimator
         /// <param name="e">Event arguments for the tick event.</param>
         private static void CaptureTimer_Tick(object sender, EventArgs e)
         {
-            Bitmap latestImage = GetImage();
+            Bitmap image = GetImage();
 
-            if (latestImage == null)
+            if (image == null)
             {
+                // TODO add code to halt capture timer and reset app
                 return;
             }
 
-            Bitmap updatedImage = new Bitmap(latestImage.Width, latestImage.Height);
+            Bitmap latestImage = CreateCircularImage(image);
+
+            Bitmap updatedImage = new Bitmap(UITheme.DisplayWindow.X, UITheme.DisplayWindow.Y);
+
             Graphics g = null;
 
             try
@@ -120,7 +127,7 @@ namespace Bahtinov_Collimator
                 if (TrackingEnabled)
                 {
                     // Get offset for the brightest area
-                    Point offset = FindBrightestAreaCenter(latestImage);
+                    Point offset = FindBrightestAreaCentroid(latestImage);
 
                     // Calculate translation
                     int delta_X = (latestImage.Width / 2) - offset.X;
@@ -133,11 +140,15 @@ namespace Bahtinov_Collimator
                     g.TranslateTransform(delta_X, delta_Y);
                 }
 
-                // Draw the latest image onto the updated image
-                g.DrawImage(latestImage, 0, 0);
+                // Calculate the center position
+                int x = (UITheme.DisplayWindow.X - latestImage.Width) / 2;
+                int y = (UITheme.DisplayWindow.Y - latestImage.Height) / 2;
 
-                Bitmap circularImage = CreateCircularImage(updatedImage);
+                // Draw the image at the calculated position
+                g.DrawImage(latestImage, x, y);
 
+                Bitmap circularImage = updatedImage;
+                
                 // Check if this is a new image
                 string newHash = Utilities.ComputeHash(circularImage);
 
@@ -169,6 +180,13 @@ namespace Bahtinov_Collimator
         private static Bitmap CreateCircularImage(Bitmap originalImage)
         {
             int diameter = Math.Min(selectedStarBox.Width, selectedStarBox.Height);
+
+            if (diameter == 0)
+            {
+                DarkMessageBox.Show("The selection is too small", "Error");
+                return null;
+            }
+
             Bitmap circularImage = new Bitmap(diameter, diameter);
 
             using (Graphics g = Graphics.FromImage(circularImage))
@@ -267,7 +285,6 @@ namespace Bahtinov_Collimator
             }
         }
 
-
         /// <summary>
         /// Captures an image of the entire window specified by the window handle.
         /// </summary>
@@ -301,68 +318,142 @@ namespace Bahtinov_Collimator
             return null;
         }
 
-        public static Point FindBrightestAreaCenter(Bitmap bitmap)
+        public static Point FindBrightestAreaCentroid(Bitmap bitmap)
         {
-            int width = bitmap.Width;
-            int height = bitmap.Height;
-            int bestX = 0, bestY = 0;
-            float maxIntensity = float.MinValue;
+            byte threshold = CalculateThreshold(bitmap, 0.10f); // 10% brightest pixels
+            using (Bitmap binaryImage = ApplyThreshold(bitmap, threshold))
+            {
+                Point centroid = FindBlobCentroid(binaryImage);
+                return centroid;
+            }
+        }
 
-            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-            int stride = bitmapData.Stride;
-            IntPtr scan0 = bitmapData.Scan0;
+        private static byte CalculateThreshold(Bitmap bitmap, float topPercent)
+        {
+            int pixelCount = bitmap.Width * bitmap.Height;
+            byte[] greenChannelValues = new byte[pixelCount];
+
+            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
 
             unsafe
             {
-                byte* p = (byte*)scan0;
+                byte* ptr = (byte*)bitmapData.Scan0;
+                int stride = bitmapData.Stride;
 
-                // Iterate through the entire image
-                for (int y = 0; y < height; y++)
+                int bitmapHeight = bitmap.Height;
+                int bitmapWidth = bitmap.Width;
+
+                for (int y = 0; y < bitmapHeight; y++)
                 {
-                    for (int x = 0; x < width; x++)
-                    {
-                        // Calculate intensity for a single pixel
-                        byte* pixel = p + y * stride + x * 3;
-                        float intensity = (pixel[2] + pixel[1] + pixel[0]) / 3.0f; // RGB order
+                    byte* row = ptr + y * stride;
 
-                        if (intensity > maxIntensity)
-                        {
-                            maxIntensity = intensity;
-                            bestX = x;
-                            bestY = y;
-                        }
+                    for (int x = 0; x < bitmapWidth; x++)
+                    {
+                        byte greenValue = row[x * 3 + 1];
+                        greenChannelValues[y * bitmapWidth + x] = greenValue;
                     }
                 }
             }
 
             bitmap.UnlockBits(bitmapData);
 
-            // Return the point of the brightest pixel
-            return new Point(bestX, bestY);
+            Array.Sort(greenChannelValues);
+            int thresholdIndex = (int)(pixelCount * (1 - topPercent)) - 1;
+            return greenChannelValues[thresholdIndex];
         }
 
-        private static unsafe float CalculateBlockIntensity(byte* p, int startX, int startY, int blockSize, int endX, int endY, int stride)
+        private static Bitmap ApplyThreshold(Bitmap bitmap, byte threshold)
         {
-            float totalIntensity = 0;
-            int count = 0;
+            Bitmap binaryBitmap = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format1bppIndexed);
+            BitmapData binaryData = binaryBitmap.LockBits(new Rectangle(0, 0, binaryBitmap.Width, binaryBitmap.Height),
+                ImageLockMode.WriteOnly, PixelFormat.Format1bppIndexed);
+            BitmapData colorData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
 
-            byte* rowPointer = p + startY * stride + startX * 3;
-
-            for (int y = startY; y < endY; y++)
+            unsafe
             {
-                byte* pixelPointer = rowPointer;
-                for (int x = startX; x < endX; x++)
+                byte* binaryPtr = (byte*)binaryData.Scan0;
+                byte* colorPtr = (byte*)colorData.Scan0;
+
+                int stride = binaryData.Stride;
+                int colorStride = colorData.Stride;
+
+                int bitmapHeight = binaryBitmap.Height;
+                int bitmapWidth = binaryBitmap.Width;
+
+                for (int y = 0; y < bitmapHeight; y++)
                 {
-                    // Calculate intensity as the average of RGB components
-                    float intensity = (pixelPointer[2] + pixelPointer[1] + pixelPointer[0]) / 3.0f;
-                    totalIntensity += intensity;
-                    count++;
-                    pixelPointer += 3;
+                    byte* binaryRow = binaryPtr + y * stride;
+                    byte* colorRow = colorPtr + y * colorStride;
+
+                    for (int x = 0; x < bitmapWidth; x++)
+                    {
+                        byte greenValue = colorRow[x * 3 + 1];
+                        byte bit = (greenValue >= threshold) ? (byte)1 : (byte)0;
+                        int bitIndex = x % 8;
+                        int byteIndex = x / 8;
+
+                        if (bit == 1)
+                        {
+                            binaryRow[byteIndex] |= (byte)(1 << (7 - bitIndex));
+                        }
+                        else
+                        {
+                            binaryRow[byteIndex] &= (byte)~(1 << (7 - bitIndex));
+                        }
+                    }
                 }
-                rowPointer += stride;
             }
 
-            return totalIntensity / count;
+            binaryBitmap.UnlockBits(binaryData);
+            bitmap.UnlockBits(colorData);
+
+            return binaryBitmap;
+        }
+
+        private static Point FindBlobCentroid(Bitmap binaryImage)
+        {
+            long sumX = 0, sumY = 0, count = 0;
+            int width = binaryImage.Width;
+            int height = binaryImage.Height;
+
+            BitmapData bitmapData = binaryImage.LockBits(new Rectangle(0, 0, width, height),
+                ImageLockMode.ReadOnly, PixelFormat.Format1bppIndexed);
+
+            unsafe
+            {
+                byte* ptr = (byte*)bitmapData.Scan0;
+                int stride = bitmapData.Stride;
+
+                for (int y = 0; y < height; y++)
+                {
+                    byte* row = ptr + y * stride;
+
+                    for (int x = 0; x < width; x++)
+                    {
+                        if ((row[x / 8] & (1 << (7 - (x % 8)))) != 0)
+                        {
+                            sumX += x;
+                            sumY += y;
+                            count++;
+                        }
+                    }
+                }
+            }
+
+            binaryImage.UnlockBits(bitmapData);
+
+            if (count == 0)
+            {
+                return new Point(width / 2, height / 2); // Default to center if no bright area is found
+            }
+
+            // Calculate centroid
+            int centroidX = (int)(sumX / count);
+            int centroidY = (int)(sumY / count);
+
+            return new Point(centroidX, centroidY);
         }
     }
 }
