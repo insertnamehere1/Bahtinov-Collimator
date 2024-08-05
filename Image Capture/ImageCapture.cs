@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Linq;
 
 namespace Bahtinov_Collimator
 {
@@ -67,6 +64,7 @@ namespace Bahtinov_Collimator
 
         private static string previousImageHash = "";
         private static bool newHashFound = false;
+        private static string firstHash = "";
 
         public static bool TrackingEnabled { get; set; } = false;
 
@@ -108,13 +106,20 @@ namespace Bahtinov_Collimator
             if (image == null)
             {
                 // TODO add code to halt capture timer and reset app
+                DarkMessageBox.Show("Invalid Image Selection - try again", "Capture Timer", MessageBoxIcon.Information, MessageBoxButtons.OK);
                 return;
             }
 
+            // Check if this is a new image
+            string secondHash = Utilities.ComputeHash(image);
+
+            if (firstHash.Equals(secondHash))
+                return;
+            else
+                firstHash = secondHash;
+
             Bitmap latestImage = CreateCircularImage(image);
-
             Bitmap updatedImage = new Bitmap(UITheme.DisplayWindow.X, UITheme.DisplayWindow.Y);
-
             Graphics g = null;
 
             try
@@ -183,7 +188,7 @@ namespace Bahtinov_Collimator
 
             if (diameter == 0)
             {
-                DarkMessageBox.Show("The selection is too small", "Error");
+                DarkMessageBox.Show("The selection area is too small", "Information", MessageBoxIcon.Information, MessageBoxButtons.OK);
                 return null;
             }
 
@@ -263,7 +268,6 @@ namespace Bahtinov_Collimator
             if (selectedStarBox.Width == 0 || selectedStarBox.Height == 0)
             {
                 StopImageCapture();
-                MessageBox.Show("Invalid Image Selection", "Selection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
 

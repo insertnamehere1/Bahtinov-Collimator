@@ -124,12 +124,16 @@ namespace Bahtinov_Collimator
             public Point Origin { get; set; }
             public int Height { get; set; }
             public int Width { get; set; }
+            public bool InsideFocus { get; set; }
+            public string ErrorValue { get; set; }
 
-            public ErrorCircle(Point origin, int height, int width)
+            public ErrorCircle(Point origin, int height, int width, bool insideFocus, string errorValue)
             {
                 Origin = origin;
                 Height = height;
                 Width = width;
+                InsideFocus = insideFocus;
+                ErrorValue = errorValue;
             }
         }
 

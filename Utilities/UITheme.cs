@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
@@ -37,6 +36,10 @@ namespace Bahtinov_Collimator
         public static Point DisplayWindow { get; } = new Point(600, 600);
         public static Color DisplayBackgroundColor { get; } = Color.Black;
 
+        // MessageBox Theme
+        public static Color MessageBoxPanelBackground { get; } = Color.FromArgb(30, 30, 35);
+        public static Color MessageBoxTextColor { get; } = Color.White;
+
         // Group Box Color Theme Dictionary
         private static readonly Dictionary<int, Color> GroupBoxTextColors;
         private static readonly Dictionary<int, Color> GroupBoxBackgroundColors;
@@ -44,6 +47,9 @@ namespace Bahtinov_Collimator
         // Display Bahtinov Lines Theme
         private static readonly Dictionary<int, Color> DisplayLineColors;
         private static readonly Dictionary<int, Pen> DisplayLinePens;
+        private static readonly Dictionary<int, Pen> ErrorCirclePens;
+        private static readonly Dictionary<int, Font> ErrorTextFonts;
+        private static readonly Dictionary<int, SolidBrush> ErrorTextBrush;
 
         static UITheme()
         {
@@ -51,11 +57,14 @@ namespace Bahtinov_Collimator
             GroupBoxBackgroundColors = new Dictionary<int, Color>();
             DisplayLineColors = new Dictionary<int, Color>();
             DisplayLinePens = new Dictionary<int, Pen>();
+            ErrorCirclePens = new Dictionary<int, Pen>();
+            ErrorTextFonts = new Dictionary<int, Font>();
+            ErrorTextBrush = new Dictionary<int, SolidBrush>();
 
             // Initialize GroupBox font colors
             GroupBoxTextColors[0] = Color.FromArgb(247, 69, 96);
             GroupBoxTextColors[1] = Color.LightGreen;
-            GroupBoxTextColors[2] = Color.FromArgb(66, 179, 245); 
+            GroupBoxTextColors[2] = Color.FromArgb(66, 179, 245);
 
             // Initialize GroupBox mouse over colors
             GroupBoxBackgroundColors[0] = Color.FromArgb(80, 70, 80);
@@ -71,6 +80,21 @@ namespace Bahtinov_Collimator
             DisplayLinePens[0] = new Pen(Color.White, 2.0f) { DashStyle = DashStyle.Dash };
             DisplayLinePens[1] = new Pen(Color.White, 2.0f) { DashStyle = DashStyle.Dash };
             DisplayLinePens[2] = new Pen(Color.White, 2.0f) { DashStyle = DashStyle.Dash };
+
+            // Initialize Error Circle Pens
+            ErrorCirclePens[0] = new Pen(DisplayLineColors[0], 5.0f);
+            ErrorCirclePens[1] = new Pen(DisplayLineColors[1], 5.0f);
+            ErrorCirclePens[2] = new Pen(DisplayLineColors[2], 5.0f);
+
+            // Initialize Error Text Fonts
+            ErrorTextFonts[0] = new Font("Arial", 16f);
+            ErrorTextFonts[1] = new Font("Arial", 16f);
+            ErrorTextFonts[2] = new Font("Arial", 16f);
+
+            // Initialize Error Text Pen
+            ErrorTextBrush[0] = new SolidBrush(Color.White);
+            ErrorTextBrush[1] = new SolidBrush(Color.White);
+            ErrorTextBrush[2] = new SolidBrush(Color.White);
         }
 
         public static Color GetGroupBoxTextColor(int groupId)
@@ -97,56 +121,39 @@ namespace Bahtinov_Collimator
             }
             return new Pen(Color.White); // Default color if not found
         }
+
+        public static Pen GetErrorCirclePen(int groupId, bool insideFocus)
+        {
+            if (ErrorCirclePens.ContainsKey(groupId))
+            {
+                Pen pen = ErrorCirclePens[groupId];
+
+                if (insideFocus)
+                    pen.DashStyle = DashStyle.Solid;
+                else
+                    pen.DashStyle = DashStyle.Dash;
+
+                return pen;
+            }
+            return new Pen(Color.White); // Default color if not found
+        }
+
+        public static Font GetErrorTextFont(int groupId)
+        {
+            if (ErrorTextFonts.ContainsKey(groupId))
+            {
+                return ErrorTextFonts[groupId];
+            }
+            return new Font("Arial", 16f); // Default color if not found
+        }
+
+        public static SolidBrush GetErrorTextBrush(int groupId)
+        {
+            if (ErrorTextBrush.ContainsKey(groupId))
+            {
+                return ErrorTextBrush[groupId];
+            }
+            return new SolidBrush(Color.White); // Default color if not found
+        }
     }
 }
-
-
-
-
-
-
-//// select pen colour for the lines
-//switch (group)
-//{
-//    case 0:
-//        dashPen.Color = Color.Red;
-//        largeDashPen.Color = Color.Red;
-//        break;
-//    case 1:
-//        dashPen.Color = Color.Green;
-//        largeDashPen.Color = Color.Green;
-//        break;
-//    case 2:
-//        dashPen.Color = Color.Blue;
-//        largeDashPen.Color = Color.Blue;
-//        break;
-//}
-
-
-
-
-//Pen errorPen;
-//if (withinCriticalFocus)
-//    errorPen = largeSolidPen;
-//else
-//    errorPen = dashPen;
-
-//// select pen colour
-//switch (group)
-//{
-//    case 0:
-//        errorPen.Color = Color.Red;
-//        break;
-//    case 1:
-//        errorPen.Color = Color.Green;
-//        break;
-//    case 2:
-//        errorPen.Color = Color.Blue;
-//        break;
-//    default:
-//        errorPen.Color = Color.White;
-//        break;
-//}
-
-//// draw the circular error marker
-//errorPen.Width = 5;

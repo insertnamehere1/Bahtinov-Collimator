@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics.Tracing;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
+
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
@@ -40,7 +34,6 @@ namespace Bahtinov_Collimator
 
         private void SetupPictureBox()
         {
-            //            pictureBox1.SizeMode = PictureBoxSizeMode.CenterImage;
             pictureBox1.BackColor = UITheme.DisplayBackgroundColor;
         }
 
@@ -98,53 +91,146 @@ namespace Bahtinov_Collimator
 
         private void UpdatePictureBox(Bitmap image, BahtinovLineDataEventArgs.BahtinovLineData data)
         {
-            // Clear all layers
+            ClearAllLayers();
+
+            DrawImageOnFirstLayer(image);
+
+            var centerX = 300;
+            var centerY = 300;
+            var radius = 290;
+
+            var clippingRegion = CreateCircularClippingRegion(centerX, centerY, radius);
+
+            foreach (var group in data.LineGroups)
+            {
+                DrawGroupLines(group, clippingRegion);
+            }
+
+            pictureBox1.Invalidate();
+        }
+
+        private void ClearAllLayers()
+        {
             foreach (var layer in layers)
             {
-                using (Graphics g = Graphics.FromImage(layer))
+                using (var g = Graphics.FromImage(layer))
                 {
                     g.Clear(Color.Transparent);
                 }
             }
+        }
 
-            // Draw the image on the first layer
-            using (Graphics g = Graphics.FromImage(layers[0]))
+        private void DrawImageOnFirstLayer(Bitmap image)
+        {
+            using (var g = Graphics.FromImage(layers[0]))
             {
                 g.DrawImage(image, new Point(0, 0));
             }
+        }
 
-            // Define the center and radius of the circle
-            int canvasWidth = 600;
-            int canvasHeight = 600;
-            int centerX = canvasWidth / 2;
-            int centerY = canvasHeight / 2;
-            int radius = 280;
+        private GraphicsPath CreateCircularClippingRegion(int centerX, int centerY, int radius)
+        {
+            var path = new GraphicsPath();
+            path.AddEllipse(centerX - radius, centerY - radius, radius * 2, radius * 2);
+            return path;
+        }
 
-            // Create a circular clipping region
-            using (GraphicsPath path = new GraphicsPath())
+        private void DrawGroupLines(BahtinovLineDataEventArgs.LineGroup group, GraphicsPath clippingRegion)
+        {
+            using (var g = Graphics.FromImage(layers[group.GroupId + 1]))
             {
-                path.AddEllipse(centerX - radius, centerY - radius, radius * 2, radius * 2);
+                g.SetClip(clippingRegion);
 
-                foreach (var group in data.LineGroups)
+                foreach (var line in group.Lines)
                 {
-                    using (Graphics g = Graphics.FromImage(layers[group.GroupId + 1]))
-                    {
-                        // Apply the clipping region
-                        g.SetClip(path);
-
-                        foreach (var line in group.Lines)
-                        {
-                            Pen pen = UITheme.GetDisplayLinePen(group.GroupId, line.LineId);
-                            g.DrawLine(pen, line.Start, line.End);
-                        }
-
-                        // Reset the clipping region
-                        g.ResetClip();
-                    }
+                    var pen = UITheme.GetDisplayLinePen(group.GroupId, line.LineId);
+                    g.DrawLine(pen, line.Start, line.End);
                 }
+
+                DrawErrorCircleAndLine(g, group);
+                DrawErrorValueText(g, group);
+
+                g.ResetClip();
+            }
+        }
+
+        private void DrawErrorCircleAndLine(Graphics g, BahtinovLineDataEventArgs.LineGroup group)
+        {
+            var errorPen = UITheme.GetErrorCirclePen(group.GroupId, group.ErrorCircle.InsideFocus);
+            var circleRadius = UITheme.ErrorCircleRadius;
+
+            g.DrawEllipse(errorPen, group.ErrorCircle.Origin.X, group.ErrorCircle.Origin.Y, circleRadius * 2, circleRadius * 2);
+            g.DrawLine(errorPen, group.ErrorLine.Start.X, group.ErrorLine.Start.Y, group.ErrorLine.End.X, group.ErrorLine.End.Y);
+        }
+
+        private void DrawErrorValueText(Graphics g, BahtinovLineDataEventArgs.LineGroup group)
+        {
+            var textFont = UITheme.GetErrorTextFont(group.GroupId);
+            var solidBrush = UITheme.GetErrorTextBrush(group.GroupId);
+
+            var textStart = group.Lines[1].Start;
+            var textEnd = group.Lines[1].End;
+
+            int margin = 50;
+
+            var adjustedPoints = AdjustPointsForMargin(textStart, textEnd, pictureBox1.Width, pictureBox1.Height, margin);
+
+            var textLocation = group.GroupId == 1 ? adjustedPoints.end : adjustedPoints.start;
+
+            if (group.GroupId == 1)
+                DrawLineWithCenteredText(g, adjustedPoints.end, adjustedPoints.start, group.ErrorCircle.ErrorValue, textFont, solidBrush);
+            else
+                DrawLineWithCenteredText(g, adjustedPoints.start, adjustedPoints.end, group.ErrorCircle.ErrorValue, textFont, solidBrush);
+        }
+
+        private void DrawLineWithCenteredText(Graphics g, Point start, Point end, string text, Font font, Brush brush)
+        {
+            // Measure the size of the text
+            SizeF textSize = g.MeasureString(text, font);
+
+            // Calculate the position to center the text at the start point
+            PointF textPosition = new PointF(start.X - textSize.Width / 2, start.Y - textSize.Height / 2);
+
+            // draw opaque background
+            g.FillRectangle(new SolidBrush(Color.Black), textPosition.X, textPosition.Y, textSize.Width, textSize.Height);
+
+            g.FillRectangle(new SolidBrush(Color.Transparent), textPosition.X, textPosition.Y, textSize.Width, textSize.Height);
+
+
+            // Draw the text
+            g.DrawString(text, font, brush, textPosition);
+
+        }
+
+        public static (Point start, Point end) AdjustPointsForMargin(Point start, Point end, int width, int height, int margin)
+        {
+            // Calculate direction vector
+            float dx = end.X - start.X;
+            float dy = end.Y - start.Y;
+            float length = (float)Math.Sqrt(dx * dx + dy * dy);
+
+            // Normalize direction vector
+            float unitDx = dx / length;
+            float unitDy = dy / length;
+
+            // Calculate margin length
+            float marginLength = (float)Math.Sqrt(margin * margin + margin * margin);
+
+            // Adjust start point if within margin
+            if (start.X < margin || start.X > width - margin || start.Y < margin || start.Y > height - margin)
+            {
+                start.X += (int)(marginLength * unitDx);
+                start.Y += (int)(marginLength * unitDy);
             }
 
-            pictureBox1.Invalidate();
+            // Adjust end point if within margin
+            if (end.X < margin || end.X > width - margin || end.Y < margin || end.Y > height - margin)
+            {
+                end.X -= (int)(marginLength * unitDx);
+                end.Y -= (int)(marginLength * unitDy);
+            }
+
+            return (start, end);
         }
 
         public void ClearDisplay()
@@ -152,56 +238,5 @@ namespace Bahtinov_Collimator
             pictureBox1.Image?.Dispose();
             pictureBox1.Image = null;
         }
-
-        public Bitmap InvertBitmapVertically(Bitmap original)
-        {
-            Bitmap inverted = new Bitmap(original.Width, original.Height);
-
-            using (Graphics g = Graphics.FromImage(inverted))
-            {
-                g.TranslateTransform(0, original.Height);
-                g.ScaleTransform(1, -1);
-                g.DrawImage(original, new Point(0, 0));
-            }
-
-            return inverted;
-        }
     }
 }
-
-
-
-//private void LoadImageLost()
-//{
-//    Bitmap imageLost = new Bitmap(Properties.Resources.imageLost);
-//            pictureBox.Image = imageLost;
-//}
-
-
-
-// display the error value in the pictureBox
-//Font font2 = new Font("Arial", 16f);
-//SolidBrush solidBrush = new SolidBrush(Color.White);
-
-//Point textStartPoint = new Point((int)lineStart_X1, (int)((float)height - lineStart_Y1 + (float)yOffset));
-//Point textEndPoint = new Point((int)lineEnd_X1, (int)((float)height - lineEnd_Y1 + (float)yOffset));
-
-//            if (textStartPoint.X > pictureBox.Width - 50 || textStartPoint.Y > pictureBox.Height - 50)
-//           {
-//                textStartPoint.X = Math.Min(textStartPoint.X, pictureBox.Width - 50);
-//                textStartPoint.Y = Math.Min(textStartPoint.Y, pictureBox.Height - 50);
-//            }
-
-//            if (textEndPoint.X > pictureBox.Width - 50 || textEndPoint.Y > pictureBox.Height - 50)
-//            {
-//                textEndPoint.X = Math.Min(textEndPoint.X, pictureBox.Width - 50);
-//                textEndPoint.Y = Math.Min(textEndPoint.Y, pictureBox.Height - 50);
-//            }
-
-//            Point textLocation = group == 1 ? textEndPoint : textStartPoint;
-
-//            if (showFocus[group] == true)
-//                graphics.DrawString((errorSign * line2ToIntersectDistance).ToString("F1"), font2, (Brush)solidBrush, (PointF)textLocation);
-
-
-

@@ -110,14 +110,15 @@ namespace Bahtinov_Collimator
             BitmapData bitmapData = starImage.LockBits(rect, ImageLockMode.ReadWrite, starImage.PixelFormat);
 
             IntPtr scan0 = bitmapData.Scan0;
-            int imagePixelCount = bitmapData.Stride * starImage.Height;
-            byte[] starImageArray = new byte[imagePixelCount];
-
-            Marshal.Copy(scan0, starImageArray, 0, imagePixelCount);
-            starImage.UnlockBits(bitmapData);
-
+            int stride = bitmapData.Stride;
+            int bytesPerPixel = System.Drawing.Image.GetPixelFormatSize(starImage.PixelFormat) / 8;
             int width = starImage.Width;
             int height = starImage.Height;
+
+            byte[] starImageArray = new byte[height * stride];
+            Marshal.Copy(scan0, starImageArray, 0, starImageArray.Length);
+            starImage.UnlockBits(bitmapData);
+
             float edgeOffset = (width < height ? 0.5f * (float)Math.Sqrt(2.0) * width : 0.5f * (float)Math.Sqrt(2.0) * height) - 8f;
             int leftEdge = (int)(0.5 * (width - edgeOffset));
             int rightEdge = (int)(0.5 * (width + edgeOffset));
@@ -132,12 +133,10 @@ namespace Bahtinov_Collimator
             {
                 for (int y = topEdge; y < bottomEdge; ++y)
                 {
-                    int pixelIndex = (x + y * width) * bitmapData.Stride / width;
-                    byte redValue = starImageArray[pixelIndex];
+                    int pixelIndex = y * stride + x * bytesPerPixel;
                     byte greenValue = starImageArray[pixelIndex + 1];
-                    byte blueValue = starImageArray[pixelIndex + 2];
 
-                    starArray2D[x, y] = (float)Math.Sqrt((redValue + greenValue + blueValue) * DIVISION_FACTOR);
+                    starArray2D[x, y] = (float)Math.Sqrt(greenValue * DIVISION_FACTOR);
                 }
             }
 
@@ -166,20 +165,24 @@ namespace Bahtinov_Collimator
                         int rotatedYRoundedDown = (int)rotatedYDistance;
                         int rotatedYRoundedUp = rotatedYRoundedDown + 1;
 
-                        float rotatedXFraction = rotatedXDistance - rotatedXRoundedDown;
-                        float rotatedYFraction = rotatedYDistance - rotatedYRoundedDown;
+                        if (rotatedXRoundedDown >= leftEdge && rotatedXRoundedUp < rightEdge &&
+                            rotatedYRoundedDown >= topEdge && rotatedYRoundedUp < bottomEdge)
+                        {
+                            float rotatedXFraction = rotatedXDistance - rotatedXRoundedDown;
+                            float rotatedYFraction = rotatedYDistance - rotatedYRoundedDown;
 
-                        float oneMinusRotatedXFraction = 1.0f - rotatedXFraction;
-                        float oneMinusRotatedYFraction = 1.0f - rotatedYFraction;
-                        float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
-                        float value2 = starArray2D[rotatedXRoundedUp, rotatedYRoundedDown];
-                        float value3 = starArray2D[rotatedXRoundedUp, rotatedYRoundedUp];
-                        float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedUp];
+                            float oneMinusRotatedXFraction = 1.0f - rotatedXFraction;
+                            float oneMinusRotatedYFraction = 1.0f - rotatedYFraction;
+                            float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
+                            float value2 = starArray2D[rotatedXRoundedUp, rotatedYRoundedDown];
+                            float value3 = starArray2D[rotatedXRoundedUp, rotatedYRoundedUp];
+                            float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedUp];
 
-                        rotatedImage[x, y] = value1 * oneMinusRotatedXFraction * oneMinusRotatedYFraction +
-                                             value2 * rotatedXFraction * oneMinusRotatedYFraction +
-                                             value3 * rotatedXFraction * rotatedYFraction +
-                                             value4 * oneMinusRotatedXFraction * rotatedYFraction;
+                            rotatedImage[x, y] = value1 * oneMinusRotatedXFraction * oneMinusRotatedYFraction +
+                                                 value2 * rotatedXFraction * oneMinusRotatedYFraction +
+                                                 value3 * rotatedXFraction * rotatedYFraction +
+                                                 value4 * oneMinusRotatedXFraction * rotatedYFraction;
+                        }
                     }
                 }
 
@@ -503,7 +506,7 @@ namespace Bahtinov_Collimator
         {
             if (lines.LineAngles.Length != 3 && lines.LineAngles.Length != 9)
             {
-                DarkMessageBox.Show("Unable to detect Bahtinov image lines", "Error");
+                DarkMessageBox.Show("Unable to detect Bahtinov image lines", "Display Error", MessageBoxIcon.Error, MessageBoxButtons.OK);
                 return false;
             }
 
@@ -607,7 +610,7 @@ namespace Bahtinov_Collimator
                 catch
                 {
                     lastFocusErrorValue = 0.0f;
-                    DarkMessageBox.Show("Image has been lost", "Error");
+                    DarkMessageBox.Show("Image has been lost", "Display Error", MessageBoxIcon.Error, MessageBoxButtons.OK);
                     return false;
                 }
 
@@ -646,8 +649,9 @@ namespace Bahtinov_Collimator
                 int circle_y = (int)(height - errorMarker_Y - circleRadius + yOffset);
                 int circle_width = circleRadius * 2;
                 int circle_height = circleRadius * 2;
+                string errorValue = (errorSign * errorDistance).ToString("F1");
 
-                lineGroup.ErrorCircle = new BahtinovLineDataEventArgs.ErrorCircle(new Point(circle_x, circle_y), circle_width, circle_height);
+                lineGroup.ErrorCircle = new BahtinovLineDataEventArgs.ErrorCircle(new Point(circle_x, circle_y), circle_width, circle_height, withinCriticalFocus, errorValue);
 
                 float lineX1 = errorMarker_X + circleRadius;
                 float lineY1 = height - errorMarker_Y;

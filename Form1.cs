@@ -255,7 +255,7 @@ namespace Bahtinov_Collimator
 
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not yet implemented");
+            DarkMessageBox.Show("Not yet implemented", "Help", MessageBoxIcon.Asterisk, MessageBoxButtons.OK);
         }
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)

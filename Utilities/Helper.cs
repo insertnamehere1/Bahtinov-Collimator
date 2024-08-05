@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MathNet.Numerics;
 using System.Deployment.Application;
 
 namespace Bahtinov_Collimator
@@ -17,27 +10,74 @@ namespace Bahtinov_Collimator
         {
             try
             {
-                if (ApplicationDeployment.IsNetworkDeployed)
+                if (!ApplicationDeployment.IsNetworkDeployed)
                 {
                     ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
                     UpdateCheckInfo info = ad.CheckForDetailedUpdate();
 
                     if (info.UpdateAvailable)
                     {
-                        bool success = ad.Update();//Updates the application asynchronously
+                        // Ask the user for confirmation before updating
+                        DialogResult result = DarkMessageBox.Show(
+                            "A new update is available. Do you want to download and install it now?",
+                            "Update Available",
+                            MessageBoxIcon.Question,
+                            MessageBoxButtons.YesNo
+                        );
 
-                        if (ad.Update())
-                            MessageBox.Show("New updates have been downloaded. Restart the application to install", "Update Available", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        if (result == DialogResult.OK)
+                        {
+                            // Perform the update
+                            bool success = ad.Update(); // Updates the application asynchronously
+     
+                            if (success)
+                            {
+                                DarkMessageBox.Show(
+                                    "New updates have been downloaded. Restart the application to install.",
+                                    "Update Completed",
+                                    MessageBoxIcon.Information,
+                                    MessageBoxButtons.YesNo
+                                );
+                            }
+                            else
+                            {
+                                DarkMessageBox.Show(
+                                    "The update download failed. Please try again.",
+                                    "Update Failed",
+                                    MessageBoxIcon.Exclamation,
+                                    MessageBoxButtons.OK
+                                );
+                            }
+                        }
                         else
-                            MessageBox.Show("The update download failed, please try again", "Update Available", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        {
+                            DarkMessageBox.Show(
+                                "Update canceled.",
+                                "Update Canceled",
+                                MessageBoxIcon.Information,
+                                MessageBoxButtons.OK
+                            );
+                        }
                     }
                     else
-                        MessageBox.Show("No new updates are available", "No Updates", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    {
+                        DarkMessageBox.Show(
+                            "No new updates are available.",
+                            "No Updates",
+                            MessageBoxIcon.Information,
+                            MessageBoxButtons.OK
+                        );
+                    }
                 }
             }
             catch (Exception)
             {
-                MessageBox.Show("Unable to connect to the update server", "Network Problem", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                DarkMessageBox.Show(
+                    "Unable to connect to the update server.",
+                    "Network Problem",
+                    MessageBoxIcon.Exclamation,
+                    MessageBoxButtons.OK
+                );
             }
         }
 
