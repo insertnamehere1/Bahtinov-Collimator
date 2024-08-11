@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
@@ -29,7 +28,13 @@ namespace Bahtinov_Collimator
             // Subscribe to the ImageReceivedEvent
             FocusChannelComponent.ChannelSelectDataEvent += ChannelSelected;
             ImageProcessing.BahtinovLineDrawEvent += OnBahtinovLineReceive;
+            ImageLostEventProvider.ImageLostEvent += HandleImageLost;
             this.pictureBox1.Paint += new PaintEventHandler(this.pictureBoxPaint);
+        }
+
+        private void HandleImageLost(object sender, ImageLostEventArgs e)
+        {
+            ClearDisplay();
         }
 
         private void SetupPictureBox()
@@ -147,10 +152,10 @@ namespace Bahtinov_Collimator
                     g.DrawLine(pen, line.Start, line.End);
                 }
 
+                g.ResetClip();
+
                 DrawErrorCircleAndLine(g, group);
                 DrawErrorValueText(g, group);
-
-                g.ResetClip();
             }
         }
 
@@ -194,12 +199,8 @@ namespace Bahtinov_Collimator
             // draw opaque background
             g.FillRectangle(new SolidBrush(Color.Black), textPosition.X, textPosition.Y, textSize.Width, textSize.Height);
 
-            g.FillRectangle(new SolidBrush(Color.Transparent), textPosition.X, textPosition.Y, textSize.Width, textSize.Height);
-
-
             // Draw the text
             g.DrawString(text, font, brush, textPosition);
-
         }
 
         public static (Point start, Point end) AdjustPointsForMargin(Point start, Point end, int width, int height, int margin)
@@ -233,10 +234,27 @@ namespace Bahtinov_Collimator
             return (start, end);
         }
 
-        public void ClearDisplay()
+        private void ClearDisplay()
         {
-            pictureBox1.Image?.Dispose();
-            pictureBox1.Image = null;
+            if (pictureBox1.InvokeRequired)
+            {
+                // If not on the UI thread, use Invoke to marshal the call to the UI thread
+                pictureBox1.Invoke(new Action(ClearDisplay));
+            }
+            else
+            {
+                ClearAllLayers();
+
+                // Dispose of the current image if it exists
+                if (pictureBox1.Image != null)
+                {
+                    pictureBox1.Image.Dispose();
+                    pictureBox1.Image = null;
+                }
+
+                // Force the PictureBox to redraw itself as blank
+                pictureBox1.Invalidate();
+            }
         }
     }
 }

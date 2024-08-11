@@ -24,13 +24,11 @@
 
 using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bahtinov_Collimator.AdjustAssistant;
-using static Bahtinov_Collimator.BahtinovLineDataEventArgs;
 
 namespace Bahtinov_Collimator
 {
@@ -111,6 +109,7 @@ namespace Bahtinov_Collimator
         private void SetEvents()
         {
             ImageCapture.ImageReceivedEvent += OnImageReceived;
+            ImageLostEventProvider.ImageLostEvent += HandleImageLost;
         }
 
         private void SetColorScheme()
@@ -228,6 +227,16 @@ namespace Bahtinov_Collimator
 
                 firstPassCompleted = true;
             }
+        }
+
+
+        private void HandleImageLost(object sender, ImageLostEventArgs e)
+        {
+            ImageCapture.StopImageCapture();
+            imageProcessing.StopImageProcessing();
+            firstPassCompleted = false;
+
+            DarkMessageBox.Show(e.Message, "Title", MessageBoxIcon.Warning, MessageBoxButtons.OK);
         }
 
         private void QuitToolStripMenuItem2_Click(object sender, EventArgs e)

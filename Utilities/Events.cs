@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Security.Permissions;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Bahtinov_Collimator
 {
@@ -38,6 +33,30 @@ namespace Bahtinov_Collimator
         {
             ChannelSelected = data;
             ChannelCount = channelCount;
+        }
+    }
+
+    public delegate void ImageLostEventHandler(object sender, ImageLostEventArgs e);
+
+    public class ImageLostEventArgs : EventArgs
+    {
+        public string Message { get; }
+
+        public ImageLostEventArgs(string message)
+        {
+            Message = message;
+        }
+    }
+
+    public static class ImageLostEventProvider
+    {
+        // Define the event
+        public static event ImageLostEventHandler ImageLostEvent;
+
+        // Method to raise the event
+        public static void OnImageLost(string message)
+        {
+            ImageLostEvent?.Invoke(null, new ImageLostEventArgs(message));
         }
     }
 

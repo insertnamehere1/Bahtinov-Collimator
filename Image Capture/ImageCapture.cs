@@ -105,8 +105,6 @@ namespace Bahtinov_Collimator
 
             if (image == null)
             {
-                // TODO add code to halt capture timer and reset app
-                DarkMessageBox.Show("Invalid Image Selection - try again", "Capture Timer", MessageBoxIcon.Information, MessageBoxButtons.OK);
                 return;
             }
 
@@ -252,6 +250,7 @@ namespace Bahtinov_Collimator
         {
             if (!GetWindowRect(targetWindowHandle, out Utilities.RECT rect))
             {
+                ImageLostEventProvider.OnImageLost("Image has been lost");
                 return null;
             }
 
@@ -267,7 +266,7 @@ namespace Bahtinov_Collimator
             // Ensure the selected rectangle is valid
             if (selectedStarBox.Width == 0 || selectedStarBox.Height == 0)
             {
-                StopImageCapture();
+                ImageLostEventProvider.OnImageLost("The selection area is too small.");
                 return null;
             }
 
@@ -277,6 +276,7 @@ namespace Bahtinov_Collimator
                 {
                     if (fullWindowBitmap == null)
                     {
+                        ImageLostEventProvider.OnImageLost("Unable to capture image");
                         return null;
                     }
 
@@ -285,6 +285,7 @@ namespace Bahtinov_Collimator
             }
             catch
             {
+                ImageLostEventProvider.OnImageLost("Image capture failed");
                 return null;
             }
         }

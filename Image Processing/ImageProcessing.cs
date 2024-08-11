@@ -506,7 +506,7 @@ namespace Bahtinov_Collimator
         {
             if (lines.LineAngles.Length != 3 && lines.LineAngles.Length != 9)
             {
-                DarkMessageBox.Show("Unable to detect Bahtinov image lines", "Display Error", MessageBoxIcon.Error, MessageBoxButtons.OK);
+                ImageLostEventProvider.OnImageLost("Unable to detect Bahtinov image lines");
                 return false;
             }
 
@@ -681,6 +681,17 @@ namespace Bahtinov_Collimator
 
             BahtinovLineDrawEvent?.Invoke(null, new BahtinovLineDataEventArgs(displayLines, starImage));
             return true;
+        }
+
+        public void StopImageProcessing()
+        {
+            FocusData fd = new FocusData
+            {
+                ClearDisplay = true,
+                Id = -1
+            };
+
+            FocusDataEvent?.Invoke(null, new FocusDataEventArgs(fd));
         }
     }
 }
