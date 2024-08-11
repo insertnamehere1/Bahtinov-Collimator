@@ -34,6 +34,7 @@ using System.Linq;
 using System.Drawing.Drawing2D;
 using static System.Net.Mime.MediaTypeNames;
 using static Bahtinov_Collimator.BahtinovLineDataEventArgs;
+using System.Collections.Generic;
 
 namespace Bahtinov_Collimator
 {
@@ -62,8 +63,11 @@ namespace Bahtinov_Collimator
         // retain last error value
         private float lastFocusErrorValue = 0.0f;
 
+        public static Dictionary<int, double> errorValues { get; private set; }
+
         public ImageProcessing()
         {
+            errorValues = new Dictionary<int, double>();
             LoadSettings();
         }
 
@@ -640,6 +644,7 @@ namespace Bahtinov_Collimator
                 };
 
                 FocusDataEvent?.Invoke(null, new FocusDataEventArgs(fd));
+                errorValues[group] = bahtinovOffset;
 
                 float errorMarker_X = xIntersection + (perpendicularX - xIntersection) * ErrorMarkerScalingValue;
                 float errorMarker_Y = yIntersection + (perpendicularY - yIntersection) * ErrorMarkerScalingValue;

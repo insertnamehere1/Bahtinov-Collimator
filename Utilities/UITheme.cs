@@ -58,6 +58,11 @@ namespace Bahtinov_Collimator
         private static readonly Dictionary<int, Font> ErrorTextFonts;
         private static readonly Dictionary<int, SolidBrush> ErrorTextBrush;
 
+        // AdjustAssist Theme
+        public static Color AdjustAssistKnobHi { get; } = Color.FromArgb(100, 100, 100);
+        public static Color AdjustAssistKnobLo { get; } = Color.FromArgb(200, 200, 200);
+        public static Color AdjustAssistTextColor { get; } = Color.Black;
+
         static UITheme()
         {
             GroupBoxTextColors = new Dictionary<int, Color>();

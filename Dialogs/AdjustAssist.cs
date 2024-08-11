@@ -2,7 +2,9 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace Bahtinov_Collimator.AdjustAssistant
 {
@@ -15,14 +17,21 @@ namespace Bahtinov_Collimator.AdjustAssistant
 
     public partial class AdjustAssist : Form
     {
+        [DllImport("dwmapi.dll", PreserveSig = true)]
+        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
+        // Constants
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
+
+
         #region Fields
 
         private int rotationAngle;
         private int circleRadius;
 
-        private float redError = 0.0f;
-        private float greenError = 0.0f;
-        private float blueError = 0.0f;
+        private double redError = ImageProcessing.errorValues[0];
+        private double greenError = ImageProcessing.errorValues[1];
+        private double blueError = ImageProcessing.errorValues[2];
         private Timer updateTimer;
         private Form1 parentForm;
         private int lastImageCount = 0;
@@ -45,6 +54,11 @@ namespace Bahtinov_Collimator.AdjustAssistant
         public AdjustAssist(Form1 parent)
         {
             InitializeComponent();
+            SetColorScheme();
+
+            ImageProcessing.FocusDataEvent += FocusDataEvent;
+
+
 
             rotationAngle = 0;
             trackBar1.Minimum = 0;
@@ -66,6 +80,43 @@ namespace Bahtinov_Collimator.AdjustAssistant
 
         #region Methods
 
+        private void SetColorScheme()
+        {
+            // main form
+            this.ForeColor = UITheme.DarkForeground;
+            this.BackColor = UITheme.DarkBackground;
+
+            // OK button
+            saveButton.BackColor = UITheme.ButtonDarkBackground;
+            saveButton.ForeColor = UITheme.ButtonDarkForeground;
+            saveButton.FlatStyle = FlatStyle.Popup;
+
+            // Cancel button
+            closeButton.BackColor = UITheme.ButtonDarkBackground;
+            closeButton.ForeColor = UITheme.ButtonDarkForeground;
+            closeButton.FlatStyle = FlatStyle.Popup;
+
+            // Titlebar
+            var color = UITheme.DarkBackground;
+            int colorValue = color.R | (color.G << 8) | (color.B << 16);
+            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
+
+            // Group Boxes
+            ChangeLabelColors(groupBox1, UITheme.MenuDarkForeground);
+            groupBox1.ForeColor = UITheme.MenuDarkForeground;
+        }
+
+        private void ChangeLabelColors(Control parent, Color color)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is Label label)
+                {
+                    label.ForeColor = color;
+                }
+            }
+        }
+
         /// <summary>
         /// Loads the settings from the properties.
         /// </summary>
@@ -84,6 +135,42 @@ namespace Bahtinov_Collimator.AdjustAssistant
             blueReverseBox.Checked = blueReverseSetting;
         }
 
+        public void FocusDataEvent(object sender, FocusDataEventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<object, FocusDataEventArgs>(FocusDataEvent), sender, e);
+                return;
+            }
+
+             int groupId = e.focusData.Id;
+
+            // is this a clear event?
+            if (groupId != -1)
+            {
+                if (!e.focusData.ClearDisplay)
+                {
+                    if(groupId == 0)
+                        redError = (float)e.focusData.BahtinovOffset;
+                    else
+                        if (groupId == 1)
+                            greenError = (float)e.focusData.BahtinovOffset;
+                    else
+                        if (groupId == 2)
+                        blueError = (float)e.focusData.BahtinovOffset;
+                }
+                else
+                {
+                    redError = 0.0f;
+                    greenError = 0.0f;
+                    blueError = 0.0f;
+                }
+            }
+            pictureBox1.Invalidate();
+        }
+
+
+
         /// <summary>
         /// Draws the contents of the picture box.
         /// </summary>
@@ -98,8 +185,8 @@ namespace Bahtinov_Collimator.AdjustAssistant
             int centerY = pictureBox1.Height / 2;
 
             // Define the colors for the shading effect
-            Color startColor = Color.White;
-            Color endColor = Color.Gray;
+            Color startColor = UITheme.AdjustAssistKnobLo;
+            Color endColor = UITheme.AdjustAssistKnobHi; ;
 
             // Create a linear gradient brush to apply shading
             Brush shadingBrush = new LinearGradientBrush(
@@ -107,7 +194,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
                 new Point(centerX + circleRadius, centerY + circleRadius),
                 startColor, endColor);
 
-            using (SolidBrush bgBrush = new SolidBrush(SystemColors.Control))
+            using (SolidBrush bgBrush = new SolidBrush(UITheme.DarkBackground))
             using (SolidBrush circleBrush = new SolidBrush(Color.DarkGray))
             using (Pen circlePen = new Pen(Color.Black, 2.0f))
             {
@@ -124,17 +211,17 @@ namespace Bahtinov_Collimator.AdjustAssistant
                 greenArrow = GetArrow(greenError, greenReverseBox.Checked);
                 blueArrow = GetArrow(blueError, blueReverseBox.Checked);
 
-                DrawSmallCircle(g, centerX, centerY, circleRadius, -90, Color.Red, redArrow, redError);
+                DrawSmallCircle(g, centerX, centerY, circleRadius, -90, UITheme.GetGroupBoxTextColor(0), redArrow, (float)redError);
 
                 if (swapGreenCheckbox.Checked)
                 {
-                    DrawSmallCircle(g, centerX, centerY, circleRadius, -210, Color.Green, greenArrow, greenError);
-                    DrawSmallCircle(g, centerX, centerY, circleRadius, -330, Color.Blue, blueArrow, blueError);
+                    DrawSmallCircle(g, centerX, centerY, circleRadius, -210, UITheme.GetGroupBoxTextColor(1), greenArrow, greenError);
+                    DrawSmallCircle(g, centerX, centerY, circleRadius, -330, UITheme.GetGroupBoxTextColor(2), blueArrow, blueError);
                 }
                 else
                 {
-                    DrawSmallCircle(g, centerX, centerY, circleRadius, -210, Color.Blue, blueArrow, blueError);
-                    DrawSmallCircle(g, centerX, centerY, circleRadius, -330, Color.Green, greenArrow, greenError);
+                    DrawSmallCircle(g, centerX, centerY, circleRadius, -210, UITheme.GetGroupBoxTextColor(2), blueArrow, blueError);
+                    DrawSmallCircle(g, centerX, centerY, circleRadius, -330, UITheme.GetGroupBoxTextColor(1), greenArrow, greenError);
                 }
             }
         }
@@ -145,7 +232,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// <param name="error">The error value.</param>
         /// <param name="isReverse">Whether the direction is reversed.</param>
         /// <returns>The arrow direction.</returns>
-        private Arrow GetArrow(float error, bool isReverse)
+        private Arrow GetArrow(double error, bool isReverse)
         {
             float value = float.Parse(error.ToString("F1"));
 
@@ -168,7 +255,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// <param name="color">The circle color.</param>
         /// <param name="arrowType">The arrow type.</param>
         /// <param name="errorValue">The error value.</param>
-        private void DrawSmallCircle(Graphics g, int centerX, int centerY, int circleRadi, int angle, Color color, Arrow arrowType, float errorValue)
+        private void DrawSmallCircle(Graphics g, int centerX, int centerY, int circleRadi, int angle, Color color, Arrow arrowType, double errorValue)
         {
             int circleRadius = (int)(circleRadi * 0.65);
             double radians = (angle + rotationAngle) * Math.PI / 180.0;
@@ -206,42 +293,39 @@ namespace Bahtinov_Collimator.AdjustAssistant
         public static void WriteValue(Graphics graphics, int x, int y, string value)
         {
             // Adjust position of the text
-            x = (float.Parse(value) < 0.0) ? x - 17 : x - 13;
-            y += 15;
+            x = (float.Parse(value) < 0.0) ? x - 22 : x - 17;
+            y += 18;
 
             Font font = new Font("Arial", 12, FontStyle.Bold); // Specify the font for the text
-            Brush brush = Brushes.Black;
+            Brush brush = new SolidBrush(UITheme.AdjustAssistTextColor);
 
             // Draw the value on the screen at the specified coordinates
             graphics.DrawString(value, font, brush, x, y);
         }
 
-        /// <summary>
-        /// Draws an arrow at the specified coordinates.
-        /// </summary>
-        /// <param name="graphics">The graphics object.</param>
-        /// <param name="arrow">The arrow type.</param>
-        /// <param name="centerX">The center X coordinate.</param>
-        /// <param name="centerY">The center Y coordinate.</param>
         public void DrawArrow(Graphics graphics, Arrow arrow, int centerX, int centerY)
         {
             // Minor corrections for arrow image placement
             if (arrow == Arrow.Right)
             {
-                centerX += 2;
-                centerY -= 10;
+                centerX += 3;
+                centerY -= 15;
             }
             else
             {
-                centerX -= 3;
-                centerY -= 10;
+                centerX -= 4;
+                centerY -= 15;
             }
 
             // Load the original image
             Image originalImage = Properties.Resources.arrow;
 
-            // Calculate the size based on the arrow type
-            Size imageSize = arrow == Arrow.None ? originalImage.Size : new Size(57, 32);
+            // Adjust size using a scale factor
+            float scaleFactor = 1.3f; // Adjust this to scale the arrow
+            Size imageSize = new Size((int)(57 * scaleFactor), (int)(32 * scaleFactor));
+
+            // Adjust position by moving the arrow right by 10 pixels and up by 20 pixels
+
 
             // Calculate the top-left corner of the image based on the center coordinates
             int imageX = centerX - imageSize.Width / 2;
@@ -381,6 +465,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// </summary>
         private void CheatSheet_FormClosed(object sender, FormClosedEventArgs e)
         {
+            ImageProcessing.FocusDataEvent += FocusDataEvent;
             updateTimer.Stop();
         }
 
