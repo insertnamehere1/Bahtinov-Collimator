@@ -40,6 +40,13 @@ namespace Bahtinov_Collimator
         public static Color MessageBoxPanelBackground { get; } = Color.FromArgb(30, 30, 35);
         public static Color MessageBoxTextColor { get; } = Color.White;
 
+        //Selection Theme
+        public static Color SelectionBackground { get; } = Color.Black;
+        public static float SelectionBackgroundTransparency { get; } = 0.5f;
+        public static Color SelectionCircleInfill { get; } = Color.FromArgb(237, 78, 78);
+        public static Color SelectionCircleBoarder { get; } = Color.DarkBlue;
+        public static int SelectionBoarderWidth { get; } = 3;    
+
         // Group Box Color Theme Dictionary
         private static readonly Dictionary<int, Color> GroupBoxTextColors;
         private static readonly Dictionary<int, Color> GroupBoxBackgroundColors;

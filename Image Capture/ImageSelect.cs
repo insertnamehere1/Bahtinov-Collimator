@@ -29,8 +29,8 @@ namespace Bahtinov_Collimator
         {
             FormBorderStyle = FormBorderStyle.None; // Remove window border
             WindowState = FormWindowState.Maximized; // Maximize window to cover entire screen
-            BackColor = Color.Black; // Set background color
-            Opacity = 0.33; // Set transparency level
+            BackColor = UITheme.SelectionBackground; // Set background color
+            Opacity = UITheme.SelectionBackgroundTransparency; // Set transparency level
             TopMost = true; // Ensure form is above all other windows
             ShowInTaskbar = false; // Hide form from taskbar
         }
@@ -111,8 +111,8 @@ namespace Bahtinov_Collimator
         /// <param name="graphics">The Graphics object used for drawing.</param>
         private void DrawSelection(Graphics graphics)
         {
-            using (var brush = new SolidBrush(Color.Gray)) // Brush for filling the ellipse
-            using (var pen = new Pen(Color.DarkBlue, 2)) // Pen for drawing the ellipse border
+            using (var brush = new SolidBrush(UITheme.SelectionCircleInfill)) // Brush for filling the ellipse
+            using (var pen = new Pen(UITheme.SelectionCircleBoarder, UITheme.SelectionBoarderWidth)) // Pen for drawing the ellipse border
             {
                 graphics.Clear(BackColor); // Clear the background with form's back color
                 if (SelectedArea.Width > 0 && SelectedArea.Height > 0)
