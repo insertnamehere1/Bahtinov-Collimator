@@ -56,10 +56,6 @@ namespace Bahtinov_Collimator
             label1.ForeColor = UITheme.DonateTextColor;
 
             pictureBox1.BackColor = UITheme.DonatePictureBackground;
-
-            // Group Boxes
- //           ChangeLabelColors(groupBox1, UITheme.MenuDarkForeground);
- //           groupBox1.ForeColor = UITheme.MenuDarkForeground;
         }
 
         /// <summary>

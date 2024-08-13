@@ -51,6 +51,10 @@ namespace Bahtinov_Collimator
         public static Color DonateTextColor { get; } = Color.White;
         public static Color DonatePictureBackground { get; } = Color.Gray;
 
+        // About Theme
+        public static Color AboutTextColor { get; } = Color.White;
+        public static Color AboutPictureBackground { get; } = Color.Gray;
+
         // Group Box Color Theme Dictionary
         private static readonly Dictionary<int, Color> GroupBoxTextColors;
         private static readonly Dictionary<int, Color> GroupBoxBackgroundColors;
