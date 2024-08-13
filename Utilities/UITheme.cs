@@ -45,7 +45,11 @@ namespace Bahtinov_Collimator
         public static float SelectionBackgroundTransparency { get; } = 0.5f;
         public static Color SelectionCircleInfill { get; } = Color.FromArgb(237, 78, 78);
         public static Color SelectionCircleBoarder { get; } = Color.DarkBlue;
-        public static int SelectionBoarderWidth { get; } = 3;    
+        public static int SelectionBoarderWidth { get; } = 3; 
+        
+        // Donate Theme
+        public static Color DonateTextColor { get; } = Color.White;
+        public static Color DonatePictureBackground { get; } = Color.Gray;
 
         // Group Box Color Theme Dictionary
         private static readonly Dictionary<int, Color> GroupBoxTextColors;
