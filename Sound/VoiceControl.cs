@@ -29,6 +29,7 @@ namespace Bahtinov_Collimator.Voice
 
             synthesizer = new SpeechSynthesizer();
             messageQueue = new Queue<string>();
+            synthesizer.Rate = 2;
 
             synthesizer.SpeakCompleted += Synthesizer_SpeakCompleted;
             synthesizer.SelectVoice("Microsoft Zira Desktop");
