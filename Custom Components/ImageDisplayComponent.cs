@@ -178,12 +178,12 @@ namespace Bahtinov_Collimator
 
             var adjustedPoints = AdjustPointsForRadius(textStart, textEnd, pictureBox1.Width, pictureBox1.Height, 250);
 
-            var textLocation = group.GroupId == 1 ? adjustedPoints.end : adjustedPoints.start;
+            var textLocation = group.GroupId != 1 ? adjustedPoints.end : adjustedPoints.start;
 
             if (group.GroupId == 1)
-                DrawLineWithCenteredText(g, adjustedPoints.end, adjustedPoints.start, group.ErrorCircle.ErrorValue, textFont, solidBrush);
-            else
                 DrawLineWithCenteredText(g, adjustedPoints.start, adjustedPoints.end, group.ErrorCircle.ErrorValue, textFont, solidBrush);
+            else
+                DrawLineWithCenteredText(g, adjustedPoints.end, adjustedPoints.start, group.ErrorCircle.ErrorValue, textFont, solidBrush);
         }
 
         private void DrawLineWithCenteredText(Graphics g, Point start, Point end, string text, Font font, Brush brush)

@@ -95,18 +95,21 @@ namespace Bahtinov_Collimator.Voice
 
         public void Play(string text)
         {
-            if (synthesizer.State == SynthesizerState.Ready || synthesizer.State == SynthesizerState.Speaking)
+            if (voiceEnabled)
             {
-                // If currently speaking or ready, enqueue the message
-                if (messageQueue.Count < 2)
+                if (synthesizer.State == SynthesizerState.Ready || synthesizer.State == SynthesizerState.Speaking)
                 {
-                    messageQueue.Enqueue(text);
-                }
+                    // If currently speaking or ready, enqueue the message
+                    if (messageQueue.Count < 2)
+                    {
+                        messageQueue.Enqueue(text);
+                    }
 
-                // If the synthesizer is not currently speaking, start the first message
-                if (synthesizer.State == SynthesizerState.Ready)
-                {
-                    PlayNextMessage();
+                    // If the synthesizer is not currently speaking, start the first message
+                    if (synthesizer.State == SynthesizerState.Ready)
+                    {
+                        PlayNextMessage();
+                    }
                 }
             }
         }
