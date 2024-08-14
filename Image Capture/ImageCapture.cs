@@ -118,6 +118,7 @@ namespace Bahtinov_Collimator
 
             Bitmap latestImage = CreateCircularImage(image);
             Bitmap updatedImage = new Bitmap(UITheme.DisplayWindow.X, UITheme.DisplayWindow.Y);
+
             Graphics g = null;
 
             try
@@ -242,10 +243,6 @@ namespace Bahtinov_Collimator
             return false;
         }
 
-        /// <summary>
-        /// Captures an image of the specified window area based on the selected rectangle.
-        /// </summary>
-        /// <returns>A Bitmap object of the captured image or null if capturing failed.</returns>
         private static Bitmap GetImage()
         {
             if (!GetWindowRect(targetWindowHandle, out Utilities.RECT rect))
@@ -263,8 +260,22 @@ namespace Bahtinov_Collimator
             selectedStarBox.Width = Math.Min(selectedStarBox.Width, windowWidth - selectedStarBox.X);
             selectedStarBox.Height = Math.Min(selectedStarBox.Height, windowHeight - selectedStarBox.Y);
 
+            // Check if selectedStarBox exceeds UITheme.DisplayWindow.X and Y, and adjust if necessary
+            if (selectedStarBox.Width > UITheme.DisplayWindow.X || selectedStarBox.Height > UITheme.DisplayWindow.Y)
+            {
+                // Calculate the excess width and height
+                int excessWidth = selectedStarBox.Width - UITheme.DisplayWindow.X;
+                int excessHeight = selectedStarBox.Height - UITheme.DisplayWindow.Y;
+
+                // Adjust equally on all sides
+                selectedStarBox.X += excessWidth / 2;
+                selectedStarBox.Y += excessHeight / 2;
+                selectedStarBox.Width -= excessWidth;
+                selectedStarBox.Height -= excessHeight;
+            }
+
             // Ensure the selected rectangle is valid
-            if (selectedStarBox.Width == 0 || selectedStarBox.Height == 0)
+            if (selectedStarBox.Width <= 0 || selectedStarBox.Height <= 0)
             {
                 ImageLostEventProvider.OnImageLost("The selection area is too small.");
                 return null;
@@ -460,147 +471,5 @@ namespace Bahtinov_Collimator
 
             return new Point(centroidX, centroidY);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public Bitmap PadAndCenterCircularBitmap(Bitmap originalBitmap, PictureBox pictureBox)
-        {
-            Color fillValue;
-
-            // Check if padding is needed
-            if ((originalBitmap.Width < pictureBox.Width) || (originalBitmap.Height < pictureBox.Height))
-            {
-                fillValue = CalculateCircularBorderAverage(originalBitmap);
-                originalBitmap = SubtractMeanFromImage(fillValue, originalBitmap);
-            }
-
-            fillValue = CalculateCircularBorderAverage(originalBitmap);
-
-            Brush brush = new SolidBrush(fillValue);
-
-            // Create larger bitmap with Mean background
-            Bitmap paddedBitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
-
-            using (Graphics graphics = Graphics.FromImage(paddedBitmap))
-            {
-                // Fill the entire background with the average color
-                graphics.FillRectangle(brush, 0, 0, paddedBitmap.Width, paddedBitmap.Height);
-
-                // Calculate padding values
-                int horizontalPadding = (paddedBitmap.Width - originalBitmap.Width) / 2;
-                int verticalPadding = (paddedBitmap.Height - originalBitmap.Height) / 2;
-
-                // Draw the original circular bitmap onto the larger bitmap with padding
-                using (GraphicsPath path = new GraphicsPath())
-                {
-                    path.AddEllipse(horizontalPadding, verticalPadding, originalBitmap.Width, originalBitmap.Height);
-                    graphics.SetClip(path);
-                    graphics.DrawImage(originalBitmap, horizontalPadding, verticalPadding, originalBitmap.Width, originalBitmap.Height);
-                    graphics.ResetClip();
-                }
-            }
-
-            return paddedBitmap;
-        }
-
-        private Color CalculateCircularBorderAverage(Bitmap bitmap)
-        {
-            float totalBrightness = 0;
-            int pixelCount = 0;
-            int width = bitmap.Width;
-            int height = bitmap.Height;
-
-            int centerX = width / 2;
-            int centerY = height / 2;
-            int radius = Math.Min(centerX, centerY) - 2;
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    if (IsOnCircleBorder(centerX, centerY, radius, x, y))
-                    {
-                        Color pixelColor = bitmap.GetPixel(x, y);
-                        totalBrightness += pixelColor.GetBrightness();
-                        pixelCount++;
-                    }
-                }
-            }
-
-            float averageBrightness = totalBrightness / pixelCount;
-            int averageGrayValue = (int)(averageBrightness * 255);
-            return Color.FromArgb(averageGrayValue, averageGrayValue, averageGrayValue);
-        }
-
-        private bool IsOnCircleBorder(int centerX, int centerY, int radius, int x, int y)
-        {
-            int dx = x - centerX;
-            int dy = y - centerY;
-            double distance = Math.Sqrt(dx * dx + dy * dy);
-            return Math.Abs(distance - radius) <= 1; // Adjust the tolerance as needed
-        }
-
-        private Bitmap SubtractMeanFromImage(Color meanColor, Bitmap bitmap)
-        {
-            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, bitmap.PixelFormat);
-            Bitmap newBitmap = new Bitmap(bitmap.Width, bitmap.Height, bitmap.PixelFormat);
-
-            unsafe
-            {
-                int bytesPerPixel = Bitmap.GetPixelFormatSize(bitmap.PixelFormat) / 8;
-                int heightInPixels = bitmapData.Height;
-                int widthInBytes = bitmapData.Width * bytesPerPixel;
-                byte* ptr = (byte*)bitmapData.Scan0;
-
-                for (int y = 0; y < heightInPixels; y++)
-                {
-                    byte* currentLine = ptr + (y * bitmapData.Stride);
-
-                    for (int x = 0; x < widthInBytes; x += bytesPerPixel)
-                    {
-                        int b = currentLine[x];
-                        int g = currentLine[x + 1];
-                        int r = currentLine[x + 2];
-
-                        // Subtract mean color components
-                        r = Math.Max(0, r - meanColor.R);
-                        g = Math.Max(0, g - meanColor.G);
-                        b = Math.Max(0, b - meanColor.B);
-
-                        currentLine[x] = (byte)b;
-                        currentLine[x + 1] = (byte)g;
-                        currentLine[x + 2] = (byte)r;
-                    }
-                }
-            }
-
-            bitmap.UnlockBits(bitmapData);
-
-            return bitmap;
-        }
-
-
-
-
-
-
-
-
-
-
     }
 }
