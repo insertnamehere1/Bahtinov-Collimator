@@ -176,9 +176,7 @@ namespace Bahtinov_Collimator
             var textStart = group.Lines[1].Start;
             var textEnd = group.Lines[1].End;
 
-            int margin = 50;
-
-            var adjustedPoints = AdjustPointsForMargin(textStart, textEnd, pictureBox1.Width, pictureBox1.Height, margin);
+            var adjustedPoints = AdjustPointsForRadius(textStart, textEnd, pictureBox1.Width, pictureBox1.Height, 250);
 
             var textLocation = group.GroupId == 1 ? adjustedPoints.end : adjustedPoints.start;
 
@@ -203,8 +201,12 @@ namespace Bahtinov_Collimator
             g.DrawString(text, font, brush, textPosition);
         }
 
-        public static (Point start, Point end) AdjustPointsForMargin(Point start, Point end, int width, int height, int margin)
+        public static (Point start, Point end) AdjustPointsForRadius(Point start, Point end, int center_X, int center_Y, float radius)
         {
+            // Calculate the center of the PictureBox
+            int centerX = center_X / 2;
+            int centerY = center_Y / 2;
+
             // Calculate direction vector
             float dx = end.X - start.X;
             float dy = end.Y - start.Y;
@@ -214,22 +216,13 @@ namespace Bahtinov_Collimator
             float unitDx = dx / length;
             float unitDy = dy / length;
 
-            // Calculate margin length
-            float marginLength = (float)Math.Sqrt(margin * margin + margin * margin);
+            // Calculate the start point on the circle with the given radius
+            start.X = (int)(centerX + radius * unitDx);
+            start.Y = (int)(centerY + radius * unitDy);
 
-            // Adjust start point if within margin
-            if (start.X < margin || start.X > width - margin || start.Y < margin || start.Y > height - margin)
-            {
-                start.X += (int)(marginLength * unitDx);
-                start.Y += (int)(marginLength * unitDy);
-            }
-
-            // Adjust end point if within margin
-            if (end.X < margin || end.X > width - margin || end.Y < margin || end.Y > height - margin)
-            {
-                end.X -= (int)(marginLength * unitDx);
-                end.Y -= (int)(marginLength * unitDy);
-            }
+            // Calculate the end point on the circle with the given radius
+            end.X = (int)(centerX - radius * unitDx);
+            end.Y = (int)(centerY - radius * unitDy);
 
             return (start, end);
         }

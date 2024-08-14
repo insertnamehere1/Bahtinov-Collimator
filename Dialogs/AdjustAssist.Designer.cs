@@ -46,7 +46,7 @@
             // saveButton
             // 
             this.saveButton.Location = new System.Drawing.Point(27, 320);
-            this.saveButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.saveButton.Margin = new System.Windows.Forms.Padding(4);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(100, 28);
             this.saveButton.TabIndex = 0;
@@ -57,7 +57,7 @@
             // closeButton
             // 
             this.closeButton.Location = new System.Drawing.Point(147, 320);
-            this.closeButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.closeButton.Margin = new System.Windows.Forms.Padding(4);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(100, 28);
             this.closeButton.TabIndex = 1;
@@ -69,7 +69,7 @@
             // 
             this.swapGreenCheckbox.AutoSize = true;
             this.swapGreenCheckbox.Location = new System.Drawing.Point(32, 23);
-            this.swapGreenCheckbox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.swapGreenCheckbox.Margin = new System.Windows.Forms.Padding(4);
             this.swapGreenCheckbox.Name = "swapGreenCheckbox";
             this.swapGreenCheckbox.Size = new System.Drawing.Size(134, 20);
             this.swapGreenCheckbox.TabIndex = 28;
@@ -84,9 +84,9 @@
             this.groupBox1.Controls.Add(this.greenReverseBox);
             this.groupBox1.Controls.Add(this.redReverseBox);
             this.groupBox1.Location = new System.Drawing.Point(16, 15);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox1.Size = new System.Drawing.Size(241, 139);
             this.groupBox1.TabIndex = 29;
             this.groupBox1.TabStop = false;
@@ -96,7 +96,7 @@
             // 
             this.blueReverseBox.AutoSize = true;
             this.blueReverseBox.Location = new System.Drawing.Point(32, 108);
-            this.blueReverseBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.blueReverseBox.Margin = new System.Windows.Forms.Padding(4);
             this.blueReverseBox.Name = "blueReverseBox";
             this.blueReverseBox.Size = new System.Drawing.Size(111, 20);
             this.blueReverseBox.TabIndex = 33;
@@ -108,7 +108,7 @@
             // 
             this.greenReverseBox.AutoSize = true;
             this.greenReverseBox.Location = new System.Drawing.Point(32, 80);
-            this.greenReverseBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.greenReverseBox.Margin = new System.Windows.Forms.Padding(4);
             this.greenReverseBox.Name = "greenReverseBox";
             this.greenReverseBox.Size = new System.Drawing.Size(121, 20);
             this.greenReverseBox.TabIndex = 32;
@@ -120,7 +120,7 @@
             // 
             this.redReverseBox.AutoSize = true;
             this.redReverseBox.Location = new System.Drawing.Point(32, 52);
-            this.redReverseBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.redReverseBox.Margin = new System.Windows.Forms.Padding(4);
             this.redReverseBox.Name = "redReverseBox";
             this.redReverseBox.Size = new System.Drawing.Size(110, 20);
             this.redReverseBox.TabIndex = 31;
@@ -131,7 +131,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Location = new System.Drawing.Point(277, 16);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(327, 302);
             this.pictureBox1.TabIndex = 31;
@@ -141,7 +141,7 @@
             // trackBar1
             // 
             this.trackBar1.Location = new System.Drawing.Point(271, 325);
-            this.trackBar1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.trackBar1.Margin = new System.Windows.Forms.Padding(4);
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(329, 56);
             this.trackBar1.TabIndex = 32;
@@ -159,7 +159,7 @@
             this.Controls.Add(this.saveButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "AdjustAssist";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
