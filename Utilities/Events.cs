@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
+using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
@@ -41,10 +43,17 @@ namespace Bahtinov_Collimator
     public class ImageLostEventArgs : EventArgs
     {
         public string Message { get; }
+        public string Title { get; }
+        public MessageBoxIcon Icon { get; }
+        public MessageBoxButtons Button { get; }
 
-        public ImageLostEventArgs(string message)
+
+        public ImageLostEventArgs(string message, string title, MessageBoxIcon icon, MessageBoxButtons button)
         {
             Message = message;
+            Title = title;
+            Icon = icon;
+            Button = button;
         }
     }
 
@@ -54,9 +63,9 @@ namespace Bahtinov_Collimator
         public static event ImageLostEventHandler ImageLostEvent;
 
         // Method to raise the event
-        public static void OnImageLost(string message)
+        public static void OnImageLost(string message, string title, MessageBoxIcon icon, MessageBoxButtons button)
         {
-            ImageLostEvent?.Invoke(null, new ImageLostEventArgs(message));
+            ImageLostEvent?.Invoke(null, new ImageLostEventArgs(message, title, icon, button));
         }
     }
 

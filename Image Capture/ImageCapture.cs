@@ -247,7 +247,7 @@ namespace Bahtinov_Collimator
         {
             if (!GetWindowRect(targetWindowHandle, out Utilities.RECT rect))
             {
-                ImageLostEventProvider.OnImageLost("Image has been lost");
+                ImageLostEventProvider.OnImageLost("Image has been lost", "GetImage", MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return null;
             }
 
@@ -277,7 +277,7 @@ namespace Bahtinov_Collimator
             // Ensure the selected rectangle is valid
             if (selectedStarBox.Width <= 0 || selectedStarBox.Height <= 0)
             {
-                ImageLostEventProvider.OnImageLost("The selection area is too small.");
+                ImageLostEventProvider.OnImageLost("The selection area is too small.", "GetImage", MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return null;
             }
 
@@ -287,7 +287,7 @@ namespace Bahtinov_Collimator
                 {
                     if (fullWindowBitmap == null)
                     {
-                        ImageLostEventProvider.OnImageLost("Unable to capture image");
+                        ImageLostEventProvider.OnImageLost("Unable to capture image", "GetImage", MessageBoxIcon.Warning, MessageBoxButtons.OK);
                         return null;
                     }
 
@@ -296,7 +296,7 @@ namespace Bahtinov_Collimator
             }
             catch
             {
-                ImageLostEventProvider.OnImageLost("Image capture failed");
+                ImageLostEventProvider.OnImageLost("Image capture failed", "GetImage", MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return null;
             }
         }

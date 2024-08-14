@@ -372,7 +372,7 @@ namespace Bahtinov_Collimator
         {
             if (lines.LineAngles.Length != 3 && lines.LineAngles.Length != 9)
             {
-                ImageLostEventProvider.OnImageLost("Unable to detect Bahtinov image lines");
+                ImageLostEventProvider.OnImageLost("Unable to detect Bahtinov image lines", "DisplayLines", MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return false;
             }
 
@@ -476,7 +476,6 @@ namespace Bahtinov_Collimator
                 catch
                 {
                     lastFocusErrorValue = 0.0f;
-                    DarkMessageBox.Show("Image has been lost", "Display Error", MessageBoxIcon.Error, MessageBoxButtons.OK);
                     return false;
                 }
 

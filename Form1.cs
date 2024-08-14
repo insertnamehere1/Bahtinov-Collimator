@@ -236,7 +236,7 @@ namespace Bahtinov_Collimator
             imageProcessing.StopImageProcessing();
             firstPassCompleted = false;
 
-            DarkMessageBox.Show(e.Message, "Title", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+            DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button);
         }
 
         private void QuitToolStripMenuItem2_Click(object sender, EventArgs e)
