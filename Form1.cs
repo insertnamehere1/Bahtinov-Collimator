@@ -29,6 +29,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bahtinov_Collimator.AdjustAssistant;
+using Bahtinov_Collimator.Voice;
 
 namespace Bahtinov_Collimator
 {
@@ -60,6 +61,9 @@ namespace Bahtinov_Collimator
         // Adjust Assistant
         private AdjustAssist adjustAssistDialog;
 
+        // Voice Generation
+        private VoiceControl voiceControl;
+
         public Form1()
         {
             SetProcessDPIAware();
@@ -71,6 +75,7 @@ namespace Bahtinov_Collimator
 
             imageProcessing = new ImageProcessing();
             menuStrip1.Renderer = new CustomToolStripRenderer();
+            voiceControl = new VoiceControl();
         }
 
         private void InitializeRedFocusBox()
@@ -229,7 +234,6 @@ namespace Bahtinov_Collimator
             }
         }
 
-
         private void HandleImageLost(object sender, ImageLostEventArgs e)
         {
             ImageCapture.StopImageCapture();
@@ -327,6 +331,8 @@ namespace Bahtinov_Collimator
             if (result == DialogResult.OK)
             {
                 imageProcessing.LoadSettings();
+                voiceControl.LoadSettings();
+
             }
         }
 

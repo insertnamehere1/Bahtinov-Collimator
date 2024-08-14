@@ -1,4 +1,4 @@
-﻿using Bahtinov_Collimator.Sound;
+﻿using Bahtinov_Collimator.Voice;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;

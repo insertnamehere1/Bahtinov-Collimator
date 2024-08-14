@@ -200,7 +200,7 @@
             this.groupBox1.Size = new System.Drawing.Size(300, 131);
             this.groupBox1.TabIndex = 35;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Sound";
+            this.groupBox1.Text = "Voice";
             // 
             // label10
             // 
