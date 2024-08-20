@@ -321,7 +321,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
             Image originalImage = Properties.Resources.arrow;
 
             // Adjust size using a scale factor
-            float scaleFactor = 1.3f; // Adjust this to scale the arrow
+            float scaleFactor = 1f / UITheme.DpiScaleX; // Adjust this to scale the arrow
             Size imageSize = new Size((int)(57 * scaleFactor), (int)(32 * scaleFactor));
 
             // Adjust position by moving the arrow right by 10 pixels and up by 20 pixels
