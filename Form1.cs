@@ -38,9 +38,6 @@ namespace Bahtinov_Collimator
 {
     public partial class Form1 : Form
     {
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        public static extern bool SetProcessDPIAware();
-
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
@@ -72,7 +69,8 @@ namespace Bahtinov_Collimator
 
         public Form1()
         {
-            SetProcessDPIAware();
+            this.AutoScaleMode = AutoScaleMode.Dpi;
+
             InitializeComponent();
             InitializeRedFocusBox();
             SetFormUI();
@@ -87,16 +85,21 @@ namespace Bahtinov_Collimator
             slideSwitch2.IsOn = Properties.Settings.Default.DefocusSwitch;
         }
 
+
+
+
+
+
         private void InitializeRedFocusBox()
         {
-            if(groupBoxRed != null)
+            if (groupBoxRed != null)
             {
                 RemoveAndDisposeControls(groupBoxRed);
             }
 
             groupBoxRed = new FocusChannelComponent(0)
             {
-                Location = new Point(10, 30)
+                Location = ScalePoint(new Point(15, 30))
             };
             this.Controls.Add(groupBoxRed);
         }
@@ -105,7 +108,7 @@ namespace Bahtinov_Collimator
         {
             groupBoxGreen = new FocusChannelComponent(1)
             {
-                Location = new Point(10, 150)
+                Location = ScalePoint(new Point(15, 125))
             };
             this.Controls.Add(groupBoxGreen);
         }
@@ -114,10 +117,29 @@ namespace Bahtinov_Collimator
         {
             groupBoxBlue = new FocusChannelComponent(2)
             {
-                Location = new Point(10, 270)
+                Location = ScalePoint(new Point(15, 221))
             };
             this.Controls.Add(groupBoxBlue);
         }
+
+        private Point ScalePoint(Point originalPoint)
+        {
+            // Get the scaling factor based on the form's AutoScaleFactor
+            float scaleX = this.DeviceDpi / this.AutoScaleDimensions.Width;
+            float scaleY = this.DeviceDpi / this.AutoScaleDimensions.Height;
+
+            // Scale the original point by the scale factors
+            return new Point((int)(originalPoint.X / scaleX), (int)(originalPoint.Y / scaleY));
+        }
+
+
+
+
+
+
+
+
+
 
         private void SetFormUI()
         {

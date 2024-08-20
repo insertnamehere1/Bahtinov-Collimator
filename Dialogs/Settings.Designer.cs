@@ -166,7 +166,7 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(37, 321);
+            this.okButton.Location = new System.Drawing.Point(42, 321);
             this.okButton.Margin = new System.Windows.Forms.Padding(4);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(100, 28);
@@ -177,7 +177,7 @@
             // 
             // CancelSettingsButton
             // 
-            this.CancelSettingsButton.Location = new System.Drawing.Point(192, 321);
+            this.CancelSettingsButton.Location = new System.Drawing.Point(187, 321);
             this.CancelSettingsButton.Margin = new System.Windows.Forms.Padding(4);
             this.CancelSettingsButton.Name = "CancelSettingsButton";
             this.CancelSettingsButton.Size = new System.Drawing.Size(100, 28);
@@ -254,7 +254,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 378);
+            this.ClientSize = new System.Drawing.Size(329, 369);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.CancelSettingsButton);
             this.Controls.Add(this.okButton);
