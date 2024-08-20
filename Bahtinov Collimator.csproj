@@ -161,6 +161,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Custom Components\SlideSwitchComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Custom Components\SlideSwitchComponent.Designer.cs">
+      <DependentUpon>SlideSwitchComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -196,6 +202,7 @@
     <Compile Include="Custom Components\ImageDisplayComponent.Designer.cs">
       <DependentUpon>ImageDisplayComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Image Processing\DefocusStarProcessing.cs" />
     <Compile Include="Utilities\DarkMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -203,7 +210,7 @@
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Utilities\Helper.cs" />
-    <Compile Include="Image Processing\ImageProcessing.cs" />
+    <Compile Include="Image Processing\BahtinovProcessing.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

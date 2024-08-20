@@ -38,9 +38,8 @@ using System.Collections.Generic;
 
 namespace Bahtinov_Collimator
 {
-    internal class ImageProcessing
+    internal class BahtinovProcessing
     {
-
         // Focus Data Listener
         public delegate void FocusDataEventHandler(object sender, FocusDataEventArgs e);
         public static event FocusDataEventHandler FocusDataEvent;
@@ -65,7 +64,7 @@ namespace Bahtinov_Collimator
 
         public static Dictionary<int, double> errorValues { get; private set; }
 
-        public ImageProcessing()
+        public BahtinovProcessing()
         {
             errorValues = new Dictionary<int, double>();
             LoadSettings();

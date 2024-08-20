@@ -53,7 +53,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void SubscribeToEvents()
         {
-            ImageProcessing.FocusDataEvent += FocusDataEvent;
+            BahtinovProcessing.FocusDataEvent += FocusDataEvent;
             groupBox1.MouseEnter += FocusChannelGroupBox_MouseEnter;
             groupBox1.MouseLeave += FocusChannelGroupBox_MouseLeave;
 
@@ -68,7 +68,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void UnsubscribeToEvents()
         {
-            ImageProcessing.FocusDataEvent -= FocusDataEvent;
+            BahtinovProcessing.FocusDataEvent -= FocusDataEvent;
             groupBox1.MouseEnter -= FocusChannelGroupBox_MouseEnter;
             groupBox1.MouseLeave -= FocusChannelGroupBox_MouseLeave;
             

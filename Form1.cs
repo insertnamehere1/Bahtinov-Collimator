@@ -30,6 +30,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Bahtinov_Collimator.AdjustAssistant;
 using Bahtinov_Collimator.Voice;
+using Bahtinov_Collimator.Image_Processing;
+using System.Drawing.Text;
+using Bahtinov_Collimator.Custom_Components;
 
 namespace Bahtinov_Collimator
 {
@@ -53,7 +56,8 @@ namespace Bahtinov_Collimator
         private bool firstPassCompleted = false;
 
         // image Processing Class
-        private ImageProcessing imageProcessing;
+        private BahtinovProcessing bahtinovProcessing;
+        private DefocusStarProcessing defocusStarProcessing;
 
         // Bahtinove line data
         private BahtinovData bahtinovLineData;
@@ -64,6 +68,8 @@ namespace Bahtinov_Collimator
         // Voice Generation
         private VoiceControl voiceControl;
 
+        private int imageType = 0;  // default - no image type, 1-Bahtinov, 2-Defocus
+
         public Form1()
         {
             SetProcessDPIAware();
@@ -73,13 +79,21 @@ namespace Bahtinov_Collimator
             SetColorScheme();
             SetEvents();
 
-            imageProcessing = new ImageProcessing();
+            bahtinovProcessing = new BahtinovProcessing();
+            defocusStarProcessing = new DefocusStarProcessing();
             menuStrip1.Renderer = new CustomToolStripRenderer();
             voiceControl = new VoiceControl();
+
+            slideSwitch2.IsOn = Properties.Settings.Default.DefocusSwitch;
         }
 
         private void InitializeRedFocusBox()
         {
+            if(groupBoxRed != null)
+            {
+                RemoveAndDisposeControls(groupBoxRed);
+            }
+
             groupBoxRed = new FocusChannelComponent(0)
             {
                 Location = new Point(10, 30)
@@ -115,6 +129,7 @@ namespace Bahtinov_Collimator
         {
             ImageCapture.ImageReceivedEvent += OnImageReceived;
             ImageLostEventProvider.ImageLostEvent += HandleImageLost;
+            slideSwitch2.ToggleChanged += SlideSwitchChanged;
         }
 
         private void SetColorScheme()
@@ -137,6 +152,11 @@ namespace Bahtinov_Collimator
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
+
+            // Labels
+            label1.ForeColor = UITheme.MenuStripForeground;
+            Label2.ForeColor = UITheme.MenuStripForeground;
+
         }
 
         private void SetMenuItemsColor(ToolStripItemCollection items, Color backColor, Color foreColor)
@@ -155,12 +175,19 @@ namespace Bahtinov_Collimator
         private void StartButton_Click(object sender, EventArgs e)
         {
             ImageCapture.StopImageCapture();
+            imageDisplayComponent1.ClearDisplay();
+            bahtinovProcessing.StopImageProcessing();
+            RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
 
             if (ImageCapture.SelectStar())
             {
-                ImageCapture.StartImageCapture();
+                if(Properties.Settings.Default.DefocusSwitch)
+                    ImageCapture.TrackingType = 2;
+                else
+                    ImageCapture.TrackingType = 1;
+
                 firstPassCompleted = false;
-                ImageCapture.TrackingEnabled = true;
+                ImageCapture.StartImageCapture();
             }
         }
 
@@ -174,15 +201,44 @@ namespace Bahtinov_Collimator
         {
             Bitmap image = new Bitmap(original);
 
+            // is this a defocused star?
+            if (!firstPassCompleted)
+            {
+                if(Properties.Settings.Default.DefocusSwitch == true)
+                {
+                    // this is a defocus star
+                    imageType = 2;
+                }
+                else
+                {   // this is a bahtinov image
+                    imageType = 1;
+                }
+           }
+
+            if (imageType == 1)
+                RunBahtinovDisplay(image);
+            else
+                if (imageType == 2)
+                RunDefocusStarDisplay(image);
+        }
+
+
+        private void RunDefocusStarDisplay(Bitmap image)
+        {
+            defocusStarProcessing.DisplayDefocusImage(image);
+        }
+
+        private void RunBahtinovDisplay(Bitmap image)
+        { 
             // Find the Bahtinov lines
             if (!firstPassCompleted)
             {
-                bahtinovLineData = imageProcessing.FindBrightestLines(image);
+                bahtinovLineData = bahtinovProcessing.FindBrightestLines(image);
                 bahtinovLineData.Sort();
             }
 
             // Second pass to find the fine details
-            bahtinovLineData = imageProcessing.FindSubpixelLines(image, bahtinovLineData.LineValue.Length, bahtinovLineData);
+            bahtinovLineData = bahtinovProcessing.FindSubpixelLines(image, bahtinovLineData.LineValue.Length, bahtinovLineData);
 
             // Update UI based on the number of lines detected
             int numberOfLines = bahtinovLineData.LineAngles.Length;
@@ -190,9 +246,10 @@ namespace Bahtinov_Collimator
             if (!firstPassCompleted)
             {
                 UpdateFocusGroup(numberOfLines);
+                firstPassCompleted = true;
             }
 
-            imageProcessing.DisplayLines(bahtinovLineData, image);
+            bahtinovProcessing.DisplayLines(bahtinovLineData, image);
         }
 
         private void ShowWarningMessage(string message)
@@ -203,8 +260,9 @@ namespace Bahtinov_Collimator
             }
             else
             {
-                MessageBox.Show(message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 ImageCapture.StopImageCapture();
+                firstPassCompleted = false;
+                MessageBox.Show(message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -234,13 +292,41 @@ namespace Bahtinov_Collimator
             }
         }
 
+        private void SlideSwitchChanged(object sender, EventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                // Marshal the call to the UI thread
+                this.Invoke(new Action<object, EventArgs>(SlideSwitchChanged), sender, e);
+                return;
+            }
+
+            SlideSwitch switchControl = sender as SlideSwitch;
+            bool toggle = ((SlideSwitch)sender).IsOn;
+
+            Properties.Settings.Default.DefocusSwitch = toggle;
+            Properties.Settings.Default.Save();
+
+            ImageCapture.StopImageCapture();
+            imageDisplayComponent1.ClearDisplay();
+            bahtinovProcessing.StopImageProcessing();
+
+            if (toggle)
+                RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue, groupBoxRed);
+            else
+            {
+                RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
+                InitializeRedFocusBox();
+            }
+        }
+
         private void HandleImageLost(object sender, ImageLostEventArgs e)
         {
             ImageCapture.StopImageCapture();
-            imageProcessing.StopImageProcessing();
+            bahtinovProcessing.StopImageProcessing();
             firstPassCompleted = false;
 
-            DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button);
+            DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
         }
 
         private void QuitToolStripMenuItem2_Click(object sender, EventArgs e)
@@ -256,19 +342,20 @@ namespace Bahtinov_Collimator
         private void AboutToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             AboutBox aboutBox = new AboutBox();
+            PositionDialogInsideMainWindow(aboutBox);
             aboutBox.ShowDialog();
-
         }
 
         private void DonateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Donate donate = new Donate();
+            PositionDialogInsideMainWindow(donate);
             donate.ShowDialog();
         }
 
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DarkMessageBox.Show("Not yet implemented", "Help", MessageBoxIcon.Asterisk, MessageBoxButtons.OK);
+            DarkMessageBox.Show("Not yet implemented", "Help", MessageBoxIcon.Asterisk, MessageBoxButtons.OK, this);
         }
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -286,6 +373,7 @@ namespace Bahtinov_Collimator
             if (adjustAssistDialog == null || adjustAssistDialog.IsDisposed)
             {
                 adjustAssistDialog = new AdjustAssistant.AdjustAssist(this);
+                PositionDialogInsideMainWindow(adjustAssistDialog);
                 adjustAssistDialog.Show(this);
                 adjustAssistDialog.FormClosed += CheatSheet_FormClosed;
             }
@@ -325,12 +413,13 @@ namespace Bahtinov_Collimator
         {
             // Settings Dialog
             Settings settingsDialog = new Settings();
+            PositionDialogInsideMainWindow(settingsDialog);
 
             DialogResult result = settingsDialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                imageProcessing.LoadSettings();
+                bahtinovProcessing.LoadSettings();
                 voiceControl.LoadSettings();
 
             }
@@ -340,6 +429,24 @@ namespace Bahtinov_Collimator
         {
             this.Activate();
         }
+
+        private void PositionDialogInsideMainWindow(Form dialog)
+        {
+            // Get the main window's rectangle
+            Rectangle mainWindowRect = this.Bounds;
+
+            // Calculate center position for the dialog within the main window
+            int x = mainWindowRect.Left + (mainWindowRect.Width - dialog.Width) / 2;
+            int y = mainWindowRect.Top + (mainWindowRect.Height - dialog.Height) / 2;
+
+            // Make sure the dialog is fully within the main window
+            x = Math.Max(mainWindowRect.Left, x);
+            y = Math.Max(mainWindowRect.Top, y);
+
+            dialog.StartPosition = FormStartPosition.Manual;
+            dialog.Location = new Point(x, y);
+        }
+
 
         // Custom renderer to change the color of selected items
         private class CustomToolStripRenderer : ToolStripProfessionalRenderer

@@ -29,9 +29,9 @@ namespace Bahtinov_Collimator.AdjustAssistant
         private int rotationAngle;
         private int circleRadius;
 
-        private double redError = ImageProcessing.errorValues[0];
-        private double greenError = ImageProcessing.errorValues[1];
-        private double blueError = ImageProcessing.errorValues[2];
+        private double redError = BahtinovProcessing.errorValues[0];
+        private double greenError = BahtinovProcessing.errorValues[1];
+        private double blueError = BahtinovProcessing.errorValues[2];
         private Timer updateTimer;
         private Form1 parentForm;
         private int lastImageCount = 0;
@@ -56,7 +56,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
             InitializeComponent();
             SetColorScheme();
 
-            ImageProcessing.FocusDataEvent += FocusDataEvent;
+            BahtinovProcessing.FocusDataEvent += FocusDataEvent;
 
 
 
@@ -465,7 +465,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// </summary>
         private void CheatSheet_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ImageProcessing.FocusDataEvent += FocusDataEvent;
+            BahtinovProcessing.FocusDataEvent += FocusDataEvent;
             updateTimer.Stop();
         }
 

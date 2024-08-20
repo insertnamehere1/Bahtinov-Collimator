@@ -11,10 +11,11 @@ namespace Bahtinov_Collimator.Voice
         #region Fields
 
         private readonly SpeechSynthesizer synthesizer;
-        private readonly Queue<string> messageQueue;
+        private readonly Queue<(string, int)> messageQueue;
         private Dictionary<int, double> errorValues;
         private bool voiceEnabled;
         private int channelPlaying = -1;
+        private int newSpeechRate = 0; 
 
         #endregion
 
@@ -28,13 +29,11 @@ namespace Bahtinov_Collimator.Voice
             errorValues = new Dictionary<int, double>();
 
             synthesizer = new SpeechSynthesizer();
-            messageQueue = new Queue<string>();
-            synthesizer.Rate = 2;
-
+            messageQueue = new Queue<(string, int)>();
             synthesizer.SpeakCompleted += Synthesizer_SpeakCompleted;
             synthesizer.SelectVoice("Microsoft Zira Desktop");
 
-            ImageProcessing.FocusDataEvent += FocusDataEvent;
+            BahtinovProcessing.FocusDataEvent += FocusDataEvent;
             FocusChannelComponent.ChannelSelectDataEvent += ChannelSelected;
 
             LoadSettings();
@@ -60,7 +59,7 @@ namespace Bahtinov_Collimator.Voice
                 // If the current channel is the one that was updated, announce the new value
                 if (channelPlaying != -1 && errorValues.ContainsKey(channelPlaying))
                 {
-                    Play(errorValues[channelPlaying].ToString("F1"));
+                    Play(errorValues[channelPlaying].ToString("F1"), 2);
                 }
             }
         }
@@ -75,8 +74,8 @@ namespace Bahtinov_Collimator.Voice
                 if (e.ChannelSelected[i] && i < errorValues.Count)
                 {
                     channelPlaying = i;
-                    Play("Channel " + (i + 1));
-                    Play(errorValues[i].ToString("F1"));
+                    Play("Channel " + (i + 1), 2);
+                    Play(errorValues[i].ToString("F1"), 2);
                     break;                   
                 }
             }
@@ -88,12 +87,12 @@ namespace Bahtinov_Collimator.Voice
             voiceEnabled = Properties.Settings.Default.VoiceEnabled;
 
             if (voiceEnabled)
-                Play("Voice Enabled");
+                Play("Voice Enabled", 0);
             else
-                Play("Voice Disabled");
+                Play("Voice Disabled", 0);
         }
 
-        public void Play(string text)
+        public void Play(string text, int speechRate)
         {
             if (voiceEnabled)
             {
@@ -102,7 +101,7 @@ namespace Bahtinov_Collimator.Voice
                     // If currently speaking or ready, enqueue the message
                     if (messageQueue.Count < 2)
                     {
-                        messageQueue.Enqueue(text);
+                        messageQueue.Enqueue((text, speechRate));
                     }
 
                     // If the synthesizer is not currently speaking, start the first message
@@ -118,9 +117,17 @@ namespace Bahtinov_Collimator.Voice
         {
             if (messageQueue.Count > 0)
             {
-                string nextMessage = messageQueue.Dequeue();
+                var (nextMessage, rate) = messageQueue.Dequeue();
+                newSpeechRate = rate;
+                synthesizer.SpeakCompleted += OnSpeakCompleted;
                 synthesizer.SpeakAsync(nextMessage);
             }
+        }
+
+        private void OnSpeakCompleted(object sender, SpeakCompletedEventArgs e)
+        {
+            synthesizer.SpeakCompleted -= OnSpeakCompleted; // Unsubscribe to avoid multiple triggers
+            synthesizer.Rate = newSpeechRate;
         }
 
         private void Synthesizer_SpeakCompleted(object sender, SpeakCompletedEventArgs e)

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -62,11 +64,11 @@ namespace Bahtinov_Collimator
         private static IntPtr targetWindowHandle;
         private static Rectangle selectedStarBox;
 
-        private static string previousImageHash = "";
+        private static string previousImageHash = null;
         private static bool newHashFound = false;
         private static string firstHash = "";
-
-        public static bool TrackingEnabled { get; set; } = false;
+            
+        public static int TrackingType {  get; set; } = 0; //0-off, 1-bahtinov, 2-defocus
 
         /// <summary>
         /// Starts the image capture process by initializing and starting a timer.
@@ -89,6 +91,9 @@ namespace Bahtinov_Collimator
         /// </summary>
         public static void StopImageCapture()
         {
+            previousImageHash = null;
+            newHashFound = false;
+            firstHash = "";
             captureTimer?.Stop();
             captureTimer?.Dispose();
             captureTimer = null;
@@ -128,7 +133,7 @@ namespace Bahtinov_Collimator
                 // Fill the entire image with black before drawing
                 g.Clear(Color.Black);
 
-                if (TrackingEnabled)
+                if (TrackingType == 1)
                 {
                     // Get offset for the brightest area
                     Point offset = FindBrightestAreaCentroid(latestImage);
@@ -142,6 +147,17 @@ namespace Bahtinov_Collimator
 
                     // Apply translation transformation to the Graphics object
                     g.TranslateTransform(delta_X, delta_Y);
+                }
+                else if (TrackingType == 2) 
+                {
+                    // Get offset for the inner circle
+                    Point offset = FindInnerCircleOffset(latestImage);
+
+                    // Update selectedStarBox with new position
+                    selectedStarBox.Offset(offset.X, offset.Y);
+
+                    // Apply translation transformation to the Graphics object
+                    g.TranslateTransform(offset.X, offset.Y);
                 }
 
                 // Calculate the center position
@@ -179,6 +195,75 @@ namespace Bahtinov_Collimator
                 // Dispose of the original image
                 latestImage.Dispose();
             }
+        }
+
+        private static Point FindInnerCircleOffset(Bitmap image)
+        {
+            int centerX = (image.Width / 2);
+            int centerY = (image.Height / 2);
+
+            int maxRadius = Math.Min(image.Width, image.Height) / 2;
+            int radiusSum = 0;
+            int transitionCount = 0;
+            double transitionXSum = 0;
+            double transitionYSum = 0;
+
+            // Store brightness values for each angle
+            Dictionary<double, List<double>> angleBrightness = new Dictionary<double, List<double>>();
+
+            // Iterate over angles from 0 to 359 degrees
+            for (double angle = 0; angle < 360; angle += 1)
+            {
+                angleBrightness[angle] = new List<double>();
+
+                // Check the radius along this angle, from center outwards
+                for (int r = 0; r < maxRadius; r++)
+                {
+                    int x = centerX + (int)(r * Math.Cos(angle * Math.PI / 180));
+                    int y = centerY + (int)(r * Math.Sin(angle * Math.PI / 180));
+
+                    if (x >= 0 && x < image.Width && y >= 0 && y < image.Height)
+                    {
+                        Color pixelColor = image.GetPixel(x, y);
+                        double brightness = pixelColor.GetBrightness();
+                        angleBrightness[angle].Add(brightness);
+                    }
+                }
+            }
+            // Detect average brightness and transition for each angle
+            for (double angle = 0; angle < 360; angle += 1)
+            {
+                double lineSumBrightness = angleBrightness[angle].Sum();
+                int numPoints = angleBrightness[angle].Count;
+                double averageLineBrightness = numPoints > 0 ? lineSumBrightness / numPoints : 0.0;
+
+                // Check radius along this angle for transition (dark to bright)
+                for (int r = 0; r < maxRadius; r++)
+                {
+                    int x = centerX + (int)(r * Math.Cos(angle * Math.PI / 180));
+                    int y = centerY + (int)(r * Math.Sin(angle * Math.PI / 180));
+
+                    if (x >= 0 && x < image.Width && y >= 0 && y < image.Height)
+                    {
+                        Color pixelColor = image.GetPixel(x, y);
+                        double brightness = pixelColor.GetBrightness();
+
+                        // Detect transition based on average brightness
+                        if (brightness > averageLineBrightness)
+                        {
+                            radiusSum += r;
+                            transitionCount++;
+                            transitionXSum += x - centerX;
+                            transitionYSum += y - centerY;
+                            break; // Move to the next angle once the transition is found
+                        }
+                    }
+                }
+            }
+
+            Point centre = new Point((int)transitionXSum / 180, (int)transitionYSum / 180);
+
+            return centre;
         }
 
         private static Bitmap CreateCircularImage(Bitmap originalImage)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
+using System.Security.Permissions;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
@@ -190,6 +191,25 @@ namespace Bahtinov_Collimator
                 Start = start;
                 End = end;
             }
+        }
+
+        public class DefocusCircleEventArgs : EventArgs
+        {
+            public Bitmap Image { get; set; }
+            public Point InnerCircleCentre { get; private set; }
+            public Point OuterCircleCentre { get; private set; }
+            public int InnerCircleRadius { get; private set; }
+            public int OuterCircleRadius { get; private set; }
+
+            public DefocusCircleEventArgs(Bitmap image, Point inner, int innerRadius, Point outer, int outerRadius)
+            {
+                this.Image = new Bitmap(image);
+                this.InnerCircleCentre = inner;
+                this.OuterCircleCentre = outer;
+                this.InnerCircleRadius = innerRadius;
+                this.OuterCircleRadius = outerRadius;
+            }
+
         }
     }
 }

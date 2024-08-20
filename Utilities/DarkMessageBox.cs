@@ -11,13 +11,9 @@ namespace Bahtinov_Collimator
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
-        // Constants
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
-
-        // Property to hold the user's response
         public static DialogResult UserResponse { get; private set; } = DialogResult.None;
 
-        // Dictionary to map MessageBoxIcon to SystemIcons
         private static readonly Dictionary<MessageBoxIcon, Icon> IconMap = new Dictionary<MessageBoxIcon, Icon>
         {
             { MessageBoxIcon.Error, SystemIcons.Error },
@@ -26,21 +22,17 @@ namespace Bahtinov_Collimator
             { MessageBoxIcon.Warning, SystemIcons.Warning }
         };
 
-        // Constructor
         public DarkMessageBox(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons)
         {
             InitializeComponent();
-
             this.Text = title;
             messageLabel.Text = message;
             DrawIconInPictureBox(icon);
-
             SetColor();
             ConfigureButtons(buttons);
             AutoSizeControls();
         }
 
-        // Set color and style
         private void SetColor()
         {
             var color = UITheme.DarkBackground;
@@ -60,7 +52,6 @@ namespace Bahtinov_Collimator
             cancelButton.FlatStyle = FlatStyle.Popup;
         }
 
-        // Configure the buttons based on the MessageBoxButtons parameter
         private void ConfigureButtons(MessageBoxButtons buttons)
         {
             okButton.Visible = false;
@@ -80,7 +71,6 @@ namespace Bahtinov_Collimator
             }
         }
 
-        // Adjust the form size based on the content
         private void AutoSizeControls()
         {
             this.messageLabel.AutoSize = true;
@@ -89,67 +79,62 @@ namespace Bahtinov_Collimator
             this.ClientSize = new Size(width, height);
         }
 
-        // Handle OK button click
         private void okButton_Click(object sender, EventArgs e)
         {
             UserResponse = DialogResult.OK;
             this.Close();
         }
 
-        // Handle Cancel button click
         private void cancelButton_Click(object sender, EventArgs e)
         {
             UserResponse = DialogResult.Cancel;
             this.Close();
         }
 
-        // Display the message box
-        public static DialogResult Show(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons)
+        public static DialogResult Show(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons, Form owner = null)
         {
             if (Application.OpenForms.Count > 0)
             {
-                Form mainForm = Application.OpenForms[0];
+                Form mainForm = owner ?? Application.OpenForms[0];
 
                 if (mainForm.InvokeRequired)
                 {
-                    return (DialogResult)mainForm.Invoke(new Func<DialogResult>(() => ShowCustomMessageBoxInternal(message, title, icon, buttons)));
+                    return (DialogResult)mainForm.Invoke(new Func<DialogResult>(() => ShowCustomMessageBoxInternal(message, title, icon, buttons, mainForm)));
                 }
                 else
                 {
-                    return ShowCustomMessageBoxInternal(message, title, icon, buttons);
+                    return ShowCustomMessageBoxInternal(message, title, icon, buttons, mainForm);
                 }
             }
             else
             {
                 // Fallback if there are no open forms
-                return ShowCustomMessageBoxInternal(message, title, icon, buttons);
+                return ShowCustomMessageBoxInternal(message, title, icon, buttons, owner);
             }
         }
 
-        // Internal method to show the message box
-        private static DialogResult ShowCustomMessageBoxInternal(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons)
+        private static DialogResult ShowCustomMessageBoxInternal(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons, Form owner)
         {
             using (DarkMessageBox customMessageBox = new DarkMessageBox(message, title, icon, buttons))
             {
-                customMessageBox.ShowDialog();
-                return UserResponse;
+                // Position the message box within the owner's bounds
+                Rectangle ownerRect = owner.Bounds;
+                int x = ownerRect.Left + (ownerRect.Width - customMessageBox.Width) / 2;
+                int y = ownerRect.Top + (ownerRect.Height - customMessageBox.Height) / 2;
+
+                customMessageBox.StartPosition = FormStartPosition.Manual;
+                customMessageBox.Location = new Point(x, y);
+
+                return customMessageBox.ShowDialog(owner);
             }
         }
 
-        // Center the form on the screen
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-
-            this.StartPosition = FormStartPosition.Manual;
-            Rectangle screen = Screen.PrimaryScreen.WorkingArea;
-            this.Location = new Point(
-                (screen.Width - this.Width) / 2,
-                (screen.Height - this.Height) / 2
-            );
+            // Centering logic now handled in ShowCustomMessageBoxInternal
         }
 
-        // Draw the icon in the PictureBox
         private void DrawIconInPictureBox(MessageBoxIcon icon)
         {
             int iconSize = 32; // Adjust the size if needed
@@ -166,7 +151,6 @@ namespace Bahtinov_Collimator
             iconBox.Image = bitmap;
         }
 
-        // Get the appropriate icon based on the MessageBoxIcon parameter
         private Icon GetIcon(MessageBoxIcon messageBoxIcon, int size)
         {
             if (IconMap.TryGetValue(messageBoxIcon, out Icon icon))

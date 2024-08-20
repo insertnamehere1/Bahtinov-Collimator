@@ -1,14 +1,19 @@
-﻿using System;
+﻿using Bahtinov_Collimator.Image_Processing;
+using MathNet.Numerics.RootFinding;
+using MathNet.Numerics;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using static Bahtinov_Collimator.BahtinovLineDataEventArgs;
+using System.Runtime.InteropServices;
+
 
 namespace Bahtinov_Collimator
 {
     public partial class ImageDisplayComponent : UserControl
     {
-
         private List<Bitmap> layers;
         private int selectedGroup = 0;
 
@@ -27,8 +32,10 @@ namespace Bahtinov_Collimator
         {
             // Subscribe to the ImageReceivedEvent
             FocusChannelComponent.ChannelSelectDataEvent += ChannelSelected;
-            ImageProcessing.BahtinovLineDrawEvent += OnBahtinovLineReceive;
+            BahtinovProcessing.BahtinovLineDrawEvent += OnBahtinovLineReceive;
             ImageLostEventProvider.ImageLostEvent += HandleImageLost;
+            DefocusStarProcessing.DefocusCircleEvent += OnDefocusCirceReceived;
+
             this.pictureBox1.Paint += new PaintEventHandler(this.pictureBoxPaint);
         }
 
@@ -68,6 +75,17 @@ namespace Bahtinov_Collimator
             }
         }
 
+        private void OnDefocusCirceReceived(object sender, DefocusCircleEventArgs e)
+        {
+            Bitmap image = new Bitmap(e.Image);
+
+            if (pictureBox1.InvokeRequired)
+                pictureBox1.Invoke(new Action(() => UpdatePictureBox(image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius)));
+            else
+                UpdatePictureBox(image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius);
+        }
+
+
         private void OnBahtinovLineReceive(object sender, BahtinovLineDataEventArgs e)
         {
             Bitmap image = new Bitmap(e.Image);
@@ -92,6 +110,32 @@ namespace Bahtinov_Collimator
             }
 
             pictureBox1.Invalidate();
+        }
+
+        private void UpdatePictureBox(Bitmap image, Point innerCentre, int innerRadius, Point outerCentre, int outerRadius)
+        {
+            ClearAllLayers();
+
+            DrawImageOnFirstLayer(image);
+            DrawDefocusCircles(innerCentre, innerRadius, outerCentre, outerRadius);
+            pictureBox1.Invalidate();
+        }
+
+        private void DrawDefocusCircles(Point innerCentre, int innerRadius, Point outerCentre, int outerRadius)
+        {
+
+            using (var g = Graphics.FromImage(layers[1]))
+            {
+                Pen dashedPen = new Pen(Color.Red, 3);
+                dashedPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+
+                int layerCentreX = layers[1].Width/2;
+                int layerCenterY = layers[1].Height/2;
+
+                // Draw the circle at the average inner radius (centered on the PictureBox1
+                g.DrawEllipse(dashedPen, layerCentreX + innerCentre.X - innerRadius, layerCenterY + innerCentre.Y - innerRadius, innerRadius * 2, innerRadius * 2);
+                g.DrawEllipse(dashedPen, layerCentreX + outerCentre.X - outerRadius, layerCenterY + outerCentre.Y - outerRadius, outerRadius * 2, outerRadius * 2);
+            }
         }
 
         private void UpdatePictureBox(Bitmap image, BahtinovLineDataEventArgs.BahtinovLineData data)
@@ -227,7 +271,7 @@ namespace Bahtinov_Collimator
             return (start, end);
         }
 
-        private void ClearDisplay()
+        public void ClearDisplay()
         {
             if (pictureBox1.InvokeRequired)
             {
