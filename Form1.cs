@@ -33,6 +33,7 @@ using Bahtinov_Collimator.Voice;
 using Bahtinov_Collimator.Image_Processing;
 using System.Drawing.Text;
 using Bahtinov_Collimator.Custom_Components;
+using System.Text;
 
 namespace Bahtinov_Collimator
 {
@@ -70,6 +71,9 @@ namespace Bahtinov_Collimator
         public Form1()
         {
             this.AutoScaleMode = AutoScaleMode.Dpi;
+            float scaleX = this.DeviceDpi / this.AutoScaleDimensions.Width;
+            float scaleY = this.DeviceDpi / this.AutoScaleDimensions.Height;
+            UITheme.Initialize(scaleX, scaleY);
 
             InitializeComponent();
             InitializeRedFocusBox();
@@ -84,11 +88,6 @@ namespace Bahtinov_Collimator
 
             slideSwitch2.IsOn = Properties.Settings.Default.DefocusSwitch;
         }
-
-
-
-
-
 
         private void InitializeRedFocusBox()
         {
@@ -131,15 +130,6 @@ namespace Bahtinov_Collimator
             // Scale the original point by the scale factors
             return new Point((int)(originalPoint.X / scaleX), (int)(originalPoint.Y / scaleY));
         }
-
-
-
-
-
-
-
-
-
 
         private void SetFormUI()
         {
@@ -251,24 +241,35 @@ namespace Bahtinov_Collimator
         }
 
         private void RunBahtinovDisplay(Bitmap image)
-        { 
-            // Find the Bahtinov lines
-            if (!firstPassCompleted)
+        {
+            try
             {
-                bahtinovLineData = bahtinovProcessing.FindBrightestLines(image);
-                bahtinovLineData.Sort();
+                // Find the Bahtinov lines
+                if (!firstPassCompleted)
+                {
+                    bahtinovLineData = bahtinovProcessing.FindBrightestLines(image);
+                    bahtinovLineData.Sort();
+                }
+
+                // Second pass to find the fine details
+                bahtinovLineData = bahtinovProcessing.FindSubpixelLines(image, bahtinovLineData.LineValue.Length, bahtinovLineData);
+
+                // Update UI based on the number of lines detected
+                int numberOfLines = bahtinovLineData.LineAngles.Length;
+
+                if (!firstPassCompleted)
+                {
+                    UpdateFocusGroup(numberOfLines);
+                    firstPassCompleted = true;
+                }
             }
-
-            // Second pass to find the fine details
-            bahtinovLineData = bahtinovProcessing.FindSubpixelLines(image, bahtinovLineData.LineValue.Length, bahtinovLineData);
-
-            // Update UI based on the number of lines detected
-            int numberOfLines = bahtinovLineData.LineAngles.Length;
-
-            if (!firstPassCompleted)
+            catch(Exception e)
             {
-                UpdateFocusGroup(numberOfLines);
-                firstPassCompleted = true;
+                ImageCapture.StopImageCapture();
+                bahtinovProcessing.StopImageProcessing();
+                firstPassCompleted = false;
+                DarkMessageBox.Show("Failed Bahtinov line detection", "RunBahtinovDisplay", MessageBoxIcon.Error, MessageBoxButtons.OK, this);
+                imageDisplayComponent1.ClearDisplay();
             }
 
             bahtinovProcessing.DisplayLines(bahtinovLineData, image);

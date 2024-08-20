@@ -45,17 +45,16 @@
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.label1 = new System.Windows.Forms.Label();
             this.Label2 = new System.Windows.Forms.Label();
-            this.slideSwitch2 = new Bahtinov_Collimator.Custom_Components.SlideSwitch();
             this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent();
+            this.slideSwitch2 = new Bahtinov_Collimator.Custom_Components.SlideSwitch();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // StartButton
             // 
-            this.StartButton.Location = new System.Drawing.Point(45, 564);
-            this.StartButton.Margin = new System.Windows.Forms.Padding(4);
+            this.StartButton.Location = new System.Drawing.Point(38, 549);
             this.StartButton.Name = "StartButton";
-            this.StartButton.Size = new System.Drawing.Size(172, 48);
+            this.StartButton.Size = new System.Drawing.Size(138, 38);
             this.StartButton.TabIndex = 0;
             this.StartButton.Text = "Select Star";
             this.StartButton.UseVisualStyleBackColor = true;
@@ -71,7 +70,8 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(728, 25);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(833, 24);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.MouseEnter += new System.EventHandler(this.MenuStrip1_MouseEnter);
@@ -81,27 +81,27 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.quitToolStripMenuItem2});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 21);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // quitToolStripMenuItem2
             // 
             this.quitToolStripMenuItem2.Name = "quitToolStripMenuItem2";
-            this.quitToolStripMenuItem2.Size = new System.Drawing.Size(120, 26);
+            this.quitToolStripMenuItem2.Size = new System.Drawing.Size(97, 22);
             this.quitToolStripMenuItem2.Text = "Quit";
             this.quitToolStripMenuItem2.Click += new System.EventHandler(this.QuitToolStripMenuItem2_Click);
             // 
             // AdjustAssistToolStripMenuItem
             // 
             this.AdjustAssistToolStripMenuItem.Name = "AdjustAssistToolStripMenuItem";
-            this.AdjustAssistToolStripMenuItem.Size = new System.Drawing.Size(106, 21);
+            this.AdjustAssistToolStripMenuItem.Size = new System.Drawing.Size(86, 20);
             this.AdjustAssistToolStripMenuItem.Text = "Adjust Assist";
             this.AdjustAssistToolStripMenuItem.Click += new System.EventHandler(this.cheatSheetToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem1
             // 
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(76, 21);
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem1.Text = "Settings";
             this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.SettingsToolStripMenuItem1_Click);
             // 
@@ -113,88 +113,94 @@
             this.donateToolStripMenuItem,
             this.aboutToolStripMenuItem2});
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(55, 21);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.aboutToolStripMenuItem.Text = "Help";
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.helpToolStripMenuItem.Text = "Help";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
             // checkForUpdatesToolStripMenuItem
             // 
             this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.checkForUpdatesToolStripMenuItem.Text = "Check for Updates";
             this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
             // 
             // donateToolStripMenuItem
             // 
             this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
-            this.donateToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+            this.donateToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.donateToolStripMenuItem.Text = "Buy me a Coffee?";
             this.donateToolStripMenuItem.Click += new System.EventHandler(this.DonateToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem2
             // 
             this.aboutToolStripMenuItem2.Name = "aboutToolStripMenuItem2";
-            this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(213, 26);
+            this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(171, 22);
             this.aboutToolStripMenuItem2.Text = "About";
             this.aboutToolStripMenuItem2.Click += new System.EventHandler(this.AboutToolStripMenuItem2_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(42, 506);
+            this.label1.Location = new System.Drawing.Point(36, 503);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 16);
+            this.label1.Size = new System.Drawing.Size(49, 13);
             this.label1.TabIndex = 22;
             this.label1.Text = "Bahtinov";
             // 
             // Label2
             // 
             this.Label2.AutoSize = true;
-            this.Label2.Location = new System.Drawing.Point(160, 506);
+            this.Label2.Location = new System.Drawing.Point(130, 503);
+            this.Label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label2.Name = "Label2";
-            this.Label2.Size = new System.Drawing.Size(57, 16);
+            this.Label2.Size = new System.Drawing.Size(47, 13);
             this.Label2.TabIndex = 23;
             this.Label2.Text = "Defocus";
+            // 
+            // imageDisplayComponent1
+            // 
+            this.imageDisplayComponent1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.imageDisplayComponent1.Location = new System.Drawing.Point(220, 34);
+            this.imageDisplayComponent1.Margin = new System.Windows.Forms.Padding(0);
+            this.imageDisplayComponent1.Name = "imageDisplayComponent1";
+            this.imageDisplayComponent1.Size = new System.Drawing.Size(604, 599);
+            this.imageDisplayComponent1.TabIndex = 25;
             // 
             // slideSwitch2
             // 
             this.slideSwitch2.IsOn = false;
-            this.slideSwitch2.Location = new System.Drawing.Point(105, 502);
+            this.slideSwitch2.Location = new System.Drawing.Point(86, 500);
+            this.slideSwitch2.Margin = new System.Windows.Forms.Padding(2);
             this.slideSwitch2.Name = "slideSwitch2";
             this.slideSwitch2.OffColor = System.Drawing.Color.Gray;
             this.slideSwitch2.OnColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(69)))), ((int)(((byte)(96)))));
-            this.slideSwitch2.Size = new System.Drawing.Size(50, 25);
+            this.slideSwitch2.Size = new System.Drawing.Size(40, 20);
             this.slideSwitch2.TabIndex = 24;
             this.slideSwitch2.ToggleColor = System.Drawing.Color.White;
             // 
-            // imageDisplayComponent1
-            // 
-            this.imageDisplayComponent1.Location = new System.Drawing.Point(269, 38);
-            this.imageDisplayComponent1.Name = "imageDisplayComponent1";
-            this.imageDisplayComponent1.Size = new System.Drawing.Size(600, 600);
-            this.imageDisplayComponent1.TabIndex = 20;
-            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(873, 643);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(833, 642);
+            this.Controls.Add(this.imageDisplayComponent1);
             this.Controls.Add(this.slideSwitch2);
             this.Controls.Add(this.Label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.imageDisplayComponent1);
             this.Controls.Add(this.StartButton);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
@@ -222,10 +228,10 @@
         private System.Windows.Forms.ToolStripMenuItem donateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem AdjustAssistToolStripMenuItem;
-        private ImageDisplayComponent imageDisplayComponent1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label Label2;
         private Custom_Components.SlideSwitch slideSwitch2;
+        private ImageDisplayComponent imageDisplayComponent1;
     }
 }
 

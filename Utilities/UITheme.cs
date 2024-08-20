@@ -33,7 +33,7 @@ namespace Bahtinov_Collimator
         public static Color GetGroupBoxCriticalColor { get; } = Color.White;
 
         // Display Window
-        public static Point DisplayWindow { get; } = new Point(600, 600);
+        public static Point DisplayWindow { get; private set; } = new Point(600, 600);
         public static Color DisplayBackgroundColor { get; } = Color.Black;
 
         // MessageBox Theme
@@ -54,6 +54,10 @@ namespace Bahtinov_Collimator
         // About Theme
         public static Color AboutTextColor { get; } = Color.White;
         public static Color AboutPictureBackground { get; } = Color.Gray;
+
+        // Scaling Values
+        public static float DpiScaleX { get; private set; } = 1.0f;
+        public static float DpiScaleY { get; private set; } = 1.0f;
 
         // Group Box Color Theme Dictionary
         private static readonly Dictionary<int, Color> GroupBoxTextColors;
@@ -115,6 +119,15 @@ namespace Bahtinov_Collimator
             ErrorTextBrush[0] = new SolidBrush(Color.White);
             ErrorTextBrush[1] = new SolidBrush(Color.White);
             ErrorTextBrush[2] = new SolidBrush(Color.White);
+        }
+
+        public static void Initialize(float scaleX, float scaleY)
+        {
+            DpiScaleX = scaleX;
+            DpiScaleY = scaleY;
+
+            // set window size
+            DisplayWindow = new Point((int)(600 / scaleX), (int)(600 / scaleY));
         }
 
         public static Color GetGroupBoxTextColor(int groupId)

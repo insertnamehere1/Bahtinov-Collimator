@@ -26,6 +26,10 @@ namespace Bahtinov_Collimator
             AddNewLayers(4);
 
             SetupSubscriptions();
+
+            int width = pictureBox1.Size.Width;
+            int height = pictureBox1.Size.Height;
+
         }
 
         private void SetupSubscriptions()
@@ -144,9 +148,9 @@ namespace Bahtinov_Collimator
 
             DrawImageOnFirstLayer(image);
 
-            var centerX = 300;
-            var centerY = 300;
-            var radius = 290;
+            var centerX = UITheme.DisplayWindow.X / 2;
+            var centerY = UITheme.DisplayWindow.Y / 2;
+            var radius = centerX - 20; 
 
             var clippingRegion = CreateCircularClippingRegion(centerX, centerY, radius);
 
@@ -217,10 +221,12 @@ namespace Bahtinov_Collimator
             var textFont = UITheme.GetErrorTextFont(group.GroupId);
             var solidBrush = UITheme.GetErrorTextBrush(group.GroupId);
 
+            var radius = (UITheme.DisplayWindow.X / 2) - 50;
+
             var textStart = group.Lines[1].Start;
             var textEnd = group.Lines[1].End;
 
-            var adjustedPoints = AdjustPointsForRadius(textStart, textEnd, pictureBox1.Width, pictureBox1.Height, 250);
+            var adjustedPoints = AdjustPointsForRadius(textStart, textEnd, this.Width, this.Height, radius);
 
             var textLocation = group.GroupId != 1 ? adjustedPoints.end : adjustedPoints.start;
 
