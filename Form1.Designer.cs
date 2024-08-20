@@ -45,8 +45,8 @@
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.label1 = new System.Windows.Forms.Label();
             this.Label2 = new System.Windows.Forms.Label();
-            this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent();
             this.slideSwitch2 = new Bahtinov_Collimator.Custom_Components.SlideSwitch();
+            this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -164,16 +164,6 @@
             this.Label2.TabIndex = 23;
             this.Label2.Text = "Defocus";
             // 
-            // imageDisplayComponent1
-            // 
-            this.imageDisplayComponent1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.imageDisplayComponent1.Location = new System.Drawing.Point(220, 34);
-            this.imageDisplayComponent1.Margin = new System.Windows.Forms.Padding(0);
-            this.imageDisplayComponent1.Name = "imageDisplayComponent1";
-            this.imageDisplayComponent1.Size = new System.Drawing.Size(604, 599);
-            this.imageDisplayComponent1.TabIndex = 25;
-            // 
             // slideSwitch2
             // 
             this.slideSwitch2.IsOn = false;
@@ -185,6 +175,14 @@
             this.slideSwitch2.Size = new System.Drawing.Size(40, 20);
             this.slideSwitch2.TabIndex = 24;
             this.slideSwitch2.ToggleColor = System.Drawing.Color.White;
+            // 
+            // imageDisplayComponent1
+            // 
+            this.imageDisplayComponent1.Location = new System.Drawing.Point(222, 31);
+            this.imageDisplayComponent1.Margin = new System.Windows.Forms.Padding(2);
+            this.imageDisplayComponent1.Name = "imageDisplayComponent1";
+            this.imageDisplayComponent1.Size = new System.Drawing.Size(600, 600);
+            this.imageDisplayComponent1.TabIndex = 25;
             // 
             // Form1
             // 

@@ -133,8 +133,8 @@ namespace Bahtinov_Collimator
                 Pen dashedPen = new Pen(Color.Red, 3);
                 dashedPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
 
-                int layerCentreX = layers[1].Width/2;
-                int layerCenterY = layers[1].Height/2;
+                int layerCentreX = pictureBox1.Size.Width / 2;
+                int layerCenterY = pictureBox1.Size.Height / 2; 
 
                 // Draw the circle at the average inner radius (centered on the PictureBox1
                 g.DrawEllipse(dashedPen, layerCentreX + innerCentre.X - innerRadius, layerCenterY + innerCentre.Y - innerRadius, innerRadius * 2, innerRadius * 2);
