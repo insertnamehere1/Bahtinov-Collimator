@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Bahtinov_Collimator.BahtinovLineDataEventArgs;
+using Bahtinov_Collimator.Helper;
 
 namespace Bahtinov_Collimator.Image_Processing
 {
@@ -24,28 +25,27 @@ namespace Bahtinov_Collimator.Image_Processing
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
             {
                 // Calculate center of the image with DPI scaling
-                int imgCenterX = (int)(image.Width / 2 );
-                int imgCenterY = (int)(image.Height / 2);
+                double imgCenterX = image.Width / 2;
+                double imgCenterY = image.Height / 2;
 
                 // Find the average radius of the inner transition
                 var (innerCentre, innerRadius) = FindAverageInnerRadius(image, imgCenterX, imgCenterY);
                 var (outerCentre, outerRadius) = FindAverageOuterRadius(image, imgCenterX, imgCenterY);
 
-                var (Distance, Direction) = CalculateDistanceAndDirection(innerCentre, outerCentre);
+                var (distance, direction) = CalculateDistanceAndDirection(innerCentre, outerCentre);
 
                 // Send an event with DPI-adjusted values
                 DefocusCircleEvent?.Invoke(null, new DefocusCircleEventArgs(image,
-                    new Point((int)((innerCentre.X - imgCenterX)), (int)((innerCentre.Y - imgCenterY))),
-                    (int)(innerRadius),
-                    new Point((int)((outerCentre.X - imgCenterX)), (int)((outerCentre.Y - imgCenterY))),
-                    (int)(outerRadius)));
+                    new PointD(innerCentre.X - imgCenterX, innerCentre.Y - imgCenterY), innerRadius,
+                    new PointD(outerCentre.X - imgCenterX, outerCentre.Y - imgCenterY), outerRadius, 
+                    distance, direction)); 
             }
         }
 
-        private static (double Distance, double Direction) CalculateDistanceAndDirection(Point firstPoint, Point secondPoint)
+        private static (double Distance, double Direction) CalculateDistanceAndDirection(PointD innerCentre, PointD outerCentre)
         {
-            double deltaX = secondPoint.X - firstPoint.X;
-            double deltaY = secondPoint.Y - firstPoint.Y;
+            double deltaX = outerCentre.X - innerCentre.X;
+            double deltaY = outerCentre.Y - innerCentre.Y;
 
             double distance = Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
             double directionRadians = Math.Atan2(deltaY, deltaX);
@@ -57,7 +57,7 @@ namespace Bahtinov_Collimator.Image_Processing
             return (distance, directionDegrees);
         }
 
-        private (Point center, int radius) CalculateAverageRadius(Bitmap image, int centerX, int centerY, bool isInnerRadius)
+        private (PointD centre, double radius) CalculateAverageRadius(Bitmap image, double centerX, double centerY, bool isInnerRadius)
         {
             int maxRadius = Math.Min(image.Width, image.Height) / 2;
             int radiusSum = 0;
@@ -94,12 +94,12 @@ namespace Bahtinov_Collimator.Image_Processing
 
                 for (int r = startRadius; isInnerRadius ? r < endRadius : r > endRadius; r += step)
                 {
-                    int x = centerX + (int)(r * cosValues[angle]);
-                    int y = centerY + (int)(r * sinValues[angle]);
+                    double x = centerX + (r * cosValues[angle]);
+                    double y = centerY + (r * sinValues[angle]);
 
                     if (x >= 0 && x < image.Width && y >= 0 && y < image.Height)
                     {
-                        int pixelIndex = y * stride + x * bytesPerPixel;
+                        int pixelIndex = (int)(y) * stride + (int)(x) * bytesPerPixel;
                         double brightness = GetBrightness(pixels[pixelIndex + 2], pixels[pixelIndex + 1], pixels[pixelIndex]); // assuming RGB format
 
                         if (brightness != 0)
@@ -114,12 +114,12 @@ namespace Bahtinov_Collimator.Image_Processing
 
                 for (int r = startRadius; isInnerRadius ? r < endRadius : r > endRadius; r += step)
                 {
-                    int x = centerX + (int)(r * cosValues[angle]);
-                    int y = centerY + (int)(r * sinValues[angle]);
+                    double x = centerX + (r * cosValues[angle]);
+                    double y = centerY + (r * sinValues[angle]);
 
                     if (x >= 0 && x < image.Width && y >= 0 && y < image.Height)
                     {
-                        int pixelIndex = y * stride + x * bytesPerPixel;
+                        int pixelIndex = (int)(y) * stride + (int)(x) * bytesPerPixel;
                         double brightness = GetBrightness(pixels[pixelIndex + 2], pixels[pixelIndex + 1], pixels[pixelIndex]);
 
                         if (brightness > averageLineBrightness)
@@ -137,10 +137,11 @@ namespace Bahtinov_Collimator.Image_Processing
             // Unlock the bitmap
             image.UnlockBits(bitmapData);
 
-            int radius = transitionCount > 0 ? (int)Math.Round((double)radiusSum / transitionCount) : maxRadius;
-            Point center = new Point((int)(transitionXSum / transitionCount + centerX), (int)(transitionYSum / transitionCount + centerY));
+            double radius = transitionCount > 0 ? Math.Round((double)radiusSum / transitionCount) : maxRadius;
+            double circleX = transitionXSum / transitionCount + centerX;
+            double circleY = transitionYSum / transitionCount + centerY;
 
-            return (center, radius);
+            return (new PointD(circleX, circleY), radius);
         }
 
         // Helper function to calculate brightness from RGB values
@@ -149,12 +150,12 @@ namespace Bahtinov_Collimator.Image_Processing
             return (r * 0.299 + g * 0.587 + b * 0.114) / 255.0;
         }
 
-        private (Point center, int radius) FindAverageInnerRadius(Bitmap image, int centerX, int centerY)
+        private (PointD centre, double radius) FindAverageInnerRadius(Bitmap image, double centerX, double centerY)
         {
             return CalculateAverageRadius(image, centerX, centerY, true);
         }
 
-        private (Point center, int radius) FindAverageOuterRadius(Bitmap image, int centerX, int centerY)
+        private (PointD centre, double radius) FindAverageOuterRadius(Bitmap image, double centerX, double centerY)
         {
             return CalculateAverageRadius(image, centerX, centerY, false);
         }

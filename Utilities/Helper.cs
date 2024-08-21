@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using System.Deployment.Application;
 
-namespace Bahtinov_Collimator
+namespace Bahtinov_Collimator.Helper
 {
     internal class Helper
     {
@@ -113,6 +113,28 @@ namespace Bahtinov_Collimator
                     Intercept = float.NaN; // Vertical line does not have a y-intercept
                 }
             }
+        }
+    }
+
+    public struct PointD
+    {
+        public double X { get; set; }
+        public double Y { get; set; }
+
+        public PointD(double x, double y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public double DirectionTo(PointD other)
+        {
+            return Math.Atan2(other.Y - Y, other.X - X);
+        }
+
+        public double DistanceTo(PointD other)
+        {
+            return Math.Sqrt(Math.Pow(other.X - X, 2) + Math.Pow(other.Y - Y, 2));
         }
     }
 }

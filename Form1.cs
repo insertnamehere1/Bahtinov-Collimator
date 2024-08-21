@@ -33,6 +33,7 @@ using Bahtinov_Collimator.Voice;
 using Bahtinov_Collimator.Image_Processing;
 using System.Drawing.Text;
 using Bahtinov_Collimator.Custom_Components;
+using Bahtinov_Collimator.Helper;
 using System.Text;
 
 namespace Bahtinov_Collimator
@@ -388,7 +389,7 @@ namespace Bahtinov_Collimator
 
         private void InstallUpdateSyncWithInfo()
         {
-            Helper.GetLatestUpdate();
+            Helper.Helper.GetLatestUpdate();
         }
 
         private void cheatSheetToolStripMenuItem_Click(object sender, EventArgs e)

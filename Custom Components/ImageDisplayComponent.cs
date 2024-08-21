@@ -8,6 +8,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using static Bahtinov_Collimator.BahtinovLineDataEventArgs;
 using System.Runtime.InteropServices;
+using Bahtinov_Collimator.Helper;
 
 
 namespace Bahtinov_Collimator
@@ -84,9 +85,9 @@ namespace Bahtinov_Collimator
             Bitmap image = new Bitmap(e.Image);
 
             if (pictureBox1.InvokeRequired)
-                pictureBox1.Invoke(new Action(() => UpdatePictureBox(image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius)));
+                pictureBox1.Invoke(new Action(() => UpdatePictureBox(image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius, e.Distance, e.Direction)));
             else
-                UpdatePictureBox(image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius);
+                UpdatePictureBox(image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius, e.Distance, e.Direction);
         }
 
 
@@ -116,29 +117,73 @@ namespace Bahtinov_Collimator
             pictureBox1.Invalidate();
         }
 
-        private void UpdatePictureBox(Bitmap image, Point innerCentre, int innerRadius, Point outerCentre, int outerRadius)
+        private void UpdatePictureBox(Bitmap image, PointD innerCentre, double innerRadius, PointD outerCentre, double outerRadius, double distance, double direction)
         {
             ClearAllLayers();
 
             DrawImageOnFirstLayer(image);
             DrawDefocusCircles(innerCentre, innerRadius, outerCentre, outerRadius);
+            DrawArrow(direction, distance, image.Height, image.Width, outerRadius);
             pictureBox1.Invalidate();
         }
 
-        private void DrawDefocusCircles(Point innerCentre, int innerRadius, Point outerCentre, int outerRadius)
+        private void DrawArrow(double angleInDegrees, double distance, int imageHeight, int imageWidth, double outerRadius)
         {
+            double circleRadius = outerRadius + 100;
+            int arrowLength = 70;
 
+            using (var g = Graphics.FromImage(layers[1]))
+            {
+                // Convert angle to radians
+                double angleInRadians = (angleInDegrees + 180) * (Math.PI / 180.0);
+
+                // Get the center of the PictureBox
+                Point center = new Point(imageWidth / 2, imageHeight / 2);
+
+                // Calculate the start position on the invisible circle
+                Point startPoint = new Point(
+                    center.X + (int)(circleRadius * Math.Cos(angleInRadians)),
+                    center.Y + (int)(circleRadius * Math.Sin(angleInRadians))
+                );
+
+                // Calculate the end position by extending inwards by arrowLength
+                Point endPoint = new Point(
+                    startPoint.X - (int)(arrowLength * Math.Cos(angleInRadians)),
+                    startPoint.Y - (int)(arrowLength * Math.Sin(angleInRadians))
+                );
+
+                // Create the arrow
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                using (Pen pen = new Pen(Color.Red, 20))
+                {
+                    pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+                    g.DrawLine(pen, startPoint, endPoint);
+                }
+
+                // Draw the distance text under the arrow
+                string distanceText = distance.ToString("F2");
+                using (Font font = new Font("Arial", 40, FontStyle.Bold | FontStyle.Italic))
+                using (Brush brush = new SolidBrush(Color.Red))
+                {
+                    PointF test = new PointF(20, 20);
+                    g.DrawString(distanceText, font, brush, test);
+                }
+            }
+        }
+
+        private void DrawDefocusCircles(PointD innerCentre, double innerRadius, PointD outerCentre, double outerRadius)
+        {
             using (var g = Graphics.FromImage(layers[1]))
             {
                 Pen dashedPen = new Pen(Color.Red, 3);
                 dashedPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
 
-                int layerCentreX = (int)Math.Ceiling(UITheme.DisplayWindow.X / 2.0f);
-                int layerCentreY = (int)Math.Ceiling(UITheme.DisplayWindow.Y / 2.0f);
+                double layerCentreX = UITheme.DisplayWindow.X / 2.0f;
+                double layerCentreY = UITheme.DisplayWindow.Y / 2.0f;
 
                 // Draw the circle at the average inner radius (centered on the PictureBox1
-                g.DrawEllipse(dashedPen, layerCentreX + innerCentre.X - innerRadius, layerCentreY + innerCentre.Y - innerRadius, innerRadius * 2, innerRadius * 2);
-                g.DrawEllipse(dashedPen, layerCentreX + outerCentre.X - outerRadius, layerCentreY + outerCentre.Y - outerRadius, outerRadius * 2, outerRadius * 2);
+                g.DrawEllipse(dashedPen, (float)(layerCentreX + innerCentre.X - innerRadius), (float)(layerCentreY + innerCentre.Y - innerRadius), (float)innerRadius * 2, (float)innerRadius * 2);
+                g.DrawEllipse(dashedPen, (float)(layerCentreX + outerCentre.X - outerRadius), (float)(layerCentreY + outerCentre.Y - outerRadius), (float)(outerRadius * 2), (float)(outerRadius * 2));
             }
         }
 
