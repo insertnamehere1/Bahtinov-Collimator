@@ -47,8 +47,8 @@ namespace Bahtinov_Collimator.Image_Processing
             double deltaX = outerCentre.X - innerCentre.X;
             double deltaY = outerCentre.Y - innerCentre.Y;
 
-            double distance = Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
-            double directionRadians = Math.Atan2(deltaY, deltaX);
+            double distance = innerCentre.DistanceTo(outerCentre);
+            double directionRadians = innerCentre.DirectionTo(outerCentre);  
             double directionDegrees = directionRadians * (180.0 / Math.PI);
 
             if (directionDegrees < 0)
