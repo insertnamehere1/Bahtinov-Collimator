@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bahtinov_Collimator.Helper;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -199,8 +200,8 @@ namespace Bahtinov_Collimator
 
         private static Point FindInnerCircleOffset(Bitmap image)
         {
-            int centerX = (image.Width / 2);
-            int centerY = (image.Height / 2);
+            double centerX = image.Width / 2;
+            double centerY = image.Height / 2;
 
             int maxRadius = Math.Min(image.Width, image.Height) / 2;
             int radiusSum = 0;
@@ -208,62 +209,89 @@ namespace Bahtinov_Collimator
             double transitionXSum = 0;
             double transitionYSum = 0;
 
-            // Store brightness values for each angle
-            Dictionary<double, List<double>> angleBrightness = new Dictionary<double, List<double>>();
+            // Precompute trigonometric values
+            double[] cosValues = new double[360];
+            double[] sinValues = new double[360];
 
-            // Iterate over angles from 0 to 359 degrees
-            for (double angle = 0; angle < 360; angle += 1)
+            for (int i = 0; i < 360; i++)
             {
-                angleBrightness[angle] = new List<double>();
+                cosValues[i] = Math.Cos(i * Math.PI / 180);
+                sinValues[i] = Math.Sin(i * Math.PI / 180);
+            }
 
-                // Check the radius along this angle, from center outwards
-                for (int r = 0; r < maxRadius; r++)
+            // Lock the bitmap for faster pixel access
+            BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, image.PixelFormat);
+            int bytesPerPixel = Image.GetPixelFormatSize(image.PixelFormat) / 8;
+            int stride = bitmapData.Stride;
+            IntPtr scan0 = bitmapData.Scan0;
+            byte[] pixels = new byte[stride * image.Height];
+
+            System.Runtime.InteropServices.Marshal.Copy(scan0, pixels, 0, pixels.Length);
+
+            for (int angle = 0; angle < 360; angle+=4)
+            {
+                double lineSumBrightness = 0;
+                int numPoints = 0;
+
+                int startRadius = 0;
+                int endRadius = maxRadius;
+                int step = 1;
+
+                for (int r = startRadius; r < endRadius; r += step)
                 {
-                    int x = centerX + (int)(r * Math.Cos(angle * Math.PI / 180));
-                    int y = centerY + (int)(r * Math.Sin(angle * Math.PI / 180));
+                    double x = centerX + (r * cosValues[angle]);
+                    double y = centerY + (r * sinValues[angle]);
 
                     if (x >= 0 && x < image.Width && y >= 0 && y < image.Height)
                     {
-                        Color pixelColor = image.GetPixel(x, y);
-                        double brightness = pixelColor.GetBrightness();
-                        angleBrightness[angle].Add(brightness);
+                        int pixelIndex = (int)(y) * stride + (int)(x) * bytesPerPixel;
+                        double brightness = GetBrightness(pixels[pixelIndex + 2], pixels[pixelIndex + 1], pixels[pixelIndex]); // assuming RGB format
+
+                        if (brightness != 0)
+                        {
+                            lineSumBrightness += brightness;
+                            numPoints++;
+                        }
                     }
                 }
-            }
-            // Detect average brightness and transition for each angle
-            for (double angle = 0; angle < 360; angle += 1)
-            {
-                double lineSumBrightness = angleBrightness[angle].Sum();
-                int numPoints = angleBrightness[angle].Count;
+
                 double averageLineBrightness = numPoints > 0 ? lineSumBrightness / numPoints : 0.0;
 
-                // Check radius along this angle for transition (dark to bright)
-                for (int r = 0; r < maxRadius; r++)
+                for (int r = startRadius; r < endRadius; r += step)
                 {
-                    int x = centerX + (int)(r * Math.Cos(angle * Math.PI / 180));
-                    int y = centerY + (int)(r * Math.Sin(angle * Math.PI / 180));
+                    double x = centerX + (r * cosValues[angle]);
+                    double y = centerY + (r * sinValues[angle]);
 
                     if (x >= 0 && x < image.Width && y >= 0 && y < image.Height)
                     {
-                        Color pixelColor = image.GetPixel(x, y);
-                        double brightness = pixelColor.GetBrightness();
+                        int pixelIndex = (int)(y) * stride + (int)(x) * bytesPerPixel;
+                        double brightness = GetBrightness(pixels[pixelIndex + 2], pixels[pixelIndex + 1], pixels[pixelIndex]);
 
-                        // Detect transition based on average brightness
                         if (brightness > averageLineBrightness)
                         {
                             radiusSum += r;
                             transitionCount++;
                             transitionXSum += x - centerX;
                             transitionYSum += y - centerY;
-                            break; // Move to the next angle once the transition is found
+                            break;
                         }
                     }
                 }
             }
 
-            Point centre = new Point((int)transitionXSum / 180, (int)transitionYSum / 180);
+            // Unlock the bitmap
+            image.UnlockBits(bitmapData);
 
-            return centre;
+            double radius = transitionCount > 0 ? Math.Round((double)radiusSum / transitionCount) : maxRadius;
+            double circleX = transitionXSum / transitionCount;
+            double circleY = transitionYSum / transitionCount;
+
+            return new Point((int)circleX, (int)circleY);
+        }
+
+        private static double GetBrightness(byte r, byte g, byte b)
+        {
+            return (r * 0.299 + g * 0.587 + b * 0.114) / 255.0;
         }
 
         private static Bitmap CreateCircularImage(Bitmap originalImage)
