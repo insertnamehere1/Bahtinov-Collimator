@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using static Bahtinov_Collimator.BahtinovLineDataEventArgs;
 using Bahtinov_Collimator.Helper;
 
@@ -138,13 +134,12 @@ namespace Bahtinov_Collimator.Image_Processing
             image.UnlockBits(bitmapData);
 
             double radius = transitionCount > 0 ? Math.Round((double)radiusSum / transitionCount) : maxRadius;
-            double circleX = transitionXSum / transitionCount + centerX;
-            double circleY = transitionYSum / transitionCount + centerY;
+            double circleX = transitionXSum / (transitionCount / 2) + centerX;
+            double circleY = transitionYSum / (transitionCount / 2) + centerY;
 
             return (new PointD(circleX, circleY), radius);
         }
 
-        // Helper function to calculate brightness from RGB values
         private double GetBrightness(byte r, byte g, byte b)
         {
             return (r * 0.299 + g * 0.587 + b * 0.114) / 255.0;

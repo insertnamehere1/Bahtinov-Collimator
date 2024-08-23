@@ -1,10 +1,7 @@
-﻿using Bahtinov_Collimator.Helper;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -185,6 +182,11 @@ namespace Bahtinov_Collimator
                     previousImageHash = newHash;
                 }
             }
+            catch(Exception er)
+            {
+                DarkMessageBox.Show("Invalid image selection", "Capture Timer", MessageBoxIcon.Information, MessageBoxButtons.OK);
+                return;
+            }
             finally
             {
                 // Dispose of the Graphics object if it was created
@@ -204,7 +206,6 @@ namespace Bahtinov_Collimator
             double centerY = image.Height / 2;
 
             int maxRadius = Math.Min(image.Width, image.Height) / 2;
-            int radiusSum = 0;
             int transitionCount = 0;
             double transitionXSum = 0;
             double transitionYSum = 0;
@@ -269,7 +270,6 @@ namespace Bahtinov_Collimator
 
                         if (brightness > averageLineBrightness)
                         {
-                            radiusSum += r;
                             transitionCount++;
                             transitionXSum += x - centerX;
                             transitionYSum += y - centerY;
@@ -282,9 +282,8 @@ namespace Bahtinov_Collimator
             // Unlock the bitmap
             image.UnlockBits(bitmapData);
 
-            double radius = transitionCount > 0 ? Math.Round((double)radiusSum / transitionCount) : maxRadius;
-            double circleX = transitionXSum / transitionCount;
-            double circleY = transitionYSum / transitionCount;
+            double circleX = transitionXSum / (transitionCount / 2);
+            double circleY = transitionYSum / (transitionCount / 2);
 
             return new Point((int)circleX, (int)circleY);
         }
