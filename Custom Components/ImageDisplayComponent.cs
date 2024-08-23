@@ -154,19 +154,19 @@ namespace Bahtinov_Collimator
 
                 // Create the arrow
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                using (Pen pen = new Pen(Color.Red, 20))
+                using (Pen pen = new Pen(UITheme.GetGroupBoxTextColor(0), 20))
                 {
                     pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                     g.DrawLine(pen, startPoint, endPoint);
                 }
 
-                // Draw the distance text under the arrow
-                string distanceText = distance.ToString("F2");
-                using (Font font = new Font("Arial", 40, FontStyle.Bold | FontStyle.Italic))
-                using (Brush brush = new SolidBrush(Color.Red))
+                // Draw the distance text
+                string distanceText = distance.ToString("F1");
+                using (Font font = new Font("Arial", 30, FontStyle.Bold | FontStyle.Italic))
+                using (Brush brush = new SolidBrush(UITheme.GetGroupBoxTextColor(0)))
                 {
-                    PointF test = new PointF(20, 20);
-                    g.DrawString(distanceText, font, brush, test);
+                    PointF textStart = new PointF(20, 20);
+                    g.DrawString("Error: " + distanceText, font, brush, textStart);
                 }
             }
         }
@@ -175,7 +175,7 @@ namespace Bahtinov_Collimator
         {
             using (var g = Graphics.FromImage(layers[1]))
             {
-                Pen dashedPen = new Pen(Color.Red, 3);
+                Pen dashedPen = new Pen(UITheme.GetGroupBoxTextColor(0), 3);
                 dashedPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
 
                 double layerCentreX = UITheme.DisplayWindow.X / 2.0f;
