@@ -28,7 +28,7 @@ namespace Bahtinov_Collimator.Image_Processing
                 var (innerCentre, innerRadius) = FindAverageInnerRadius(image, imgCenterX, imgCenterY);
                 var (outerCentre, outerRadius) = FindAverageOuterRadius(image, imgCenterX, imgCenterY);
 
-                var (distance, direction) = CalculateDistanceAndDirection(innerCentre, outerCentre);
+                var (distance, direction) = CalculateDistanceAndDirection(innerCentre, outerCentre, innerRadius);
 
                 // Send an event with DPI-adjusted values
                 DefocusCircleEvent?.Invoke(null, new DefocusCircleEventArgs(image,
@@ -38,12 +38,12 @@ namespace Bahtinov_Collimator.Image_Processing
             }
         }
 
-        private static (double Distance, double Direction) CalculateDistanceAndDirection(PointD innerCentre, PointD outerCentre)
+        private static (double Distance, double Direction) CalculateDistanceAndDirection(PointD innerCentre, PointD outerCentre, double innerRadius)
         {
             double deltaX = outerCentre.X - innerCentre.X;
             double deltaY = outerCentre.Y - innerCentre.Y;
 
-            double distance = innerCentre.DistanceTo(outerCentre);
+            double distance = ((innerCentre.DistanceTo(outerCentre))/innerRadius) * 50;
             double directionRadians = innerCentre.DirectionTo(outerCentre);  
             double directionDegrees = directionRadians * (180.0 / Math.PI);
 
