@@ -203,10 +203,10 @@
       <DependentUpon>ImageDisplayComponent.cs</DependentUpon>
     </Compile>
     <Compile Include="Image Processing\DefocusStarProcessing.cs" />
-    <Compile Include="Utilities\DarkMessageBox.cs">
+    <Compile Include="Dialogs\DarkMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Utilities\DarkMessageBox.Designer.cs">
+    <Compile Include="Dialogs\DarkMessageBox.Designer.cs">
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Utilities\Helper.cs" />
@@ -232,7 +232,7 @@
     <Compile Include="Dialogs\Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Sound\VoiceControl.cs" />
+    <Compile Include="Voice\VoiceControl.cs" />
     <Compile Include="Utilities\UITheme.cs" />
     <Compile Include="Utilities\Utilities.cs" />
     <EmbeddedResource Include="Dialogs\AboutBox.resx">
@@ -261,7 +261,7 @@
     <EmbeddedResource Include="Dialogs\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Utilities\DarkMessageBox.resx">
+    <EmbeddedResource Include="Dialogs\DarkMessageBox.resx">
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Bahtinov Collimator_TemporaryKey.pfx" />
@@ -293,14 +293,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Icons\imageLost.bmp" />
+    <None Include="Images\imageLost.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Icons\Adjustments.png" />
-    <Content Include="Icons\arrow.png" />
-    <None Include="Icons\focusImage.png" />
-    <Content Include="Icons\focusIcon2.ico" />
-    <Content Include="Icons\paypal.png" />
+    <Content Include="Images\Adjustments.png" />
+    <Content Include="Images\arrow.png" />
+    <None Include="Images\focusImage.png" />
+    <Content Include="Images\focusIcon2.ico" />
+    <Content Include="Images\paypal.png" />
     <Content Include="published\.gitattributes" />
   </ItemGroup>
   <ItemGroup>

@@ -156,4 +156,3 @@ namespace Bahtinov_Collimator.Image_Processing
         }
     }
 }
-

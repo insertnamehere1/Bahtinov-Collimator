@@ -51,7 +51,7 @@
             // 
             this.WithinCriticalFocusLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.WithinCriticalFocusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.WithinCriticalFocusLabel.Location = new System.Drawing.Point(159, 79);
+            this.WithinCriticalFocusLabel.Location = new System.Drawing.Point(166, 79);
             this.WithinCriticalFocusLabel.Name = "WithinCriticalFocusLabel";
             this.WithinCriticalFocusLabel.Size = new System.Drawing.Size(43, 18);
             this.WithinCriticalFocusLabel.TabIndex = 7;
