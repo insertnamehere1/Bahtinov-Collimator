@@ -166,7 +166,7 @@ namespace Bahtinov_Collimator
                 using (Brush brush = new SolidBrush(UITheme.GetGroupBoxTextColor(0)))
                 {
                     PointF textStart = new PointF(20, 20);
-                    g.DrawString("Error: " + distanceText, font, brush, textStart);
+                    g.DrawString("Offset: " + distanceText, font, brush, textStart);
                 }
             }
         }
