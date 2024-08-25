@@ -29,6 +29,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.WithinCriticalFocusLabel);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
@@ -42,20 +45,22 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(221, 112);
+            this.groupBox1.Size = new System.Drawing.Size(234, 110);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "FocusChannel";
             // 
             // WithinCriticalFocusLabel
             // 
-            this.WithinCriticalFocusLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.WithinCriticalFocusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.WithinCriticalFocusLabel.Location = new System.Drawing.Point(166, 79);
+            this.WithinCriticalFocusLabel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.WithinCriticalFocusLabel.Location = new System.Drawing.Point(176, 78);
             this.WithinCriticalFocusLabel.Name = "WithinCriticalFocusLabel";
-            this.WithinCriticalFocusLabel.Size = new System.Drawing.Size(43, 18);
+            this.WithinCriticalFocusLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.WithinCriticalFocusLabel.Size = new System.Drawing.Size(37, 23);
             this.WithinCriticalFocusLabel.TabIndex = 7;
-            this.WithinCriticalFocusLabel.Text = " ---    ";
+            this.WithinCriticalFocusLabel.Text = "---    ";
+            this.WithinCriticalFocusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label5
             // 
@@ -71,7 +76,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(167, 52);
+            this.label4.Location = new System.Drawing.Point(171, 53);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(29, 18);
             this.label4.TabIndex = 5;
@@ -79,12 +84,11 @@
             // 
             // AbsoluteFocusErrorLabel
             // 
-            this.AbsoluteFocusErrorLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.AbsoluteFocusErrorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AbsoluteFocusErrorLabel.Location = new System.Drawing.Point(125, 52);
+            this.AbsoluteFocusErrorLabel.Location = new System.Drawing.Point(137, 53);
             this.AbsoluteFocusErrorLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.AbsoluteFocusErrorLabel.Name = "AbsoluteFocusErrorLabel";
-            this.AbsoluteFocusErrorLabel.Size = new System.Drawing.Size(45, 21);
+            this.AbsoluteFocusErrorLabel.Size = new System.Drawing.Size(39, 21);
             this.AbsoluteFocusErrorLabel.TabIndex = 4;
             this.AbsoluteFocusErrorLabel.Text = "0.0";
             this.AbsoluteFocusErrorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -103,7 +107,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(166, 27);
+            this.label2.Location = new System.Drawing.Point(170, 27);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(45, 18);
             this.label2.TabIndex = 2;
@@ -111,9 +115,8 @@
             // 
             // FocusErrorLabel
             // 
-            this.FocusErrorLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.FocusErrorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FocusErrorLabel.Location = new System.Drawing.Point(128, 25);
+            this.FocusErrorLabel.Location = new System.Drawing.Point(135, 25);
             this.FocusErrorLabel.Name = "FocusErrorLabel";
             this.FocusErrorLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.FocusErrorLabel.Size = new System.Drawing.Size(41, 25);
@@ -139,7 +142,8 @@
             this.Controls.Add(this.groupBox1);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "FocusChannelComponent";
-            this.Size = new System.Drawing.Size(227, 114);
+            this.Size = new System.Drawing.Size(237, 114);
+            this.Load += new System.EventHandler(this.FocusChannelComponent_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

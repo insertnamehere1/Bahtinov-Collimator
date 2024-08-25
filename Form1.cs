@@ -67,13 +67,19 @@ namespace Bahtinov_Collimator
         // Voice Generation
         private VoiceControl voiceControl;
 
+        // DPI Scaling
+        private float scaleX = 1;
+        private float scaleY = 1;
+
         private int imageType = 0;  // default - no image type, 1-Bahtinov, 2-Defocus
+
+        private ImageDisplayComponent imageDisplayComponent1;
 
         public Form1()
         {
-            this.AutoScaleMode = AutoScaleMode.Dpi;
-            float scaleX = this.DeviceDpi / this.AutoScaleDimensions.Width;
-            float scaleY = this.DeviceDpi / this.AutoScaleDimensions.Height;
+            this.AutoScaleMode = AutoScaleMode.None;
+//            scaleX = this.DeviceDpi / this.AutoScaleDimensions.Width;
+//            scaleY = this.DeviceDpi / this.AutoScaleDimensions.Height;
             UITheme.Initialize(scaleX, scaleY);
 
             InitializeComponent();
@@ -81,6 +87,12 @@ namespace Bahtinov_Collimator
             SetFormUI();
             SetColorScheme();
             SetEvents();
+            InitializeDisplayComponent();
+
+            float increasedSize = this.Font.Size + 2.0f;
+            Font largerFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
+
+            SetFontSize(largerFont);
 
             bahtinovProcessing = new BahtinovProcessing();
             defocusStarProcessing = new DefocusStarProcessing();
@@ -90,6 +102,28 @@ namespace Bahtinov_Collimator
             slideSwitch2.IsOn = Properties.Settings.Default.DefocusSwitch;
         }
 
+        private void InitializeDisplayComponent()
+        {
+            this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent();
+            this.imageDisplayComponent1.Location = new System.Drawing.Point(256, 45);
+            this.imageDisplayComponent1.Margin = new System.Windows.Forms.Padding(2);
+            this.imageDisplayComponent1.Name = "imageDisplayComponent1";
+            this.imageDisplayComponent1.Size = new System.Drawing.Size(600, 600);
+            this.imageDisplayComponent1.TabIndex = 25;
+
+            this.Controls.Add(this.imageDisplayComponent1);
+        }
+
+        private void SetFontSize(Font newFont)
+        {
+            // Apply the larger font to the MenuStrip
+            menuStrip1.Font = newFont;
+
+            // any labels
+            label1.Font = newFont;
+            Label2.Font = newFont;
+        }
+
         private void InitializeRedFocusBox()
         {
             if (groupBoxRed != null)
@@ -97,39 +131,36 @@ namespace Bahtinov_Collimator
                 RemoveAndDisposeControls(groupBoxRed);
             }
 
-            groupBoxRed = new FocusChannelComponent(0)
-            {
-                Location = ScalePoint(new Point(15, 30))
-            };
+            groupBoxRed = new FocusChannelComponent(0);
+            groupBoxRed.Size = new Size(230, 114);
+            groupBoxRed.Location = new Point(12, 35);
             this.Controls.Add(groupBoxRed);
         }
 
         private void InitializeGreenFocusBox()
         {
-            groupBoxGreen = new FocusChannelComponent(1)
+            if (groupBoxGreen != null)
             {
-                Location = ScalePoint(new Point(15, 125))
-            };
+                RemoveAndDisposeControls(groupBoxGreen);
+            }
+
+            groupBoxGreen = new FocusChannelComponent(1);
+            groupBoxGreen.Size = new Size(230, 114);
+            groupBoxGreen.Location = new Point(12, 150);
             this.Controls.Add(groupBoxGreen);
         }
 
         private void InitializeBlueFocusBox()
         {
-            groupBoxBlue = new FocusChannelComponent(2)
+            if (groupBoxBlue != null)
             {
-                Location = ScalePoint(new Point(15, 221))
-            };
+                RemoveAndDisposeControls(groupBoxBlue);
+            }
+
+            groupBoxBlue = new FocusChannelComponent(2);
+            groupBoxBlue.Size = new Size(230, 114);
+            groupBoxBlue.Location = new Point(12, 265);
             this.Controls.Add(groupBoxBlue);
-        }
-
-        private Point ScalePoint(Point originalPoint)
-        {
-            // Get the scaling factor based on the form's AutoScaleFactor
-            float scaleX = this.DeviceDpi / this.AutoScaleDimensions.Width;
-            float scaleY = this.DeviceDpi / this.AutoScaleDimensions.Height;
-
-            // Scale the original point by the scale factors
-            return new Point((int)(originalPoint.X / scaleX), (int)(originalPoint.Y / scaleY));
         }
 
         private void SetFormUI()

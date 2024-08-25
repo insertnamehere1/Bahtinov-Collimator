@@ -38,7 +38,15 @@ namespace Bahtinov_Collimator
 
             SetProcessDPIAware();
             InitializeComponent();
-            SetLabelProperties();
+
+            this.AutoSize = true;
+            this.AutoScaleMode = AutoScaleMode.Dpi;
+
+            float increasedSize = this.Font.Size + 2.0f;
+            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
+            this.groupBox1.Font = newFont;
+
+            SetLabelProperties(newFont);
             ApplyTheme();
             SubscribeToEvents();
 
@@ -81,13 +89,22 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Initializes the properties of the labels.
         /// </summary>
-        private void SetLabelProperties()
+        private void SetLabelProperties(Font newFont)
         {
             DisableLabels();
+            SetLabelFont(newFont);
             SetLabelTextAlignment();
             SetLabelTextDirection();
             SetLabelAutoSize(false);
             SetLabelText();
+        }
+
+        private void SetLabelFont(Font newFont)
+        {
+            foreach (var label in GetAllLabels())
+            {
+                label.Font = newFont;
+            }
         }
 
         /// <summary>
@@ -109,6 +126,8 @@ namespace Bahtinov_Collimator
             {
                 label.TextAlign = ContentAlignment.MiddleRight;
             }
+
+            WithinCriticalFocusLabel.TextAlign = ContentAlignment.MiddleLeft;
         }
 
         /// <summary>
@@ -271,6 +290,11 @@ namespace Bahtinov_Collimator
 
             base.Dispose(disposing);
             disposed = true;
+        }
+
+        private void FocusChannelComponent_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

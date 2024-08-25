@@ -45,14 +45,13 @@
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.label1 = new System.Windows.Forms.Label();
             this.Label2 = new System.Windows.Forms.Label();
-            this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent();
             this.slideSwitch2 = new Bahtinov_Collimator.Custom_Components.SlideSwitch();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // StartButton
             // 
-            this.StartButton.Location = new System.Drawing.Point(36, 686);
+            this.StartButton.Location = new System.Drawing.Point(41, 556);
             this.StartButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.StartButton.Name = "StartButton";
             this.StartButton.Size = new System.Drawing.Size(172, 48);
@@ -72,7 +71,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1000, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(868, 28);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.MouseEnter += new System.EventHandler(this.MenuStrip1_MouseEnter);
@@ -148,7 +147,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(33, 629);
+            this.label1.Location = new System.Drawing.Point(26, 500);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(59, 16);
@@ -158,25 +157,17 @@
             // Label2
             // 
             this.Label2.AutoSize = true;
-            this.Label2.Location = new System.Drawing.Point(150, 629);
+            this.Label2.Location = new System.Drawing.Point(154, 500);
             this.Label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label2.Name = "Label2";
             this.Label2.Size = new System.Drawing.Size(57, 16);
             this.Label2.TabIndex = 23;
             this.Label2.Text = "Defocus";
             // 
-            // imageDisplayComponent1
-            // 
-            this.imageDisplayComponent1.Location = new System.Drawing.Point(246, 39);
-            this.imageDisplayComponent1.Margin = new System.Windows.Forms.Padding(2);
-            this.imageDisplayComponent1.Name = "imageDisplayComponent1";
-            this.imageDisplayComponent1.Size = new System.Drawing.Size(750, 750);
-            this.imageDisplayComponent1.TabIndex = 25;
-            // 
             // slideSwitch2
             // 
             this.slideSwitch2.IsOn = false;
-            this.slideSwitch2.Location = new System.Drawing.Point(96, 625);
+            this.slideSwitch2.Location = new System.Drawing.Point(100, 498);
             this.slideSwitch2.Margin = new System.Windows.Forms.Padding(2);
             this.slideSwitch2.Name = "slideSwitch2";
             this.slideSwitch2.OffColor = System.Drawing.Color.Gray;
@@ -190,8 +181,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1000, 781);
-            this.Controls.Add(this.imageDisplayComponent1);
+            this.ClientSize = new System.Drawing.Size(868, 658);
             this.Controls.Add(this.slideSwitch2);
             this.Controls.Add(this.Label2);
             this.Controls.Add(this.label1);
@@ -231,7 +221,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label Label2;
         private Custom_Components.SlideSwitch slideSwitch2;
-        private ImageDisplayComponent imageDisplayComponent1;
     }
 }
 
