@@ -369,7 +369,11 @@ namespace Bahtinov_Collimator
             bahtinovProcessing.StopImageProcessing();
 
             if (toggle)
+            {
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue, groupBoxRed);
+                adjustAssistDialog?.Close();
+                AdjustAssistToolStripMenuItem.Visible = false;
+            }
             else
             {
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
@@ -523,13 +527,6 @@ namespace Bahtinov_Collimator
                     base.OnRenderMenuItemBackground(e);
                 }
             }
-
-            protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
-            {
-                e.TextColor = UITheme.MenuDarkForeground;
-                base.OnRenderItemText(e);
-            }
         }
-
     }
 }
