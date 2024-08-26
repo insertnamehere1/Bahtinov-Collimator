@@ -78,9 +78,10 @@ namespace Bahtinov_Collimator
         public Form1()
         {
             this.AutoScaleMode = AutoScaleMode.None;
-//            scaleX = this.DeviceDpi / this.AutoScaleDimensions.Width;
-//            scaleY = this.DeviceDpi / this.AutoScaleDimensions.Height;
             UITheme.Initialize(scaleX, scaleY);
+
+            this.AutoSize = false;
+            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             InitializeComponent();
             InitializeRedFocusBox();
@@ -122,6 +123,7 @@ namespace Bahtinov_Collimator
             // any labels
             label1.Font = newFont;
             Label2.Font = newFont;
+            StartButton.Font = newFont;
         }
 
         private void InitializeRedFocusBox()

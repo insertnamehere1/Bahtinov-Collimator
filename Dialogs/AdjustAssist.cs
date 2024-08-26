@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
@@ -79,6 +80,23 @@ namespace Bahtinov_Collimator.AdjustAssistant
         #endregion
 
         #region Methods
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            float increasedSize = this.Font.Size + 2.0f;
+            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
+
+            // Adjust fonts
+            this.Font = newFont;
+            this.swapGreenCheckbox.Font = newFont;
+            this.blueReverseBox.Font = newFont;
+            this.redReverseBox.Font = newFont;
+            this.greenReverseBox.Font = newFont;
+            this.groupBox1.Font = newFont;
+            this.saveButton.Font = newFont;
+            this.closeButton.Font = newFont;
+        }
 
         private void SetColorScheme()
         {
@@ -110,7 +128,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is Label label)
+                if (control is System.Windows.Forms.Label label)
                 {
                     label.ForeColor = color;
                 }
@@ -322,7 +340,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
 
             // Adjust size using a scale factor
             float scaleFactor = 1f / UITheme.DpiScaleX; // Adjust this to scale the arrow
-            Size imageSize = new Size((int)(57 * scaleFactor), (int)(32 * scaleFactor));
+            Size imageSize = new Size((int)(65 * scaleFactor), (int)(35 * scaleFactor));
 
             // Adjust position by moving the arrow right by 10 pixels and up by 20 pixels
 

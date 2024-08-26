@@ -74,7 +74,7 @@
             // PixelSizeTextBox
             // 
             this.PixelSizeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PixelSizeTextBox.Location = new System.Drawing.Point(137, 94);
+            this.PixelSizeTextBox.Location = new System.Drawing.Point(136, 96);
             this.PixelSizeTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.PixelSizeTextBox.Name = "PixelSizeTextBox";
             this.PixelSizeTextBox.Size = new System.Drawing.Size(87, 26);
@@ -85,7 +85,7 @@
             // FocalLengthTextBox
             // 
             this.FocalLengthTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FocalLengthTextBox.Location = new System.Drawing.Point(137, 62);
+            this.FocalLengthTextBox.Location = new System.Drawing.Point(136, 64);
             this.FocalLengthTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.FocalLengthTextBox.Name = "FocalLengthTextBox";
             this.FocalLengthTextBox.Size = new System.Drawing.Size(87, 26);
@@ -96,7 +96,7 @@
             // ApertureTextBox
             // 
             this.ApertureTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ApertureTextBox.Location = new System.Drawing.Point(136, 30);
+            this.ApertureTextBox.Location = new System.Drawing.Point(135, 32);
             this.ApertureTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.ApertureTextBox.Name = "ApertureTextBox";
             this.ApertureTextBox.Size = new System.Drawing.Size(87, 26);

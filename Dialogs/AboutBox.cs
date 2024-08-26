@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Deployment.Application;
+using System.Drawing;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices;
@@ -42,6 +43,26 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Assembly Attribute Accessors
+
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            float increasedSize = this.Font.Size + 2.0f;
+            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
+
+            // Adjust fonts
+            this.Font = newFont;
+
+            this.Font = newFont;
+            this.labelProductName.Font = newFont;
+            this.labelVersion.Font = newFont;
+            this.labelCopyright.Font = newFont;
+            this.labelCompanyName.Font = newFont;
+            this.textBoxDescription.Font = newFont;
+            this.okButton.Font = newFont;
+        }
 
         /// <summary>
         /// Gets the title of the assembly.

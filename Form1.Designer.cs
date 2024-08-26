@@ -51,8 +51,8 @@
             // 
             // StartButton
             // 
-            this.StartButton.Location = new System.Drawing.Point(41, 556);
-            this.StartButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.StartButton.Location = new System.Drawing.Point(39, 557);
+            this.StartButton.Margin = new System.Windows.Forms.Padding(4);
             this.StartButton.Name = "StartButton";
             this.StartButton.Size = new System.Drawing.Size(172, 48);
             this.StartButton.TabIndex = 0;
@@ -70,8 +70,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(868, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(734, 28);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.MouseEnter += new System.EventHandler(this.MenuStrip1_MouseEnter);
@@ -147,7 +146,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(26, 500);
+            this.label1.Location = new System.Drawing.Point(26, 496);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(59, 16);
@@ -157,7 +156,7 @@
             // Label2
             // 
             this.Label2.AutoSize = true;
-            this.Label2.Location = new System.Drawing.Point(154, 500);
+            this.Label2.Location = new System.Drawing.Point(154, 497);
             this.Label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Label2.Name = "Label2";
             this.Label2.Size = new System.Drawing.Size(57, 16);
@@ -167,7 +166,7 @@
             // slideSwitch2
             // 
             this.slideSwitch2.IsOn = false;
-            this.slideSwitch2.Location = new System.Drawing.Point(100, 498);
+            this.slideSwitch2.Location = new System.Drawing.Point(100, 493);
             this.slideSwitch2.Margin = new System.Windows.Forms.Padding(2);
             this.slideSwitch2.Name = "slideSwitch2";
             this.slideSwitch2.OffColor = System.Drawing.Color.Gray;
@@ -181,7 +180,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(868, 658);
+            this.ClientSize = new System.Drawing.Size(744, 647);
             this.Controls.Add(this.slideSwitch2);
             this.Controls.Add(this.Label2);
             this.Controls.Add(this.label1);
@@ -190,9 +189,10 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "Form1";
+            this.Padding = new System.Windows.Forms.Padding(0, 0, 10, 10);
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Bahtinov Collimator";
             this.MouseEnter += new System.EventHandler(this.Form1_MouseEnter);

@@ -30,6 +30,37 @@ namespace Bahtinov_Collimator
 
         #region Methods
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            float increasedSize = this.Font.Size + 2.0f;
+            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
+
+            // Adjust fonts
+            this.Font = newFont;
+
+            this.Font = newFont;
+            this.groupBox1.Font = newFont;
+            this.groupBox2.Font = newFont;
+            this.label1.Font = newFont;
+            this.label2.Font = newFont;
+            this.label3.Font = newFont;
+            this.label4.Font = newFont;
+            this.label5.Font = newFont;
+            this.label6.Font = newFont;
+            this.label7.Font = newFont;
+            this.label8.Font = newFont;
+            this.label9.Font = newFont;
+            this.label10.Font = newFont;
+            this.ApertureTextBox.Font = newFont;
+            this.PixelSizeTextBox.Font = newFont;
+            this.FocalLengthTextBox.Font = newFont;
+            this.CancelSettingsButton.Font = newFont;
+            this.okButton.Font = newFont;
+        }
+
+
         private void SetColorScheme()
         {
             // main form

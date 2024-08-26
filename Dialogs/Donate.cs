@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
@@ -26,11 +27,29 @@ namespace Bahtinov_Collimator
             InitializeComponent();
             InitializeRichTextBox();
             SetColorScheme();
+
+            this.AutoSize = true;
+            this.AutoScaleMode = AutoScaleMode.Dpi;
         }
 
         #endregion
 
         #region Methods
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            float increasedSize = this.Font.Size + 2.0f;
+            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
+            
+            // Adjust fonts
+            this.Font = newFont;
+            richTextBox.Font = newFont;
+            label1.Font = newFont;
+            donateButton.Font = newFont;
+            cancelButton.Font = newFont;
+        }
 
         private void SetColorScheme()
         {
