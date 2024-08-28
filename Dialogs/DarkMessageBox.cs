@@ -22,7 +22,7 @@ namespace Bahtinov_Collimator
             { MessageBoxIcon.Warning, SystemIcons.Warning }
         };
 
-        public DarkMessageBox(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons)
+        public DarkMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
             InitializeComponent();
             this.Text = title;
@@ -128,7 +128,7 @@ namespace Bahtinov_Collimator
 
         private static DialogResult ShowCustomMessageBoxInternal(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons, Form owner)
         {
-            using (DarkMessageBox customMessageBox = new DarkMessageBox(message, title, icon, buttons))
+            using (DarkMessageBox customMessageBox = new DarkMessageBox(message, title, buttons, icon))
             {
                 // Position the message box within the owner's bounds
                 Rectangle ownerRect = owner.Bounds;

@@ -339,7 +339,7 @@ namespace Bahtinov_Collimator
 
                     if (targetWindowHandle == IntPtr.Zero)
                     {
-                        MessageBox.Show("No application found under the selected area");
+                        DarkMessageBox.Show("No application found under the selected area", "Image Capture", MessageBoxIcon.Error, MessageBoxButtons.OK);
                         return false;
                     }
 
@@ -443,6 +443,7 @@ namespace Bahtinov_Collimator
                 }
             }
 
+            DarkMessageBox.Show("Unable to capture window image", "Capture Image", MessageBoxIcon.Exclamation, MessageBoxButtons.OK);
             return null;
         }
 

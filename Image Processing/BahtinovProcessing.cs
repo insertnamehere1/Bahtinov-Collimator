@@ -478,6 +478,7 @@ namespace Bahtinov_Collimator
                 }
                 catch
                 {
+                    DarkMessageBox.Show("Invalid Error calculation", "Bahtinov Processing", MessageBoxIcon.Error, MessageBoxButtons.OK);
                     lastFocusErrorValue = 0.0f;
                     return false;
                 }

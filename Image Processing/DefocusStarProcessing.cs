@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using static Bahtinov_Collimator.BahtinovLineDataEventArgs;
 using Bahtinov_Collimator.Helper;
+using System.Windows.Forms;
 
 namespace Bahtinov_Collimator.Image_Processing
 {
@@ -16,7 +17,10 @@ namespace Bahtinov_Collimator.Image_Processing
         public void DisplayDefocusImage(Bitmap image)
         {
             if (image == null)
+            {
+                DarkMessageBox.Show("No defocus image found", "Defocus Processing", MessageBoxIcon.Error, MessageBoxButtons.OK);
                 return;
+            }
 
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
             {

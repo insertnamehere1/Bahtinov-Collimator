@@ -151,8 +151,7 @@ namespace Bahtinov_Collimator
             catch
             {
                 // Show warning message if input parsing fails
-                MessageBox.Show("Invalid input, try again", "Warning",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                DarkMessageBox.Show("Invalid input, try again", "Warning", MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return;
             }
 

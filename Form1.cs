@@ -31,10 +31,7 @@ using System.Windows.Forms;
 using Bahtinov_Collimator.AdjustAssistant;
 using Bahtinov_Collimator.Voice;
 using Bahtinov_Collimator.Image_Processing;
-using System.Drawing.Text;
 using Bahtinov_Collimator.Custom_Components;
-using Bahtinov_Collimator.Helper;
-using System.Text;
 
 namespace Bahtinov_Collimator
 {
@@ -309,20 +306,6 @@ namespace Bahtinov_Collimator
             bahtinovProcessing.DisplayLines(bahtinovLineData, image);
         }
 
-        private void ShowWarningMessage(string message)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => ShowWarningMessage(message)));
-            }
-            else
-            {
-                ImageCapture.StopImageCapture();
-                firstPassCompleted = false;
-                MessageBox.Show(message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-        }
-
         private void UpdateFocusGroup(int numberOfLines)
         {
             if (InvokeRequired)
@@ -442,7 +425,6 @@ namespace Bahtinov_Collimator
 
         private void CheatSheet_FormClosed(object sender, FormClosedEventArgs e)
         {
-            // Set adjustAssistDialog instance to null when the form is closed
             adjustAssistDialog = null;
         }
 
