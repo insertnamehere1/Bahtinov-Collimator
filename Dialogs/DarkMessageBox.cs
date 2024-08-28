@@ -28,6 +28,7 @@ namespace Bahtinov_Collimator
             this.Text = title;
             messageLabel.Text = message;
             DrawIconInPictureBox(icon);
+            SetTextSize();
             SetColor();
             ConfigureButtons(buttons);
             AutoSizeControls();
@@ -50,6 +51,18 @@ namespace Bahtinov_Collimator
             cancelButton.BackColor = UITheme.ButtonDarkBackground;
             cancelButton.ForeColor = UITheme.ButtonDarkForeground;
             cancelButton.FlatStyle = FlatStyle.Popup;
+        }
+
+        private void SetTextSize()
+        {
+            float increasedSize = this.Font.Size + 2.0f;
+            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
+
+            // Adjust fonts
+            this.Font = newFont;
+            this.messageLabel.Font = newFont;
+            this.cancelButton.Font = newFont;
+            this.okButton.Font = newFont;
         }
 
         private void ConfigureButtons(MessageBoxButtons buttons)
