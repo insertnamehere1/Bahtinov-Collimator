@@ -72,6 +72,8 @@ namespace Bahtinov_Collimator
 
         private ImageDisplayComponent imageDisplayComponent1;
 
+        private bool screenCaptureRunningFlag = false;
+
         public Form1()
         {
             this.AutoScaleMode = AutoScaleMode.None;
@@ -199,7 +201,6 @@ namespace Bahtinov_Collimator
             // Labels
             label1.ForeColor = UITheme.MenuStripForeground;
             Label2.ForeColor = UITheme.MenuStripForeground;
-
         }
 
         private void SetMenuItemsColor(ToolStripItemCollection items, Color backColor, Color foreColor)
@@ -217,20 +218,35 @@ namespace Bahtinov_Collimator
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            ImageCapture.StopImageCapture();
-            imageDisplayComponent1.ClearDisplay();
-            bahtinovProcessing.StopImageProcessing();
-            RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
-
-            if (ImageCapture.SelectStar())
+            if (screenCaptureRunningFlag == false)
             {
-                if(Properties.Settings.Default.DefocusSwitch)
-                    ImageCapture.TrackingType = 2;
-                else
-                    ImageCapture.TrackingType = 1;
+                ImageCapture.StopImageCapture();
+                imageDisplayComponent1.ClearDisplay();
+                bahtinovProcessing.StopImageProcessing();
+                RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
 
-                firstPassCompleted = false;
-                ImageCapture.StartImageCapture();
+                if (ImageCapture.SelectStar())
+                {
+                    if(Properties.Settings.Default.DefocusSwitch)
+                        ImageCapture.TrackingType = 2;
+                    else
+                        ImageCapture.TrackingType = 1;
+
+                    firstPassCompleted = false;
+                    ImageCapture.StartImageCapture();
+                }
+
+                screenCaptureRunningFlag = true;
+                StartButton.Text = "Stop";
+            }
+            else
+            {
+                ImageCapture.StopImageCapture();
+                imageDisplayComponent1.ClearDisplay();
+                bahtinovProcessing.StopImageProcessing();
+                RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
+                screenCaptureRunningFlag = false;
+                StartButton.Text = "Select Star";
             }
         }
 
@@ -353,12 +369,16 @@ namespace Bahtinov_Collimator
 
             if (toggle)
             {
+                screenCaptureRunningFlag = false;
+                StartButton.Text = "Select Star";
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue, groupBoxRed);
                 adjustAssistDialog?.Close();
                 AdjustAssistToolStripMenuItem.Visible = false;
             }
             else
             {
+                screenCaptureRunningFlag = false;
+                StartButton.Text = "Select Star";
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                 InitializeRedFocusBox();
             }
@@ -508,6 +528,24 @@ namespace Bahtinov_Collimator
                 {
                     base.OnRenderMenuItemBackground(e);
                 }
+            }
+
+            protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
+            {
+                // Check if the menu item is "Donate" and set the text color to red
+                if (e.Item.Text == "Buy me a Coffee?")
+                {
+                    e.TextColor = Color.Red;
+                    // Set the font to bold
+                    e.TextFont = new Font(e.TextFont, FontStyle.Bold);
+                }
+                else
+                {
+                    // Use the default text color for other items
+                    e.TextColor = UITheme.MenuDarkForeground;
+                }
+
+                base.OnRenderItemText(e);
             }
         }
     }
