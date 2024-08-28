@@ -143,7 +143,6 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "FocusChannelComponent";
             this.Size = new System.Drawing.Size(237, 114);
-            this.Load += new System.EventHandler(this.FocusChannelComponent_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

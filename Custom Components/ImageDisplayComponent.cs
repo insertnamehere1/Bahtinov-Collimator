@@ -15,9 +15,15 @@ namespace Bahtinov_Collimator
 {
     public partial class ImageDisplayComponent : UserControl
     {
+        #region Fields
+        // List to hold multiple layers of Bitmap images
         private List<Bitmap> layers;
-        private int selectedGroup = 0;
 
+        // Index to track the currently selected group
+        private int selectedGroup = 0;
+        #endregion
+
+        #region Constructor
         public ImageDisplayComponent()
         {
             InitializeComponent();
@@ -32,7 +38,12 @@ namespace Bahtinov_Collimator
             int height = pictureBox1.Size.Height;
 
         }
+        #endregion
 
+        #region Setup Methods
+        /// <summary>
+        /// Sets up event subscriptions for various components and events.
+        /// </summary>
         private void SetupSubscriptions()
         {
             // Subscribe to the ImageReceivedEvent
@@ -44,42 +55,31 @@ namespace Bahtinov_Collimator
             this.pictureBox1.Paint += new PaintEventHandler(this.pictureBoxPaint);
         }
 
+        /// <summary>
+        /// Configures the PictureBox settings, such as background color.
+        /// </summary>
+        private void SetupPictureBox()
+        {
+            pictureBox1.BackColor = UITheme.DisplayBackgroundColor;
+        }
+        #endregion
+
+        #region Event Handlers
+        /// <summary>
+        /// Handles the event when an image is lost. Clears the display.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">Event arguments.</param>
         private void HandleImageLost(object sender, ImageLostEventArgs e)
         {
             ClearDisplay();
         }
 
-        private void SetupPictureBox()
-        {
-            pictureBox1.BackColor = UITheme.DisplayBackgroundColor;
-        }
-
-        private void AddNewLayers(int count)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                var layer = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-                layers.Add(layer);
-            }
-        }
-
-        private void pictureBoxPaint(object sender, PaintEventArgs e)
-        {
-            e.Graphics.DrawImage(layers[0], 0, 0);
-
-            if (selectedGroup == 0)
-            {
-                foreach (var layer in layers)
-                {
-                    e.Graphics.DrawImage(layer, 0, 0);
-                }
-            }
-            else if (selectedGroup > 0 && selectedGroup < layers.Count)
-            {
-                e.Graphics.DrawImage(layers[selectedGroup], 0, 0);
-            }
-        }
-
+        /// <summary>
+        /// Handles the event when a defocus circle is received. Updates the PictureBox with the new image and circle data.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">Event arguments containing the image and circle data.</param>
         private void OnDefocusCirceReceived(object sender, DefocusCircleEventArgs e)
         {
             Bitmap image = new Bitmap(e.Image);
@@ -90,7 +90,11 @@ namespace Bahtinov_Collimator
                 UpdatePictureBox(image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius, e.Distance, e.Direction);
         }
 
-
+        /// <summary>
+        /// Handles the event when Bahtinov line data is received. Updates the PictureBox with the new image and line data.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">Event arguments containing the image and line data.</param>
         private void OnBahtinovLineReceive(object sender, BahtinovLineDataEventArgs e)
         {
             Bitmap image = new Bitmap(e.Image);
@@ -101,6 +105,11 @@ namespace Bahtinov_Collimator
                 UpdatePictureBox(image, e.Linedata);
         }
 
+        /// <summary>
+        /// Handles the event when the channel selection changes. Updates the selected group index and refreshes the PictureBox.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">Event arguments containing the channel selection data.</param>
         private void ChannelSelected(object sender, ChannelSelectEventArgs e)
         {
             selectedGroup = 0; // Default value
@@ -116,7 +125,19 @@ namespace Bahtinov_Collimator
 
             pictureBox1.Invalidate();
         }
+        #endregion
 
+        #region Update Methods
+        /// <summary>
+        /// Updates the PictureBox with the provided image and drawing data, including defocus circles and arrows.
+        /// </summary>
+        /// <param name="image">The Bitmap image to display.</param>
+        /// <param name="innerCentre">The center point of the inner defocus circle.</param>
+        /// <param name="innerRadius">The radius of the inner defocus circle.</param>
+        /// <param name="outerCentre">The center point of the outer defocus circle.</param>
+        /// <param name="outerRadius">The radius of the outer defocus circle.</param>
+        /// <param name="distance">The distance value to display with the arrow.</param>
+        /// <param name="direction">The direction angle for the arrow.</param>
         private void UpdatePictureBox(Bitmap image, PointD innerCentre, double innerRadius, PointD outerCentre, double outerRadius, double distance, double direction)
         {
             ClearAllLayers();
@@ -127,6 +148,42 @@ namespace Bahtinov_Collimator
             pictureBox1.Invalidate();
         }
 
+        /// <summary>
+        /// Updates the PictureBox with the provided image and drawing data, including bahtinov line data and error values.
+        /// </summary>
+        /// <param name="image">The Bitmap image to display.</param>
+        /// <param name="data">The Bahtinov line information and the bahtinov error values.</param>
+        private void UpdatePictureBox(Bitmap image, BahtinovLineDataEventArgs.BahtinovLineData data)
+        {
+            ClearAllLayers();
+
+            DrawImageOnFirstLayer(image);
+
+            var centerX = UITheme.DisplayWindow.X / 2;
+            var centerY = UITheme.DisplayWindow.Y / 2;
+            var radius = centerX - 20;
+
+            var clippingRegion = CreateCircularClippingRegion(centerX, centerY, radius);
+
+            foreach (var group in data.LineGroups)
+            {
+                DrawGroupLines(group, clippingRegion);
+            }
+
+            pictureBox1.Invalidate();
+        }
+        #endregion
+
+        #region Drawing Methods
+
+        /// <summary>
+        /// Draws an arrow on the PictureBox indicating the direction and distance.
+        /// </summary>
+        /// <param name="angleInDegrees">The angle of the arrow in degrees.</param>
+        /// <param name="distance">The distance value to display with the arrow.</param>
+        /// <param name="imageHeight">The height of the image.</param>
+        /// <param name="imageWidth">The width of the image.</param>
+        /// <param name="outerRadius">The radius of the outer defocus circle.</param>
         private void DrawArrow(double angleInDegrees, double distance, int imageHeight, int imageWidth, double outerRadius)
         {
             double circleRadius = outerRadius + 100;
@@ -171,6 +228,13 @@ namespace Bahtinov_Collimator
             }
         }
 
+        /// <summary>
+        /// Draws defocus circles on the specified layer of the PictureBox.
+        /// </summary>
+        /// <param name="innerCentre">The center point of the inner defocus circle.</param>
+        /// <param name="innerRadius">The radius of the inner defocus circle.</param>
+        /// <param name="outerCentre">The center point of the outer defocus circle.</param>
+        /// <param name="outerRadius">The radius of the outer defocus circle.</param>
         private void DrawDefocusCircles(PointD innerCentre, double innerRadius, PointD outerCentre, double outerRadius)
         {
             using (var g = Graphics.FromImage(layers[1]))
@@ -187,37 +251,10 @@ namespace Bahtinov_Collimator
             }
         }
 
-        private void UpdatePictureBox(Bitmap image, BahtinovLineDataEventArgs.BahtinovLineData data)
-        {
-            ClearAllLayers();
-
-            DrawImageOnFirstLayer(image);
-
-            var centerX = UITheme.DisplayWindow.X / 2;
-            var centerY = UITheme.DisplayWindow.Y / 2;
-            var radius = centerX - 20; 
-
-            var clippingRegion = CreateCircularClippingRegion(centerX, centerY, radius);
-
-            foreach (var group in data.LineGroups)
-            {
-                DrawGroupLines(group, clippingRegion);
-            }
-
-            pictureBox1.Invalidate();
-        }
-
-        private void ClearAllLayers()
-        {
-            foreach (var layer in layers)
-            {
-                using (var g = Graphics.FromImage(layer))
-                {
-                    g.Clear(Color.Transparent);
-                }
-            }
-        }
-
+        /// <summary>
+        /// Draws the provided image on the first layer of the PictureBox.
+        /// </summary>
+        /// <param name="image">The Bitmap image to draw.</param>
         private void DrawImageOnFirstLayer(Bitmap image)
         {
             using (var g = Graphics.FromImage(layers[0]))
@@ -226,13 +263,11 @@ namespace Bahtinov_Collimator
             }
         }
 
-        private GraphicsPath CreateCircularClippingRegion(int centerX, int centerY, int radius)
-        {
-            var path = new GraphicsPath();
-            path.AddEllipse(centerX - radius, centerY - radius, radius * 2, radius * 2);
-            return path;
-        }
-
+        /// <summary>
+        /// Draws a group of lines on the PictureBox based on the provided line group data.
+        /// </summary>
+        /// <param name="group">The group line data for the bahtinov lines.</param>
+        /// <param name="clippingRegion">The clipping circle.</param>
         private void DrawGroupLines(BahtinovLineDataEventArgs.LineGroup group, GraphicsPath clippingRegion)
         {
             using (var g = Graphics.FromImage(layers[group.GroupId + 1]))
@@ -252,6 +287,11 @@ namespace Bahtinov_Collimator
             }
         }
 
+        /// <summary>
+        /// Draws an error circle and an error line on the provided graphics object.
+        /// </summary>
+        /// <param name="g">The <see cref="Graphics"/> object used for drawing.</param>
+        /// <param name="group">An instance of <see cref="BahtinovLineDataEventArgs.LineGroup"/> containing the data for the error circle and line.</param>
         private void DrawErrorCircleAndLine(Graphics g, BahtinovLineDataEventArgs.LineGroup group)
         {
             var errorPen = UITheme.GetErrorCirclePen(group.GroupId, group.ErrorCircle.InsideFocus);
@@ -261,6 +301,11 @@ namespace Bahtinov_Collimator
             g.DrawLine(errorPen, group.ErrorLine.Start.X, group.ErrorLine.Start.Y, group.ErrorLine.End.X, group.ErrorLine.End.Y);
         }
 
+        /// <summary>
+        /// Draws the error value text on the provided graphics object at a calculated location based on the error line data from the specified line group.
+        /// </summary>
+        /// <param name="g">The <see cref="Graphics"/> object used for drawing.</param>
+        /// <param name="group">An instance of <see cref="BahtinovLineDataEventArgs.LineGroup"/> containing the error line data and error circle information.</param>
         private void DrawErrorValueText(Graphics g, BahtinovLineDataEventArgs.LineGroup group)
         {
             var textFont = UITheme.GetErrorTextFont(group.GroupId);
@@ -281,6 +326,15 @@ namespace Bahtinov_Collimator
                 DrawLineWithCenteredText(g, adjustedPoints.end, adjustedPoints.start, group.ErrorCircle.ErrorValue, textFont, solidBrush);
         }
 
+        /// <summary>
+        /// Draws a line of text centered at the specified start point on the provided graphics object.
+        /// </summary>
+        /// <param name="g">The <see cref="Graphics"/> object used for drawing the text.</param>
+        /// <param name="start">The <see cref="Point"/> specifying the start position where the text will be centered.</param>
+        /// <param name="end">The <see cref="Point"/> specifying the end position of the line (currently not used in this implementation).</param>
+        /// <param name="text">The text string to be drawn.</param>
+        /// <param name="font">The <see cref="Font"/> used to draw the text.</param>
+        /// <param name="brush">The <see cref="Brush"/> used to color the text.</param>
         private void DrawLineWithCenteredText(Graphics g, Point start, Point end, string text, Font font, Brush brush)
         {
             // Measure the size of the text
@@ -295,7 +349,84 @@ namespace Bahtinov_Collimator
             // Draw the text
             g.DrawString(text, font, brush, textPosition);
         }
+        #endregion
 
+        #region Helper Methods
+
+        /// <summary>
+        /// Adds a specified number of new layers to the <see cref="layers"/> collection. Each layer is represented as a <see cref="Bitmap"/> with the dimensions of the PictureBox control.
+        /// </summary>
+        /// <param name="count">The number of layers to add.</param>
+        private void AddNewLayers(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var layer = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+                layers.Add(layer);
+            }
+        }
+
+        /// <summary>
+        /// Handles the Paint event of the PictureBox control to render the image layers on the control.
+        /// </summary>
+        /// <param name="sender">The source of the event, typically the PictureBox control.</param>
+        /// <param name="e">An <see cref="PaintEventArgs"/> that contains information about the paint event, including the <see cref="Graphics"/> object used for drawing.</param>
+        private void pictureBoxPaint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(layers[0], 0, 0);
+
+            if (selectedGroup == 0)
+            {
+                foreach (var layer in layers)
+                {
+                    e.Graphics.DrawImage(layer, 0, 0);
+                }
+            }
+            else if (selectedGroup > 0 && selectedGroup < layers.Count)
+            {
+                e.Graphics.DrawImage(layers[selectedGroup], 0, 0);
+            }
+        }
+
+        /// <summary>
+        /// Clears all image layers by setting their contents to transparent.
+        /// </summary>
+        private void ClearAllLayers()
+        {
+            foreach (var layer in layers)
+            {
+                using (var g = Graphics.FromImage(layer))
+                {
+                    g.Clear(Color.Transparent);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates a circular clipping region centered at a specified point with a given radius.
+        /// </summary>
+        /// <param name="centerX">The x-coordinate of the center of the circle.</param>
+        /// <param name="centerY">The y-coordinate of the center of the circle.</param>
+        /// <param name="radius">The radius of the circle.</param>
+        /// <returns>A <see cref="GraphicsPath"/> object representing the circular clipping region.</returns>
+        private GraphicsPath CreateCircularClippingRegion(int centerX, int centerY, int radius)
+        {
+            var path = new GraphicsPath();
+            path.AddEllipse(centerX - radius, centerY - radius, radius * 2, radius * 2);
+            return path;
+        }
+
+        /// <summary>
+        /// Adjusts two points to be positioned on a circle centered at the middle of a PictureBox with a specified radius.
+        /// </summary>
+        /// <param name="start">The initial start point to be adjusted.</param>
+        /// <param name="end">The initial end point to be adjusted.</param>
+        /// <param name="center_X">The width of the PictureBox, used to calculate the center.</param>
+        /// <param name="center_Y">The height of the PictureBox, used to calculate the center.</param>
+        /// <param name="radius">The radius of the circle on which the points should be adjusted.</param>
+        /// <returns>
+        /// A tuple containing the adjusted <paramref name="start"/> and <paramref name="end"/> points that are repositioned on the circle.
+        /// </returns>
         public static (Point start, Point end) AdjustPointsForRadius(Point start, Point end, int center_X, int center_Y, float radius)
         {
             // Calculate the center of the PictureBox
@@ -322,6 +453,10 @@ namespace Bahtinov_Collimator
             return (start, end);
         }
 
+        /// <summary>
+        /// Clears the display in the PictureBox by removing all drawn layers and disposing of the current image.
+        /// </summary>
+        /// <remarks>
         public void ClearDisplay()
         {
             if (pictureBox1.InvokeRequired)
@@ -344,5 +479,6 @@ namespace Bahtinov_Collimator
                 pictureBox1.Invalidate();
             }
         }
+        #endregion
     }
 }

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
     public partial class FocusChannelComponent : UserControl
     {
+        #region Fields
+
         [DllImport("user32.dll")]
         public static extern bool SetProcessDPIAware();
 
@@ -19,13 +20,11 @@ namespace Bahtinov_Collimator
 
         private bool disposed = false; // To detect redundant calls
         private int groupID;
-        public bool IsHighlighted { get; private set; } = false;
         private Color insideCriticalFocusColor;
 
-        public FocusChannelComponent()
-        {
-            InitializeComponent();
-        }
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FocusChannelComponent"/> class.
@@ -56,6 +55,10 @@ namespace Bahtinov_Collimator
             focusChannelCount++;
         }
 
+        #endregion
+
+        #region Event Subscription
+
         /// <summary>
         /// Subscribes to necessary events for the component.
         /// </summary>
@@ -79,16 +82,21 @@ namespace Bahtinov_Collimator
             BahtinovProcessing.FocusDataEvent -= FocusDataEvent;
             groupBox1.MouseEnter -= FocusChannelGroupBox_MouseEnter;
             groupBox1.MouseLeave -= FocusChannelGroupBox_MouseLeave;
-            
+
             foreach (var label in GetAllLabels())
             {
                 label.Paint -= Label_Paint;
             }
         }
 
+        #endregion
+
+        #region Label Setup
+
         /// <summary>
         /// Initializes the properties of the labels.
         /// </summary>
+        /// <param name="newFont">The new font to apply to the labels.</param>
         private void SetLabelProperties(Font newFont)
         {
             DisableLabels();
@@ -99,6 +107,10 @@ namespace Bahtinov_Collimator
             SetLabelText();
         }
 
+        /// <summary>
+        /// Sets the font for all labels.
+        /// </summary>
+        /// <param name="newFont">The new font to apply to the labels.</param>
         private void SetLabelFont(Font newFont)
         {
             foreach (var label in GetAllLabels())
@@ -153,27 +165,6 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Applies the theme to the component.
-        /// </summary>
-        private void ApplyTheme()
-        {
-            groupBox1.ForeColor = UITheme.GetGroupBoxTextColor(groupID);
-        }
-
-        /// <summary>
-        /// Retrieves all labels that require painting events.
-        /// </summary>
-        /// <returns>An array of labels.</returns>
-        private Label[] GetAllLabels()
-        {
-            return new[]
-            {
-                label1, label2, label3, label4, label5,
-                FocusErrorLabel, AbsoluteFocusErrorLabel, WithinCriticalFocusLabel
-            };
-        }
-
-        /// <summary>
         /// Disables the labels initially.
         /// </summary>
         private void DisableLabels()
@@ -183,6 +174,58 @@ namespace Bahtinov_Collimator
                 label.Enabled = false;
             }
         }
+
+        #endregion
+
+        #region Theme Application
+
+        /// <summary>
+        /// Applies the theme to the component.
+        /// </summary>
+        private void ApplyTheme()
+        {
+            groupBox1.ForeColor = UITheme.GetGroupBoxTextColor(groupID);
+        }
+
+        #endregion
+
+        #region Label Paint Event
+
+        /// <summary>
+        /// Custom paint event handler for labels.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The <see cref="PaintEventArgs"/> instance containing the event data.</param>
+        private void Label_Paint(object sender, PaintEventArgs e)
+        {
+            if (sender is Label label && label.Parent is GroupBox parentGroupBox && parentGroupBox.Tag is int groupId)
+            {
+                Color textColor = UITheme.GetGroupBoxTextColor(groupId);
+                TextFormatFlags flags = TextFormatFlags.Default;
+
+                // Check label name to set text format flags
+                if (label.Name == "AbsoluteFocusErrorLabel" ||
+                    label.Name == "FocusErrorLabel" ||
+                    label.Name == "WithinCriticalFocusLabel")
+                {
+                    flags = TextFormatFlags.VerticalCenter | TextFormatFlags.Right;
+                }
+
+                if (label.Name == "WithinCriticalFocusLabel")
+                {
+                    TextRenderer.DrawText(e.Graphics, label.Text, label.Font, label.ClientRectangle, insideCriticalFocusColor, flags);
+                }
+                else
+                {
+                    // Draw the text with the specified color and format
+                    TextRenderer.DrawText(e.Graphics, label.Text, label.Font, label.ClientRectangle, textColor, flags);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Focus Data Handling
 
         /// <summary>
         /// Handles the focus data event to update label values.
@@ -214,38 +257,9 @@ namespace Bahtinov_Collimator
             }
         }
 
-        /// <summary>
-        /// Custom paint event handler for labels.
-        /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The <see cref="PaintEventArgs"/> instance containing the event data.</param>
-        private void Label_Paint(object sender, PaintEventArgs e)
-        {
-            if (sender is Label label && label.Parent is GroupBox parentGroupBox && parentGroupBox.Tag is int groupId)
-            {
-                Color textColor = UITheme.GetGroupBoxTextColor(groupId);
-                TextFormatFlags flags = TextFormatFlags.Default;
+        #endregion
 
-                // Check label name to set text format flags
-                if (label.Name == "AbsoluteFocusErrorLabel" ||
-                    label.Name == "FocusErrorLabel" ||
-                    label.Name == "WithinCriticalFocusLabel")
-                {
-                    flags = TextFormatFlags.VerticalCenter | TextFormatFlags.Right;
-                }
-
-                if(label.Name == "WithinCriticalFocusLabel")
-                {
-                    TextRenderer.DrawText(e.Graphics, label.Text, label.Font, label.ClientRectangle, insideCriticalFocusColor, flags);
-                }
-                else
-                {
-                    // Draw the text with the specified color and format
-                    TextRenderer.DrawText(e.Graphics, label.Text, label.Font, label.ClientRectangle, textColor, flags);
-                }
-
-            }
-        }
+        #region GroupBox Mouse Events
 
         /// <summary>
         /// Handles the MouseEnter event for the group box.
@@ -271,30 +285,42 @@ namespace Bahtinov_Collimator
             ChannelSelectDataEvent?.Invoke(null, new ChannelSelectEventArgs(mouseOver, focusChannelCount));
         }
 
+        #endregion
+
+        #region Disposal
+
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
-        /// <param name="disposing">If set to <c>true</c> release both managed and unmanaged resources; otherwise, only release unmanaged resources.</param>
+        /// <param name="disposing">If set to <c>true</c>, release both managed and unmanaged resources; otherwise, only release unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposed)
-                return;
-
-            if (disposing)
+            if (!disposed)
             {
-                UnsubscribeToEvents();
-                focusChannelCount--;
-                mouseOver[groupID] = false;
-                components?.Dispose();
+                if (disposing)
+                {
+                    components?.Dispose();
+                    UnsubscribeToEvents();
+                }
+
+                disposed = true;
+                base.Dispose(disposing);
             }
-
-            base.Dispose(disposing);
-            disposed = true;
         }
 
-        private void FocusChannelComponent_Load(object sender, EventArgs e)
+        #endregion
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Gets all labels in the control.
+        /// </summary>
+        /// <returns>An array of labels.</returns>
+        private Label[] GetAllLabels()
         {
-
+            return new Label[] { label1, label2, label3, label4, label5, FocusErrorLabel, AbsoluteFocusErrorLabel, WithinCriticalFocusLabel };
         }
+
+        #endregion
     }
 }
