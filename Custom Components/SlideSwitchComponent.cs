@@ -1,34 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator.Custom_Components
 {
     public partial class SlideSwitch : UserControl
     {
+        #region Fields
+
         private bool isOn;
         private Rectangle toggleRectangle;
         private Color onColor = UITheme.GetGroupBoxTextColor(0);
         private Color offColor = Color.Gray;
         private Color toggleColor = Color.White;
 
-        public SlideSwitch()
-        {
-            InitializeComponent();
-            this.Size = new Size(50, 25);
-            this.toggleRectangle = new Rectangle(2, 2, this.Height - 4, this.Height - 4);
-            this.isOn = false;
-            this.DoubleBuffered = true;
-            this.Click += SlideSwitch_Click;
-        }
+        #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the color of the switch when it is in the "on" position.
+        /// </summary>
         [Category("Appearance")]
         public Color OnColor
         {
@@ -36,6 +30,9 @@ namespace Bahtinov_Collimator.Custom_Components
             set { onColor = value; Invalidate(); }
         }
 
+        /// <summary>
+        /// Gets or sets the color of the switch when it is in the "off" position.
+        /// </summary>
         [Category("Appearance")]
         public Color OffColor
         {
@@ -43,6 +40,9 @@ namespace Bahtinov_Collimator.Custom_Components
             set { offColor = value; Invalidate(); }
         }
 
+        /// <summary>
+        /// Gets or sets the color of the toggle knob.
+        /// </summary>
         [Category("Appearance")]
         public Color ToggleColor
         {
@@ -50,6 +50,9 @@ namespace Bahtinov_Collimator.Custom_Components
             set { toggleColor = value; Invalidate(); }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the switch is in the "on" position.
+        /// </summary>
         [Category("Behavior")]
         public bool IsOn
         {
@@ -62,24 +65,68 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SlideSwitch"/> class.
+        /// </summary>
+        public SlideSwitch()
+        {
+            InitializeComponent();
+            this.Size = new Size(50, 25);
+            this.toggleRectangle = new Rectangle(2, 2, this.Height - 4, this.Height - 4);
+            this.isOn = false;
+            this.DoubleBuffered = true;
+            this.Click += SlideSwitch_Click;
+        }
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Occurs when the toggle state of the switch changes.
+        /// </summary>
         public event EventHandler ToggleChanged;
 
+        /// <summary>
+        /// Raises the <see cref="ToggleChanged"/> event.
+        /// </summary>
+        /// <param name="e">Event arguments.</param>
         protected virtual void OnToggleChanged(EventArgs e)
         {
             ToggleChanged?.Invoke(this, e);
         }
 
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Handles the Click event of the switch.
+        /// Toggles the switch state when clicked.
+        /// </summary>
         private void SlideSwitch_Click(object sender, EventArgs e)
         {
             IsOn = !IsOn;
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Paints the switch control, including its background and toggle knob.
+        /// </summary>
+        /// <param name="e">Paint event arguments.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
             Graphics g = e.Graphics;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
 
             // Background
             int backgroundCornerRadius = this.Height / 2;
@@ -117,5 +164,8 @@ namespace Bahtinov_Collimator.Custom_Components
                 }
             }
         }
+
+        #endregion
     }
 }
+
