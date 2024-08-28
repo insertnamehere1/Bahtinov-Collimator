@@ -1,13 +1,10 @@
 ﻿using Bahtinov_Collimator.Image_Processing;
-using MathNet.Numerics.RootFinding;
-using MathNet.Numerics;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using static Bahtinov_Collimator.BahtinovLineDataEventArgs;
-using System.Runtime.InteropServices;
 using Bahtinov_Collimator.Helper;
 
 
