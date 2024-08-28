@@ -469,7 +469,7 @@ namespace Bahtinov_Collimator
             string versionString = $"V {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
 
             // Set the form's title
-            this.Text = $"Bahtinov Collimator - {versionString}";
+            this.Text = this.Text + $" - {versionString}";
         }
 
         private void SettingsToolStripMenuItem1_Click(object sender, EventArgs e)

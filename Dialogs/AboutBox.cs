@@ -2,7 +2,6 @@
 using System.Deployment.Application;
 using System.Drawing;
 using System.Reflection;
-using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -43,7 +42,6 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Assembly Attribute Accessors
-
 
         protected override void OnLoad(EventArgs e)
         {

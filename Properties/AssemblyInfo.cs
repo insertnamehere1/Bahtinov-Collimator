@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Bahtinov Collimator")]
+[assembly: AssemblyTitle("SkyCal Focus and Collimation Tool")]
 [assembly: AssemblyDescription("The application is designed to assist astronomers collimating and focusing their telescopes with ease and precision. It incorporates the algorithm and code developed by the late Niels Noordhoek, to achieve accurate adjustments for both focus and collimation.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Coded by Chris")]
-[assembly: AssemblyProduct("Bahtinov Collimator")]
+[assembly: AssemblyCompany("Coded by Chris Dowd")]
+[assembly: AssemblyProduct("SkyCal Focus and Collimation Tool")]
 [assembly: AssemblyCopyright("GNU General Public License v3.0")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
