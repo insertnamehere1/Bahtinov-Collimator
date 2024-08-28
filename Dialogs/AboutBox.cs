@@ -9,17 +9,21 @@ namespace Bahtinov_Collimator
 {
     partial class AboutBox : Form
     {
+        #region P/Invoke Declarations
+
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
         // Constants
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
 
+        #endregion
+
         #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AboutBox"/> class.
-        /// Sets up the form with assembly information.
+        /// Sets up the form with assembly information and applies the color scheme.
         /// </summary>
         public AboutBox()
         {
@@ -43,25 +47,6 @@ namespace Bahtinov_Collimator
 
         #region Assembly Attribute Accessors
 
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            float increasedSize = this.Font.Size + 2.0f;
-            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
-
-            // Adjust fonts
-            this.Font = newFont;
-
-            this.Font = newFont;
-            this.labelProductName.Font = newFont;
-            this.labelVersion.Font = newFont;
-            this.labelCopyright.Font = newFont;
-            this.labelCompanyName.Font = newFont;
-            this.textBoxDescription.Font = newFont;
-            this.okButton.Font = newFont;
-        }
-
         /// <summary>
         /// Gets the title of the assembly.
         /// </summary>
@@ -73,7 +58,7 @@ namespace Bahtinov_Collimator
                 if (attributes.Length > 0)
                 {
                     AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
-                    if (titleAttribute.Title != "")
+                    if (!string.IsNullOrEmpty(titleAttribute.Title))
                     {
                         return titleAttribute.Title;
                     }
@@ -103,7 +88,7 @@ namespace Bahtinov_Collimator
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
                 if (attributes.Length == 0)
                 {
-                    return "";
+                    return string.Empty;
                 }
                 return ((AssemblyDescriptionAttribute)attributes[0]).Description;
             }
@@ -119,7 +104,7 @@ namespace Bahtinov_Collimator
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
                 if (attributes.Length == 0)
                 {
-                    return "";
+                    return string.Empty;
                 }
                 return ((AssemblyProductAttribute)attributes[0]).Product;
             }
@@ -135,7 +120,7 @@ namespace Bahtinov_Collimator
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
                 if (attributes.Length == 0)
                 {
-                    return "";
+                    return string.Empty;
                 }
                 return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
             }
@@ -151,7 +136,7 @@ namespace Bahtinov_Collimator
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
                 if (attributes.Length == 0)
                 {
-                    return "";
+                    return string.Empty;
                 }
                 return ((AssemblyCompanyAttribute)attributes[0]).Company;
             }
@@ -163,7 +148,7 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Handles the click event of the OK button.
-        /// Closes the form.
+        /// Closes the form when the OK button is clicked.
         /// </summary>
         private void okButton_Click(object sender, EventArgs e)
         {
@@ -187,26 +172,28 @@ namespace Bahtinov_Collimator
             return AssemblyVersion;
         }
 
+        /// <summary>
+        /// Applies the color scheme to the form and its controls.
+        /// </summary>
         private void SetColorScheme()
         {
-            // main form
+            // Set colors for main form
             this.ForeColor = UITheme.DarkForeground;
             this.BackColor = UITheme.DarkBackground;
 
-            // OK button
+            // Set colors for OK button
             okButton.BackColor = UITheme.ButtonDarkBackground;
             okButton.ForeColor = UITheme.ButtonDarkForeground;
             okButton.FlatStyle = FlatStyle.Popup;
 
-
-            // Titlebar
+            // Set colors for titlebar
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
 
+            // Set colors for other controls
             textBoxDescription.ForeColor = UITheme.AboutTextColor;
             textBoxDescription.BackColor = UITheme.DarkBackground;
-
             logoPictureBox.BackColor = UITheme.AboutPictureBackground;
         }
 
