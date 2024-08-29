@@ -41,7 +41,7 @@
             // 
             this.messageLabel.AutoSize = true;
             this.messageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.messageLabel.Location = new System.Drawing.Point(78, 40);
+            this.messageLabel.Location = new System.Drawing.Point(78, 38);
             this.messageLabel.Name = "messageLabel";
             this.messageLabel.Size = new System.Drawing.Size(44, 16);
             this.messageLabel.TabIndex = 0;
@@ -50,7 +50,7 @@
             // 
             // iconBox
             // 
-            this.iconBox.Location = new System.Drawing.Point(26, 28);
+            this.iconBox.Location = new System.Drawing.Point(26, 26);
             this.iconBox.Name = "iconBox";
             this.iconBox.Size = new System.Drawing.Size(40, 40);
             this.iconBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -71,7 +71,7 @@
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(138, 9);
+            this.cancelButton.Location = new System.Drawing.Point(138, 8);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(82, 30);
             this.cancelButton.TabIndex = 2;
@@ -82,7 +82,7 @@
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(235, 9);
+            this.okButton.Location = new System.Drawing.Point(235, 8);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(82, 30);
             this.okButton.TabIndex = 1;
