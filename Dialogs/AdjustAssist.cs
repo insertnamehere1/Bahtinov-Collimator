@@ -11,9 +11,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
 {
     public enum Arrow
     {
-        Right,
-        Left,
-        None
+        Right, Left, None
     }
 
     public partial class AdjustAssist : Form
@@ -23,7 +21,6 @@ namespace Bahtinov_Collimator.AdjustAssistant
 
         // Constants
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
-
 
         #region Fields
 
@@ -59,8 +56,6 @@ namespace Bahtinov_Collimator.AdjustAssistant
 
             BahtinovProcessing.FocusDataEvent += FocusDataEvent;
 
-
-
             rotationAngle = 0;
             trackBar1.Minimum = 0;
             trackBar1.Maximum = 360;
@@ -80,6 +75,12 @@ namespace Bahtinov_Collimator.AdjustAssistant
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Handles the OnLoad event for the form.
+        /// Increases the font size for the form and its controls by 2 points.
+        /// </summary>
+        /// <param name="e">The event data.</param>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -98,6 +99,11 @@ namespace Bahtinov_Collimator.AdjustAssistant
             this.closeButton.Font = newFont;
         }
 
+        /// <summary>
+        /// Configures the color scheme for the form and its controls.
+        /// Applies dark theme colors to the form background, foreground, buttons, 
+        /// title bar, and group boxes based on the UITheme settings.
+        /// </summary>
         private void SetColorScheme()
         {
             // main form
@@ -124,6 +130,13 @@ namespace Bahtinov_Collimator.AdjustAssistant
             groupBox1.ForeColor = UITheme.MenuDarkForeground;
         }
 
+        /// <summary>
+        /// Changes the text color of all Label controls within a specified parent control.
+        /// Iterates through the child controls of the parent and sets the ForeColor 
+        /// of any Label control to the specified color.
+        /// </summary>
+        /// <param name="parent">The parent control containing the Label controls to be updated.</param>
+        /// <param name="color">The color to apply to the ForeColor property of each Label control.</param>
         private void ChangeLabelColors(Control parent, Color color)
         {
             foreach (Control control in parent.Controls)
@@ -153,6 +166,13 @@ namespace Bahtinov_Collimator.AdjustAssistant
             blueReverseBox.Checked = blueReverseSetting;
         }
 
+        /// <summary>
+        /// Handles the focus data event, updating the focus error values for red, green, 
+        /// and blue channels based on the incoming data. If the event is not on the UI thread, 
+        /// the method invokes itself on the correct thread. Also triggers a redraw of the PictureBox.
+        /// </summary>
+        /// <param name="sender">The source of the event, typically the object that raised the event.</param>
+        /// <param name="e">A <see cref="FocusDataEventArgs"/> object containing the focus data to be processed.</param>
         public void FocusDataEvent(object sender, FocusDataEventArgs e)
         {
             if (InvokeRequired)
@@ -186,8 +206,6 @@ namespace Bahtinov_Collimator.AdjustAssistant
             }
             pictureBox1.Invalidate();
         }
-
-
 
         /// <summary>
         /// Draws the contents of the picture box.
@@ -321,58 +339,66 @@ namespace Bahtinov_Collimator.AdjustAssistant
             graphics.DrawString(value, font, brush, x, y);
         }
 
+        /// <summary>
+        /// Draws an arrow on the specified <see cref="Graphics"/> object at the given center coordinates.
+        /// The arrow's direction can be adjusted based on the <see cref="Arrow"/> type, 
+        /// and its size is scaled according to the DPI settings.
+        /// </summary>
+        /// <param name="graphics">The <see cref="Graphics"/> object on which to draw the arrow.</param>
+        /// <param name="arrow">The direction of the arrow to be drawn. This can be Right, Left, or None.</param>
+        /// <param name="centerX">The X-coordinate of the center point where the arrow should be drawn.</param>
+        /// <param name="centerY">The Y-coordinate of the center point where the arrow should be drawn.</param>
         public void DrawArrow(Graphics graphics, Arrow arrow, int centerX, int centerY)
         {
-            // Minor corrections for arrow image placement
+            // Adjust center coordinates for the arrow's placement
             if (arrow == Arrow.Right)
             {
                 centerX += 3;
                 centerY -= 15;
             }
-            else
+            else if (arrow == Arrow.Left)
             {
                 centerX -= 4;
                 centerY -= 15;
             }
 
-            // Load the original image
+            // Load the original arrow image
             Image originalImage = Properties.Resources.arrow;
 
-            // Adjust size using a scale factor
-            float scaleFactor = 1f / UITheme.DpiScaleX; // Adjust this to scale the arrow
+            // Scale the arrow size based on DPI settings
+            float scaleFactor = 1f / UITheme.DpiScaleX;
             Size imageSize = new Size((int)(65 * scaleFactor), (int)(35 * scaleFactor));
-
-            // Adjust position by moving the arrow right by 10 pixels and up by 20 pixels
-
 
             // Calculate the top-left corner of the image based on the center coordinates
             int imageX = centerX - imageSize.Width / 2;
             int imageY = centerY - imageSize.Height / 2;
 
             // Create a new bitmap with the calculated size
-            Bitmap bitmap = new Bitmap(imageSize.Width, imageSize.Height);
-
-            // Create a Graphics object from the bitmap
-            using (Graphics bitmapGraphics = Graphics.FromImage(bitmap))
+            using (Bitmap bitmap = new Bitmap(imageSize.Width, imageSize.Height))
             {
-                // If arrow is Left, reverse the image
-                if (arrow == Arrow.Left)
+                // Create a Graphics object from the bitmap
+                using (Graphics bitmapGraphics = Graphics.FromImage(bitmap))
                 {
-                    bitmapGraphics.DrawImage(originalImage, new Rectangle(0, 0, imageSize.Width, imageSize.Height),
-                        new Rectangle(originalImage.Width, 0, -originalImage.Width, originalImage.Height), GraphicsUnit.Pixel);
+                    // Reverse the image for the left arrow
+                    if (arrow == Arrow.Left)
+                    {
+                        bitmapGraphics.DrawImage(originalImage,
+                            new Rectangle(0, 0, imageSize.Width, imageSize.Height),
+                            new Rectangle(originalImage.Width, 0, -originalImage.Width, originalImage.Height),
+                            GraphicsUnit.Pixel);
+                    }
+                    else if (arrow != Arrow.None) // Draw the image for the right arrow
+                    {
+                        bitmapGraphics.DrawImage(originalImage, new Rectangle(0, 0, imageSize.Width, imageSize.Height));
+                    }
                 }
-                else if (arrow != Arrow.None)
-                {
-                    bitmapGraphics.DrawImage(originalImage, new Rectangle(0, 0, imageSize.Width, imageSize.Height));
-                }
+
+                // Draw the bitmap on the specified Graphics object
+                graphics.DrawImage(bitmap, imageX, imageY);
             }
 
-            // Draw the bitmap on the specified Graphics object
-            graphics.DrawImage(bitmap, imageX, imageY);
-
-            // Dispose of the created objects
+            // Dispose of the original image
             originalImage.Dispose();
-            bitmap.Dispose();
         }
 
         /// <summary>
@@ -397,8 +423,10 @@ namespace Bahtinov_Collimator.AdjustAssistant
         }
 
         /// <summary>
-        /// Handles the Click event of the closeButton control.
+        /// Handles the Click event for the close button. Stops the update timer and closes the form.
         /// </summary>
+        /// <param name="sender">The source of the event, typically the close button.</param>
+        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
         private void closeButton_Click(object sender, EventArgs e)
         {
             updateTimer.Stop();
@@ -406,16 +434,20 @@ namespace Bahtinov_Collimator.AdjustAssistant
         }
 
         /// <summary>
-        /// Handles the CheckedChanged event of the swapGreenCheckbox control.
+        /// Handles the CheckedChanged event for checkBox1. Invalidates the pictureBox1, causing it to be redrawn.
         /// </summary>
+        /// <param name="sender">The source of the event, typically checkBox1.</param>
+        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             pictureBox1.Invalidate();
         }
 
         /// <summary>
-        /// Handles the ValueChanged event of the trackBar1 control.
+        /// Handles the ValueChanged event for trackBar1. Updates the rotation angle and refreshes the form.
         /// </summary>
+        /// <param name="sender">The source of the event, typically trackBar1.</param>
+        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
             rotationAngle = trackBar1.Value;
@@ -423,16 +455,20 @@ namespace Bahtinov_Collimator.AdjustAssistant
         }
 
         /// <summary>
-        /// Handles the Paint event of the pictureBox1 control.
+        /// Handles the Paint event for pictureBox1. Draws graphics on the PictureBox using the provided Graphics object.
         /// </summary>
+        /// <param name="sender">The source of the event, typically pictureBox1.</param>
+        /// <param name="e">A <see cref="PaintEventArgs"/> object that contains the event data, including the Graphics object used for drawing.</param>
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             DrawPictureBox(e.Graphics);
         }
 
         /// <summary>
-        /// Handles the Click event of the saveButton control.
+        /// Handles the Click event for the saveButton. Saves current settings to application settings.
         /// </summary>
+        /// <param name="sender">The source of the event, typically the saveButton.</param>
+        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
         private void saveButton_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.CS_Slider = trackBar1.Value;
@@ -456,31 +492,20 @@ namespace Bahtinov_Collimator.AdjustAssistant
         }
 
         /// <summary>
-        /// Handles the Tick event of the updateTimer control.
+        /// Handles the Tick event for the updateTimer. Invalidates the PictureBox to trigger a repaint.
         /// </summary>
+        /// <param name="sender">The source of the event, typically the updateTimer.</param>
+        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
         private void updateTimer_Tick(object sender, EventArgs e)
         {
-//            if (parentForm.isScreenCaptureRunning() == false)
-//                this.Close();
-
- //           int imageCount = parentForm.getImageCount();
-
-            // Only update if we have a new image
- //           if (imageCount > lastImageCount)
-            {
- //               float[] errorValues = parentForm.getErrorValues();
- //               redError = errorValues[0];
- //               greenError = errorValues[1];
- //               blueError = errorValues[2];
-
-                pictureBox1.Invalidate();
-   //             lastImageCount = imageCount;
-            }
+            pictureBox1.Invalidate();
         }
 
         /// <summary>
-        /// Handles the FormClosed event of the AdjustAssist form.
+        /// Handles the FormClosed event for the CheatSheet form. Unsubscribes from the FocusDataEvent and stops the updateTimer.
         /// </summary>
+        /// <param name="sender">The source of the event, typically the CheatSheet form.</param>
+        /// <param name="e">A <see cref="FormClosedEventArgs"/> object that contains the event data.</param>
         private void CheatSheet_FormClosed(object sender, FormClosedEventArgs e)
         {
             BahtinovProcessing.FocusDataEvent += FocusDataEvent;
@@ -488,8 +513,10 @@ namespace Bahtinov_Collimator.AdjustAssistant
         }
 
         /// <summary>
-        /// Handles the CheckedChanged event of the reverseBox controls.
+        /// Handles the CheckedChanged event for the reverseBox control. Invalidates the pictureBox1 control to trigger a repaint.
         /// </summary>
+        /// <param name="sender">The source of the event, typically the reverseBox control.</param>
+        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
         private void reverseBox_CheckedChanged(object sender, EventArgs e)
         {
             pictureBox1.Invalidate();
