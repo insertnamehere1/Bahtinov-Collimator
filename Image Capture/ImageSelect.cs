@@ -6,13 +6,18 @@ namespace Bahtinov_Collimator
 {
     public class ImageSelect : Form
     {
-        // Private fields to manage selection
-        private bool selectingArea;
-        private Point startPoint;
-        public Rectangle SelectedArea { get; private set; }
+        #region Private Fields
+
+        private bool selectingArea; // Indicates whether the user is currently selecting an area
+        private Point startPoint; // The starting point of the selection
+        public Rectangle SelectedArea { get; private set; } // The selected area as a rectangle
+
+        #endregion
+
+        #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the ImageSelect class.
+        /// Initializes a new instance of the <see cref="ImageSelect"/> class.
         /// Configures the form's appearance and registers event handlers.
         /// </summary>
         public ImageSelect()
@@ -20,6 +25,10 @@ namespace Bahtinov_Collimator
             InitializeForm();
             RegisterEventHandlers();
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Configures the form's properties to make it suitable for screen area selection.
@@ -122,5 +131,7 @@ namespace Bahtinov_Collimator
                 }
             }
         }
+
+        #endregion
     }
 }
