@@ -295,6 +295,9 @@ namespace Bahtinov_Collimator
             // Unlock the bitmap
             image.UnlockBits(bitmapData);
 
+            if(transitionXSum == 0 || transitionYSum == 0)
+                ImageLostEventProvider.OnImageLost("Unable to detect Defocus Image", "Circle Offset", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+
             double circleX = transitionXSum / (transitionCount / 2);
             double circleY = transitionYSum / (transitionCount / 2);
 

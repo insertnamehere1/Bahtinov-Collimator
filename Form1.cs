@@ -464,6 +464,8 @@ namespace Bahtinov_Collimator
             ImageCapture.StopImageCapture();
             bahtinovProcessing.StopImageProcessing();
             firstPassCompleted = false;
+            screenCaptureRunningFlag = false;
+            StartButton.Text = "Select Star";
 
             DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
         }
