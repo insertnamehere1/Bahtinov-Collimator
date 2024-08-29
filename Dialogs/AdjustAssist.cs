@@ -181,21 +181,21 @@ namespace Bahtinov_Collimator.AdjustAssistant
                 return;
             }
 
-             int groupId = e.focusData.Id;
+             int groupId = e.FocusData.Id;
 
             // is this a clear event?
             if (groupId != -1)
             {
-                if (!e.focusData.ClearDisplay)
+                if (!e.FocusData.ClearDisplay)
                 {
                     if(groupId == 0)
-                        redError = (float)e.focusData.BahtinovOffset;
+                        redError = (float)e.FocusData.BahtinovOffset;
                     else
                         if (groupId == 1)
-                            greenError = (float)e.focusData.BahtinovOffset;
+                            greenError = (float)e.FocusData.BahtinovOffset;
                     else
                         if (groupId == 2)
-                        blueError = (float)e.focusData.BahtinovOffset;
+                        blueError = (float)e.FocusData.BahtinovOffset;
                 }
                 else
                 {

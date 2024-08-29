@@ -45,8 +45,8 @@ namespace Bahtinov_Collimator.Voice
 
         public void FocusDataEvent(object sender, FocusDataEventArgs e)
         {
-            double focusValue = e.focusData.BahtinovOffset;
-            int group = e.focusData.Id;
+            double focusValue = e.FocusData.BahtinovOffset;
+            int group = e.FocusData.Id;
 
             if (group == -1)
             {

@@ -240,14 +240,14 @@ namespace Bahtinov_Collimator
                 return;
             }
 
-            if (e.focusData.Id == groupID || e.focusData.Id == -1)
+            if (e.FocusData.Id == groupID || e.FocusData.Id == -1)
             {
-                if (!e.focusData.ClearDisplay)
+                if (!e.FocusData.ClearDisplay)
                 {
-                    FocusErrorLabel.Text = e.focusData.BahtinovOffset.ToString("F1");
-                    AbsoluteFocusErrorLabel.Text = e.focusData.DefocusError.ToString("F1");
-                    WithinCriticalFocusLabel.Text = e.focusData.InsideFocus ? "YES" : "NO";
-                    insideCriticalFocusColor = e.focusData.InsideFocus ? UITheme.GetGroupBoxTextColor(groupID) : UITheme.GetGroupBoxCriticalColor;
+                    FocusErrorLabel.Text = e.FocusData.BahtinovOffset.ToString("F1");
+                    AbsoluteFocusErrorLabel.Text = e.FocusData.DefocusError.ToString("F1");
+                    WithinCriticalFocusLabel.Text = e.FocusData.InsideFocus ? "YES" : "NO";
+                    insideCriticalFocusColor = e.FocusData.InsideFocus ? UITheme.GetGroupBoxTextColor(groupID) : UITheme.GetGroupBoxCriticalColor;
                 }
                 else
                 {
