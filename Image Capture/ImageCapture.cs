@@ -9,8 +9,8 @@ namespace Bahtinov_Collimator
 {
     internal class ImageCapture
     {
-        // P/Invoke declarations for interacting with the Windows API
 
+        #region External Methods
         /// <summary>
         /// Retrieves the dimensions of the window specified by the given handle.
         /// </summary>
@@ -38,9 +38,9 @@ namespace Bahtinov_Collimator
         /// <returns>Handle to the window that contains the point.</returns>
         [DllImport("user32.dll", SetLastError = true)]
         private static extern IntPtr WindowFromPoint(Point p);
+        #endregion
 
-        // Event and delegate for image received
-
+        #region Events and Delegates
         /// <summary>
         /// Represents the method that will handle the ImageReceived event.
         /// </summary>
@@ -52,10 +52,14 @@ namespace Bahtinov_Collimator
         /// Occurs when a new image has been captured.
         /// </summary>
         public static event ImageReceivedEventHandler ImageReceivedEvent;
+        #endregion
 
+        #region Constants
         // Constants for PrintWindow function flags
         private const int PW_RENDERFULLCONTENT = 0x2;
+        #endregion
 
+        #region Private Fields
         // Private fields for managing image capture
         private static Timer captureTimer;
         private static Rectangle captureRectangle;
@@ -65,9 +69,13 @@ namespace Bahtinov_Collimator
         private static string previousImageHash = null;
         private static bool newHashFound = false;
         private static string firstHash = "";
-            
-        public static int TrackingType {  get; set; } = 0; //0-off, 1-bahtinov, 2-defocus
+        #endregion
 
+        #region Public Fields
+        public static int TrackingType {  get; set; } = 0; //0-off, 1-bahtinov, 2-defocus
+        #endregion
+
+        #region Methods
         /// <summary>
         /// Starts the image capture process by initializing and starting a timer.
         /// The timer triggers the CaptureTimer_Tick method at regular intervals.
@@ -200,6 +208,11 @@ namespace Bahtinov_Collimator
             }
         }
 
+        /// <summary>
+        /// Finds the offset of the inner circle in a donut-shaped image by analyzing brightness transitions along circular paths.
+        /// </summary>
+        /// <param name="image">The bitmap image to analyze. It is expected to contain a donut-shaped feature with a bright outer ring and a dark inner circle.</param>
+        /// <returns>A <see cref="Point"/> representing the estimated center of the inner circle within the image.</returns>
         private static Point FindInnerCircleOffset(Bitmap image)
         {
             double centerX = image.Width / 2;
@@ -288,11 +301,23 @@ namespace Bahtinov_Collimator
             return new Point((int)circleX, (int)circleY);
         }
 
+        /// <summary>
+        /// Calculates the brightness of a pixel based on its RGB color values.
+        /// </summary>
+        /// <param name="r">The red component of the pixel's color.</param>
+        /// <param name="g">The green component of the pixel's color.</param>
+        /// <param name="b">The blue component of the pixel's color.</param>
+        /// <returns>A <see cref="double"/> representing the brightness of the pixel, normalized to the range [0.0, 1.0].</returns>
         private static double GetBrightness(byte r, byte g, byte b)
         {
             return (r * 0.299 + g * 0.587 + b * 0.114) / 255.0;
         }
 
+        /// <summary>
+        /// Creates a circular bitmap from the given original image, using the smaller dimension of the selection area as the diameter.
+        /// </summary>
+        /// <param name="originalImage">The original bitmap image to be cropped into a circular shape.</param>
+        /// <returns>A <see cref="Bitmap"/> representing the original image cropped into a circular shape. Returns null if the selection area is too small.</returns>
         private static Bitmap CreateCircularImage(Bitmap originalImage)
         {
             int diameter = Math.Min(selectedStarBox.Width, selectedStarBox.Height);
@@ -355,6 +380,11 @@ namespace Bahtinov_Collimator
             return false;
         }
 
+        /// <summary>
+        /// Captures a portion of the target window's image based on the specified selection area and returns it as a <see cref="Bitmap"/>.
+        /// Adjusts the selection area to ensure it fits within the window and adheres to UI constraints. If any issues occur during image capture, returns null and shows a warning message.
+        /// </summary>
+        /// <returns>A <see cref="Bitmap"/> representing the selected area of the target window. Returns null if there are issues with image capture or if the selection area is invalid.</returns>
         private static Bitmap GetImage()
         {
             if (!GetWindowRect(targetWindowHandle, out Utilities.RECT rect))
@@ -447,6 +477,11 @@ namespace Bahtinov_Collimator
             return null;
         }
 
+        /// <summary>
+        /// Finds the centroid of the brightest area in a bitmap image. The method first calculates a brightness threshold that includes the top 10% of the brightest pixels. It then creates a binary image based on this threshold and determines the centroid of the brightest area from the binary image.
+        /// </summary>
+        /// <param name="bitmap">The <see cref="Bitmap"/> image from which to find the brightest area.</param>
+        /// <returns>A <see cref="Point"/> representing the centroid of the brightest area in the image.</returns>
         public static Point FindBrightestAreaCentroid(Bitmap bitmap)
         {
             byte threshold = CalculateThreshold(bitmap, 0.10f); // 10% brightest pixels
@@ -457,6 +492,12 @@ namespace Bahtinov_Collimator
             }
         }
 
+        /// <summary>
+        /// Calculates the brightness threshold for the top percentage of brightest pixels in a bitmap image. The method extracts green channel values from the image, sorts them, and determines the threshold value to include the specified percentage of the brightest pixels.
+        /// </summary>
+        /// <param name="bitmap">The <see cref="Bitmap"/> image from which to calculate the threshold.</param>
+        /// <param name="topPercent">The percentage of the brightest pixels to include in the threshold calculation (e.g., 0.10 for the top 10%).</param>
+        /// <returns>A <see cref="byte"/> representing the calculated brightness threshold.</returns>
         private static byte CalculateThreshold(Bitmap bitmap, float topPercent)
         {
             int pixelCount = bitmap.Width * bitmap.Height;
@@ -492,6 +533,12 @@ namespace Bahtinov_Collimator
             return greenChannelValues[thresholdIndex];
         }
 
+        /// <summary>
+        /// Converts a color bitmap to a binary bitmap based on a brightness threshold. Pixels with a green channel value greater than or equal to the specified threshold are set to white; all other pixels are set to black.
+        /// </summary>
+        /// <param name="bitmap">The <see cref="Bitmap"/> image to be thresholded.</param>
+        /// <param name="threshold">The brightness threshold value. Pixels with a green channel value greater than or equal to this threshold are set to white in the resulting binary image.</param>
+        /// <returns>A <see cref="Bitmap"/> in 1-bit per pixel format where pixels are either black or white based on the threshold.</returns>
         private static Bitmap ApplyThreshold(Bitmap bitmap, byte threshold)
         {
             Bitmap binaryBitmap = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format1bppIndexed);
@@ -541,6 +588,11 @@ namespace Bahtinov_Collimator
             return binaryBitmap;
         }
 
+        /// <summary>
+        /// Calculates the centroid of the white areas in a binary bitmap. The centroid is determined by averaging the coordinates of all white pixels. If no white pixels are found, the method returns the center of the image.
+        /// </summary>
+        /// <param name="binaryImage">The <see cref="Bitmap"/> image in 1-bit per pixel format where white pixels are considered as part of the blob.</param>
+        /// <returns>A <see cref="Point"/> representing the centroid of the white areas in the binary image. If no white pixels are found, returns the center of the image.</returns>
         private static Point FindBlobCentroid(Bitmap binaryImage)
         {
             long sumX = 0, sumY = 0, count = 0;
@@ -584,5 +636,6 @@ namespace Bahtinov_Collimator
 
             return new Point(centroidX, centroidY);
         }
+        #endregion
     }
 }
