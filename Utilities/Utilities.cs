@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -11,14 +8,16 @@ namespace Bahtinov_Collimator
 {
     internal static class Utilities
     {
+        #region Bitmap Operations
+
         /// <summary>
         /// Resizes a bitmap to the specified width and height using high-quality bicubic interpolation.
         /// </summary>
-        /// <param name="sourceBitmap">The original bitmap to be resized.</param>
+        /// <param name="sourceBitmap">The original bitmap to be resized. Must not be null.</param>
         /// <param name="width">The desired width of the resized bitmap.</param>
         /// <param name="height">The desired height of the resized bitmap.</param>
         /// <returns>A new bitmap that is resized to the specified dimensions.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when the sourceBitmap parameter is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="sourceBitmap"/> parameter is null.</exception>
         public static Bitmap ResizeBitmap(Bitmap sourceBitmap, int width, int height)
         {
             if (sourceBitmap == null)
@@ -35,8 +34,17 @@ namespace Bahtinov_Collimator
             return resizedBitmap;
         }
 
+        /// <summary>
+        /// Computes the SHA-256 hash of the given bitmap image.
+        /// </summary>
+        /// <param name="bitmap">The bitmap image to compute the hash for.</param>
+        /// <returns>A hexadecimal string representing the SHA-256 hash of the bitmap.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the <paramref name="bitmap"/> parameter is null.</exception>
         public static string ComputeHash(Bitmap bitmap)
         {
+            if (bitmap == null)
+                throw new ArgumentNullException(nameof(bitmap));
+
             // Convert the Bitmap to a byte array more efficiently
             byte[] imageBytes = ImageToByteArray(bitmap);
 
@@ -56,8 +64,20 @@ namespace Bahtinov_Collimator
             }
         }
 
+        #endregion
+
+        #region Image Conversion
+
+        /// <summary>
+        /// Converts a bitmap image to a byte array.
+        /// </summary>
+        /// <param name="image">The bitmap image to convert.</param>
+        /// <returns>A byte array representation of the bitmap image.</returns>
         private static byte[] ImageToByteArray(Bitmap image)
         {
+            if (image == null)
+                throw new ArgumentNullException(nameof(image));
+
             using (MemoryStream stream = new MemoryStream())
             {
                 image.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
@@ -65,6 +85,9 @@ namespace Bahtinov_Collimator
             }
         }
 
+        #endregion
+
+        #region Structures
 
         /// <summary>
         /// Represents a rectangular area defined by the coordinates of its top-left and bottom-right corners.
@@ -91,6 +114,7 @@ namespace Bahtinov_Collimator
             /// </summary>
             public int Bottom { get; set; }
         }
+
+        #endregion
     }
 }
-
