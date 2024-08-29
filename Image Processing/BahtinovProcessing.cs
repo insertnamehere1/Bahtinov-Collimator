@@ -29,10 +29,6 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Security.Cryptography;
-using System.Linq;
-using System.Drawing.Drawing2D;
-using static System.Net.Mime.MediaTypeNames;
 using static Bahtinov_Collimator.BahtinovLineDataEventArgs;
 using System.Collections.Generic;
 
@@ -40,6 +36,7 @@ namespace Bahtinov_Collimator
 {
     internal class BahtinovProcessing
     {
+        #region Delegates
         // Focus Data Listener
         public delegate void FocusDataEventHandler(object sender, FocusDataEventArgs e);
         public static event FocusDataEventHandler FocusDataEvent;
@@ -47,7 +44,9 @@ namespace Bahtinov_Collimator
         // LineDrawing Event Listener
         public delegate void BahtinovLineDrawEventHandler(object sender, BahtinovLineDataEventArgs e);
         public static event BahtinovLineDrawEventHandler BahtinovLineDrawEvent;
+        #endregion
 
+        #region Private Fields
         // Settings
         private int apertureSetting;
         private int focalLengthSetting;
@@ -61,15 +60,29 @@ namespace Bahtinov_Collimator
 
         // retain last error value
         private float lastFocusErrorValue = 0.0f;
+        #endregion
 
+        #region Public Fields
         public static Dictionary<int, double> errorValues { get; private set; }
+        #endregion
 
+        #region Constructor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BahtinovProcessing"/> class. 
+        /// Sets up an empty dictionary for storing error values and loads settings from a configuration source.
+        /// </summary>
         public BahtinovProcessing()
         {
             errorValues = new Dictionary<int, double>();
             LoadSettings();
         }
+        #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// Loads configuration settings from the application settings.
+        /// </summary>
         public void LoadSettings()
         {
             // load settings
@@ -78,6 +91,19 @@ namespace Bahtinov_Collimator
             pixelSizeSetting = Properties.Settings.Default.PixelSize;
         }
 
+        /// <summary>
+        /// Analyzes a bitmap image of a star to identify the brightest lines and their angles.
+        /// 
+        /// The method performs the following:
+        /// 1. Converts the image data into a 2D array and calculates brightness values.
+        /// 2. Rotates the image at various angles and detects the brightest lines by summing pixel values along each line.
+        /// 3. Smooths the detected line values and selects the top brightest lines.
+        /// 
+        /// Returns a <see cref="BahtinovData"/> object containing the indices, angles, and values of the brightest lines.
+        /// 
+        /// <param name="starImage">The bitmap image of the star to be analyzed.</param>
+        /// <returns>A <see cref="BahtinovData"/> object with information about the brightest lines.</returns>
+        /// </summary>
         public BahtinovData FindBrightestLines(Bitmap starImage)
         {
             const int LINES = 9;
@@ -235,6 +261,22 @@ namespace Bahtinov_Collimator
             return result;
         }
 
+        /// <summary>
+        /// Enhances the accuracy of line detection in a star image by performing subpixel interpolation.
+        /// 
+        /// The method performs the following steps:
+        /// 1. Initializes the bounding box and scales it according to the DPI settings.
+        /// 2. Reads and processes the image pixel data into a 2D array.
+        /// 3. For each line specified in the <paramref name="bahtinovLines"/> object, applies rotation and interpolation to find the subpixel-accurate position and value of the line.
+        /// 4. Updates the provided <paramref name="bahtinovLines"/> object with the refined line indices and values.
+        /// 
+        /// Returns the updated <see cref="BahtinovData"/> object containing the subpixel-accurate line indices and values.
+        /// 
+        /// <param name="starImage">The bitmap image of the star to be analyzed.</param>
+        /// <param name="lineCount">The number of lines to detect and refine.</param>
+        /// <param name="bahtinovLines">The <see cref="BahtinovData"/> object containing initial line data to be refined.</param>
+        /// <returns>The updated <see cref="BahtinovData"/> object with refined line indices and values.</returns>
+        /// </summary>
         public BahtinovData FindSubpixelLines(Bitmap starImage, int lineCount, BahtinovData bahtinovLines)
         {
             float dpiScale = UITheme.DpiScaleX;
@@ -371,6 +413,26 @@ namespace Bahtinov_Collimator
             return bahtinovLines;
         }
 
+        /// <summary>
+        /// Processes and displays detected Bahtinov lines on the provided star image.
+        /// 
+        /// The method performs the following steps:
+        /// 1. Validates the number of detected lines, ensuring it is either 3 or 9. Logs an error and returns false if the number is incorrect.
+        /// 2. Initializes data structures for processing and calculates image center coordinates.
+        /// 3. For each group of lines:
+        ///    - Reorders lines if necessary.
+        ///    - Computes the start and end points of each line.
+        ///    - Calculates intersections and error distances related to focus.
+        ///    - Determines if the focus error is within an acceptable range.
+        ///    - Prepares visual markers for displaying the error and lines.
+        /// 4. Invokes events to update the user interface or other components with the processed line data and error information.
+        /// 
+        /// Returns true if the lines were successfully processed and displayed; otherwise, false.
+        /// 
+        /// <param name="lines">The <see cref="BahtinovData"/> object containing the detected line angles and indices.</param>
+        /// <param name="starImage">The bitmap image of the star on which the lines are to be displayed.</param>
+        /// <returns>True if the lines were successfully processed and displayed; otherwise, false.</returns>
+        /// </summary>
         public bool DisplayLines(BahtinovData lines, Bitmap starImage)
         {
             if (lines.LineAngles.Length != 3 && lines.LineAngles.Length != 9)
@@ -553,6 +615,12 @@ namespace Bahtinov_Collimator
             return true;
         }
 
+        /// <summary>
+        /// Stops the image processing and clears any displayed focus data.
+        /// 
+        /// The method creates a <see cref="FocusData"/> object with a flag to clear the display and an identifier of -1.
+        /// It then triggers the <see cref="FocusDataEvent"/> event with this data to update the UI or other components accordingly.
+        /// </summary>
         public void StopImageProcessing()
         {
             FocusData fd = new FocusData
@@ -563,5 +631,6 @@ namespace Bahtinov_Collimator
 
             FocusDataEvent?.Invoke(null, new FocusDataEventArgs(fd));
         }
+        #endregion
     }
 }
