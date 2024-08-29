@@ -301,6 +301,9 @@ namespace Bahtinov_Collimator
                 {
                     components?.Dispose();
                     UnsubscribeToEvents();
+
+                    if(focusChannelCount > 0)
+                        focusChannelCount--;
                 }
 
                 disposed = true;

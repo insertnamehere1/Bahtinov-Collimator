@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Speech.Synthesis;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator.Voice
 {
+    /// <summary>
+    /// Provides control over voice synthesis, including queuing and playing voice messages.
+    /// </summary>
     public class VoiceControl
     {
         #region Fields
 
         private readonly SpeechSynthesizer synthesizer;
-        private readonly Queue<(string, int)> messageQueue;
+        private readonly Queue<(string Text, int Rate)> messageQueue;
         private Dictionary<int, double> errorValues;
         private bool voiceEnabled;
         private int channelPlaying = -1;
-        private int newSpeechRate = 0; 
+        private int newSpeechRate = 0;
 
         #endregion
 
@@ -23,11 +25,11 @@ namespace Bahtinov_Collimator.Voice
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VoiceControl"/> class.
+        /// Sets up the speech synthesizer, message queue, and event handlers.
         /// </summary>
         public VoiceControl()
         {
             errorValues = new Dictionary<int, double>();
-
             synthesizer = new SpeechSynthesizer();
             messageQueue = new Queue<(string, int)>();
             synthesizer.SpeakCompleted += Synthesizer_SpeakCompleted;
@@ -43,6 +45,11 @@ namespace Bahtinov_Collimator.Voice
 
         #region Methods
 
+        /// <summary>
+        /// Handles focus data events to update the error values and play the focus value if necessary.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event data containing focus data.</param>
         public void FocusDataEvent(object sender, FocusDataEventArgs e)
         {
             double focusValue = e.FocusData.BahtinovOffset;
@@ -64,6 +71,11 @@ namespace Bahtinov_Collimator.Voice
             }
         }
 
+        /// <summary>
+        /// Handles channel selection events to update the current channel and play the associated error value.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event data containing selected channels.</param>
         private void ChannelSelected(object sender, ChannelSelectEventArgs e)
         {
             channelPlaying = -1;
@@ -76,14 +88,17 @@ namespace Bahtinov_Collimator.Voice
                     channelPlaying = i;
                     Play("Channel " + (i + 1), 2);
                     Play(errorValues[i].ToString("F1"), 2);
-                    break;                   
+                    break;
                 }
             }
         }
 
+        /// <summary>
+        /// Loads settings and updates the voice enabled state based on configuration.
+        /// </summary>
         public void LoadSettings()
         {
-            // load settings
+            // Load settings from application configuration
             voiceEnabled = Properties.Settings.Default.VoiceEnabled;
 
             if (voiceEnabled)
@@ -92,19 +107,24 @@ namespace Bahtinov_Collimator.Voice
                 Play("Voice Disabled", 0);
         }
 
+        /// <summary>
+        /// Queues a message for playback if voice synthesis is enabled.
+        /// </summary>
+        /// <param name="text">The text to be spoken.</param>
+        /// <param name="speechRate">The speech rate for the message.</param>
         public void Play(string text, int speechRate)
         {
             if (voiceEnabled)
             {
                 if (synthesizer.State == SynthesizerState.Ready || synthesizer.State == SynthesizerState.Speaking)
                 {
-                    // If currently speaking or ready, enqueue the message
+                    // Enqueue the message if the queue has space
                     if (messageQueue.Count < 2)
                     {
                         messageQueue.Enqueue((text, speechRate));
                     }
 
-                    // If the synthesizer is not currently speaking, start the first message
+                    // Start the first message if the synthesizer is ready
                     if (synthesizer.State == SynthesizerState.Ready)
                     {
                         PlayNextMessage();
@@ -113,6 +133,9 @@ namespace Bahtinov_Collimator.Voice
             }
         }
 
+        /// <summary>
+        /// Plays the next message in the queue, if available.
+        /// </summary>
         private void PlayNextMessage()
         {
             if (messageQueue.Count > 0)
@@ -124,18 +147,31 @@ namespace Bahtinov_Collimator.Voice
             }
         }
 
+        /// <summary>
+        /// Handles the completion of speech synthesis to update the speech rate.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event data.</param>
         private void OnSpeakCompleted(object sender, SpeakCompletedEventArgs e)
         {
             synthesizer.SpeakCompleted -= OnSpeakCompleted; // Unsubscribe to avoid multiple triggers
             synthesizer.Rate = newSpeechRate;
         }
 
+        /// <summary>
+        /// Handles the completion of speech synthesis to play the next message in the queue.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event data.</param>
         private void Synthesizer_SpeakCompleted(object sender, SpeakCompletedEventArgs e)
         {
-            // When the current message finishes, play the next one if any
+            // Play the next message if any
             PlayNextMessage();
         }
 
+        /// <summary>
+        /// Stops all ongoing speech and clears the message queue.
+        /// </summary>
         public void Stop()
         {
             synthesizer.SpeakAsyncCancelAll();
