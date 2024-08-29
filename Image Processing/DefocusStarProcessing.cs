@@ -9,11 +9,43 @@ namespace Bahtinov_Collimator.Image_Processing
 {
     internal class DefocusStarProcessing
     {
+        #region Events
+
+        /// <summary>
+        /// Delegate for handling defocus circle events.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">Event arguments containing defocus circle data.</param>
         public delegate void DefocusCircleEventHandler(object sender, DefocusCircleEventArgs e);
+
+        /// <summary>
+        /// Event triggered when defocus circle data is available.
+        /// </summary>
         public static event DefocusCircleEventHandler DefocusCircleEvent;
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefocusStarProcessing"/> class.
+        /// </summary>
         public DefocusStarProcessing() { }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Processes the given defocus image to find the inner and outer circles and calculate their properties.
+        /// 
+        /// The method calculates the center, inner radius, and outer radius of the defocus image, and then computes
+        /// the distance and direction between the inner and outer circles. The results are sent through the
+        /// <see cref="DefocusCircleEvent"/>.
+        /// 
+        /// If the image is null, an error message is displayed.
+        /// </summary>
+        /// <param name="image">The bitmap image of the defocus star.</param>
         public void DisplayDefocusImage(Bitmap image)
         {
             if (image == null)
@@ -37,18 +69,32 @@ namespace Bahtinov_Collimator.Image_Processing
                 // Send an event with DPI-adjusted values
                 DefocusCircleEvent?.Invoke(null, new DefocusCircleEventArgs(image,
                     new PointD(innerCentre.X - imgCenterX, innerCentre.Y - imgCenterY), innerRadius,
-                    new PointD(outerCentre.X - imgCenterX, outerCentre.Y - imgCenterY), outerRadius, 
-                    distance, direction)); 
+                    new PointD(outerCentre.X - imgCenterX, outerCentre.Y - imgCenterY), outerRadius,
+                    distance, direction));
             }
         }
 
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Calculates the distance and direction between the inner and outer circles.
+        /// 
+        /// The distance is scaled relative to the inner radius, and the direction is converted from radians to degrees.
+        /// The direction is adjusted to be within the range of 0 to 360 degrees.
+        /// </summary>
+        /// <param name="innerCentre">The center point of the inner circle.</param>
+        /// <param name="outerCentre">The center point of the outer circle.</param>
+        /// <param name="innerRadius">The radius of the inner circle.</param>
+        /// <returns>A tuple containing the calculated distance and direction (in degrees).</returns>
         private static (double Distance, double Direction) CalculateDistanceAndDirection(PointD innerCentre, PointD outerCentre, double innerRadius)
         {
             double deltaX = outerCentre.X - innerCentre.X;
             double deltaY = outerCentre.Y - innerCentre.Y;
 
-            double distance = ((innerCentre.DistanceTo(outerCentre))/innerRadius) * 50;
-            double directionRadians = innerCentre.DirectionTo(outerCentre);  
+            double distance = ((innerCentre.DistanceTo(outerCentre)) / innerRadius) * 50;
+            double directionRadians = innerCentre.DirectionTo(outerCentre);
             double directionDegrees = directionRadians * (180.0 / Math.PI);
 
             if (directionDegrees < 0)
@@ -57,6 +103,20 @@ namespace Bahtinov_Collimator.Image_Processing
             return (distance, directionDegrees);
         }
 
+        /// <summary>
+        /// Calculates the average radius and center of a circle in the image based on brightness transitions.
+        /// 
+        /// The method iterates over different angles to find the radius where the brightness transition occurs. It uses
+        /// trigonometric precomputations for efficiency and processes the image's pixel data to determine the average radius
+        /// and center point. The calculation is different for inner and outer circles based on the <paramref name="isInnerRadius"/> flag.
+        /// 
+        /// The bitmap is locked for faster access, and pixel brightness is computed using a predefined formula.
+        /// </summary>
+        /// <param name="image">The bitmap image to process.</param>
+        /// <param name="centerX">The X-coordinate of the image center.</param>
+        /// <param name="centerY">The Y-coordinate of the image center.</param>
+        /// <param name="isInnerRadius">Flag indicating whether to calculate the inner radius.</param>
+        /// <returns>A tuple containing the center point and radius of the circle.</returns>
         private (PointD centre, double radius) CalculateAverageRadius(Bitmap image, double centerX, double centerY, bool isInnerRadius)
         {
             int maxRadius = Math.Min(image.Width, image.Height) / 2;
@@ -144,19 +204,53 @@ namespace Bahtinov_Collimator.Image_Processing
             return (new PointD(circleX, circleY), radius);
         }
 
+        /// <summary>
+        /// Calculates the brightness of a pixel based on its RGB values.
+        /// 
+        /// The brightness is computed using a weighted average of the red, green, and blue components. This formula is
+        /// commonly used for converting RGB values to grayscale brightness.
+        /// 
+        /// The result is normalized to a range of 0 to 1.
+        /// </summary>
+        /// <param name="r">The red component of the pixel.</param>
+        /// <param name="g">The green component of the pixel.</param>
+        /// <param name="b">The blue component of the pixel.</param>
+        /// <returns>The calculated brightness of the pixel.</returns>
         private double GetBrightness(byte r, byte g, byte b)
         {
             return (r * 0.299 + g * 0.587 + b * 0.114) / 255.0;
         }
 
+        /// <summary>
+        /// Finds the average radius and center of the inner circle in the defocus image.
+        /// 
+        /// This method calls the <see cref="CalculateAverageRadius"/> method with the <paramref name="isInnerRadius"/> flag
+        /// set to true to find the average inner radius and center.
+        /// </summary>
+        /// <param name="image">The bitmap image to process.</param>
+        /// <param name="centerX">The X-coordinate of the image center.</param>
+        /// <param name="centerY">The Y-coordinate of the image center.</param>
+        /// <returns>A tuple containing the center point and radius of the inner circle.</returns>
         private (PointD centre, double radius) FindAverageInnerRadius(Bitmap image, double centerX, double centerY)
         {
             return CalculateAverageRadius(image, centerX, centerY, true);
         }
 
+        /// <summary>
+        /// Finds the average radius and center of the outer circle in the defocus image.
+        /// 
+        /// This method calls the <see cref="CalculateAverageRadius"/> method with the <paramref name="isInnerRadius"/> flag
+        /// set to false to find the average outer radius and center.
+        /// </summary>
+        /// <param name="image">The bitmap image to process.</param>
+        /// <param name="centerX">The X-coordinate of the image center.</param>
+        /// <param name="centerY">The Y-coordinate of the image center.</param>
+        /// <returns>A tuple containing the center point and radius of the outer circle.</returns>
         private (PointD centre, double radius) FindAverageOuterRadius(Bitmap image, double centerX, double centerY)
         {
             return CalculateAverageRadius(image, centerX, centerY, false);
         }
+
+        #endregion
     }
 }
