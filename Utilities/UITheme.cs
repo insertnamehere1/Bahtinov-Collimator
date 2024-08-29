@@ -4,76 +4,228 @@ using System.Drawing.Drawing2D;
 
 namespace Bahtinov_Collimator
 {
+    /// <summary>
+    /// Provides theme-related properties and methods for the user interface.
+    /// </summary>
     public static class UITheme
     {
-        // Forms theme
+        #region Forms Theme
+
+        /// <summary>
+        /// Gets the background color for dark-themed forms.
+        /// </summary>
         public static Color DarkBackground { get; } = Color.FromArgb(47, 54, 64);
+
+        /// <summary>
+        /// Gets the foreground color for dark-themed forms.
+        /// </summary>
         public static Color DarkForeground { get; } = Color.FromArgb(70, 80, 90);
 
-        // Menu Strip
+        #endregion
+
+        #region Menu Strip Theme
+
+        /// <summary>
+        /// Gets the foreground color for the menu strip.
+        /// </summary>
         public static Color MenuStripForeground { get; } = Color.White;
+
+        /// <summary>
+        /// Gets the background color for highlighted menu items.
+        /// </summary>
         public static Color MenuHighlightBackground { get; } = Color.Gray;
 
-        // Drop Down Menu theme
+        #endregion
+
+        #region Drop Down Menu Theme
+
+        /// <summary>
+        /// Gets the background color for dark-themed drop-down menus.
+        /// </summary>
         public static Color MenuDarkBackground { get; } = DarkBackground;
+
+        /// <summary>
+        /// Gets the foreground color for dark-themed drop-down menus.
+        /// </summary>
         public static Color MenuDarkForeground { get; } = Color.LightGray;
 
-        //Button Theme
+        #endregion
+
+        #region Button Theme
+
+        /// <summary>
+        /// Gets the background color for dark-themed buttons.
+        /// </summary>
         public static Color ButtonDarkBackground { get; } = Color.DimGray;
+
+        /// <summary>
+        /// Gets the foreground color for dark-themed buttons.
+        /// </summary>
         public static Color ButtonDarkForeground { get; } = Color.LightGray;
 
-        // Text Box theme
+        #endregion
+
+        #region Text Box Theme
+
+        /// <summary>
+        /// Gets the background color for text boxes.
+        /// </summary>
         public static Color TextBoxBackground { get; } = Color.DarkGray;
+
+        /// <summary>
+        /// Gets the foreground color for text boxes.
+        /// </summary>
         public static Color TextBoxForeground { get; } = Color.Black;
 
-        // Display Error Circle Theme
+        #endregion
+
+        #region Error Circle Theme
+
+        /// <summary>
+        /// Gets the radius for displaying error circles.
+        /// </summary>
         public static int ErrorCircleRadius { get; } = 64;
 
-        // Groupbox Theme
+        #endregion
+
+        #region Group Box Theme
+
+        /// <summary>
+        /// Gets the color for critical group box text.
+        /// </summary>
         public static Color GetGroupBoxCriticalColor { get; } = Color.White;
 
-        // Display Window
+        #endregion
+
+        #region Display Window
+
+        /// <summary>
+        /// Gets or sets the size of the display window.
+        /// </summary>
         public static Point DisplayWindow { get; private set; } = new Point(600, 600);
+
+        /// <summary>
+        /// Gets the background color for the display window.
+        /// </summary>
         public static Color DisplayBackgroundColor { get; } = Color.Black;
 
-        // MessageBox Theme
+        #endregion
+
+        #region MessageBox Theme
+
+        /// <summary>
+        /// Gets the background color for message boxes.
+        /// </summary>
         public static Color MessageBoxPanelBackground { get; } = Color.FromArgb(30, 30, 35);
+
+        /// <summary>
+        /// Gets the text color for message boxes.
+        /// </summary>
         public static Color MessageBoxTextColor { get; } = Color.White;
 
-        //Selection Theme
+        #endregion
+
+        #region Selection Theme
+
+        /// <summary>
+        /// Gets the background color for selection areas.
+        /// </summary>
         public static Color SelectionBackground { get; } = Color.Black;
+
+        /// <summary>
+        /// Gets the transparency level for the selection background.
+        /// </summary>
         public static float SelectionBackgroundTransparency { get; } = 0.5f;
+
+        /// <summary>
+        /// Gets the fill color for selection circles.
+        /// </summary>
         public static Color SelectionCircleInfill { get; } = Color.FromArgb(237, 78, 78);
+
+        /// <summary>
+        /// Gets the border color for selection circles.
+        /// </summary>
         public static Color SelectionCircleBoarder { get; } = Color.DarkBlue;
-        public static int SelectionBoarderWidth { get; } = 3; 
-        
-        // Donate Theme
+
+        /// <summary>
+        /// Gets the border width for selection circles.
+        /// </summary>
+        public static int SelectionBoarderWidth { get; } = 3;
+
+        #endregion
+
+        #region Donate Theme
+
+        /// <summary>
+        /// Gets the text color for the donate section.
+        /// </summary>
         public static Color DonateTextColor { get; } = Color.White;
+
+        /// <summary>
+        /// Gets the background color for the donate picture.
+        /// </summary>
         public static Color DonatePictureBackground { get; } = Color.Gray;
 
-        // About Theme
+        #endregion
+
+        #region About Theme
+
+        /// <summary>
+        /// Gets the text color for the about section.
+        /// </summary>
         public static Color AboutTextColor { get; } = Color.White;
+
+        /// <summary>
+        /// Gets the background color for the about picture.
+        /// </summary>
         public static Color AboutPictureBackground { get; } = Color.Gray;
 
-        // Scaling Values
+        #endregion
+
+        #region Scaling Values
+
+        /// <summary>
+        /// Gets or sets the DPI scale factor in the X direction.
+        /// </summary>
         public static float DpiScaleX { get; private set; } = 1.0f;
+
+        /// <summary>
+        /// Gets or sets the DPI scale factor in the Y direction.
+        /// </summary>
         public static float DpiScaleY { get; private set; } = 1.0f;
 
-        // Group Box Color Theme Dictionary
+        /// <summary>
+        /// Gets the color used for the high state of the adjustment assist knob.
+        /// </summary>
+        public static Color AdjustAssistKnobHi { get; } = Color.FromArgb(100, 100, 100);
+
+        /// <summary>
+        /// Gets the color used for the low state of the adjustment assist knob.
+        /// </summary>
+        public static Color AdjustAssistKnobLo { get; } = Color.FromArgb(200, 200, 200);
+
+        /// <summary>
+        /// Gets the color used for the text displayed on the adjustment assist knob.
+        /// </summary>
+        public static Color AdjustAssistTextColor { get; } = Color.Black;
+
+
+
+        #endregion
+
+        #region Dictionaries
+
         private static readonly Dictionary<int, Color> GroupBoxTextColors;
         private static readonly Dictionary<int, Color> GroupBoxBackgroundColors;
-
-        // Display Bahtinov Lines Theme
         private static readonly Dictionary<int, Color> DisplayLineColors;
         private static readonly Dictionary<int, Pen> DisplayLinePens;
         private static readonly Dictionary<int, Pen> ErrorCirclePens;
         private static readonly Dictionary<int, Font> ErrorTextFonts;
         private static readonly Dictionary<int, SolidBrush> ErrorTextBrush;
 
-        // AdjustAssist Theme
-        public static Color AdjustAssistKnobHi { get; } = Color.FromArgb(100, 100, 100);
-        public static Color AdjustAssistKnobLo { get; } = Color.FromArgb(200, 200, 200);
-        public static Color AdjustAssistTextColor { get; } = Color.Black;
+        #endregion
+
+        #region Constructor
 
         static UITheme()
         {
@@ -115,21 +267,35 @@ namespace Bahtinov_Collimator
             ErrorTextFonts[1] = new Font("Arial", 16f);
             ErrorTextFonts[2] = new Font("Arial", 16f);
 
-            // Initialize Error Text Pen
+            // Initialize Error Text Brush
             ErrorTextBrush[0] = new SolidBrush(Color.White);
             ErrorTextBrush[1] = new SolidBrush(Color.White);
             ErrorTextBrush[2] = new SolidBrush(Color.White);
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Initializes the DPI scaling and display window size.
+        /// </summary>
+        /// <param name="scaleX">The DPI scale factor in the X direction.</param>
+        /// <param name="scaleY">The DPI scale factor in the Y direction.</param>
         public static void Initialize(float scaleX, float scaleY)
         {
             DpiScaleX = scaleX;
             DpiScaleY = scaleY;
 
-            // set window size
+            // Set window size
             DisplayWindow = new Point((int)(600 / scaleX), (int)(600 / scaleY));
         }
 
+        /// <summary>
+        /// Gets the text color for a group box based on the group ID.
+        /// </summary>
+        /// <param name="groupId">The group ID.</param>
+        /// <returns>The color for the group box text.</returns>
         public static Color GetGroupBoxTextColor(int groupId)
         {
             if (GroupBoxTextColors.ContainsKey(groupId))
@@ -137,6 +303,11 @@ namespace Bahtinov_Collimator
             return Color.Black; // Default color if not found
         }
 
+        /// <summary>
+        /// Gets the background color for a group box based on the group ID.
+        /// </summary>
+        /// <param name="groupId">The group ID.</param>
+        /// <returns>The color for the group box background.</returns>
         public static Color GetGroupBoxBackgroundColor(int groupId)
         {
             if (GroupBoxBackgroundColors.ContainsKey(groupId))
@@ -144,6 +315,12 @@ namespace Bahtinov_Collimator
             return Color.Black; // Default color if not found
         }
 
+        /// <summary>
+        /// Gets the pen used for displaying lines based on the group ID and line ID.
+        /// </summary>
+        /// <param name="groupId">The group ID.</param>
+        /// <param name="lineId">The line ID.</param>
+        /// <returns>The pen for displaying lines.</returns>
         public static Pen GetDisplayLinePen(int groupId, int lineId)
         {
             if (DisplayLineColors.ContainsKey(groupId) && DisplayLinePens.ContainsKey(lineId))
@@ -155,31 +332,42 @@ namespace Bahtinov_Collimator
             return new Pen(Color.White); // Default color if not found
         }
 
+        /// <summary>
+        /// Gets the pen used for drawing error circles based on the group ID and focus status.
+        /// </summary>
+        /// <param name="groupId">The group ID.</param>
+        /// <param name="insideFocus">Whether the focus is inside or outside.</param>
+        /// <returns>The pen for drawing error circles.</returns>
         public static Pen GetErrorCirclePen(int groupId, bool insideFocus)
         {
             if (ErrorCirclePens.ContainsKey(groupId))
             {
                 Pen pen = ErrorCirclePens[groupId];
-
-                if (insideFocus)
-                    pen.DashStyle = DashStyle.Solid;
-                else
-                    pen.DashStyle = DashStyle.Dash;
-
+                pen.DashStyle = insideFocus ? DashStyle.Solid : DashStyle.Dash;
                 return pen;
             }
             return new Pen(Color.White); // Default color if not found
         }
 
+        /// <summary>
+        /// Gets the font used for error text based on the group ID.
+        /// </summary>
+        /// <param name="groupId">The group ID.</param>
+        /// <returns>The font for error text.</returns>
         public static Font GetErrorTextFont(int groupId)
         {
             if (ErrorTextFonts.ContainsKey(groupId))
             {
                 return ErrorTextFonts[groupId];
             }
-            return new Font("Arial", 16f); // Default color if not found
+            return new Font("Arial", 16f); // Default font if not found
         }
 
+        /// <summary>
+        /// Gets the brush used for error text based on the group ID.
+        /// </summary>
+        /// <param name="groupId">The group ID.</param>
+        /// <returns>The brush for error text.</returns>
         public static SolidBrush GetErrorTextBrush(int groupId)
         {
             if (ErrorTextBrush.ContainsKey(groupId))
@@ -188,5 +376,7 @@ namespace Bahtinov_Collimator
             }
             return new SolidBrush(Color.White); // Default color if not found
         }
+
+        #endregion
     }
 }
