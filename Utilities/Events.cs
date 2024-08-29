@@ -500,7 +500,6 @@ namespace Bahtinov_Collimator
                 Direction = direction;
             }
         }
-
-        #endregion
     }
+    #endregion
 }
