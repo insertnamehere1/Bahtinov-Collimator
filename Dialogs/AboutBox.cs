@@ -2,6 +2,7 @@
 using System.Deployment.Application;
 using System.Drawing;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -153,6 +154,26 @@ namespace Bahtinov_Collimator
         private void okButton_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        /// <summary>
+        /// Handles the Load event of the form. Increases the font size of the form and its controls.
+        /// </summary>
+        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            float increasedSize = this.Font.Size + 2.0f;
+            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
+
+            // Adjust fonts
+            this.Font = newFont;
+            this.labelProductName.Font = new Font(this.Font.FontFamily, this.Font.Size + 3.0f, this.Font.Style);
+            this.labelVersion.Font = newFont;
+            this.labelCopyright.Font = newFont;
+            this.labelCompanyName.Font = newFont;
+            this.textBoxDescription.Font = newFont;
         }
 
         #endregion
