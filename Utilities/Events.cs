@@ -62,9 +62,6 @@ namespace Bahtinov_Collimator
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
 
-            if (data.Length != channelCount)
-                throw new ArgumentException("The length of data array must match the channel count.", nameof(channelCount));
-
             ChannelSelected = data;
             ChannelCount = channelCount;
         }
