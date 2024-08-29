@@ -32,6 +32,8 @@ using Bahtinov_Collimator.AdjustAssistant;
 using Bahtinov_Collimator.Voice;
 using Bahtinov_Collimator.Image_Processing;
 using Bahtinov_Collimator.Custom_Components;
+using System.Diagnostics;
+using System.IO;
 
 namespace Bahtinov_Collimator
 {
@@ -517,7 +519,22 @@ namespace Bahtinov_Collimator
         /// <param name="e">The event data.</param>
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DarkMessageBox.Show("Not yet implemented", "Help", MessageBoxIcon.Asterisk, MessageBoxButtons.OK, this);
+            try
+            {
+                // Extract the PDF from resources and save it to a temporary location
+                string tempPath = Path.Combine(Path.GetTempPath(), "help.pdf");
+
+                // Write the embedded PDF file to the temporary location
+                File.WriteAllBytes(tempPath, Properties.Resources.help);
+
+                // Open the PDF file with the default PDF viewer
+                Process.Start(tempPath);
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions if the file cannot be opened
+                MessageBox.Show("Unable to open the help file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>

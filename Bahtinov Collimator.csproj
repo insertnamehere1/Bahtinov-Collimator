@@ -266,6 +266,7 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Bahtinov Collimator_TemporaryKey.pfx" />
+    <None Include="Properties\help.pdf" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
@@ -277,6 +278,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\help.pdf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
