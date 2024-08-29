@@ -2,17 +2,23 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace Bahtinov_Collimator
 {
     public partial class Settings : Form
     {
+        #region DLL Imports
+
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
-        // Constants
+        #endregion
+
+        #region Constants
+
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
+
+        #endregion
 
         #region Constructor
 
@@ -30,6 +36,10 @@ namespace Bahtinov_Collimator
 
         #region Methods
 
+        /// <summary>
+        /// Handles the Load event of the form. Increases the font size of the form and its controls.
+        /// </summary>
+        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -39,31 +49,31 @@ namespace Bahtinov_Collimator
 
             // Adjust fonts
             this.Font = newFont;
-
-            this.Font = newFont;
-            this.groupBox1.Font = newFont;
-            this.groupBox2.Font = newFont;
-            this.label1.Font = newFont;
-            this.label2.Font = newFont;
-            this.label3.Font = newFont;
-            this.label4.Font = newFont;
-            this.label5.Font = newFont;
-            this.label6.Font = newFont;
-            this.label7.Font = newFont;
-            this.label8.Font = newFont;
-            this.label9.Font = newFont;
-            this.label10.Font = newFont;
-            this.ApertureTextBox.Font = newFont;
-            this.PixelSizeTextBox.Font = newFont;
-            this.FocalLengthTextBox.Font = newFont;
-            this.CancelSettingsButton.Font = newFont;
-            this.okButton.Font = newFont;
+            groupBox1.Font = newFont;
+            groupBox2.Font = newFont;
+            label1.Font = newFont;
+            label2.Font = newFont;
+            label3.Font = newFont;
+            label4.Font = newFont;
+            label5.Font = newFont;
+            label6.Font = newFont;
+            label7.Font = newFont;
+            label8.Font = newFont;
+            label9.Font = newFont;
+            label10.Font = newFont;
+            ApertureTextBox.Font = newFont;
+            PixelSizeTextBox.Font = newFont;
+            FocalLengthTextBox.Font = newFont;
+            CancelSettingsButton.Font = newFont;
+            okButton.Font = newFont;
         }
 
-
+        /// <summary>
+        /// Sets the color scheme of the form and its controls.
+        /// </summary>
         private void SetColorScheme()
         {
-            // main form
+            // Main form
             this.ForeColor = UITheme.DarkForeground;
             this.BackColor = UITheme.DarkBackground;
 
@@ -77,7 +87,7 @@ namespace Bahtinov_Collimator
             CancelSettingsButton.ForeColor = UITheme.ButtonDarkForeground;
             CancelSettingsButton.FlatStyle = FlatStyle.Popup;
 
-            // Titlebar
+            // Title bar
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
@@ -91,6 +101,10 @@ namespace Bahtinov_Collimator
             ChangeTextBoxColors(groupBox2);
         }
 
+        /// <summary>
+        /// Changes the background and foreground colors of TextBox controls within a parent control.
+        /// </summary>
+        /// <param name="parent">The parent control containing the TextBox controls.</param>
         private void ChangeTextBoxColors(Control parent)
         {
             foreach (Control control in parent.Controls)
@@ -100,11 +114,15 @@ namespace Bahtinov_Collimator
                     textBox.ForeColor = UITheme.TextBoxForeground;
                     textBox.BackColor = UITheme.TextBoxBackground;
                     textBox.BorderStyle = BorderStyle.None;
-
                 }
             }
         }
 
+        /// <summary>
+        /// Changes the foreground color of Label controls within a parent control.
+        /// </summary>
+        /// <param name="parent">The parent control containing the Label controls.</param>
+        /// <param name="color">The color to set for the labels' foreground.</param>
         private void ChangeLabelColors(Control parent, Color color)
         {
             foreach (Control control in parent.Controls)
