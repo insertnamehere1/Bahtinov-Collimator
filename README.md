@@ -1,5 +1,5 @@
 # Bahtinov Collimator
-[View the documentation]([(https://github.com/insertnamehere1/Bahtinov-Collimator/blob/devV3/Resources/help.pdf)])
+[View the documentation](https://github.com/insertnamehere1/Bahtinov-Collimator/blob/devV3/Resources/help.pdf)
 
 
 
