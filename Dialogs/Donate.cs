@@ -10,12 +10,18 @@ namespace Bahtinov_Collimator
 {
     public partial class Donate : Form
     {
+        #region DLL Imports
 
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
-        // Constants
+        #endregion
+
+        #region Constants
+
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
+
+        #endregion
 
         #region Constructor
 
@@ -36,13 +42,17 @@ namespace Bahtinov_Collimator
 
         #region Methods
 
+        /// <summary>
+        /// Handles the Load event of the form. Increases the font size of the form and its controls.
+        /// </summary>
+        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
             float increasedSize = this.Font.Size + 2.0f;
             Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
-            
+
             // Adjust fonts
             this.Font = newFont;
             richTextBox.Font = newFont;
@@ -51,13 +61,16 @@ namespace Bahtinov_Collimator
             cancelButton.Font = newFont;
         }
 
+        /// <summary>
+        /// Sets the color scheme of the form and its controls.
+        /// </summary>
         private void SetColorScheme()
         {
-            // main form
+            // Main form
             this.ForeColor = UITheme.DarkForeground;
             this.BackColor = UITheme.DarkBackground;
 
-            // OK button
+            // Donate button
             donateButton.BackColor = UITheme.ButtonDarkBackground;
             donateButton.ForeColor = UITheme.ButtonDarkForeground;
             donateButton.FlatStyle = FlatStyle.Popup;
@@ -67,7 +80,7 @@ namespace Bahtinov_Collimator
             cancelButton.ForeColor = UITheme.ButtonDarkForeground;
             cancelButton.FlatStyle = FlatStyle.Popup;
 
-            // Titlebar
+            // Title bar
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
