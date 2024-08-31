@@ -119,6 +119,9 @@ namespace Bahtinov_Collimator.Image_Processing
         /// <returns>A tuple containing the center point and radius of the circle.</returns>
         private (PointD centre, double radius) CalculateAverageRadius(Bitmap image, double centerX, double centerY, bool isInnerRadius)
         {
+            int width = image.Width;
+            int height = image.Height;
+
             int maxRadius = Math.Min(image.Width, image.Height) / 2;
             int radiusSum = 0;
             int transitionCount = 0;
@@ -136,11 +139,11 @@ namespace Bahtinov_Collimator.Image_Processing
             }
 
             // Lock the bitmap for faster pixel access
-            BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, image.PixelFormat);
+            BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, image.PixelFormat);
             int bytesPerPixel = Image.GetPixelFormatSize(image.PixelFormat) / 8;
             int stride = bitmapData.Stride;
             IntPtr scan0 = bitmapData.Scan0;
-            byte[] pixels = new byte[stride * image.Height];
+            byte[] pixels = new byte[stride * height];
             System.Runtime.InteropServices.Marshal.Copy(scan0, pixels, 0, pixels.Length);
 
             for (int angle = 0; angle < 360; angle++)
@@ -157,9 +160,10 @@ namespace Bahtinov_Collimator.Image_Processing
                     double x = centerX + (r * cosValues[angle]);
                     double y = centerY + (r * sinValues[angle]);
 
-                    if (x >= 0 && x < image.Width && y >= 0 && y < image.Height)
+                    if (x >= 0 && x < width && y >= 0 && y < height)
                     {
                         int pixelIndex = (int)(y) * stride + (int)(x) * bytesPerPixel;
+       
                         double brightness = GetBrightness(pixels[pixelIndex + 2], pixels[pixelIndex + 1], pixels[pixelIndex]); // assuming RGB format
 
                         if (brightness != 0)
@@ -177,7 +181,7 @@ namespace Bahtinov_Collimator.Image_Processing
                     double x = centerX + (r * cosValues[angle]);
                     double y = centerY + (r * sinValues[angle]);
 
-                    if (x >= 0 && x < image.Width && y >= 0 && y < image.Height)
+                    if (x >= 0 && x < width && y >= 0 && y < height)
                     {
                         int pixelIndex = (int)(y) * stride + (int)(x) * bytesPerPixel;
                         double brightness = GetBrightness(pixels[pixelIndex + 2], pixels[pixelIndex + 1], pixels[pixelIndex]);

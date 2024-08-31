@@ -138,7 +138,7 @@ namespace Bahtinov_Collimator
                 // Fill the entire image with black before drawing
                 g.Clear(Color.Black);
 
-                if (TrackingType == 1)
+                if (TrackingType == 1) // bahtinov style image
                 {
                     // Get offset for the brightest area
                     Point offset = FindBrightestAreaCentroid(latestImage);
@@ -153,7 +153,7 @@ namespace Bahtinov_Collimator
                     // Apply translation transformation to the Graphics object
                     g.TranslateTransform(delta_X, delta_Y);
                 }
-                else if (TrackingType == 2) 
+                else if (TrackingType == 2) // defocus style image
                 {
                     // Get offset for the inner circle
                     Point offset = FindInnerCircleOffset(latestImage);
@@ -162,7 +162,7 @@ namespace Bahtinov_Collimator
                     scaledSelectedStarBox.Offset(offset.X, offset.Y);
 
                     // Apply translation transformation to the Graphics object
-                    g.TranslateTransform(offset.X, offset.Y);
+                    g.TranslateTransform(-offset.X, -offset.Y);
                 }
 
                 // Calculate the center position
@@ -171,6 +171,7 @@ namespace Bahtinov_Collimator
 
                 // Draw the image at the calculated position
                 g.DrawImage(latestImage, x, y);
+                g.ResetTransform();
 
                 Bitmap circularImage = updatedImage;
                 
@@ -214,10 +215,13 @@ namespace Bahtinov_Collimator
         /// <returns>A <see cref="Point"/> representing the estimated center of the inner circle within the image.</returns>
         private static Point FindInnerCircleOffset(Bitmap image)
         {
-            double centerX = image.Width / 2;
-            double centerY = image.Height / 2;
+            int width = image.Width;
+            int height = image.Height;
 
-            int maxRadius = Math.Min(image.Width, image.Height) / 2;
+            double centerX = width / 2;
+            double centerY = height / 2;
+
+            int maxRadius = Math.Min(width, height) / 2;
             int transitionCount = 0;
             double transitionXSum = 0;
             double transitionYSum = 0;
@@ -233,11 +237,11 @@ namespace Bahtinov_Collimator
             }
 
             // Lock the bitmap for faster pixel access
-            BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, image.PixelFormat);
+            BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, image.PixelFormat);
             int bytesPerPixel = Image.GetPixelFormatSize(image.PixelFormat) / 8;
             int stride = bitmapData.Stride;
             IntPtr scan0 = bitmapData.Scan0;
-            byte[] pixels = new byte[stride * image.Height];
+            byte[] pixels = new byte[stride * height];
 
             System.Runtime.InteropServices.Marshal.Copy(scan0, pixels, 0, pixels.Length);
 
@@ -255,7 +259,7 @@ namespace Bahtinov_Collimator
                     double x = centerX + (r * cosValues[angle]);
                     double y = centerY + (r * sinValues[angle]);
 
-                    if (x >= 0 && x < image.Width && y >= 0 && y < image.Height)
+                    if (x >= 0 && x < width && y >= 0 && y < height)
                     {
                         int pixelIndex = (int)(y) * stride + (int)(x) * bytesPerPixel;
                         double brightness = GetBrightness(pixels[pixelIndex + 2], pixels[pixelIndex + 1], pixels[pixelIndex]); // assuming RGB format
@@ -275,7 +279,7 @@ namespace Bahtinov_Collimator
                     double x = centerX + (r * cosValues[angle]);
                     double y = centerY + (r * sinValues[angle]);
 
-                    if (x >= 0 && x < image.Width && y >= 0 && y < image.Height)
+                    if (x >= 0 && x < width && y >= 0 && y < height)
                     {
                         int pixelIndex = (int)(y) * stride + (int)(x) * bytesPerPixel;
                         double brightness = GetBrightness(pixels[pixelIndex + 2], pixels[pixelIndex + 1], pixels[pixelIndex]);
@@ -300,7 +304,7 @@ namespace Bahtinov_Collimator
             double circleX = transitionXSum / (transitionCount / 2);
             double circleY = transitionYSum / (transitionCount / 2);
 
-            return new Point((int)circleX, (int)circleY);
+            return new Point((int)Math.Round(circleX), (int)Math.Round(circleY));
         }
 
         /// <summary>
@@ -642,10 +646,10 @@ namespace Bahtinov_Collimator
             }
 
             // Calculate centroid
-            int centroidX = (int)(sumX / count);
-            int centroidY = (int)(sumY / count);
+            double centroidX = sumX / count;
+            double centroidY = sumY / count;
 
-            return new Point(centroidX, centroidY);
+            return new Point((int)Math.Round(centroidX), (int)Math.Round(centroidY));
         }
         #endregion
     }
