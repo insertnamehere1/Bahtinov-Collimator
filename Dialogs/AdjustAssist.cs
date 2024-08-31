@@ -366,8 +366,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
             Image originalImage = Properties.Resources.arrow;
 
             // Scale the arrow size based on DPI settings
-            float scaleFactor = 1f / UITheme.DpiScaleX;
-            Size imageSize = new Size((int)(65 * scaleFactor), (int)(35 * scaleFactor));
+            Size imageSize = new Size(65, 35);
 
             // Calculate the top-left corner of the image based on the center coordinates
             int imageX = centerX - imageSize.Width / 2;

@@ -52,6 +52,26 @@ namespace Bahtinov_Collimator
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
+        /// <summary>
+        /// Retrieves a handle to the display monitor that is closest to the specified window.
+        /// </summary>
+        /// <param name="hwnd">A handle to the window of interest.</param>
+        /// <param name="dwFlags">Determines the return value if the window does not intersect any display monitor. Use MONITOR_DEFAULTTONEAREST to get the handle to the monitor closest to the window.</param>
+        /// <returns>A handle to the monitor closest to the specified window.</returns>
+        [DllImport("user32.dll")]
+        private static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
+
+        /// <summary>
+        /// Retrieves the DPI (Dots Per Inch) for a specified monitor.
+        /// </summary>
+        /// <param name="hmonitor">A handle to the monitor of interest.</param>
+        /// <param name="dpiType">The DPI type to retrieve. Use MDT_EFFECTIVE_DPI to get the effective DPI for scaling.</param>
+        /// <param name="dpiX">Outputs the DPI value for the X (horizontal) dimension of the monitor.</param>
+        /// <param name="dpiY">Outputs the DPI value for the Y (vertical) dimension of the monitor.</param>
+        /// <returns>An HRESULT indicating success or failure.</returns>
+        [DllImport("shcore.dll")]
+        private static extern int GetDpiForMonitor(IntPtr hmonitor, int dpiType, out uint dpiX, out uint dpiY);
+  
         #endregion
 
         #region Constants
@@ -60,6 +80,18 @@ namespace Bahtinov_Collimator
         /// Specifies the attribute for enabling or disabling immersive dark mode for a window using the Desktop Window Manager (DWM) API.
         /// </summary>
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
+        
+        /// <summary>
+        /// Flag that specifies the function should return the handle to the monitor closest to a specified window.
+        /// Used with the MonitorFromWindow function.
+        /// </summary>
+        private const uint MONITOR_DEFAULTTONEAREST = 2;
+
+        /// <summary>
+        /// Specifies that the effective DPI (Dots Per Inch) of a monitor should be retrieved.
+        /// Used with the GetDpiForMonitor function.
+        /// </summary>
+        private const int MDT_EFFECTIVE_DPI = 0;
 
         #endregion
 
@@ -116,17 +148,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         private VoiceControl voiceControl;
 
-        // DPI Scaling
-        /// <summary>
-        /// The horizontal scaling factor for DPI awareness.
-        /// </summary>
-        private float scaleX = 1;
-
-        /// <summary>
-        /// The vertical scaling factor for DPI awareness.
-        /// </summary>
-        private float scaleY = 1;
-
         // Image Type
         /// <summary>
         /// Specifies the type of image currently being processed:
@@ -156,7 +177,18 @@ namespace Bahtinov_Collimator
         /// Initializes a new instance of the <see cref="Form1"/> class.
         /// </summary>
         public Form1()
-        {
+        {   
+            // Get the monitor handle where the window is located
+            IntPtr hMonitor = MonitorFromWindow(this.Handle, MONITOR_DEFAULTTONEAREST);
+
+            // Retrieve the DPI of the target window
+            uint dpiX, dpiY;
+            GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, out dpiX, out dpiY);
+
+            // Convert DPI to scaling factor
+            float scaleX = dpiX / 96.0f;  // 96 DPI is considered 100% scaling
+            float scaleY = dpiY / 96.0f;
+
             // Set the form to not automatically scale based on its container.
             this.AutoScaleMode = AutoScaleMode.None;
 

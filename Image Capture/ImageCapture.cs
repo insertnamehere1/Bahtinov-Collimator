@@ -9,7 +9,6 @@ namespace Bahtinov_Collimator
 {
     internal class ImageCapture
     {
-
         #region External Methods
         /// <summary>
         /// Retrieves the dimensions of the window specified by the given handle.
@@ -64,11 +63,11 @@ namespace Bahtinov_Collimator
         private static Timer captureTimer;
         private static Rectangle captureRectangle;
         private static IntPtr targetWindowHandle;
-        private static Rectangle selectedStarBox;
-
+        private static Rectangle scaledSelectedStarBox;
         private static string previousImageHash = null;
         private static bool newHashFound = false;
         private static string firstHash = "";
+        private static Rectangle selectedStarBox;
         #endregion
 
         #region Public Fields
@@ -148,8 +147,8 @@ namespace Bahtinov_Collimator
                     int delta_X = (latestImage.Width / 2) - offset.X;
                     int delta_Y = (latestImage.Height / 2) - offset.Y;
 
-                    // Update selectedStarBox with new position
-                    selectedStarBox.Offset(-delta_X, -delta_Y);
+                    // Update scaledSelectedStarBox with new position
+                    scaledSelectedStarBox.Offset(-delta_X, -delta_Y);
 
                     // Apply translation transformation to the Graphics object
                     g.TranslateTransform(delta_X, delta_Y);
@@ -159,8 +158,8 @@ namespace Bahtinov_Collimator
                     // Get offset for the inner circle
                     Point offset = FindInnerCircleOffset(latestImage);
 
-                    // Update selectedStarBox with new position
-                    selectedStarBox.Offset(offset.X, offset.Y);
+                    // Update scaledSelectedStarBox with new position
+                    scaledSelectedStarBox.Offset(offset.X, offset.Y);
 
                     // Apply translation transformation to the Graphics object
                     g.TranslateTransform(offset.X, offset.Y);
@@ -323,7 +322,7 @@ namespace Bahtinov_Collimator
         /// <returns>A <see cref="Bitmap"/> representing the original image cropped into a circular shape. Returns null if the selection area is too small.</returns>
         private static Bitmap CreateCircularImage(Bitmap originalImage)
         {
-            int diameter = Math.Min(selectedStarBox.Width, selectedStarBox.Height);
+            int diameter = Math.Min(scaledSelectedStarBox.Width, scaledSelectedStarBox.Height);
 
             if (diameter == 0)
             {
@@ -360,6 +359,13 @@ namespace Bahtinov_Collimator
                 if (overlay.ShowDialog() == DialogResult.OK)
                 {
                     selectedStarBox = overlay.SelectedArea;
+
+                    // scale to DPI 
+                    scaledSelectedStarBox = new Rectangle((int)(selectedStarBox.X / UITheme.DpiScaleX),
+                                                          (int)(selectedStarBox.Y / UITheme.DpiScaleY),
+                                                          (int)(selectedStarBox.Width / UITheme.DpiScaleX),
+                                                          (int)(selectedStarBox.Height / UITheme.DpiScaleY));
+
                     targetWindowHandle = WindowFromPoint(new Point(
                         selectedStarBox.Left + selectedStarBox.Width / 2,
                         selectedStarBox.Top + selectedStarBox.Height / 2
@@ -374,7 +380,7 @@ namespace Bahtinov_Collimator
                     if (GetWindowRect(targetWindowHandle, out Utilities.RECT rect))
                     {
                         // Adjust the selected area to be relative to the window's coordinates
-                        selectedStarBox.Offset(-rect.Left, -rect.Top);
+                        scaledSelectedStarBox.Offset((int)(-rect.Left / UITheme.DpiScaleY),(int)( -rect.Top / UITheme.DpiScaleX));
                         return true;
                     }
                 }
@@ -390,37 +396,39 @@ namespace Bahtinov_Collimator
         /// <returns>A <see cref="Bitmap"/> representing the selected area of the target window. Returns null if there are issues with image capture or if the selection area is invalid.</returns>
         private static Bitmap GetImage()
         {
+            // Get the window rectangle
             if (!GetWindowRect(targetWindowHandle, out Utilities.RECT rect))
             {
                 ImageLostEventProvider.OnImageLost("Image has been lost", "GetImage", MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return null;
             }
 
-            int windowWidth = rect.Right - rect.Left;
-            int windowHeight = rect.Bottom - rect.Top;
+            // Convert window dimensions to logical pixels
+            int windowWidth = (int)((rect.Right - rect.Left));
+            int windowHeight = (int)((rect.Bottom - rect.Top));
 
-            // Adjust selectedStarBox to be within the bounds of the window
-            selectedStarBox.X = Math.Max(selectedStarBox.X, 0);
-            selectedStarBox.Y = Math.Max(selectedStarBox.Y, 0);
-            selectedStarBox.Width = Math.Min(selectedStarBox.Width, windowWidth - selectedStarBox.X);
-            selectedStarBox.Height = Math.Min(selectedStarBox.Height, windowHeight - selectedStarBox.Y);
+            // Adjust scaledSelectedStarBox to be within the bounds of the window
+            scaledSelectedStarBox.X = Math.Max(scaledSelectedStarBox.X, 0);
+            scaledSelectedStarBox.Y = Math.Max(scaledSelectedStarBox.Y , 0);
+            scaledSelectedStarBox.Width = Math.Min(scaledSelectedStarBox.Width, windowWidth - scaledSelectedStarBox.X);
+            scaledSelectedStarBox.Height = Math.Min(scaledSelectedStarBox.Height, windowHeight - scaledSelectedStarBox.Y);
 
-            // Check if selectedStarBox exceeds UITheme.DisplayWindow.X and Y, and adjust if necessary
-            if (selectedStarBox.Width > UITheme.DisplayWindow.X || selectedStarBox.Height > UITheme.DisplayWindow.Y)
+            // Check if scaledSelectedStarBox exceeds UITheme.DisplayWindow.X and Y, and adjust if necessary
+            if (scaledSelectedStarBox.Width > UITheme.DisplayWindow.X || scaledSelectedStarBox.Height > UITheme.DisplayWindow.Y)
             {
                 // Calculate the excess width and height
-                int excessWidth = selectedStarBox.Width - UITheme.DisplayWindow.X;
-                int excessHeight = selectedStarBox.Height - UITheme.DisplayWindow.Y;
+                int excessWidth = scaledSelectedStarBox.Width - UITheme.DisplayWindow.X;
+                int excessHeight = scaledSelectedStarBox.Height - UITheme.DisplayWindow.Y;
 
                 // Adjust equally on all sides
-                selectedStarBox.X += excessWidth / 2;
-                selectedStarBox.Y += excessHeight / 2;
-                selectedStarBox.Width -= excessWidth;
-                selectedStarBox.Height -= excessHeight;
+                scaledSelectedStarBox.X += excessWidth / 2;
+                scaledSelectedStarBox.Y += excessHeight / 2;
+                scaledSelectedStarBox.Width -= excessWidth;
+                scaledSelectedStarBox.Height -= excessHeight;
             }
 
             // Ensure the selected rectangle is valid
-            if (selectedStarBox.Width <= 0 || selectedStarBox.Height <= 0)
+            if (scaledSelectedStarBox.Width <= 0 || scaledSelectedStarBox.Height <= 0)
             {
                 ImageLostEventProvider.OnImageLost("The selection area is too small.", "GetImage", MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return null;
@@ -436,7 +444,7 @@ namespace Bahtinov_Collimator
                         return null;
                     }
 
-                    return fullWindowBitmap.Clone(selectedStarBox, fullWindowBitmap.PixelFormat);
+                    return fullWindowBitmap.Clone(scaledSelectedStarBox, fullWindowBitmap.PixelFormat);
                 }
             }
             catch

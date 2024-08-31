@@ -279,8 +279,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         public BahtinovData FindSubpixelLines(Bitmap starImage, int lineCount, BahtinovData bahtinovLines)
         {
-            float dpiScale = UITheme.DpiScaleX;
-
             // Define the full rectangle of the image.
             Rectangle rect = new Rectangle(0, 0, starImage.Width, starImage.Height);
 
@@ -299,7 +297,7 @@ namespace Bahtinov_Collimator
             int height = starImage.Height;
 
             // Apply DPI scaling to the edgeOffset
-            float edgeOffset = ((width < height ? width : height) * 0.707f - 8f) * dpiScale;
+            float edgeOffset = ((width < height ? width : height) * 0.707f - 8f);
 
             // Calculate bounding box edges with scaling.
             int leftEdge = (int)(0.5f * (width - edgeOffset));

@@ -182,18 +182,7 @@ namespace Bahtinov_Collimator
 
         #endregion
 
-        #region Scaling Values
-
-        /// <summary>
-        /// Gets or sets the DPI scale factor in the X direction.
-        /// </summary>
-        public static float DpiScaleX { get; private set; } = 1.0f;
-
-        /// <summary>
-        /// Gets or sets the DPI scale factor in the Y direction.
-        /// </summary>
-        public static float DpiScaleY { get; private set; } = 1.0f;
-
+        #region Adjust Assist Theme
         /// <summary>
         /// Gets the color used for the high state of the adjustment assist knob.
         /// </summary>
@@ -209,8 +198,20 @@ namespace Bahtinov_Collimator
         /// </summary>
         public static Color AdjustAssistTextColor { get; } = Color.Black;
 
+        #endregion
 
+        #region Scaling
 
+        /// <summary>
+        /// The horizontal scaling factor for DPI (Dots Per Inch) adjustments.
+        /// </summary>
+        public static float DpiScaleX { get; private set; } = 1;
+
+        /// <summary>
+        /// The vertical scaling factor for DPI (Dots Per Inch) adjustments.
+        /// </summary>
+        public static float DpiScaleY { get; private set; } = 1;
+        
         #endregion
 
         #region Dictionaries
@@ -284,11 +285,12 @@ namespace Bahtinov_Collimator
         /// <param name="scaleY">The DPI scale factor in the Y direction.</param>
         public static void Initialize(float scaleX, float scaleY)
         {
+            // Set window size
+            DisplayWindow = new Point(600, 600);
+
+            // set scaling correction value
             DpiScaleX = scaleX;
             DpiScaleY = scaleY;
-
-            // Set window size
-            DisplayWindow = new Point((int)(600 / scaleX), (int)(600 / scaleY));
         }
 
         /// <summary>
