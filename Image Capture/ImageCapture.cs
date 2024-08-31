@@ -192,7 +192,9 @@ namespace Bahtinov_Collimator
             }
             catch(Exception er)
             {
-                DarkMessageBox.Show("Invalid image selection", "Capture Timer", MessageBoxIcon.Information, MessageBoxButtons.OK);
+                if(captureTimer != null)
+                    DarkMessageBox.Show("Invalid image selection", "Capture Timer", MessageBoxIcon.Information, MessageBoxButtons.OK);
+
                 return;
             }
             finally
