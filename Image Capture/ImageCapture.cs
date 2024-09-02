@@ -150,8 +150,18 @@ namespace Bahtinov_Collimator
                 }
                 else if (TrackingType == 2) // defocus style image
                 {
-                    // Get offset for the inner circle
-                    Point offset = FindInnerCircleOffset(latestImage);
+                    Point offset;
+
+                    try
+                    {
+                        // Get offset for the inner circle
+                        offset = FindInnerCircleOffset(latestImage);
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        ImageLostEventProvider.OnImageLost("Unable to detect Defocus Image", "Circle Offset", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                        return;
+                    }
 
                     // Update selectedStarBox with new position
                     selectedStarBox.Offset(offset.X, offset.Y);
@@ -281,8 +291,8 @@ namespace Bahtinov_Collimator
             // Unlock the bitmap
             image.UnlockBits(bitmapData);
 
-            if(transitionXSum == 0 || transitionYSum == 0)
-                ImageLostEventProvider.OnImageLost("Unable to detect Defocus Image", "Circle Offset", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+            if (transitionXSum == 0 || transitionYSum == 0)
+                throw new InvalidOperationException("No valid transitions detected in the image.");
 
             double circleX = transitionXSum / (transitionCount / 2);
             double circleY = transitionYSum / (transitionCount / 2);
