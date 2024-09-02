@@ -135,17 +135,17 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the transparency level for the selection background.
         /// </summary>
-        public static float SelectionBackgroundTransparency { get; } = 0.5f;
+        public static float SelectionBackgroundTransparency { get; } = 0.6f;
 
         /// <summary>
         /// Gets the fill color for selection circles.
         /// </summary>
-        public static Color SelectionCircleInfill { get; } = Color.FromArgb(237, 78, 78);
+        public static Color SelectionCircleInfill { get; } = Color.FromArgb(247, 69, 96);
 
         /// <summary>
         /// Gets the border color for selection circles.
         /// </summary>
-        public static Color SelectionCircleBoarder { get; } = Color.DarkBlue;
+        public static Color SelectionCircleBoarder { get; } = Color.Red;
 
         /// <summary>
         /// Gets the border width for selection circles.
