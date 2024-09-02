@@ -178,22 +178,8 @@ namespace Bahtinov_Collimator
         /// </summary>
         public Form1()
         {   
-            // Get the monitor handle where the window is located
-            IntPtr hMonitor = MonitorFromWindow(this.Handle, MONITOR_DEFAULTTONEAREST);
-
-            // Retrieve the DPI of the target window
-            uint dpiX, dpiY;
-            GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, out dpiX, out dpiY);
-
-            // Convert DPI to scaling factor
-            float scaleX = dpiX / 96.0f;  // 96 DPI is considered 100% scaling
-            float scaleY = dpiY / 96.0f;
-
             // Set the form to not automatically scale based on its container.
             this.AutoScaleMode = AutoScaleMode.None;
-
-            // Initialize the UI theme with the current scaling factors.
-            UITheme.Initialize(scaleX, scaleY);
 
             // Disable automatic resizing and set the form to grow and shrink based on its content.
             this.AutoSize = false;

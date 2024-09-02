@@ -200,20 +200,6 @@ namespace Bahtinov_Collimator
 
         #endregion
 
-        #region Scaling
-
-        /// <summary>
-        /// The horizontal scaling factor for DPI (Dots Per Inch) adjustments.
-        /// </summary>
-        public static float DpiScaleX { get; private set; } = 1;
-
-        /// <summary>
-        /// The vertical scaling factor for DPI (Dots Per Inch) adjustments.
-        /// </summary>
-        public static float DpiScaleY { get; private set; } = 1;
-        
-        #endregion
-
         #region Dictionaries
 
         private static readonly Dictionary<int, Color> GroupBoxTextColors;
@@ -277,21 +263,6 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Public Methods
-
-        /// <summary>
-        /// Initializes the DPI scaling and display window size.
-        /// </summary>
-        /// <param name="scaleX">The DPI scale factor in the X direction.</param>
-        /// <param name="scaleY">The DPI scale factor in the Y direction.</param>
-        public static void Initialize(float scaleX, float scaleY)
-        {
-            // Set window size
-            DisplayWindow = new Point(600, 600);
-
-            // set scaling correction value
-            DpiScaleX = scaleX;
-            DpiScaleY = scaleY;
-        }
 
         /// <summary>
         /// Gets the text color for a group box based on the group ID.
