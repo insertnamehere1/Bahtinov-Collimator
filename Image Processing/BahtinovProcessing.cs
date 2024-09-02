@@ -538,12 +538,12 @@ namespace Bahtinov_Collimator
                 }
                 catch
                 {
-                    DarkMessageBox.Show("Invalid Error calculation", "Bahtinov Processing", MessageBoxIcon.Error, MessageBoxButtons.OK);
+                    ImageLostEventProvider.OnImageLost("Invalid Error calculation", "Bahtinov Processing", MessageBoxIcon.Error, MessageBoxButtons.OK);
                     lastFocusErrorValue = 0.0f;
                     return false;
                 }
 
-                double bahtinovOffset = errorSign * errorDistance;
+                double bahtinovOffset = errorSign * Math.Floor(errorDistance * 10) / 10 ;
 
                 float radianPerDegree = (float)Math.PI / 180f;
                 float bahtinovAngle = Math.Abs((bahtinovLines.LineAngles[2] - bahtinovLines.LineAngles[0]) / 2.0f);
@@ -579,7 +579,7 @@ namespace Bahtinov_Collimator
                 int circle_y = (int)(height - errorMarker_Y - circleRadius + yOffset);
                 int circle_width = circleRadius * 2;
                 int circle_height = circleRadius * 2;
-                string errorValue = (errorSign * errorDistance).ToString("F1");
+                string errorValue = (errorSign * (Math.Floor(errorDistance * 10)/10)).ToString("F1");
 
                 lineGroup.ErrorCircle = new BahtinovLineDataEventArgs.ErrorCircle(new Point(circle_x, circle_y), circle_width, circle_height, withinCriticalFocus, errorValue);
 
