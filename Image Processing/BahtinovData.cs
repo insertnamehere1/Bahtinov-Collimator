@@ -79,20 +79,21 @@ namespace Bahtinov_Collimator
         public bool ValidateBahtinovLines()
         {
             bool result = true;
+            int length = lineAngles.Length;
 
-            if (!(lineAngles.Length == 3 || lineAngles.Length == 9))
+            if (!(length == 3 || length == 9))
                 return false;
 
-            for (int i = 0; i < lineAngles.Length; i += 3)
+            for (int i = 0; i < length; i += 3)
             {
                 float line1 = lineAngles[i];
                 float line2 = lineAngles[i + 1];
                 float line3 = lineAngles[i + 2];
 
                 // Check the differences between the lines against the tolerances.
-                result = CheckAngleDifference(line1, line3, 25.0f) &&
-                         CheckAngleDifference(line1, line2, 12.0f) &&
-                         CheckAngleDifference(line2, line3, 12.0f);
+                result = CheckAngleDifference(line1, line3, length == 9 ? 25.0f : 42.0f) &&
+                         CheckAngleDifference(line1, line2, length == 9 ? 12.0f : 22.0f) &&
+                         CheckAngleDifference(line2, line3, length == 9 ? 12.0f : 22.0f);
                 
                 if (result == false)
                     break;
