@@ -479,13 +479,26 @@ namespace Bahtinov_Collimator
         /// <param name="e">The event data containing the error message.</param>
         private void HandleImageLost(object sender, ImageLostEventArgs e)
         {
+            // Stop any image capture and processing
             ImageCapture.StopImageCapture();
             bahtinovProcessing.StopImageProcessing();
             firstPassCompleted = false;
             screenCaptureRunningFlag = false;
-            StartButton.Text = "Select Star";
 
-            DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
+            // Ensure UI updates are performed on the UI thread
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() =>
+                {
+                    StartButton.Text = "Select Star";
+                    DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
+                }));
+            }
+            else
+            {
+                StartButton.Text = "Select Star";
+                DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
+            }
         }
 
         /// <summary>

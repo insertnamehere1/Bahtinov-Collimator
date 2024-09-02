@@ -64,8 +64,6 @@ namespace Bahtinov_Collimator
         private static Rectangle captureRectangle;
         private static IntPtr targetWindowHandle;
         private static Rectangle selectedStarBox;
-        private static string previousImageHash = null;
-        private static bool newHashFound = false;
         private static string firstHash = "";
         #endregion
 
@@ -95,8 +93,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         public static void StopImageCapture()
         {
-            previousImageHash = null;
-            newHashFound = false;
             firstHash = "";
             captureTimer?.Stop();
             captureTimer?.Dispose();
@@ -172,22 +168,8 @@ namespace Bahtinov_Collimator
                 g.DrawImage(latestImage, x, y);
                 g.ResetTransform();
 
-                Bitmap circularImage = updatedImage;
-                
-                // Check if this is a new image
-                string newHash = Utilities.ComputeHash(circularImage);
-
-                if (newHashFound)
-                {
-                    ImageReceivedEvent?.Invoke(null, new ImageReceivedEventArgs(circularImage));
-                    newHashFound = false; // Reset the flag after triggering the event
-                    previousImageHash = newHash;
-                }
-                else if (!newHash.Equals(previousImageHash))
-                {
-                    newHashFound = true; // Set the flag if a new hash is found
-                    previousImageHash = newHash;
-                }
+                // distribut new image
+                ImageReceivedEvent?.Invoke(null, new ImageReceivedEventArgs(updatedImage));
             }
             catch(Exception er)
             {
