@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
@@ -66,6 +67,39 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Validates the Bahtinov mask lines by checking the angular differences 
+        /// between the three lines to ensure they are within specified tolerances.
+        /// </summary>
+        /// <returns>
+        /// Returns <c>true</c> if all sets of line angles satisfy the required 
+        /// conditions; otherwise, returns <c>false</c>.
+        /// </returns>
+        public bool ValidateBahtinovLines()
+        {
+            bool result = true;
+
+            if (!(lineAngles.Length == 3 || lineAngles.Length == 9))
+                return false;
+
+            for (int i = 0; i < lineAngles.Length; i += 3)
+            {
+                float line1 = lineAngles[i];
+                float line2 = lineAngles[i + 1];
+                float line3 = lineAngles[i + 2];
+
+                // Check the differences between the lines against the tolerances.
+                result = CheckAngleDifference(line1, line3, 25.0f) &&
+                         CheckAngleDifference(line1, line2, 12.0f) &&
+                         CheckAngleDifference(line2, line3, 12.0f);
+                
+                if (result == false)
+                    break;
+            }
+
+            return result;
+        }
 
         /// <summary>
         /// Clears the arrays by setting all elements to 0.0f.

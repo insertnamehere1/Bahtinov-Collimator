@@ -708,6 +708,13 @@ namespace Bahtinov_Collimator
                 {
                     bahtinovLineData = bahtinovProcessing.FindBrightestLines(image);
                     bahtinovLineData.Sort();
+
+                    if (screenCaptureRunningFlag == false)
+                        return;
+
+                    // validate the line groups
+                    if (bahtinovLineData.ValidateBahtinovLines() == false)
+                        throw new InvalidOperationException("Invalid Bahtinov line group.");
                 }
 
                 // Perform a second pass to find fine details of Bahtinov lines
@@ -721,19 +728,15 @@ namespace Bahtinov_Collimator
                     UpdateFocusGroup(numberOfLines);
                     firstPassCompleted = true;
                 }
+
+                // Display the detected Bahtinov lines on the image
+                bahtinovProcessing.DisplayLines(bahtinovLineData, image);
             }
             catch (Exception e)
             {
-                // Handle exceptions by stopping image capture and processing, and display an error message
-                ImageCapture.StopImageCapture();
-                bahtinovProcessing.StopImageProcessing();
-                firstPassCompleted = false;
-                DarkMessageBox.Show("Failed Bahtinov line detection", "RunBahtinovDisplay", MessageBoxIcon.Error, MessageBoxButtons.OK, this);
-                imageDisplayComponent1.ClearDisplay();
+                screenCaptureRunningFlag = false;
+                ImageLostEventProvider.OnImageLost("Failed Bahtinov line detection", "RunBahtinovDisplay", MessageBoxIcon.Error, MessageBoxButtons.OK);
             }
-
-            // Display the detected Bahtinov lines on the image
-            bahtinovProcessing.DisplayLines(bahtinovLineData, image);
         }
 
         /// <summary>
