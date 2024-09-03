@@ -23,7 +23,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/master/published/</InstallUrl>
+    <InstallUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/devV3/published/</InstallUrl>
     <UpdateUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/master/published/</UpdateUrl>
     <ProductName>Bahtinov Collimator</ProductName>
     <PublisherName>Chris</PublisherName>
@@ -31,7 +31,7 @@
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>3.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
