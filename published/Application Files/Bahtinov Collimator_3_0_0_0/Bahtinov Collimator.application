@@ -8,20 +8,20 @@
         <expiration maximumAge="0" unit="days" />
       </update>
     </subscription>
-    <deploymentProvider codebase="https://github.com/insertnamehere1/Bahtinov-Collimator/raw/master/published/Bahtinov%20Collimator.application" />
+    <deploymentProvider codebase="https://github.com/insertnamehere1/Bahtinov-Collimator/raw/devV3/published/Bahtinov%20Collimator.application" />
   </deployment>
   <compatibleFrameworks xmlns="urn:schemas-microsoft-com:clickonce.v2">
     <framework targetVersion="4.7.2" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="Application Files\Bahtinov Collimator_3_0_0_0\Bahtinov Collimator.exe.manifest" size="7891">
+    <dependentAssembly dependencyType="install" codebase="Application Files\Bahtinov Collimator_3_0_0_0\Bahtinov Collimator.exe.manifest" size="8377">
       <assemblyIdentity name="Bahtinov Collimator.exe" version="3.0.0.0" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>LLWv6PgOigyxWcj3tO65COgLt7sAOuURRH+vdxo+dh8=</dsig:DigestValue>
+        <dsig:DigestValue>jSoBXWMkYVjnPrbns9gJ1hTBbWAFVSdZEyZWwgMEra4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
