@@ -24,7 +24,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/master/published/</InstallUrl>
-    <UpdateUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/Master/published/</UpdateUrl>
+    <UpdateUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/master/published/</UpdateUrl>
     <ProductName>SkyCal Focus and Collimation Tool</ProductName>
     <PublisherName>Chris Dowd</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
