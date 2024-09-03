@@ -7,7 +7,7 @@
     <ProjectGuid>{39E0141A-A5A6-43A9-A8F6-69DDCE441854}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Bahtinov_Collimator</RootNamespace>
-    <AssemblyName>Bahtinov Collimator</AssemblyName>
+    <AssemblyName>SkyCal Focus and Collimation Tool</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -25,12 +25,12 @@
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/devV3/published/</InstallUrl>
     <UpdateUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/devV3/published/</UpdateUrl>
-    <ProductName>Bahtinov Collimator</ProductName>
-    <PublisherName>Chris</PublisherName>
+    <ProductName>SkyCal Focus and Collimation Tool</ProductName>
+    <PublisherName>Chris Dowd</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationRevision>7</ApplicationRevision>
     <ApplicationVersion>3.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
