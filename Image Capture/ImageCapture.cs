@@ -267,7 +267,7 @@ namespace Bahtinov_Collimator
 
                 double averageLineBrightness = numPoints > 0 ? lineSumBrightness / numPoints : 0.0;
 
-                for (int r = startRadius; r < endRadius; r += step)
+                for (int r = startRadius + 10; r < endRadius; r += step)
                 {
                     double x = centerX + (r * cosValues[angle]);
                     double y = centerY + (r * sinValues[angle]);
