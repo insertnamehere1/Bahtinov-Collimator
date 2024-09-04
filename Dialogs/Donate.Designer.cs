@@ -46,7 +46,7 @@
             this.donateButton.Name = "donateButton";
             this.donateButton.Size = new System.Drawing.Size(100, 28);
             this.donateButton.TabIndex = 0;
-            this.donateButton.Text = "Donate";
+            this.donateButton.Text = "Contribute";
             this.donateButton.UseVisualStyleBackColor = true;
             this.donateButton.Click += new System.EventHandler(this.Button1_Click);
             // 
@@ -57,13 +57,13 @@
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(100, 28);
             this.cancelButton.TabIndex = 2;
-            this.cancelButton.Text = "Cancel";
+            this.cancelButton.Text = "Maybe Later";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.Button2_Click);
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.White;
+            this.pictureBox1.BackColor = System.Drawing.Color.Gray;
             this.pictureBox1.Image = global::Bahtinov_Collimator.Properties.Resources.focusImage;
             this.pictureBox1.Location = new System.Drawing.Point(-1, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
@@ -75,7 +75,7 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.BackColor = System.Drawing.Color.White;
+            this.pictureBox2.BackColor = System.Drawing.Color.Gray;
             this.pictureBox2.Image = global::Bahtinov_Collimator.Properties.Resources.paypal;
             this.pictureBox2.Location = new System.Drawing.Point(16, 19);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(4);

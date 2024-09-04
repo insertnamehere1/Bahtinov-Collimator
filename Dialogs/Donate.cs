@@ -3,8 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Bahtinov_Collimator
 {
@@ -33,9 +31,6 @@ namespace Bahtinov_Collimator
             InitializeComponent();
             InitializeRichTextBox();
             SetColorScheme();
-
-            this.AutoSize = true;
-            this.AutoScaleMode = AutoScaleMode.Dpi;
         }
 
         #endregion
