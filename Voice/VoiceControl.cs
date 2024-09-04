@@ -18,6 +18,7 @@ namespace Bahtinov_Collimator.Voice
         private bool voiceEnabled;
         private int channelPlaying = -1;
         private int newSpeechRate = 0;
+        private Dictionary<int, double> lastPlayedValues = new Dictionary<int, double>();
 
         #endregion
 
@@ -46,10 +47,13 @@ namespace Bahtinov_Collimator.Voice
         #region Methods
 
         /// <summary>
-        /// Handles focus data events to update the error values and play the focus value if necessary.
+        /// Handles the focus data event by updating the error values for the specified group. 
+        /// If the value for the currently playing channel has changed since the last call, 
+        /// the new value is played and announced. 
         /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="e">The event data containing focus data.</param>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">A <see cref="FocusDataEventArgs"/> object that contains the event data, 
+        /// including the focus value (Bahtinov offset) and group identifier.</param>
         public void FocusDataEvent(object sender, FocusDataEventArgs e)
         {
             double focusValue = e.FocusData.BahtinovOffset;
@@ -58,15 +62,26 @@ namespace Bahtinov_Collimator.Voice
             if (group == -1)
             {
                 errorValues.Clear();
+                lastPlayedValues.Clear(); // Clear the last played values when resetting
             }
             else
             {
                 errorValues[group] = focusValue;
 
-                // If the current channel is the one that was updated, announce the new value
+                // If the current channel is the one that was updated, check if the value has changed
                 if (channelPlaying != -1 && errorValues.ContainsKey(channelPlaying))
                 {
-                    Play(errorValues[channelPlaying].ToString("F1"), 2);
+                    double currentValue = errorValues[channelPlaying];
+
+                    // Check if the value has changed since the last time it was played
+                    if (!lastPlayedValues.ContainsKey(channelPlaying) || lastPlayedValues[channelPlaying] != currentValue)
+                    {
+                        Play(RemoveLeading0(currentValue), 2);
+                        Console.WriteLine(currentValue.ToString("F1"));
+
+                        // Update the last played value for the channel
+                        lastPlayedValues[channelPlaying] = currentValue;
+                    }
                 }
             }
         }
@@ -87,10 +102,34 @@ namespace Bahtinov_Collimator.Voice
                 {
                     channelPlaying = i;
                     Play("Channel " + (i + 1), 2);
-                    Play(errorValues[i].ToString("F1"), 2);
+                    Play( RemoveLeading0(errorValues[i]) , 2);
                     break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Converts a double value to a string and removes the leading zero 
+        /// if the value is between -1 and 1 (exclusive).
+        /// </summary>
+        /// <param name="value">The double value to be converted to a string.</param>
+        /// <returns>A string representation of the double value without a leading zero 
+        /// if the value is between -1 and 1 (exclusive), otherwise the standard formatted string.</returns>
+        private string RemoveLeading0(double value)
+        {
+            // Format the number to one decimal place
+            string result = value.ToString("F1");
+
+            // If the value is between -1 and 1 and has a leading zero, remove it
+            if (value > -1 && value < 1)
+            {
+                if (result.StartsWith("0."))
+                    result = result.Substring(1);  // Remove the leading '0' for positive numbers
+                else if (result.StartsWith("-0."))
+                    result = "-" + result.Substring(2); // Remove the leading '0' after the negative sign
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -119,7 +158,7 @@ namespace Bahtinov_Collimator.Voice
                 if (synthesizer.State == SynthesizerState.Ready || synthesizer.State == SynthesizerState.Speaking)
                 {
                     // Enqueue the message if the queue has space
-                    if (messageQueue.Count < 2)
+                    if (messageQueue.Count == 0)
                     {
                         messageQueue.Enqueue((text, speechRate));
                     }
