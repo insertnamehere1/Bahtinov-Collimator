@@ -139,6 +139,7 @@ namespace Bahtinov_Collimator
         private void okButton_Click(object sender, EventArgs e)
         {
             UserResponse = DialogResult.OK;
+            this.DialogResult = DialogResult.Yes;
             this.Close();
         }
 
@@ -150,6 +151,7 @@ namespace Bahtinov_Collimator
         private void cancelButton_Click(object sender, EventArgs e)
         {
             UserResponse = DialogResult.Cancel;
+            this.DialogResult = DialogResult.No;
             this.Close();
         }
 
@@ -205,6 +207,7 @@ namespace Bahtinov_Collimator
                 customMessageBox.StartPosition = FormStartPosition.Manual;
                 customMessageBox.Location = new Point(x, y);
 
+                // Return the DialogResult directly
                 return customMessageBox.ShowDialog(owner);
             }
         }
