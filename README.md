@@ -1,4 +1,4 @@
-# Bahtinov Collimator
+# SkyCal Focus and Collimation Tool
 For detailed documentation, please refer to the [User Manual](https://github.com/insertnamehere1/Bahtinov-Collimator/blob/master/Resources/help.pdf)
 
 
