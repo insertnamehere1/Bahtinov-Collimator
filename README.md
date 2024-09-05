@@ -1,5 +1,5 @@
 # Bahtinov Collimator
-For detailed documentation, please refer to the [User Manual](https://github.com/insertnamehere1/Bahtinov-Collimator/blob/devV3/Resources/help.pdf)
+For detailed documentation, please refer to the [User Manual](https://github.com/insertnamehere1/Bahtinov-Collimator/blob/master/Resources/help.pdf)
 
 
 
