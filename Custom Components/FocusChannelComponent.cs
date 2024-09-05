@@ -108,26 +108,26 @@ namespace Bahtinov_Collimator
             SetLabelText();
         }
 
-
+        /// <summary>
+        /// Sets up the location of various labels in the form. 
+        /// The labels are organized into three columns: first column, second column, and third column.
+        /// </summary>
         private void SetupLabelLocation()
         {
-            // first column
+            // First column: Positioning labels in the first column
             label1.Location = new Point(9, 24);
             label3.Location = new Point(9, 49);
             label5.Location = new Point(9, 74);
 
-            // second column
-            FocusErrorLabel.Location = new Point(123, 24);
+            // Second column: Positioning labels in the second column
+            FocusErrorLabel.Location = new Point(123, 22);
             AbsoluteFocusErrorLabel.Location = new Point(125, 49);
             WithinCriticalFocusLabel.Location = new Point(164, 74);
 
-            // third column
+            // Third column: Positioning labels in the third column
             label2.Location = new Point(160, 24);
             label4.Location = new Point(160, 49);
-
-
         }
-
 
         /// <summary>
         /// Sets the font for all labels.
