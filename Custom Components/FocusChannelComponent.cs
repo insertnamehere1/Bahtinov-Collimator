@@ -120,13 +120,13 @@ namespace Bahtinov_Collimator
             label5.Location = new Point(9, 74);
 
             // Second column: Positioning labels in the second column
-            FocusErrorLabel.Location = new Point(123, 22);
-            AbsoluteFocusErrorLabel.Location = new Point(125, 49);
-            WithinCriticalFocusLabel.Location = new Point(164, 74);
+            FocusErrorLabel.Location = new Point(128, 22);
+            AbsoluteFocusErrorLabel.Location = new Point(130, 49);
+            WithinCriticalFocusLabel.Location = new Point(169, 74);
 
             // Third column: Positioning labels in the third column
-            label2.Location = new Point(160, 24);
-            label4.Location = new Point(160, 49);
+            label2.Location = new Point(165, 24);
+            label4.Location = new Point(165, 49);
         }
 
         /// <summary>
@@ -158,10 +158,16 @@ namespace Bahtinov_Collimator
         {
             foreach (var label in GetAllLabels())
             {
-                label.TextAlign = ContentAlignment.MiddleRight;
+                // Check if the current label is WithinCriticalFocusLabel
+                if (label == WithinCriticalFocusLabel)
+                {
+                    label.TextAlign = ContentAlignment.MiddleLeft;
+                }
+                else
+                {
+                    label.TextAlign = ContentAlignment.MiddleRight;
+                }
             }
-
-            WithinCriticalFocusLabel.TextAlign = ContentAlignment.MiddleLeft;
         }
 
         /// <summary>
