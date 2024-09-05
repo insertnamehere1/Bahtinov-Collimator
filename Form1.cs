@@ -490,12 +490,14 @@ namespace Bahtinov_Collimator
             {
                 Invoke(new Action(() =>
                 {
+                    RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                     StartButton.Text = "Select Star";
                     DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
                 }));
             }
             else
             {
+                RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                 StartButton.Text = "Select Star";
                 DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
             }
