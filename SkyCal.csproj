@@ -31,7 +31,7 @@
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>3.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>3.0.0.2</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -270,6 +270,7 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Bahtinov Collimator_TemporaryKey.pfx" />
+    <None Include="help.pdf" />
     <None Include="Properties\help.pdf" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
@@ -282,7 +283,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Resources\help.pdf" />
+    <Content Include="Resources\help.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="SkyCal_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
