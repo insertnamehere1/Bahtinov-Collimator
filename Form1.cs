@@ -177,7 +177,10 @@ namespace Bahtinov_Collimator
         /// Initializes a new instance of the <see cref="Form1"/> class.
         /// </summary>
         public Form1()
-        {   
+        {
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+            this.UpdateStyles();
+
             // Set the form to not automatically scale based on its container.
             this.AutoScaleMode = AutoScaleMode.None;
 

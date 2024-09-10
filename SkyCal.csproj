@@ -13,6 +13,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>true</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>C:\Users\chris\OneDrive\Documents\Visual Studio 2022\Projects\Astronomy Projects\Bahtinov Collimator\published\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -122,7 +123,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Bahtinov Collimator_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -209,6 +211,12 @@
     <Compile Include="Dialogs\DarkMessageBox.Designer.cs">
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\DebugPictureBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\DebugPictureBox.Designer.cs">
+      <DependentUpon>DebugPictureBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\Helper.cs" />
     <Compile Include="Image Processing\BahtinovProcessing.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -268,8 +276,10 @@
     <EmbeddedResource Include="Dialogs\DarkMessageBox.resx">
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Utilities\DebugPictureBox.resx">
+      <DependentUpon>DebugPictureBox.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.manifest" />
-    <None Include="Bahtinov Collimator_TemporaryKey.pfx" />
     <None Include="help.pdf" />
     <None Include="Properties\help.pdf" />
     <None Include="packages.config" />
@@ -286,7 +296,7 @@
     <Content Include="Resources\help.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="SkyCal_TemporaryKey.pfx" />
+    <None Include="Bahtinov Collimator_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -14,11 +14,11 @@ namespace Bahtinov_Collimator.Voice
 
         private readonly SpeechSynthesizer synthesizer;
         private readonly Queue<(string Text, int Rate)> messageQueue;
-        private Dictionary<int, double> errorValues;
+        private readonly Dictionary<int, double> errorValues;
         private bool voiceEnabled;
         private int channelPlaying = -1;
         private int newSpeechRate = 0;
-        private Dictionary<int, double> lastPlayedValues = new Dictionary<int, double>();
+        private readonly Dictionary<int, double> lastPlayedValues = new Dictionary<int, double>();
 
         #endregion
 

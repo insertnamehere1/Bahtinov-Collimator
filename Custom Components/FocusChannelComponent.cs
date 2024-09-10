@@ -32,6 +32,9 @@ namespace Bahtinov_Collimator
         /// <param name="groupID">The group ID for the component.</param>
         public FocusChannelComponent(int groupID)
         {
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+            this.UpdateStyles();
+
             this.groupID = groupID;
             insideCriticalFocusColor = UITheme.GetGroupBoxTextColor(groupID);
 

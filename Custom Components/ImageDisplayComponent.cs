@@ -23,6 +23,9 @@ namespace Bahtinov_Collimator
         #region Constructor
         public ImageDisplayComponent()
         {
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+            this.UpdateStyles();
+
             InitializeComponent();
             SetupPictureBox();
 
