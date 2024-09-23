@@ -123,13 +123,13 @@ namespace Bahtinov_Collimator
             label5.Location = new Point(9, 74);
 
             // Second column: Positioning labels in the second column
-            FocusErrorLabel.Location = new Point(128, 22);
-            AbsoluteFocusErrorLabel.Location = new Point(130, 49);
+            FocusErrorLabel.Location = new Point(132, 22);
+            AbsoluteFocusErrorLabel.Location = new Point(134, 49);
             WithinCriticalFocusLabel.Location = new Point(169, 74);
 
             // Third column: Positioning labels in the third column
-            label2.Location = new Point(165, 24);
-            label4.Location = new Point(165, 49);
+            label2.Location = new Point(167, 24);
+            label4.Location = new Point(167, 49);
         }
 
         /// <summary>
