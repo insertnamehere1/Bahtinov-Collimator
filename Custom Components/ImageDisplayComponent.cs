@@ -18,11 +18,16 @@ namespace Bahtinov_Collimator
 
         // Index to track the currently selected group
         private int selectedGroup = 0;
+
+        // scalable font for the displayed error values
+        private Font errorFont;
         #endregion
 
         #region Constructor
         public ImageDisplayComponent()
         {
+            this.AutoScaleMode = AutoScaleMode.None;
+
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
 
@@ -62,6 +67,34 @@ namespace Bahtinov_Collimator
         {
             pictureBox1.BackColor = UITheme.DisplayBackgroundColor;
         }
+
+        /// <summary>
+        /// Handles the form's Load event and adjusts the font size based on the current display's DPI.
+        /// This ensures that the font maintains a consistent physical size, regardless of the system's
+        /// scaling settings. It retrieves the current DPI, calculates the appropriate font size by
+        /// comparing it to the standard DPI (96), and then applies the scaled font to the form.
+        /// </summary>
+        /// <param name="e">Event data for the Load event.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            // Get the current DPI of the display
+            using (Graphics g = this.CreateGraphics())
+            {
+                float dpi = g.DpiX; // Horizontal DPI (DpiY can also be used)
+
+                // Set the base font size in points (e.g., 12 points)
+                float baseFontSize = 25.0f;
+
+                // Calculate the font size based on DPI (assuming 96 DPI as standard)
+                float scaledFontSize = baseFontSize * 96f / dpi;
+
+                // Apply the scaled font to the form or controls
+                this.errorFont = new Font(this.Font.FontFamily, scaledFontSize);
+            }
+        }
+
         #endregion
 
         #region Event Handlers
@@ -308,7 +341,6 @@ namespace Bahtinov_Collimator
         /// <param name="group">An instance of <see cref="BahtinovLineDataEventArgs.LineGroup"/> containing the error line data and error circle information.</param>
         private void DrawErrorValueText(Graphics g, BahtinovLineDataEventArgs.LineGroup group)
         {
-            var textFont = UITheme.GetErrorTextFont(group.GroupId);
             var solidBrush = UITheme.GetErrorTextBrush(group.GroupId);
 
             var radius = (UITheme.DisplayWindow.X / 2) - 50;
@@ -321,9 +353,9 @@ namespace Bahtinov_Collimator
             var textLocation = group.GroupId != 1 ? adjustedPoints.end : adjustedPoints.start;
 
             if (group.GroupId == 1)
-                DrawLineWithCenteredText(g, adjustedPoints.start, adjustedPoints.end, group.ErrorCircle.ErrorValue, textFont, solidBrush);
+                DrawLineWithCenteredText(g, adjustedPoints.start, adjustedPoints.end, group.ErrorCircle.ErrorValue, errorFont, solidBrush);
             else
-                DrawLineWithCenteredText(g, adjustedPoints.end, adjustedPoints.start, group.ErrorCircle.ErrorValue, textFont, solidBrush);
+                DrawLineWithCenteredText(g, adjustedPoints.end, adjustedPoints.start, group.ErrorCircle.ErrorValue, errorFont, solidBrush);
         }
 
         /// <summary>

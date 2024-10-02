@@ -21,6 +21,7 @@ namespace Bahtinov_Collimator
         private bool disposed = false; // To detect redundant calls
         private int groupID;
         private Color insideCriticalFocusColor;
+        private Font labelFont;
 
         #endregion
 
@@ -41,13 +42,27 @@ namespace Bahtinov_Collimator
             SetProcessDPIAware();
             InitializeComponent();
 
-            this.AutoScaleMode = AutoScaleMode.Dpi;
+            this.AutoScaleMode = AutoScaleMode.None;
 
-            float increasedSize = this.Font.Size + 1.0f;
-            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
-            this.groupBox1.Font = newFont;
 
-            SetLabelProperties(newFont);
+            // Get the current DPI of the display
+            using (Graphics g = this.CreateGraphics())
+            {
+                float dpi = g.DpiX; // Horizontal DPI (DpiY can also be used)
+
+                // Set the base font size in points (e.g., 12 points)
+                float baseFontSize = 12.0f;
+
+                // Calculate the font size based on DPI (assuming 96 DPI as standard)
+                float scaledFontSize = baseFontSize * 96f / dpi;
+
+                // Apply the scaled font to the form or controls
+                this.labelFont = new Font(this.Font.FontFamily, scaledFontSize);
+            }
+
+            this.groupBox1.Font = labelFont;
+
+            SetLabelProperties(labelFont);
             ApplyTheme();
             SubscribeToEvents();
 
@@ -123,8 +138,8 @@ namespace Bahtinov_Collimator
 
             // Second column: Positioning labels in the second column
             FocusErrorLabel.Location = new Point(141, 22);
-            AbsoluteFocusErrorLabel.Location = new Point(132, 49);
-            WithinCriticalFocusLabel.Location = new Point(165, 74);
+            AbsoluteFocusErrorLabel.Location = new Point(133, 49);
+            WithinCriticalFocusLabel.Location = new Point(170, 74);
 
             // Third column: Positioning labels in the third column
             label2.Location = new Point(177, 24);
@@ -191,7 +206,7 @@ namespace Bahtinov_Collimator
         {
             FocusErrorLabel.AutoSize = autoSize;
             AbsoluteFocusErrorLabel.AutoSize = autoSize;
-            WithinCriticalFocusLabel.AutoSize = autoSize;
+            WithinCriticalFocusLabel.AutoSize = true;
         }
 
         /// <summary>
