@@ -267,7 +267,7 @@
             // 
             // CriticalFocusLabel
             // 
-            this.CriticalFocusLabel.Location = new System.Drawing.Point(174, 132);
+            this.CriticalFocusLabel.Location = new System.Drawing.Point(173, 132);
             this.CriticalFocusLabel.Name = "CriticalFocusLabel";
             this.CriticalFocusLabel.Size = new System.Drawing.Size(50, 16);
             this.CriticalFocusLabel.TabIndex = 19;
