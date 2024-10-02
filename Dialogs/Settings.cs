@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -20,6 +21,16 @@ namespace Bahtinov_Collimator
 
         #endregion
 
+        #region Variables
+
+        // settings value for focal length
+        private float focalLength = 0.0f;
+
+        // settings value for aperture
+        private float aperture = 0.0f;
+
+        #endregion
+
         #region Constructor
 
         /// <summary>
@@ -30,11 +41,72 @@ namespace Bahtinov_Collimator
             InitializeComponent();
             LoadSettings();
             SetColorScheme();
+
+            // Set the CriticalFocusLabel properties for left expanding text
+            CriticalFocusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            CriticalFocusLabel.RightToLeft = RightToLeft.Yes;
+            CriticalFocusLabel.AutoSize = false; 
+
+            // Subscribe to the TextChanged events
+            FocalLengthTextBox.TextChanged += FocalLengthTextBox_TextChanged;
+            ApertureTextBox.TextChanged += ApertureTextBox_TextChanged;
         }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Handles the TextChanged event for the FocalLengthTextBox.
+        /// This method is called whenever the text in the FocalLengthTextBox changes.
+        /// It triggers the update of the critical focus calculation to reflect the new focal length input.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The event data.</param>
+        private void FocalLengthTextBox_TextChanged(object sender, EventArgs e)
+        {
+            UpdateCriticalFocus();
+        }
+
+        /// <summary>
+        /// Handles the TextChanged event for the ApertureTextBox.
+        /// This method is called whenever the text in the ApertureTextBox changes.
+        /// It triggers the update of the critical focus calculation to reflect the new aperture input.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The event data.</param>
+        private void ApertureTextBox_TextChanged(object sender, EventArgs e)
+        {
+            UpdateCriticalFocus();
+        }
+
+        /// <summary>
+        /// Updates the critical focus based on the current values of the focal length and aperture inputs.
+        /// This method attempts to parse the input values from the respective text boxes.
+        /// If valid numeric values are provided and the aperture is greater than zero,
+        /// it updates the corresponding class variables and recalculates the critical focus.
+        /// If the input is invalid, it sets the CriticalFocusLabel to indicate an error.
+        /// </summary>
+        private void UpdateCriticalFocus()
+        {
+            // Try to parse the input values
+            if (float.TryParse(FocalLengthTextBox.Text, out float newFocalLength) &&
+                float.TryParse(ApertureTextBox.Text, out float newAperture) &&
+                newAperture > 0) // Ensure the aperture is greater than zero
+            {
+                // Update the class variables
+                focalLength = newFocalLength;
+                aperture = newAperture;
+
+                // Calculate and update the critical focus label
+                CalculateCriticalFocus();
+            }
+            else
+            {
+                // Optionally, you can clear or reset the critical focus label if input is invalid
+                CriticalFocusLabel.Text = "Invalid Input";
+            }
+        }
 
         /// <summary>
         /// Handles the Load event of the form. Increases the font size of the form and its controls.
@@ -61,6 +133,9 @@ namespace Bahtinov_Collimator
             label8.Font = newFont;
             label9.Font = newFont;
             label10.Font = newFont;
+            label11.Font = newFont;
+            label13.Font = newFont;
+            CriticalFocusLabel.Font = newFont;
             ApertureTextBox.Font = newFont;
             PixelSizeTextBox.Font = newFont;
             FocalLengthTextBox.Font = newFont;
@@ -127,7 +202,7 @@ namespace Bahtinov_Collimator
         {
             foreach (Control control in parent.Controls)
             {
-                if (control is Label label)
+                if (control is System.Windows.Forms.Label label)
                 {
                     label.ForeColor = color;
                 }
@@ -139,10 +214,14 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void LoadSettings()
         {
-            ApertureTextBox.Text = Properties.Settings.Default.Aperture.ToString("F0");
-            FocalLengthTextBox.Text = Properties.Settings.Default.FocalLength.ToString("F0");
+            this.aperture = Properties.Settings.Default.Aperture;
+            this.focalLength = Properties.Settings.Default.FocalLength;
+            ApertureTextBox.Text = aperture.ToString("F0");
+            FocalLengthTextBox.Text = focalLength.ToString("F0");
             PixelSizeTextBox.Text = Properties.Settings.Default.PixelSize.ToString("F2");
             VoiceCheckBox.Checked = Properties.Settings.Default.VoiceEnabled;
+
+            CalculateCriticalFocus();
         }
 
         /// <summary>
@@ -186,6 +265,15 @@ namespace Bahtinov_Collimator
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        private void CalculateCriticalFocus()
+        {
+            float focalApertureRatio = focalLength / aperture;
+
+            float criticalFocusValue = 8.99999974990351E-01f * focalApertureRatio * focalApertureRatio;
+
+            CriticalFocusLabel.Text = criticalFocusValue.ToString("F0");
         }
 
         #endregion

@@ -47,12 +47,18 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.VoiceCheckBox = new System.Windows.Forms.CheckBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.CriticalFocusLabel = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label13);
+            this.groupBox2.Controls.Add(this.CriticalFocusLabel);
+            this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Controls.Add(this.PixelSizeTextBox);
             this.groupBox2.Controls.Add(this.FocalLengthTextBox);
             this.groupBox2.Controls.Add(this.ApertureTextBox);
@@ -66,7 +72,7 @@
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox2.Size = new System.Drawing.Size(300, 140);
+            this.groupBox2.Size = new System.Drawing.Size(300, 166);
             this.groupBox2.TabIndex = 8;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Telescope";
@@ -166,7 +172,7 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(42, 321);
+            this.okButton.Location = new System.Drawing.Point(42, 350);
             this.okButton.Margin = new System.Windows.Forms.Padding(4);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(100, 28);
@@ -177,7 +183,7 @@
             // 
             // CancelSettingsButton
             // 
-            this.CancelSettingsButton.Location = new System.Drawing.Point(187, 321);
+            this.CancelSettingsButton.Location = new System.Drawing.Point(187, 350);
             this.CancelSettingsButton.Margin = new System.Windows.Forms.Padding(4);
             this.CancelSettingsButton.Name = "CancelSettingsButton";
             this.CancelSettingsButton.Size = new System.Drawing.Size(100, 28);
@@ -193,7 +199,7 @@
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.VoiceCheckBox);
-            this.groupBox1.Location = new System.Drawing.Point(16, 163);
+            this.groupBox1.Location = new System.Drawing.Point(16, 192);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
@@ -250,11 +256,38 @@
             this.VoiceCheckBox.Text = "Voice Guidance";
             this.VoiceCheckBox.UseVisualStyleBackColor = true;
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(37, 132);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(90, 16);
+            this.label11.TabIndex = 18;
+            this.label11.Text = "Critical Focus:";
+            // 
+            // CriticalFocusLabel
+            // 
+            this.CriticalFocusLabel.Location = new System.Drawing.Point(174, 132);
+            this.CriticalFocusLabel.Name = "CriticalFocusLabel";
+            this.CriticalFocusLabel.Size = new System.Drawing.Size(50, 16);
+            this.CriticalFocusLabel.TabIndex = 19;
+            this.CriticalFocusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(225, 132);
+            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(25, 16);
+            this.label13.TabIndex = 20;
+            this.label13.Text = "µm";
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 369);
+            this.ClientSize = new System.Drawing.Size(329, 410);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.CancelSettingsButton);
             this.Controls.Add(this.okButton);
@@ -295,5 +328,8 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label CriticalFocusLabel;
+        private System.Windows.Forms.Label label11;
     }
 }
