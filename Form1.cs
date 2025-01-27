@@ -317,7 +317,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void SetFormUI()
         {
-            AdjustAssistToolStripMenuItem.Visible = false;
+            AdjustAssistToolStripMenuItem.Enabled = false;
             SetWindowTitleWithVersion();
         }
 
@@ -416,6 +416,7 @@ namespace Bahtinov_Collimator
                 imageDisplayComponent1.ClearDisplay();
                 bahtinovProcessing.StopImageProcessing();
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
+                AdjustAssistToolStripMenuItem.Enabled = false;
                 screenCaptureRunningFlag = false;
                 StartButton.Text = "Select Star";
             }
@@ -464,7 +465,7 @@ namespace Bahtinov_Collimator
                 StartButton.Text = "Select Star";
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue, groupBoxRed);
                 adjustAssistDialog?.Close();
-                AdjustAssistToolStripMenuItem.Visible = false;
+                AdjustAssistToolStripMenuItem.Enabled = false;
             }
             else
             {
@@ -495,6 +496,7 @@ namespace Bahtinov_Collimator
                 {
                     RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                     StartButton.Text = "Select Star";
+                    AdjustAssistToolStripMenuItem.Enabled = false;
                     DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
                 }));
             }
@@ -502,6 +504,7 @@ namespace Bahtinov_Collimator
             {
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                 StartButton.Text = "Select Star";
+                AdjustAssistToolStripMenuItem.Enabled = false;
                 DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
             }
         }
@@ -765,11 +768,11 @@ namespace Bahtinov_Collimator
                     InitializeRedFocusBox();
                     InitializeGreenFocusBox();
                     InitializeBlueFocusBox();
-                    AdjustAssistToolStripMenuItem.Visible = true;
+                    AdjustAssistToolStripMenuItem.Enabled = true;
                 }
                 else
                 {
-                    AdjustAssistToolStripMenuItem.Visible = false;
+                    AdjustAssistToolStripMenuItem.Enabled = false;
                 }
 
                 firstPassCompleted = true;
