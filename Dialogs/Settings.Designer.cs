@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.CriticalFocusLabel = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.PixelSizeTextBox = new System.Windows.Forms.TextBox();
             this.FocalLengthTextBox = new System.Windows.Forms.TextBox();
             this.ApertureTextBox = new System.Windows.Forms.TextBox();
@@ -47,11 +50,12 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.VoiceCheckBox = new System.Windows.Forms.CheckBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.CriticalFocusLabel = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.SCTRadioButton = new System.Windows.Forms.RadioButton();
+            this.MakCassRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox2
@@ -68,14 +72,41 @@
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Location = new System.Drawing.Point(16, 15);
+            this.groupBox2.Location = new System.Drawing.Point(13, 13);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox2.Size = new System.Drawing.Size(300, 166);
             this.groupBox2.TabIndex = 8;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Telescope";
+            this.groupBox2.Text = "Optics";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(225, 132);
+            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(25, 16);
+            this.label13.TabIndex = 20;
+            this.label13.Text = "µm";
+            // 
+            // CriticalFocusLabel
+            // 
+            this.CriticalFocusLabel.Location = new System.Drawing.Point(173, 132);
+            this.CriticalFocusLabel.Name = "CriticalFocusLabel";
+            this.CriticalFocusLabel.Size = new System.Drawing.Size(50, 16);
+            this.CriticalFocusLabel.TabIndex = 19;
+            this.CriticalFocusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(37, 132);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(90, 16);
+            this.label11.TabIndex = 18;
+            this.label11.Text = "Critical Focus:";
             // 
             // PixelSizeTextBox
             // 
@@ -172,18 +203,18 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(42, 350);
+            this.okButton.Location = new System.Drawing.Point(346, 282);
             this.okButton.Margin = new System.Windows.Forms.Padding(4);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(100, 28);
             this.okButton.TabIndex = 13;
-            this.okButton.Text = "OK";
+            this.okButton.Text = "Save";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
             // CancelSettingsButton
             // 
-            this.CancelSettingsButton.Location = new System.Drawing.Point(187, 350);
+            this.CancelSettingsButton.Location = new System.Drawing.Point(454, 282);
             this.CancelSettingsButton.Margin = new System.Windows.Forms.Padding(4);
             this.CancelSettingsButton.Name = "CancelSettingsButton";
             this.CancelSettingsButton.Size = new System.Drawing.Size(100, 28);
@@ -199,7 +230,7 @@
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.VoiceCheckBox);
-            this.groupBox1.Location = new System.Drawing.Point(16, 192);
+            this.groupBox1.Location = new System.Drawing.Point(13, 187);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
@@ -256,38 +287,45 @@
             this.VoiceCheckBox.Text = "Voice Guidance";
             this.VoiceCheckBox.UseVisualStyleBackColor = true;
             // 
-            // label11
+            // groupBox3
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(37, 132);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(90, 16);
-            this.label11.TabIndex = 18;
-            this.label11.Text = "Critical Focus:";
+            this.groupBox3.Controls.Add(this.MakCassRadioButton);
+            this.groupBox3.Controls.Add(this.SCTRadioButton);
+            this.groupBox3.Location = new System.Drawing.Point(320, 13);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(261, 255);
+            this.groupBox3.TabIndex = 36;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Adjustment Display";
             // 
-            // CriticalFocusLabel
+            // SCTRadioButton
             // 
-            this.CriticalFocusLabel.Location = new System.Drawing.Point(173, 132);
-            this.CriticalFocusLabel.Name = "CriticalFocusLabel";
-            this.CriticalFocusLabel.Size = new System.Drawing.Size(50, 16);
-            this.CriticalFocusLabel.TabIndex = 19;
-            this.CriticalFocusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.SCTRadioButton.AutoSize = true;
+            this.SCTRadioButton.Location = new System.Drawing.Point(16, 28);
+            this.SCTRadioButton.Name = "SCTRadioButton";
+            this.SCTRadioButton.Size = new System.Drawing.Size(188, 20);
+            this.SCTRadioButton.TabIndex = 0;
+            this.SCTRadioButton.TabStop = true;
+            this.SCTRadioButton.Text = "Schmidt–Cassegrain (SCT)";
+            this.SCTRadioButton.UseVisualStyleBackColor = true;
             // 
-            // label13
+            // MakCassRadioButton
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(225, 132);
-            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(25, 16);
-            this.label13.TabIndex = 20;
-            this.label13.Text = "µm";
+            this.MakCassRadioButton.AutoSize = true;
+            this.MakCassRadioButton.Location = new System.Drawing.Point(16, 59);
+            this.MakCassRadioButton.Name = "MakCassRadioButton";
+            this.MakCassRadioButton.Size = new System.Drawing.Size(199, 20);
+            this.MakCassRadioButton.TabIndex = 1;
+            this.MakCassRadioButton.TabStop = true;
+            this.MakCassRadioButton.Text = "Maksutov-Cassegrain (MCT)";
+            this.MakCassRadioButton.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 410);
+            this.ClientSize = new System.Drawing.Size(595, 329);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.CancelSettingsButton);
             this.Controls.Add(this.okButton);
@@ -304,6 +342,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -331,5 +371,8 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label CriticalFocusLabel;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.RadioButton MakCassRadioButton;
+        private System.Windows.Forms.RadioButton SCTRadioButton;
     }
 }

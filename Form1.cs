@@ -621,6 +621,8 @@ namespace Bahtinov_Collimator
         /// <param name="e">The event data.</param>
         private void SettingsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            int displayType = Properties.Settings.Default.AdjustDisplayType;
+
             // Settings Dialog
             Settings settingsDialog = new Settings();
             PositionDialogInsideMainWindow(settingsDialog);
@@ -629,6 +631,12 @@ namespace Bahtinov_Collimator
 
             if (result == DialogResult.OK)
             {
+                // restart Adjust Assist, to display any changes
+                if (displayType != Properties.Settings.Default.AdjustDisplayType && (adjustAssistDialog != null))
+                {
+                    adjustAssistDialog.Close();     
+                }
+
                 bahtinovProcessing.LoadSettings();
                 voiceControl.LoadSettings();
             }
@@ -645,7 +653,7 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Handles the click event for the Cheat Sheet menu item, showing the AdjustAssist dialog if it's not already open.
+        /// Handles the click event for the Cheat Sheet menu item, showing the AdjustAssistSCT dialog if it's not already open.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The event data.</param>

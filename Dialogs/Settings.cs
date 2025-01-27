@@ -141,6 +141,8 @@ namespace Bahtinov_Collimator
             FocalLengthTextBox.Font = newFont;
             CancelSettingsButton.Font = newFont;
             okButton.Font = newFont;
+            SCTRadioButton.Font = newFont;
+            MakCassRadioButton.Font = newFont;
         }
 
         /// <summary>
@@ -170,8 +172,10 @@ namespace Bahtinov_Collimator
             // Group Boxes
             ChangeLabelColors(groupBox1, UITheme.MenuDarkForeground);
             ChangeLabelColors(groupBox2, UITheme.MenuDarkForeground);
+            ChangeLabelColors(groupBox3, UITheme.MenuDarkForeground);
             groupBox1.ForeColor = UITheme.MenuDarkForeground;
             groupBox2.ForeColor = UITheme.MenuDarkForeground;
+            groupBox3.ForeColor = UITheme.MenuDarkForeground;
 
             ChangeTextBoxColors(groupBox2);
         }
@@ -221,6 +225,20 @@ namespace Bahtinov_Collimator
             PixelSizeTextBox.Text = Properties.Settings.Default.PixelSize.ToString("F2");
             VoiceCheckBox.Checked = Properties.Settings.Default.VoiceEnabled;
 
+            // set the Adjust Assist Display settings
+            switch(Properties.Settings.Default.AdjustDisplayType)
+            {
+                case 0:
+                    SCTRadioButton.Checked = true;
+                    break;
+                case 1:
+                    MakCassRadioButton.Checked = true;
+                    break;
+                default:
+                    SCTRadioButton.Checked = true;
+                    break;    
+            };
+
             CalculateCriticalFocus();
         }
 
@@ -238,6 +256,12 @@ namespace Bahtinov_Collimator
                 Properties.Settings.Default.FocalLength = int.Parse(FocalLengthTextBox.Text);
                 Properties.Settings.Default.PixelSize = float.Parse(PixelSizeTextBox.Text);
                 Properties.Settings.Default.VoiceEnabled = VoiceCheckBox.Checked;
+
+                // set Adjust Display Type
+                if(SCTRadioButton.Checked) 
+                    Properties.Settings.Default.AdjustDisplayType = 0;
+                else if(MakCassRadioButton.Checked)
+                    Properties.Settings.Default.AdjustDisplayType = 1;
 
                 // Save settings
                 Properties.Settings.Default.Save();

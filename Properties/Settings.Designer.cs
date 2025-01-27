@@ -142,5 +142,17 @@ namespace Bahtinov_Collimator.Properties {
                 this["DefocusSwitch"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int AdjustDisplayType {
+            get {
+                return ((int)(this["AdjustDisplayType"]));
+            }
+            set {
+                this["AdjustDisplayType"] = value;
+            }
+        }
     }
 }
