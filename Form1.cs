@@ -28,7 +28,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Bahtinov_Collimator.AdjustAssistant;
 using Bahtinov_Collimator.Voice;
 using Bahtinov_Collimator.Image_Processing;
 using Bahtinov_Collimator.Custom_Components;
@@ -140,7 +139,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Represents the dialog for adjusting assistive features.
         /// </summary>
-        private AdjustAssist adjustAssistDialog;
+        private AdjustAssistant.AdjustAssistBase adjustAssistDialog;
 
         // Voice Generation
         /// <summary>
@@ -653,7 +652,7 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Handles the click event for the Cheat Sheet menu item, showing the AdjustAssistSCT dialog if it's not already open.
+        /// Handles the click event for the Cheat Sheet menu item, showing the AdjustAssistBase dialog if it's not already open.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The event data.</param>
@@ -661,7 +660,19 @@ namespace Bahtinov_Collimator
         {
             if (adjustAssistDialog == null || adjustAssistDialog.IsDisposed)
             {
-                adjustAssistDialog = new AdjustAssistant.AdjustAssist(this);
+                switch(Properties.Settings.Default.AdjustDisplayType)
+                {
+                    case 0:
+                        adjustAssistDialog = new AdjustAssistant.AdjustAssistSCT(this);
+                        break;
+                    case 1:
+                        adjustAssistDialog = new AdjustAssistant.AdjustAssistMCT(this);
+                        break;
+                    default:
+                        adjustAssistDialog = new AdjustAssistant.AdjustAssistSCT(this);
+                        break;
+
+                }
                 PositionDialogInsideMainWindow(adjustAssistDialog);
                 adjustAssistDialog.Show(this);
                 adjustAssistDialog.FormClosed += CheatSheet_FormClosed;

@@ -1,6 +1,6 @@
 ﻿namespace Bahtinov_Collimator.AdjustAssistant
 {
-    partial class AdjustAssist
+    partial class AdjustAssistBase
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdjustAssist));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdjustAssistBase));
             this.saveButton = new System.Windows.Forms.Button();
             this.closeButton = new System.Windows.Forms.Button();
             this.swapGreenCheckbox = new System.Windows.Forms.CheckBox();
@@ -45,7 +45,7 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(27, 320);
+            this.saveButton.Location = new System.Drawing.Point(21, 493);
             this.saveButton.Margin = new System.Windows.Forms.Padding(4);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(100, 28);
@@ -56,7 +56,7 @@
             // 
             // closeButton
             // 
-            this.closeButton.Location = new System.Drawing.Point(147, 320);
+            this.closeButton.Location = new System.Drawing.Point(141, 493);
             this.closeButton.Margin = new System.Windows.Forms.Padding(4);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(100, 28);
@@ -68,7 +68,7 @@
             // swapGreenCheckbox
             // 
             this.swapGreenCheckbox.AutoSize = true;
-            this.swapGreenCheckbox.Location = new System.Drawing.Point(32, 23);
+            this.swapGreenCheckbox.Location = new System.Drawing.Point(8, 23);
             this.swapGreenCheckbox.Margin = new System.Windows.Forms.Padding(4);
             this.swapGreenCheckbox.Name = "swapGreenCheckbox";
             this.swapGreenCheckbox.Size = new System.Drawing.Size(134, 20);
@@ -83,11 +83,11 @@
             this.groupBox1.Controls.Add(this.swapGreenCheckbox);
             this.groupBox1.Controls.Add(this.greenReverseBox);
             this.groupBox1.Controls.Add(this.redReverseBox);
-            this.groupBox1.Location = new System.Drawing.Point(16, 15);
+            this.groupBox1.Location = new System.Drawing.Point(13, 15);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(241, 139);
+            this.groupBox1.Size = new System.Drawing.Size(161, 139);
             this.groupBox1.TabIndex = 29;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Configuration";
@@ -95,7 +95,7 @@
             // blueReverseBox
             // 
             this.blueReverseBox.AutoSize = true;
-            this.blueReverseBox.Location = new System.Drawing.Point(32, 108);
+            this.blueReverseBox.Location = new System.Drawing.Point(8, 108);
             this.blueReverseBox.Margin = new System.Windows.Forms.Padding(4);
             this.blueReverseBox.Name = "blueReverseBox";
             this.blueReverseBox.Size = new System.Drawing.Size(111, 20);
@@ -107,7 +107,7 @@
             // greenReverseBox
             // 
             this.greenReverseBox.AutoSize = true;
-            this.greenReverseBox.Location = new System.Drawing.Point(32, 80);
+            this.greenReverseBox.Location = new System.Drawing.Point(8, 80);
             this.greenReverseBox.Margin = new System.Windows.Forms.Padding(4);
             this.greenReverseBox.Name = "greenReverseBox";
             this.greenReverseBox.Size = new System.Drawing.Size(121, 20);
@@ -119,7 +119,7 @@
             // redReverseBox
             // 
             this.redReverseBox.AutoSize = true;
-            this.redReverseBox.Location = new System.Drawing.Point(32, 52);
+            this.redReverseBox.Location = new System.Drawing.Point(8, 52);
             this.redReverseBox.Margin = new System.Windows.Forms.Padding(4);
             this.redReverseBox.Name = "redReverseBox";
             this.redReverseBox.Size = new System.Drawing.Size(110, 20);
@@ -130,28 +130,28 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(277, 16);
+            this.pictureBox1.Location = new System.Drawing.Point(182, 25);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(327, 302);
+            this.pictureBox1.Size = new System.Drawing.Size(435, 387);
             this.pictureBox1.TabIndex = 31;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(271, 325);
+            this.trackBar1.Location = new System.Drawing.Point(266, 465);
             this.trackBar1.Margin = new System.Windows.Forms.Padding(4);
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(329, 56);
             this.trackBar1.TabIndex = 32;
             this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
             // 
-            // AdjustAssist
+            // AdjustAssistBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(623, 369);
+            this.ClientSize = new System.Drawing.Size(630, 544);
             this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox1);
@@ -161,7 +161,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
-            this.Name = "AdjustAssist";
+            this.Name = "AdjustAssistBase";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Adjustment Assistant";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CheatSheet_FormClosed);
@@ -178,12 +178,12 @@
 
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Button closeButton;
-        private System.Windows.Forms.CheckBox swapGreenCheckbox;
+        protected System.Windows.Forms.CheckBox swapGreenCheckbox;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.CheckBox blueReverseBox;
-        private System.Windows.Forms.CheckBox greenReverseBox;
-        private System.Windows.Forms.CheckBox redReverseBox;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        protected System.Windows.Forms.CheckBox blueReverseBox;
+        protected System.Windows.Forms.CheckBox greenReverseBox;
+        protected System.Windows.Forms.CheckBox redReverseBox;
+        protected System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TrackBar trackBar1;
     }
 }

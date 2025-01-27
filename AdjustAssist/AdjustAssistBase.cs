@@ -1,11 +1,8 @@
-﻿using Bahtinov_Collimator.Voice;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace Bahtinov_Collimator.AdjustAssistant
 {
@@ -14,7 +11,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         Right, Left, None
     }
 
-    public partial class AdjustAssist : Form
+    public abstract partial class AdjustAssistBase : Form
     {
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
@@ -25,17 +22,16 @@ namespace Bahtinov_Collimator.AdjustAssistant
         #region Fields
 
         private int rotationAngle;
-        private int circleRadius;
+        protected int circleRadius;
 
-        private double redError = BahtinovProcessing.errorValues[0];
-        private double greenError = BahtinovProcessing.errorValues[1];
-        private double blueError = BahtinovProcessing.errorValues[2];
+        protected double redError = BahtinovProcessing.errorValues[0];
+        protected double greenError = BahtinovProcessing.errorValues[1];
+        protected double blueError = BahtinovProcessing.errorValues[2];
         private Timer updateTimer;
-        private Form1 parentForm;
-        private int lastImageCount = 0;
+        private readonly Form1 parentForm;
 
         // settings
-        private int rotationSetting;
+        private int  rotationSetting;
         private bool swapColorSetting;
         private bool redReverseSetting;
         private bool greenReverseSetting;
@@ -46,10 +42,10 @@ namespace Bahtinov_Collimator.AdjustAssistant
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AdjustAssist"/> class.
+        /// Initializes a new instance of the <see cref="AdjustAssistBase"/> class.
         /// </summary>
         /// <param name="parent">The parent form.</param>
-        public AdjustAssist(Form1 parent)
+        public AdjustAssistBase(Form1 parent)
         {
             InitializeComponent();
             SetColorScheme();
@@ -104,7 +100,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// Applies dark theme colors to the form background, foreground, buttons, 
         /// title bar, and group boxes based on the UITheme settings.
         /// </summary>
-        private void SetColorScheme()
+        protected virtual void SetColorScheme()
         {
             // main form
             this.ForeColor = UITheme.DarkForeground;
@@ -151,7 +147,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// <summary>
         /// Loads the settings from the properties.
         /// </summary>
-        private void LoadSettings()
+        protected virtual void LoadSettings()
         {
             rotationSetting = Properties.Settings.Default.CS_Slider;
             swapColorSetting = Properties.Settings.Default.CS_Swap;
@@ -173,94 +169,13 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// </summary>
         /// <param name="sender">The source of the event, typically the object that raised the event.</param>
         /// <param name="e">A <see cref="FocusDataEventArgs"/> object containing the focus data to be processed.</param>
-        public void FocusDataEvent(object sender, FocusDataEventArgs e)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action<object, FocusDataEventArgs>(FocusDataEvent), sender, e);
-                return;
-            }
-
-             int groupId = e.FocusData.Id;
-
-            // is this a clear event?
-            if (groupId != -1)
-            {
-                if (!e.FocusData.ClearDisplay)
-                {
-                    if(groupId == 0)
-                        redError = (float)e.FocusData.BahtinovOffset;
-                    else
-                        if (groupId == 1)
-                            greenError = (float)e.FocusData.BahtinovOffset;
-                    else
-                        if (groupId == 2)
-                        blueError = (float)e.FocusData.BahtinovOffset;
-                }
-                else
-                {
-                    redError = 0.0f;
-                    greenError = 0.0f;
-                    blueError = 0.0f;
-                }
-            }
-            pictureBox1.Invalidate();
-        }
+        public abstract void FocusDataEvent(object sender, FocusDataEventArgs e);
 
         /// <summary>
         /// Draws the contents of the picture box.
         /// </summary>
         /// <param name="g">The graphics object.</param>
-        private void DrawPictureBox(Graphics g)
-        {
-            Arrow redArrow = Arrow.None;
-            Arrow greenArrow = Arrow.None;
-            Arrow blueArrow = Arrow.None;
-
-            int centerX = pictureBox1.Width / 2;
-            int centerY = pictureBox1.Height / 2;
-
-            // Define the colors for the shading effect
-            Color startColor = UITheme.AdjustAssistKnobLo;
-            Color endColor = UITheme.AdjustAssistKnobHi; ;
-
-            // Create a linear gradient brush to apply shading
-            Brush shadingBrush = new LinearGradientBrush(
-                new Point(centerX - circleRadius, centerY - circleRadius),
-                new Point(centerX + circleRadius, centerY + circleRadius),
-                startColor, endColor);
-
-            using (SolidBrush bgBrush = new SolidBrush(UITheme.DarkBackground))
-            using (SolidBrush circleBrush = new SolidBrush(Color.DarkGray))
-            using (Pen circlePen = new Pen(Color.Black, 2.0f))
-            {
-                g.FillRectangle(bgBrush, ClientRectangle);
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-
-                int circleSize = circleRadius * 2;
-                int circleX = centerX - circleRadius;
-                int circleY = centerY - circleRadius;
-                g.FillEllipse(shadingBrush, circleX, circleY, circleSize, circleSize);
-                g.DrawEllipse(circlePen, circleX, circleY, circleSize, circleSize);
-
-                redArrow = GetArrow(redError, redReverseBox.Checked);
-                greenArrow = GetArrow(greenError, greenReverseBox.Checked);
-                blueArrow = GetArrow(blueError, blueReverseBox.Checked);
-
-                DrawSmallCircle(g, centerX, centerY, circleRadius, -90, UITheme.GetGroupBoxTextColor(0), redArrow, (float)redError);
-
-                if (swapGreenCheckbox.Checked)
-                {
-                    DrawSmallCircle(g, centerX, centerY, circleRadius, -210, UITheme.GetGroupBoxTextColor(1), greenArrow, greenError);
-                    DrawSmallCircle(g, centerX, centerY, circleRadius, -330, UITheme.GetGroupBoxTextColor(2), blueArrow, blueError);
-                }
-                else
-                {
-                    DrawSmallCircle(g, centerX, centerY, circleRadius, -210, UITheme.GetGroupBoxTextColor(2), blueArrow, blueError);
-                    DrawSmallCircle(g, centerX, centerY, circleRadius, -330, UITheme.GetGroupBoxTextColor(1), greenArrow, greenError);
-                }
-            }
-        }
+        protected abstract void DrawPictureBox(Graphics g);
 
         /// <summary>
         /// Gets the arrow direction based on the error value and reverse setting.
@@ -268,7 +183,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// <param name="error">The error value.</param>
         /// <param name="isReverse">Whether the direction is reversed.</param>
         /// <returns>The arrow direction.</returns>
-        private Arrow GetArrow(double error, bool isReverse)
+        protected Arrow GetArrow(double error, bool isReverse)
         {
             float value = float.Parse(error.ToString("F1"));
 
@@ -291,7 +206,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// <param name="color">The circle color.</param>
         /// <param name="arrowType">The arrow type.</param>
         /// <param name="errorValue">The error value.</param>
-        private void DrawSmallCircle(Graphics g, int centerX, int centerY, int circleRadi, int angle, Color color, Arrow arrowType, double errorValue)
+        protected void DrawSmallCircle(Graphics g, int centerX, int centerY, int circleRadi, int angle, Color color, Arrow arrowType, double errorValue)
         {
             int circleRadius = (int)(circleRadi * 0.65);
             double radians = (angle + rotationAngle) * Math.PI / 180.0;
