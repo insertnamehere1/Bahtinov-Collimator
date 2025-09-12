@@ -56,6 +56,9 @@ namespace Bahtinov_Collimator
         #region Constants
         // Constants for PrintWindow function flags
         private const int PW_RENDERFULLCONTENT = 0x2;
+
+        // Threshold for detecting significant movement
+        private const int MovementThreshold = 5;
         #endregion
 
         #region Private Fields
@@ -109,15 +112,16 @@ namespace Bahtinov_Collimator
             Bitmap image = GetImage();
 
             if (image == null)
-            {
                 return;
-            }
 
             // Check if this is a new image
             string secondHash = Utilities.ComputeHash(image);
 
             if (firstHash.Equals(secondHash))
+            {
+                captureTimer.Interval = 200;
                 return;
+            }
             else
                 firstHash = secondHash;
 
@@ -137,6 +141,9 @@ namespace Bahtinov_Collimator
                 {
                     // Get offset for the brightest area
                     Point offset = FindBrightestAreaCentroid(latestImage);
+
+                    if (Math.Abs(offset.X) > MovementThreshold || Math.Abs(offset.Y) > MovementThreshold)
+                        captureTimer.Interval = 10;
 
                     // Calculate translation
                     int delta_X = (latestImage.Width / 2) - offset.X;
@@ -162,6 +169,9 @@ namespace Bahtinov_Collimator
                         ImageLostEventProvider.OnImageLost("Unable to detect Defocus Image", "Circle Offset", MessageBoxIcon.Warning, MessageBoxButtons.OK);
                         return;
                     }
+
+                    if (Math.Abs(offset.X) > MovementThreshold || Math.Abs(offset.Y) > MovementThreshold)
+                        captureTimer.Interval = 10;
 
                     // Update selectedStarBox with new position
                     selectedStarBox.Offset(offset.X, offset.Y);
