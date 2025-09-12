@@ -568,7 +568,13 @@ namespace Bahtinov_Collimator
                     Id = group
                 };
 
-                FocusDataEvent?.Invoke(null, new FocusDataEventArgs(fd));
+                try
+                {
+                    FocusDataEvent?.Invoke(null, new FocusDataEventArgs(fd));
+                }
+                catch (Exception ex)
+                {}
+
                 errorValues[group] = bahtinovOffset;
 
                 float errorMarker_X = xIntersection + (perpendicularX - xIntersection) * ErrorMarkerScalingValue;

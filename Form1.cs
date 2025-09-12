@@ -418,6 +418,7 @@ namespace Bahtinov_Collimator
                 AdjustAssistToolStripMenuItem.Enabled = false;
                 screenCaptureRunningFlag = false;
                 StartButton.Text = "Select Star";
+                firstPassCompleted = false;
             }
         }
 
