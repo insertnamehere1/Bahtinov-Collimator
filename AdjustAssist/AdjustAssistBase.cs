@@ -56,7 +56,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
             trackBar1.Minimum = 0;
             trackBar1.Maximum = 360;
             trackBar1.TickStyle = TickStyle.None;
-            circleRadius = (int)(Math.Min(pictureBox1.Width, pictureBox1.Height) * 0.4);
+            circleRadius = (int)(Math.Min(pictureBox1.Width, pictureBox1.Height) * 0.32);
 
             updateTimer = new Timer();
             updateTimer.Interval = 100; // 100 milliseconds

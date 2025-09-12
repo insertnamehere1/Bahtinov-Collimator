@@ -51,8 +51,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.VoiceCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.SCTRadioButton = new System.Windows.Forms.RadioButton();
             this.MakCassRadioButton = new System.Windows.Forms.RadioButton();
+            this.SCTRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -298,6 +298,18 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Adjustment Display";
             // 
+            // MakCassRadioButton
+            // 
+            this.MakCassRadioButton.AutoSize = true;
+            this.MakCassRadioButton.Enabled = false;
+            this.MakCassRadioButton.Location = new System.Drawing.Point(16, 59);
+            this.MakCassRadioButton.Name = "MakCassRadioButton";
+            this.MakCassRadioButton.Size = new System.Drawing.Size(199, 20);
+            this.MakCassRadioButton.TabIndex = 1;
+            this.MakCassRadioButton.TabStop = true;
+            this.MakCassRadioButton.Text = "Maksutov-Cassegrain (MCT)";
+            this.MakCassRadioButton.UseVisualStyleBackColor = true;
+            // 
             // SCTRadioButton
             // 
             this.SCTRadioButton.AutoSize = true;
@@ -308,17 +320,6 @@
             this.SCTRadioButton.TabStop = true;
             this.SCTRadioButton.Text = "Schmidt–Cassegrain (SCT)";
             this.SCTRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // MakCassRadioButton
-            // 
-            this.MakCassRadioButton.AutoSize = true;
-            this.MakCassRadioButton.Location = new System.Drawing.Point(16, 59);
-            this.MakCassRadioButton.Name = "MakCassRadioButton";
-            this.MakCassRadioButton.Size = new System.Drawing.Size(199, 20);
-            this.MakCassRadioButton.TabIndex = 1;
-            this.MakCassRadioButton.TabStop = true;
-            this.MakCassRadioButton.Text = "Maksutov-Cassegrain (MCT)";
-            this.MakCassRadioButton.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 

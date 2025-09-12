@@ -45,7 +45,7 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(21, 493);
+            this.saveButton.Location = new System.Drawing.Point(18, 433);
             this.saveButton.Margin = new System.Windows.Forms.Padding(4);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(100, 28);
@@ -56,7 +56,7 @@
             // 
             // closeButton
             // 
-            this.closeButton.Location = new System.Drawing.Point(141, 493);
+            this.closeButton.Location = new System.Drawing.Point(138, 433);
             this.closeButton.Margin = new System.Windows.Forms.Padding(4);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(100, 28);
@@ -140,7 +140,7 @@
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(266, 465);
+            this.trackBar1.Location = new System.Drawing.Point(267, 433);
             this.trackBar1.Margin = new System.Windows.Forms.Padding(4);
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(329, 56);
@@ -151,7 +151,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(630, 544);
+            this.ClientSize = new System.Drawing.Size(630, 478);
             this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox1);
