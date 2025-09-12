@@ -220,8 +220,11 @@ namespace Bahtinov_Collimator
         {
             this.aperture = Properties.Settings.Default.Aperture;
             this.focalLength = Properties.Settings.Default.FocalLength;
-            ApertureTextBox.Text = aperture.ToString("F0");
-            FocalLengthTextBox.Text = focalLength.ToString("F0");
+
+            // Use "0.##" to show up to two decimals but trim trailing zeros (e.g. 1.50 -> 1.5, 1.00 -> 1)
+            ApertureTextBox.Text = aperture.ToString("0.##");
+
+            FocalLengthTextBox.Text = focalLength.ToString("0.##");
             PixelSizeTextBox.Text = Properties.Settings.Default.PixelSize.ToString("F2");
             VoiceCheckBox.Checked = Properties.Settings.Default.VoiceEnabled;
 
@@ -252,8 +255,8 @@ namespace Bahtinov_Collimator
             try
             {
                 // Parse input values and save them to application settings
-                Properties.Settings.Default.Aperture = int.Parse(ApertureTextBox.Text);
-                Properties.Settings.Default.FocalLength = int.Parse(FocalLengthTextBox.Text);
+                Properties.Settings.Default.Aperture = float.Parse(ApertureTextBox.Text);
+                Properties.Settings.Default.FocalLength = float.Parse(FocalLengthTextBox.Text);
                 Properties.Settings.Default.PixelSize = float.Parse(PixelSizeTextBox.Text);
                 Properties.Settings.Default.VoiceEnabled = VoiceCheckBox.Checked;
 

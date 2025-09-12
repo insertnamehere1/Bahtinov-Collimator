@@ -48,8 +48,8 @@ namespace Bahtinov_Collimator
 
         #region Private Fields
         // Settings
-        private int apertureSetting;
-        private int focalLengthSetting;
+        private float apertureSetting;
+        private float focalLengthSetting;
         private double pixelSizeSetting;
 
         // to be checked for relevance

@@ -26,9 +26,9 @@ namespace Bahtinov_Collimator.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("72")]
-        public int Aperture {
+        public float Aperture {
             get {
-                return ((int)(this["Aperture"]));
+                return ((float)(this["Aperture"]));
             }
             set {
                 this["Aperture"] = value;
@@ -38,9 +38,9 @@ namespace Bahtinov_Collimator.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("450")]
-        public int FocalLength {
+        public float FocalLength {
             get {
-                return ((int)(this["FocalLength"]));
+                return ((float)(this["FocalLength"]));
             }
             set {
                 this["FocalLength"] = value;
