@@ -905,7 +905,7 @@ namespace Bahtinov_Collimator
                 string tempPath = Path.Combine(Path.GetTempPath(), "whatsNew.pdf");
 
                 // Write the embedded PDF file to the temporary location
-                File.WriteAllBytes(tempPath, Properties.Resources.help);
+                File.WriteAllBytes(tempPath, Properties.Resources.whatsNew);
 
                 // Open the PDF file with the default PDF viewer
                 Process.Start(tempPath);
