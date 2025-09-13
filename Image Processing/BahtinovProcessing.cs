@@ -538,7 +538,7 @@ namespace Bahtinov_Collimator
                 }
                 catch(Exception ex)
                 {
-                    ImageLostEventProvider.OnImageLost("Image Lost\n" + ex.Message, "Bahtinov Processing: ", MessageBoxIcon.Error, MessageBoxButtons.OK);
+                    ImageLostEventProvider.OnImageLost("Image Lost", "Bahtinov Processing: ", MessageBoxIcon.Error, MessageBoxButtons.OK);
                     lastFocusErrorValue = 0.0f;
                     return false;
                 }
