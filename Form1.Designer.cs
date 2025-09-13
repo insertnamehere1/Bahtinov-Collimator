@@ -96,7 +96,7 @@
             this.AdjustAssistToolStripMenuItem.Name = "AdjustAssistToolStripMenuItem";
             this.AdjustAssistToolStripMenuItem.Size = new System.Drawing.Size(106, 24);
             this.AdjustAssistToolStripMenuItem.Text = "Adjust Assist";
-            this.AdjustAssistToolStripMenuItem.Click += new System.EventHandler(this.cheatSheetToolStripMenuItem_Click);
+            this.AdjustAssistToolStripMenuItem.Click += new System.EventHandler(this.CheatSheetToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem1
             // 
@@ -129,7 +129,7 @@
             this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
             this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.checkForUpdatesToolStripMenuItem.Text = "Check for Updates";
-            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.CheckForUpdatesToolStripMenuItem_Click);
             // 
             // donateToolStripMenuItem
             // 
@@ -184,7 +184,7 @@
             this.whatsNewToolStripMenuItem.Name = "whatsNewToolStripMenuItem";
             this.whatsNewToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.whatsNewToolStripMenuItem.Text = "What\'s New";
-            this.whatsNewToolStripMenuItem.Click += new System.EventHandler(this.whatsNewToolStripMenuItem_Click);
+            this.whatsNewToolStripMenuItem.Click += new System.EventHandler(this.WhatsNewToolStripMenuItem_Click);
             // 
             // Form1
             // 

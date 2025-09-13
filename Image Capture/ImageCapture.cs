@@ -64,7 +64,6 @@ namespace Bahtinov_Collimator
         #region Private Fields
         // Private fields for managing image capture
         private static Timer captureTimer;
-        private static Rectangle captureRectangle;
         private static IntPtr targetWindowHandle;
         private static Rectangle selectedStarBox;
         private static string firstHash = "";
@@ -164,7 +163,7 @@ namespace Bahtinov_Collimator
                         // Get offset for the inner circle
                         offset = FindInnerCircleOffset(latestImage);
                     }
-                    catch (InvalidOperationException ex)
+                    catch (InvalidOperationException)
                     {
                         ImageLostEventProvider.OnImageLost("Unable to detect Defocus Image", "Circle Offset", MessageBoxIcon.Warning, MessageBoxButtons.OK);
                         return;
@@ -191,7 +190,7 @@ namespace Bahtinov_Collimator
                 // distribut new image
                 ImageReceivedEvent?.Invoke(null, new ImageReceivedEventArgs(updatedImage));
             }
-            catch(Exception er)
+            catch(Exception)
             {
                 if(captureTimer != null)
                     DarkMessageBox.Show("Invalid image selection", "Capture Timer", MessageBoxIcon.Information, MessageBoxButtons.OK);
@@ -203,7 +202,7 @@ namespace Bahtinov_Collimator
                 // Dispose of the Graphics object if it was created
                 if (g != null)
                 {
-                    g.Dispose();
+                    g?.Dispose();
                 }
 
                 // Dispose of the original image

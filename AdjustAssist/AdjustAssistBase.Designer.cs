@@ -52,7 +52,7 @@
             this.saveButton.TabIndex = 0;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
-            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+            this.saveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
             // closeButton
             // 
@@ -63,7 +63,7 @@
             this.closeButton.TabIndex = 1;
             this.closeButton.Text = "Close";
             this.closeButton.UseVisualStyleBackColor = true;
-            this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
+            this.closeButton.Click += new System.EventHandler(this.CloseButton_Click);
             // 
             // swapGreenCheckbox
             // 
@@ -75,7 +75,7 @@
             this.swapGreenCheckbox.TabIndex = 28;
             this.swapGreenCheckbox.Text = "Swap Green/Blue";
             this.swapGreenCheckbox.UseVisualStyleBackColor = true;
-            this.swapGreenCheckbox.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.swapGreenCheckbox.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
             // groupBox1
             // 
@@ -102,7 +102,7 @@
             this.blueReverseBox.TabIndex = 33;
             this.blueReverseBox.Text = "Blue Reverse";
             this.blueReverseBox.UseVisualStyleBackColor = true;
-            this.blueReverseBox.CheckedChanged += new System.EventHandler(this.reverseBox_CheckedChanged);
+            this.blueReverseBox.CheckedChanged += new System.EventHandler(this.ReverseBox_CheckedChanged);
             // 
             // greenReverseBox
             // 
@@ -114,7 +114,7 @@
             this.greenReverseBox.TabIndex = 32;
             this.greenReverseBox.Text = "Green Reverse";
             this.greenReverseBox.UseVisualStyleBackColor = true;
-            this.greenReverseBox.CheckedChanged += new System.EventHandler(this.reverseBox_CheckedChanged);
+            this.greenReverseBox.CheckedChanged += new System.EventHandler(this.ReverseBox_CheckedChanged);
             // 
             // redReverseBox
             // 
@@ -126,7 +126,7 @@
             this.redReverseBox.TabIndex = 31;
             this.redReverseBox.Text = "Red Reverse";
             this.redReverseBox.UseVisualStyleBackColor = true;
-            this.redReverseBox.CheckedChanged += new System.EventHandler(this.reverseBox_CheckedChanged);
+            this.redReverseBox.CheckedChanged += new System.EventHandler(this.ReverseBox_CheckedChanged);
             // 
             // pictureBox1
             // 
@@ -136,7 +136,7 @@
             this.pictureBox1.Size = new System.Drawing.Size(435, 387);
             this.pictureBox1.TabIndex = 31;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.PictureBox1_Paint);
             // 
             // trackBar1
             // 
@@ -145,7 +145,7 @@
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(329, 56);
             this.trackBar1.TabIndex = 32;
-            this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
+            this.trackBar1.ValueChanged += new System.EventHandler(this.TrackBar1_ValueChanged);
             // 
             // AdjustAssistBase
             // 

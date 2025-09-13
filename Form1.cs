@@ -122,12 +122,12 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the processing of Bahtinov mask images for focus adjustment.
         /// </summary>
-        private BahtinovProcessing bahtinovProcessing;
+        private readonly BahtinovProcessing bahtinovProcessing;
 
         /// <summary>
         /// Handles the processing of defocus star images for focus adjustment.
         /// </summary>
-        private DefocusStarProcessing defocusStarProcessing;
+        private readonly DefocusStarProcessing defocusStarProcessing;
 
         // Bahtinov line data
         /// <summary>
@@ -145,7 +145,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Manages the voice control for audio notifications and speech synthesis.
         /// </summary>
-        private VoiceControl voiceControl;
+        private readonly VoiceControl voiceControl;
 
         // Image Type
         /// <summary>
@@ -235,12 +235,14 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void InitializeDisplayComponent()
         {
-            this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent();
-            this.imageDisplayComponent1.Location = new System.Drawing.Point(256, 45);
-            this.imageDisplayComponent1.Margin = new System.Windows.Forms.Padding(2);
-            this.imageDisplayComponent1.Name = "imageDisplayComponent1";
-            this.imageDisplayComponent1.Size = new System.Drawing.Size(600, 600);
-            this.imageDisplayComponent1.TabIndex = 25;
+            this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent
+            {
+                Location = new System.Drawing.Point(256, 45),
+                Margin = new System.Windows.Forms.Padding(2),
+                Name = "imageDisplayComponent1",
+                Size = new System.Drawing.Size(600, 600),
+                TabIndex = 25
+            };
 
             this.Controls.Add(this.imageDisplayComponent1);
         }
@@ -271,9 +273,11 @@ namespace Bahtinov_Collimator
                 RemoveAndDisposeControls(groupBoxRed);
             }
 
-            groupBoxRed = new FocusChannelComponent(0);
-            groupBoxRed.Size = new Size(230, 114);
-            groupBoxRed.Location = new Point(12, 35);
+            groupBoxRed = new FocusChannelComponent(0)
+            {
+                Size = new Size(230, 114),
+                Location = new Point(12, 35)
+            };
             this.Controls.Add(groupBoxRed);
         }
 
@@ -288,9 +292,11 @@ namespace Bahtinov_Collimator
                 RemoveAndDisposeControls(groupBoxGreen);
             }
 
-            groupBoxGreen = new FocusChannelComponent(1);
-            groupBoxGreen.Size = new Size(230, 114);
-            groupBoxGreen.Location = new Point(12, 150);
+            groupBoxGreen = new FocusChannelComponent(1)
+            {
+                Size = new Size(230, 114),
+                Location = new Point(12, 150)
+            };
             this.Controls.Add(groupBoxGreen);
         }
 
@@ -305,9 +311,11 @@ namespace Bahtinov_Collimator
                 RemoveAndDisposeControls(groupBoxBlue);
             }
 
-            groupBoxBlue = new FocusChannelComponent(2);
-            groupBoxBlue.Size = new Size(230, 114);
-            groupBoxBlue.Location = new Point(12, 265);
+            groupBoxBlue = new FocusChannelComponent(2)
+            {
+                Size = new Size(230, 114),
+                Location = new Point(12, 265)
+            };
             this.Controls.Add(groupBoxBlue);
         }
 
@@ -341,7 +349,9 @@ namespace Bahtinov_Collimator
 
             // Apply color scheme to the title bar using DWM API
             var color = UITheme.DarkBackground;
-            int colorValue = color.R | (color.G << 8) | (color.B << 16);
+            int colorValue = color.R;
+            colorValue |= (color.G << 8);
+            colorValue |= (color.B << 16);
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
 
             // Apply color scheme to labels
@@ -583,7 +593,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The event data.</param>
-        private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CheckForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             InstallUpdateSyncWithInfo();
         }
@@ -657,7 +667,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The event data.</param>
-        private void cheatSheetToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CheatSheetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (adjustAssistDialog == null || adjustAssistDialog.IsDisposed)
             {
@@ -760,7 +770,7 @@ namespace Bahtinov_Collimator
                 // Display the detected Bahtinov lines on the image
                 bahtinovProcessing.DisplayLines(bahtinovLineData, image);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 screenCaptureRunningFlag = false;
                 ImageLostEventProvider.OnImageLost("Failed Bahtinov line detection", "RunBahtinovDisplay", MessageBoxIcon.Error, MessageBoxButtons.OK);
@@ -818,8 +828,8 @@ namespace Bahtinov_Collimator
             // Create the version string
             string versionString = $"V {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
 
-            // Set the form's title
-            this.Text = this.Text + $" - {versionString}";
+            // Use compound assignment to append the version string to the form title
+            this.Text += $" - {versionString}";
         }
 
         /// <summary>
@@ -897,7 +907,7 @@ namespace Bahtinov_Collimator
 
         #endregion
 
-        private void whatsNewToolStripMenuItem_Click(object sender, EventArgs e)
+        private void WhatsNewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {

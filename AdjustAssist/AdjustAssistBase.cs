@@ -24,10 +24,10 @@ namespace Bahtinov_Collimator.AdjustAssistant
         private int rotationAngle;
         protected int circleRadius;
 
-        protected double redError = BahtinovProcessing.errorValues[0];
-        protected double greenError = BahtinovProcessing.errorValues[1];
-        protected double blueError = BahtinovProcessing.errorValues[2];
-        private Timer updateTimer;
+        protected double redError = BahtinovProcessing.ErrorValues[0];
+        protected double greenError = BahtinovProcessing.ErrorValues[1];
+        protected double blueError = BahtinovProcessing.ErrorValues[2];
+        private readonly Timer updateTimer;
         private readonly Form1 parentForm;
 
         // settings
@@ -58,9 +58,11 @@ namespace Bahtinov_Collimator.AdjustAssistant
             trackBar1.TickStyle = TickStyle.None;
             circleRadius = (int)(Math.Min(pictureBox1.Width, pictureBox1.Height) * 0.32);
 
-            updateTimer = new Timer();
-            updateTimer.Interval = 100; // 100 milliseconds
-            updateTimer.Tick += updateTimer_Tick;
+            updateTimer = new Timer
+            {
+                Interval = 100 // 100 milliseconds
+            };
+            updateTimer.Tick += UpdateTimer_Tick;
 
             LoadSettings();
 
@@ -341,7 +343,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// </summary>
         /// <param name="sender">The source of the event, typically the close button.</param>
         /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        private void closeButton_Click(object sender, EventArgs e)
+        private void CloseButton_Click(object sender, EventArgs e)
         {
             updateTimer.Stop();
             this.Close();
@@ -352,7 +354,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// </summary>
         /// <param name="sender">The source of the event, typically checkBox1.</param>
         /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {
             pictureBox1.Invalidate();
         }
@@ -362,7 +364,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// </summary>
         /// <param name="sender">The source of the event, typically trackBar1.</param>
         /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        private void TrackBar1_ValueChanged(object sender, EventArgs e)
         {
             rotationAngle = trackBar1.Value;
             Refresh();
@@ -373,7 +375,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// </summary>
         /// <param name="sender">The source of the event, typically pictureBox1.</param>
         /// <param name="e">A <see cref="PaintEventArgs"/> object that contains the event data, including the Graphics object used for drawing.</param>
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        private void PictureBox1_Paint(object sender, PaintEventArgs e)
         {
             DrawPictureBox(e.Graphics);
         }
@@ -383,7 +385,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// </summary>
         /// <param name="sender">The source of the event, typically the saveButton.</param>
         /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        private void saveButton_Click(object sender, EventArgs e)
+        private void SaveButton_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.CS_Slider = trackBar1.Value;
             Properties.Settings.Default.CS_Swap = swapGreenCheckbox.Checked;
@@ -398,7 +400,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// Updates the error values.
         /// </summary>
         /// <param name="errorValues">The error values array.</param>
-        internal void errorValues(float[] errorValues)
+        internal void ErrorValues(float[] errorValues)
         {
             redError = errorValues[0];
             greenError = errorValues[1];
@@ -410,7 +412,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// </summary>
         /// <param name="sender">The source of the event, typically the updateTimer.</param>
         /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        private void updateTimer_Tick(object sender, EventArgs e)
+        private void UpdateTimer_Tick(object sender, EventArgs e)
         {
             pictureBox1.Invalidate();
         }
@@ -431,7 +433,7 @@ namespace Bahtinov_Collimator.AdjustAssistant
         /// </summary>
         /// <param name="sender">The source of the event, typically the reverseBox control.</param>
         /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        private void reverseBox_CheckedChanged(object sender, EventArgs e)
+        private void ReverseBox_CheckedChanged(object sender, EventArgs e)
         {
             pictureBox1.Invalidate();
         }

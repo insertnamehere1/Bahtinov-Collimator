@@ -63,7 +63,7 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Public Fields
-        public static Dictionary<int, double> errorValues { get; private set; }
+        public static Dictionary<int, double> ErrorValues { get; private set; }
         #endregion
 
         #region Constructor
@@ -73,7 +73,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         public BahtinovProcessing()
         {
-            errorValues = new Dictionary<int, double>();
+            ErrorValues = new Dictionary<int, double>();
             LoadSettings();
         }
         #endregion
@@ -536,7 +536,7 @@ namespace Bahtinov_Collimator
                 {
                     errorSign = -Math.Sign((double)(xErrorDistance * yDistance - yErrorDistance * xDistance));
                 }
-                catch(Exception ex)
+                catch(Exception)
                 {
                     ImageLostEventProvider.OnImageLost("Image Lost", "Bahtinov Processing: ", MessageBoxIcon.Error, MessageBoxButtons.OK);
                     lastFocusErrorValue = 0.0f;
@@ -572,10 +572,10 @@ namespace Bahtinov_Collimator
                 {
                     FocusDataEvent?.Invoke(null, new FocusDataEventArgs(fd));
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {}
 
-                errorValues[group] = bahtinovOffset;
+                ErrorValues[group] = bahtinovOffset;
 
                 float errorMarker_X = xIntersection + (perpendicularX - xIntersection) * ErrorMarkerScalingValue;
                 float errorMarker_Y = yIntersection + (perpendicularY - yIntersection) * ErrorMarkerScalingValue;
