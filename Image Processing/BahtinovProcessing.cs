@@ -671,6 +671,7 @@ namespace Bahtinov_Collimator
         #endregion
     }
 
+    #region Structures
     public readonly struct Line2D
     {
         // Normal form: a*x + b*y + c = 0, with sqrt(a^2 + b^2) = 1
@@ -749,26 +750,6 @@ namespace Bahtinov_Collimator
             double d = A * x0 + B * y0 + C;
             return (x0 - d * A, y0 - d * B);
         }
-
-        /// <summary>
-        /// Returns a normalized direction vector (dx, dy) along the line.
-        /// Uses the original defining points if available; otherwise, computes
-        /// a perpendicular to the line’s normal vector.
-        /// </summary>
-        /// <returns>A unit vector (dx, dy) along the direction of the line.</returns>
-        public (double dx, double dy) Direction()
-        {
-            // Any direction vector perpendicular to the normal (A,B)
-            // Use the original points if available, else a perpendicular
-            double dx = X2 - X1;
-            double dy = Y2 - Y1;
-            if (dx == 0 && dy == 0)
-            {
-                // fallback to a unit vector perpendicular to the normal
-                return (-B, A);
-            }
-            double s = Math.Sqrt(dx * dx + dy * dy);
-            return (dx / s, dy / s);
-        }
     }
+    #endregion
 }
