@@ -873,7 +873,9 @@ namespace Bahtinov_Collimator
                 {
                     SolidBrush menuBackgroundBrush = new SolidBrush(UITheme.MenuHighlightBackground);
 
-                    e.Graphics.FillRectangle(menuBackgroundBrush, e.Item.ContentRectangle);
+                    if (e.Item.Enabled)
+                        e.Graphics.FillRectangle(menuBackgroundBrush, e.Item.ContentRectangle);
+
                     e.Item.ForeColor = UITheme.MenuDarkForeground;
                 }
                 else
