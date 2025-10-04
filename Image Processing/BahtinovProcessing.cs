@@ -412,25 +412,23 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Processes and displays detected Bahtinov lines on the provided star image.
+        /// Processes detected Bahtinov diffraction lines and overlays them on a star image.
         /// 
-        /// The method performs the following steps:
-        /// 1. Validates the number of detected lines, ensuring it is either 3 or 9. Logs an error and returns false if the number is incorrect.
-        /// 2. Initializes data structures for processing and calculates image center coordinates.
-        /// 3. For each group of lines:
-        ///    - Reorders lines if necessary.
-        ///    - Computes the start and end points of each line.
-        ///    - Calculates intersections and error distances related to focus.
-        ///    - Determines if the focus error is within an acceptable range.
-        ///    - Prepares visual markers for displaying the error and lines.
-        /// 4. Invokes events to update the user interface or other components with the processed line data and error information.
-        /// 
-        /// Returns true if the lines were successfully processed and displayed; otherwise, false.
-        /// 
-        /// <param name="lines">The <see cref="BahtinovData"/> object containing the detected line angles and indices.</param>
-        /// <param name="starImage">The bitmap image of the star on which the lines are to be displayed.</param>
-        /// <returns>True if the lines were successfully processed and displayed; otherwise, false.</returns>
+        /// Steps performed:
+        /// 1. Validates the number of detected lines (must be 3 or 9).
+        /// 2. Converts detected line angles and offsets into XY endpoints.
+        /// 3. Builds robust line representations in normal form, avoiding slope infinities.
+        /// 4. For each group of 3 lines:
+        ///    - Computes the intersection of the outer lines.
+        ///    - Projects this intersection onto the middle line.
+        ///    - Calculates focus error magnitude and sign.
+        ///    - Evaluates whether the error lies within the critical focus zone.
+        ///    - Prepares visual markers (error circle, error line, line overlays).
+        /// 5. Emits events with processed focus data and line drawing information.
         /// </summary>
+        /// <param name="lines">The <see cref="BahtinovData"/> containing detected line angles and offsets.</param>
+        /// <param name="starImage">The bitmap image on which lines and markers are drawn.</param>
+        /// <returns>True if processing succeeded, false if an error occurred.</returns>
         public bool DisplayLines(BahtinovData lines, Bitmap starImage)
         {
             if (lines.LineAngles.Length != 3 && lines.LineAngles.Length != 9)
@@ -451,6 +449,9 @@ namespace Bahtinov_Collimator
             float starImage_Y_Centre = (float)(height + 1.0) / 2.0f;
             float yOffset = 0.0f;
 
+            // Choose a small epsilon relative to image size for robust parallel checks
+            double eps = Math.Max(width, height) * 1e-12; // very strict, yet safe for 500x500
+
             for (int group = 0; group < numberOfGroups; group++)
             {
                 BahtinovLineDataEventArgs.LineGroup lineGroup = new BahtinovLineDataEventArgs.LineGroup(group);
@@ -459,6 +460,7 @@ namespace Bahtinov_Collimator
                 Array.Copy(lines.LineAngles, startIndex, bahtinovLines.LineAngles, 0, 3);
                 Array.Copy(lines.LineIndex, startIndex, bahtinovLines.LineIndex, 0, 3);
 
+                // Preserve your vertical-swap logic
                 if (Math.Abs(bahtinovLines.LineAngles[0] - 1.5708) < 0.0001)
                 {
                     float tmp = bahtinovLines.LineAngles[0];
@@ -469,11 +471,16 @@ namespace Bahtinov_Collimator
                     bahtinovLines.LineIndex[2] = tmp2;
                 }
 
-                float firstLineSlope = 0.0f, thirdLineSlope = 0.0f;
-                float firstYForXStart = 0.0f, thirdYForXStart = 0.0f;
-                float secondLineStartX = 0.0f, secondLineStartY = 0.0f;
-                float secondLineEndX = 0.0f, secondLineEndY = 0.0f;
+                // Storage for endpoints, and for normal-form lines
+                // second line endpoints are still required later for sign and distances
+                double secondLineStartX = 0, secondLineStartY = 0;
+                double secondLineEndX = 0, secondLineEndY = 0;
 
+                Line2D? firstLine = null;
+                Line2D? secondLine = null;
+                Line2D? thirdLine = null;
+
+                // Build endpoints from your angle + offset model, then create Line2D from endpoints
                 for (int index = 0; index < bahtinovLines.LineAngles.Length; ++index)
                 {
                     float centrePoint = Math.Min(starImage_X_Centre, starImage_Y_Centre);
@@ -487,63 +494,79 @@ namespace Bahtinov_Collimator
                     float lineStart_Y = starImage_Y_Centre + (-centrePoint * sinAngle) - (offsetY * cosAngle);
                     float lineEnd_Y = starImage_Y_Centre + (centrePoint * sinAngle) - (offsetY * cosAngle);
 
-                    BahtinovLineDataEventArgs.Line bahtinovLine = new BahtinovLineDataEventArgs.Line(
+                    // Add to group for drawing (screen coordinates with Y flipped as you had)
+                    var bahtinovLine = new BahtinovLineDataEventArgs.Line(
                         new Point((int)Math.Round(lineStart_X), (int)Math.Round(height - lineStart_Y + yOffset)),
-                        new Point((int)Math.Round(lineEnd_X), (int)Math.Round(height - lineEnd_Y + yOffset)), index
+                        new Point((int)Math.Round(lineEnd_X), (int)Math.Round(height - lineEnd_Y + yOffset)),
+                        index
                     );
                     lineGroup.AddLine(bahtinovLine);
+
+                    // Build robust Line2D
+                    var L = Line2D.FromPoints(lineStart_X, lineStart_Y, lineEnd_X, lineEnd_Y);
 
                     switch (index)
                     {
                         case 0:
-                            firstLineSlope = (lineEnd_Y - lineStart_Y) / (lineEnd_X - lineStart_X);
-                            firstYForXStart = -(lineStart_X * (lineEnd_Y - lineStart_Y) / (lineEnd_X - lineStart_X)) + lineStart_Y;
+                            firstLine = L;
                             break;
                         case 1:
+                            secondLine = L;
                             secondLineStartX = lineStart_X;
-                            secondLineEndX = lineEnd_X;
                             secondLineStartY = lineStart_Y;
+                            secondLineEndX = lineEnd_X;
                             secondLineEndY = lineEnd_Y;
                             break;
                         case 2:
-                            thirdLineSlope = (lineEnd_Y - lineStart_Y) / (lineEnd_X - lineStart_X);
-                            thirdYForXStart = -(lineStart_X * (lineEnd_Y - lineStart_Y) / (lineEnd_X - lineStart_X)) + lineStart_Y;
+                            thirdLine = L;
                             break;
                     }
                 }
 
-                float xIntersection = -(firstYForXStart - thirdYForXStart) / (firstLineSlope - thirdLineSlope);
-                float yIntersection = firstLineSlope * xIntersection + firstYForXStart;
+                if (firstLine == null || secondLine == null || thirdLine == null)
+                {
+                    ImageLostEventProvider.OnImageLost("Image Lost", "Bahtinov Processing: missing lines", MessageBoxIcon.Error, MessageBoxButtons.OK);
+                    lastFocusErrorValue = 0.0f;
+                    return false;
+                }
 
-                float perpendicularDistance = ((xIntersection - secondLineStartX) * (secondLineEndX - secondLineStartX) +
-                                               (yIntersection - secondLineStartY) * (secondLineEndY - secondLineStartY)) /
-                                              ((secondLineEndX - secondLineStartX) * (secondLineEndX - secondLineStartX) +
-                                               (secondLineEndY - secondLineStartY) * (secondLineEndY - secondLineStartY));
+                // Intersection of first and third lines (no slopes used)
+                var inter = Line2D.Intersect(firstLine.Value, thirdLine.Value, eps);
+                if (!inter.HasValue)
+                {
+                    // If these are nearly parallel, you could fall back to midpoints or skip
+                    ImageLostEventProvider.OnImageLost("Unable to compute intersection for Bahtinov lines", "DisplayLines", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                    lastFocusErrorValue = 0.0f;
+                    return false;
+                }
+                double xIntersectionD = inter.Value.x;
+                double yIntersectionD = inter.Value.y;
 
-                float perpendicularX = secondLineStartX + perpendicularDistance * (secondLineEndX - secondLineStartX);
-                float perpendicularY = secondLineStartY + perpendicularDistance * (secondLineEndY - secondLineStartY);
+                // Project the intersection onto the second line to get the perpendicular foot
+                var (perpXD, perpYD) = secondLine.Value.ProjectPoint(xIntersectionD, yIntersectionD);
 
-                float errorDistance = (float)Math.Sqrt((xIntersection - perpendicularX) * (xIntersection - perpendicularX) +
-                                                       (yIntersection - perpendicularY) * (yIntersection - perpendicularY));
+                // Distances and sign (keep your existing sign convention)
+                double dxErr = xIntersectionD - perpXD;
+                double dyErr = yIntersectionD - perpYD;
 
-                float xErrorDistance = xIntersection - perpendicularX;
-                float yErrorDistance = yIntersection - perpendicularY;
-                float xDistance = secondLineEndX - secondLineStartX;
-                float yDistance = secondLineEndY - secondLineStartY;
+                double dx2 = secondLineEndX - secondLineStartX;
+                double dy2 = secondLineEndY - secondLineStartY;
 
                 float errorSign;
                 try
                 {
-                    errorSign = -Math.Sign((double)(xErrorDistance * yDistance - yErrorDistance * xDistance));
+                    // cross product z of (error vector) x (second line direction)
+                    errorSign = (float)(-Math.Sign(dxErr * dy2 - dyErr * dx2));
                 }
-                catch(Exception)
+                catch
                 {
                     ImageLostEventProvider.OnImageLost("Image Lost", "Bahtinov Processing: ", MessageBoxIcon.Error, MessageBoxButtons.OK);
                     lastFocusErrorValue = 0.0f;
                     return false;
                 }
 
-                double bahtinovOffset = errorSign * Math.Floor(errorDistance * 10) / 10 ;
+                double errorDistanceD = Math.Sqrt(dxErr * dxErr + dyErr * dyErr);
+                double bahtinovOffset = errorSign * Math.Floor(errorDistanceD * 10.0) / 10.0;
 
                 float radianPerDegree = (float)Math.PI / 180f;
                 float bahtinovAngle = Math.Abs((bahtinovLines.LineAngles[2] - bahtinovLines.LineAngles[0]) / 2.0f);
@@ -552,7 +575,7 @@ namespace Bahtinov_Collimator
                                         ((focalLengthSetting / 1000.0f) * pixelSizeSetting) *
                                         (1.0f + Math.Cos(45.0f * radianPerDegree) * (1.0f + (float)Math.Tan(bahtinovAngle))));
 
-                double focusErrorInMicrons = errorDistance / pixelsPerMicron;
+                double focusErrorInMicrons = errorDistanceD / pixelsPerMicron;
 
                 float criticalFocusValue = 8.99999974990351E-07f * (focalLengthSetting / 1000.0f) /
                                            (apertureSetting / 1000.0f) * (focalLengthSetting / 1000.0f) /
@@ -572,10 +595,15 @@ namespace Bahtinov_Collimator
                 {
                     FocusDataEvent?.Invoke(null, new FocusDataEventArgs(fd));
                 }
-                catch (Exception)
-                {}
+                catch { }
 
                 ErrorValues[group] = bahtinovOffset;
+
+                // Error marker point along the perpendicular segment (cast back to float for drawing)
+                float xIntersection = (float)xIntersectionD;
+                float yIntersection = (float)yIntersectionD;
+                float perpendicularX = (float)perpXD;
+                float perpendicularY = (float)perpYD;
 
                 float errorMarker_X = xIntersection + (perpendicularX - xIntersection) * ErrorMarkerScalingValue;
                 float errorMarker_Y = yIntersection + (perpendicularY - yIntersection) * ErrorMarkerScalingValue;
@@ -585,10 +613,12 @@ namespace Bahtinov_Collimator
                 int circle_y = (int)(height - errorMarker_Y - circleRadius + yOffset);
                 int circle_width = circleRadius * 2;
                 int circle_height = circleRadius * 2;
-                string errorValue = (errorSign * (Math.Floor(errorDistance * 10)/10)).ToString("F1");
+                string errorValue = (errorSign * (Math.Floor((float)errorDistanceD * 10) / 10)).ToString("F1");
 
-                lineGroup.ErrorCircle = new BahtinovLineDataEventArgs.ErrorCircle(new Point(circle_x, circle_y), circle_width, circle_height, withinCriticalFocus, errorValue);
+                lineGroup.ErrorCircle = new BahtinovLineDataEventArgs.ErrorCircle(
+                    new Point(circle_x, circle_y), circle_width, circle_height, withinCriticalFocus, errorValue);
 
+                // Error line is drawn perpendicular to the 2nd line at the error marker location
                 float lineX1 = errorMarker_X + circleRadius;
                 float lineY1 = height - errorMarker_Y;
                 float lineX2 = errorMarker_X - circleRadius;
@@ -609,10 +639,13 @@ namespace Bahtinov_Collimator
                 rotatedX2 += errorMarker_X;
                 rotatedY2 += height - errorMarker_Y;
 
-                lineGroup.ErrorLine = new BahtinovLineDataEventArgs.ErrorLine(new Point((int)rotatedX1, (int)rotatedY1), new Point((int)rotatedX2, (int)rotatedY2));
+                lineGroup.ErrorLine = new BahtinovLineDataEventArgs.ErrorLine(
+                    new Point((int)rotatedX1, (int)rotatedY1),
+                    new Point((int)rotatedX2, (int)rotatedY2));
+
                 displayLines.AddLineGroup(lineGroup);
 
-                lastFocusErrorValue = xIntersection;
+                lastFocusErrorValue = xIntersection; // unchanged behavior
             }
 
             BahtinovLineDrawEvent?.Invoke(null, new BahtinovLineDataEventArgs(displayLines, starImage));
@@ -636,5 +669,106 @@ namespace Bahtinov_Collimator
             FocusDataEvent?.Invoke(null, new FocusDataEventArgs(fd));
         }
         #endregion
+    }
+
+    public readonly struct Line2D
+    {
+        // Normal form: a*x + b*y + c = 0, with sqrt(a^2 + b^2) = 1
+        public double A { get; }
+        public double B { get; }
+        public double C { get; }
+
+        // Optional: store points to recover direction if needed
+        public double X1 { get; }
+        public double Y1 { get; }
+        public double X2 { get; }
+        public double Y2 { get; }
+
+        private Line2D(double a, double b, double c, double x1, double y1, double x2, double y2)
+        {
+            double s = Math.Sqrt(a * a + b * b);
+            if (s == 0) throw new ArgumentException("Degenerate line from identical points");
+            A = a / s; B = b / s; C = c / s;
+            X1 = x1; Y1 = y1; X2 = x2; Y2 = y2;
+        }
+
+        /// <summary>
+        /// Constructs a <see cref="Line2D"/> in normalized normal form (a*x + b*y + c = 0)
+        /// from two given points. This avoids slope calculations and remains stable
+        /// even for vertical or horizontal lines.
+        /// </summary>
+        /// <param name="x1">The x-coordinate of the first point.</param>
+        /// <param name="y1">The y-coordinate of the first point.</param>
+        /// <param name="x2">The x-coordinate of the second point.</param>
+        /// <param name="y2">The y-coordinate of the second point.</param>
+        /// <returns>A <see cref="Line2D"/> representing the line through the two points.</returns>
+        /// <exception cref="ArgumentException">Thrown if the two points are identical.</exception>
+        public static Line2D FromPoints(double x1, double y1, double x2, double y2)
+        {
+            // a = dy, b = -dx, c = dx*y1 - dy*x1
+            double dx = x2 - x1;
+            double dy = y2 - y1;
+            double a = dy;
+            double b = -dx;
+            double c = dx * y1 - dy * x1;
+            return new Line2D(a, b, c, x1, y1, x2, y2);
+        }
+
+        /// <summary>
+        /// Computes the intersection point of two lines in normalized normal form.
+        /// Returns <c>null</c> if the lines are parallel or coincident within the
+        /// specified epsilon tolerance.
+        /// </summary>
+        /// <param name="L1">The first line.</param>
+        /// <param name="L2">The second line.</param>
+        /// <param name="eps">Numerical tolerance for determinant near zero (default 1e-9).</param>
+        /// <returns>
+        /// A tuple (x, y) containing the coordinates of the intersection, or
+        /// <c>null</c> if no unique intersection exists.
+        /// </returns>
+        public static (double x, double y)? Intersect(Line2D L1, Line2D L2, double eps = 1e-9)
+        {
+            double det = L1.A * L2.B - L2.A * L1.B;
+            if (Math.Abs(det) < eps) return null; // parallel or coincident
+            double x = (L1.B * L2.C - L2.B * L1.C) / det;
+            double y = (L1.C * L2.A - L2.C * L1.A) / det;
+            return (x, y);
+        }
+
+        /// <summary>
+        /// Projects a point (x0, y0) orthogonally onto this line,
+        /// returning the coordinates of the perpendicular foot.
+        /// </summary>
+        /// <param name="x0">The x-coordinate of the point to project.</param>
+        /// <param name="y0">The y-coordinate of the point to project.</param>
+        /// <returns>A tuple (x, y) giving the projection of the point onto the line.</returns>
+        public (double x, double y) ProjectPoint(double x0, double y0)
+        {
+            // Projection of point onto line in normal form
+            // p' = p - (a*x0 + b*y0 + c) * (a, b)
+            double d = A * x0 + B * y0 + C;
+            return (x0 - d * A, y0 - d * B);
+        }
+
+        /// <summary>
+        /// Returns a normalized direction vector (dx, dy) along the line.
+        /// Uses the original defining points if available; otherwise, computes
+        /// a perpendicular to the line’s normal vector.
+        /// </summary>
+        /// <returns>A unit vector (dx, dy) along the direction of the line.</returns>
+        public (double dx, double dy) Direction()
+        {
+            // Any direction vector perpendicular to the normal (A,B)
+            // Use the original points if available, else a perpendicular
+            double dx = X2 - X1;
+            double dy = Y2 - Y1;
+            if (dx == 0 && dy == 0)
+            {
+                // fallback to a unit vector perpendicular to the normal
+                return (-B, A);
+            }
+            double s = Math.Sqrt(dx * dx + dy * dy);
+            return (dx / s, dy / s);
+        }
     }
 }
