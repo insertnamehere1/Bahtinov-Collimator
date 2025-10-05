@@ -114,9 +114,9 @@ namespace Bahtinov_Collimator
         private string GenerateDonationUrl()
         {
             string business = "chris@chrisandbev.com.au";
-            string description = "Bahtinov%20Collimator%20Donation";
+            string description = "SkyCal%20Collimator%20Donation";
             string country = "AU";  // AU, US, etc.
-            string currency = "AUD";  // AUD, USD, etc.
+            string currency = "USD";  // AUD, USD, etc.
 
             return "https://www.paypal.com/cgi-bin/webscr" +
                    "?cmd=_donations" +
