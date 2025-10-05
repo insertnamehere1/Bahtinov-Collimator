@@ -1,8 +1,13 @@
-﻿using System;
+﻿using Bahtinov_Collimator.Helper;
+using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Windows.Forms;
+using static System.Windows.Forms.LinkLabel;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Bahtinov_Collimator
 {
@@ -92,7 +97,16 @@ namespace Bahtinov_Collimator
         {
             richTextBox.BackColor = UITheme.DarkBackground;
             richTextBox.ForeColor = UITheme.DonateTextColor;
-            richTextBox.Text = "If you've found this app useful and it has helped improve your images, please consider donating. \n\nYour contribution is appreciated.";
+
+            richTextBox.Text = "Thank you for using SkyCal!\n\n" +
+            "If SkyCal has helped you achieve sharper focus, easier collimation, or simply made\n" +
+            "your nights under the stars a little more rewarding, please consider showing your \n" +
+            "support by using the “Buy Me a Coffee” link in the Help menu. Every coffee keeps \n" +
+            "the project alive, keeps me awake while writing manuals, helps me keep improving \n" +
+            "the software, and reminds me that the effort was worthwhile.\n\n" +
+            "Clear Skies and Sharp Stars\n" +
+            "Chris Dowd,\n" +
+            "Developer of SkyCal";
         }
 
         /// <summary>
@@ -113,10 +127,11 @@ namespace Bahtinov_Collimator
         /// <returns>The URL as a string.</returns>
         private string GenerateDonationUrl()
         {
-            string business = "chris@chrisandbev.com.au";
-            string description = "SkyCal%20Collimator%20Donation";
-            string country = "AU";  // AU, US, etc.
-            string currency = "USD";  // AUD, USD, etc.
+            string business = Uri.EscapeDataString("chris@chrisandbev.com.au");
+            string description = Uri.EscapeDataString("Buy Chris a Coffee – SkyCal Project");
+            string country = "AU";
+            string currency = "USD";
+            string thankYouUrl = "https://yourdomain.com/thankyou";
 
             return "https://www.paypal.com/cgi-bin/webscr" +
                    "?cmd=_donations" +
@@ -124,7 +139,11 @@ namespace Bahtinov_Collimator
                    "&lc=" + country +
                    "&item_name=" + description +
                    "&currency_code=" + currency +
-                   "&bn=PP%2dDonationsBF";
+                   "&no_shipping=1" +
+                   "&no_note=0" +
+                   "&cn=Leave%20a%20message%20(optional)" +
+                   "&return=" + Uri.EscapeDataString(thankYouUrl) +
+                   "&bn=PP-DonationsBF";
         }
 
         /// <summary>
