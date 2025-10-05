@@ -247,6 +247,7 @@
     <Compile Include="Voice\VoiceControl.cs" />
     <Compile Include="Utilities\UITheme.cs" />
     <Compile Include="Utilities\Utilities.cs" />
+    <Content Include="SkyCal.logo.png" />
     <EmbeddedResource Include="AdjustAssist\AdjustAssistBase.resx">
       <DependentUpon>AdjustAssistBase.cs</DependentUpon>
     </EmbeddedResource>
