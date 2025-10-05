@@ -57,8 +57,10 @@ namespace Bahtinov_Collimator
             this.Font = newFont;
             richTextBox.Font = newFont;
             label1.Font = newFont;
-            donateButton.Font = newFont;
             cancelButton.Font = newFont;
+
+            string url = GenerateDonationUrl();
+            Process.Start(url);
         }
 
         /// <summary>
@@ -69,11 +71,6 @@ namespace Bahtinov_Collimator
             // Main form
             this.ForeColor = UITheme.DarkForeground;
             this.BackColor = UITheme.DarkBackground;
-
-            // Donate button
-            donateButton.BackColor = UITheme.ButtonDarkBackground;
-            donateButton.ForeColor = UITheme.ButtonDarkForeground;
-            donateButton.FlatStyle = FlatStyle.Popup;
 
             // Cancel button
             cancelButton.BackColor = UITheme.ButtonDarkBackground;
@@ -116,9 +113,8 @@ namespace Bahtinov_Collimator
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void Button1_Click(object sender, EventArgs e)
         {
-            string url = GenerateDonationUrl();
-            Process.Start(url);
-            Close();
+
+
         }
 
         /// <summary>
@@ -131,6 +127,7 @@ namespace Bahtinov_Collimator
             string description = Uri.EscapeDataString("Buy Chris a Coffee – SkyCal Project");
             string country = "AU";
             string currency = "USD";
+            string logoUrl = "https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/refs/heads/master/SkyCal.logo.png";
             string thankYouUrl = "https://yourdomain.com/thankyou";
 
             return "https://www.paypal.com/cgi-bin/webscr" +
@@ -142,6 +139,7 @@ namespace Bahtinov_Collimator
                    "&no_shipping=1" +
                    "&no_note=0" +
                    "&cn=Leave%20a%20message%20(optional)" +
+                   "&image_url=" + Uri.EscapeDataString(logoUrl) +
                    "&return=" + Uri.EscapeDataString(thankYouUrl) +
                    "&bn=PP-DonationsBF";
         }
