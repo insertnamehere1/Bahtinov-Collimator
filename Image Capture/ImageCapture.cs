@@ -495,122 +495,11 @@ namespace Bahtinov_Collimator
         /// <returns>A <see cref="Point"/> representing the centroid of the brightest area in the image.</returns>
         public static Point FindBrightestAreaCentroid(Bitmap bitmap)
         {
-            byte threshold = CalculateThreshold(bitmap, 0.10f); // 10% brightest pixels
-            using (Bitmap binaryImage = ApplyThreshold(bitmap, threshold))
-            {
-                Point centroid = FindBlobCentroid(binaryImage);
-                return centroid;
-            }
-        }
-
-        /// <summary>
-        /// Calculates the brightness threshold for the top percentage of brightest pixels in a bitmap image. The method extracts green channel values from the image, sorts them, and determines the threshold value to include the specified percentage of the brightest pixels.
-        /// </summary>
-        /// <param name="bitmap">The <see cref="Bitmap"/> image from which to calculate the threshold.</param>
-        /// <param name="topPercent">The percentage of the brightest pixels to include in the threshold calculation (e.g., 0.10 for the top 10%).</param>
-        /// <returns>A <see cref="byte"/> representing the calculated brightness threshold.</returns>
-        private static byte CalculateThreshold(Bitmap bitmap, float topPercent)
-        {
-            int pixelCount = bitmap.Width * bitmap.Height;
-            byte[] greenChannelValues = new byte[pixelCount];
-
-            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
-                ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-
-            unsafe
-            {
-                byte* ptr = (byte*)bitmapData.Scan0;
-                int stride = bitmapData.Stride;
-
-                int bitmapHeight = bitmap.Height;
-                int bitmapWidth = bitmap.Width;
-
-                for (int y = 0; y < bitmapHeight; y++)
-                {
-                    byte* row = ptr + y * stride;
-
-                    for (int x = 0; x < bitmapWidth; x++)
-                    {
-                        byte greenValue = row[x * 3 + 1];
-                        greenChannelValues[y * bitmapWidth + x] = greenValue;
-                    }
-                }
-            }
-
-            bitmap.UnlockBits(bitmapData);
-
-            Array.Sort(greenChannelValues);
-            int thresholdIndex = (int)(pixelCount * (1 - topPercent)) - 1;
-            return greenChannelValues[thresholdIndex];
-        }
-
-        /// <summary>
-        /// Converts a color bitmap to a binary bitmap based on a brightness threshold. Pixels with a green channel value greater than or equal to the specified threshold are set to white; all other pixels are set to black.
-        /// </summary>
-        /// <param name="bitmap">The <see cref="Bitmap"/> image to be thresholded.</param>
-        /// <param name="threshold">The brightness threshold value. Pixels with a green channel value greater than or equal to this threshold are set to white in the resulting binary image.</param>
-        /// <returns>A <see cref="Bitmap"/> in 1-bit per pixel format where pixels are either black or white based on the threshold.</returns>
-        private static Bitmap ApplyThreshold(Bitmap bitmap, byte threshold)
-        {
-            Bitmap binaryBitmap = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format1bppIndexed);
-            BitmapData binaryData = binaryBitmap.LockBits(new Rectangle(0, 0, binaryBitmap.Width, binaryBitmap.Height),
-                ImageLockMode.WriteOnly, PixelFormat.Format1bppIndexed);
-            BitmapData colorData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
-                ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-
-            unsafe
-            {
-                byte* binaryPtr = (byte*)binaryData.Scan0;
-                byte* colorPtr = (byte*)colorData.Scan0;
-
-                int stride = binaryData.Stride;
-                int colorStride = colorData.Stride;
-
-                int bitmapHeight = binaryBitmap.Height;
-                int bitmapWidth = binaryBitmap.Width;
-
-                for (int y = 0; y < bitmapHeight; y++)
-                {
-                    byte* binaryRow = binaryPtr + y * stride;
-                    byte* colorRow = colorPtr + y * colorStride;
-
-                    for (int x = 0; x < bitmapWidth; x++)
-                    {
-                        byte greenValue = colorRow[x * 3 + 1];
-                        byte bit = (greenValue >= threshold) ? (byte)1 : (byte)0;
-                        int bitIndex = x % 8;
-                        int byteIndex = x / 8;
-
-                        if (bit == 1)
-                        {
-                            binaryRow[byteIndex] |= (byte)(1 << (7 - bitIndex));
-                        }
-                        else
-                        {
-                            binaryRow[byteIndex] &= (byte)~(1 << (7 - bitIndex));
-                        }
-                    }
-                }
-            }
-
-            binaryBitmap.UnlockBits(binaryData);
-            bitmap.UnlockBits(colorData);
-
-            return binaryBitmap;
-        }
-
-        /// <summary>
-        /// Calculates the centroid of the white areas in a binary bitmap. The centroid is determined by averaging the coordinates of all white pixels. If no white pixels are found, the method returns the center of the image.
-        /// </summary>
-        /// <param name="binaryImage">The <see cref="Bitmap"/> image in 1-bit per pixel format where white pixels are considered as part of the blob.</param>
-        /// <returns>A <see cref="Point"/> representing the centroid of the white areas in the binary image. If no white pixels are found, returns the center of the image.</returns>
-        private static Point FindBlobCentroid(Bitmap binaryImage)
-        {
             long sumX = 0, sumY = 0, count = 0;
-            int width = binaryImage.Width;
-            int height = binaryImage.Height;
+            int width = bitmap.Width;
+            int height = bitmap.Height;
 
-            BitmapData bitmapData = binaryImage.LockBits(new Rectangle(0, 0, width, height),
+            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height),
                 ImageLockMode.ReadOnly, PixelFormat.Format1bppIndexed);
 
             unsafe
@@ -634,7 +523,7 @@ namespace Bahtinov_Collimator
                 }
             }
 
-            binaryImage.UnlockBits(bitmapData);
+            bitmap.UnlockBits(bitmapData);
 
             if (count == 0)
             {
