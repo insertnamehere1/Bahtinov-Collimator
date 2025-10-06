@@ -23,14 +23,15 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
+using MathNet.Numerics.Distributions;
 using System;
-using System.Drawing.Imaging;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Bahtinov_Collimator.BahtinovLineDataEventArgs;
-using System.Collections.Generic;
 
 namespace Bahtinov_Collimator
 {
@@ -214,19 +215,22 @@ namespace Bahtinov_Collimator
                     }
                 }
 
-                float largestValue = -1f;
-                float lineNumber = -1f;
+                // Old: pick single max row (unstable on thick spikes)
+                // New: find peak row, then compute centroid across bright plateau for stability
+                int yPeak = -1;
+                float bestVal = -1f;
+                
                 for (int y = topEdge; y < bottomEdge; ++y)
                 {
-                    if (smoothedTotals[y] > largestValue)
+                    if (smoothedTotals[y] > bestVal)
                     {
-                        largestValue = smoothedTotals[y];
-                        lineNumber = y;
+                        bestVal = smoothedTotals[y];
+                        yPeak = y;
                     }
                 }
-
-                lineNumbersOfBrightestLines[index1] = lineNumber;
-                valuesOfBrightestLines[index1] = largestValue;
+                float centroidY = PeakCentroid(smoothedTotals, topEdge, bottomEdge, yPeak, 0.80f);
+                lineNumbersOfBrightestLines[index1] = centroidY;
+                valuesOfBrightestLines[index1] = bestVal;
             });
 
             for (int i = 0; i < LINES; ++i)
@@ -242,13 +246,32 @@ namespace Bahtinov_Collimator
                     {
                         maxValue = valuesOfBrightestLines[j];
                         lineNumber = lineNumbersOfBrightestLines[j];
-                        angleInRadians = j * RADIANS_PER_DEGREE;
                         brightestLineIndex = j;
                     }
                 }
 
+                // Sub-degree angle refinement around brightestLineIndex using 3-point parabolic fit
+                int a0 = (brightestLineIndex - 1 + DEGREES180) % DEGREES180;
+                int a1 = brightestLineIndex;
+                int a2 = (brightestLineIndex + 1) % DEGREES180;
+                
+                float v0 = valuesOfBrightestLines[a0];
+                float v1 = valuesOfBrightestLines[a1];
+                float v2 = valuesOfBrightestLines[a2];
+                
+                // Vertex offset in bins (bin=1 degree): delta = 0.5*(v0 - v2)/(v0 - 2*v1 + v2)
+                float denom = (v0 - 2f * v1 + v2);
+                float delta = denom != 0f ? 0.5f * (v0 - v2) / denom : 0f;
+                
+                // Clamp to [-0.5, +0.5] so we do not jump across neighboring bins
+                if (delta < -0.5f) delta = -0.5f;
+                if (delta > 0.5f) delta = 0.5f;
+                
+                float refinedAngleDeg = a1 + delta;
+                angleInRadians = refinedAngleDeg * RADIANS_PER_DEGREE;
+                
                 result.LineIndex[i] = lineNumber;
-                result.LineAngles[i] = angleInRadians;
+                result.LineAngles[i] = angleInRadians;   // refined sub-degree angle
                 result.LineValue[i] = maxValue;
 
                 for (int j = brightestLineIndex - DEG_5; j <= brightestLineIndex + DEG_5; ++j)
@@ -398,7 +421,12 @@ namespace Bahtinov_Collimator
                     }
                 }
 
-                float subPixelLineNumber = (float)PolynomialCurveFit.FindMaxValueIndex(rowTotals, (int)lineNumberOfLargestValue, 2);
+                // Seed the subpixel fit at the centroid of the peak plateau for extra stability
+                int yPeak = (int)lineNumberOfLargestValue;
+                float centroidY = PeakCentroid(rowTotals, topEdge, bottomEdge, yPeak, 0.80f);
+                int seed = (int)Math.Round(centroidY);
+                
+                float subPixelLineNumber = (float)PolynomialCurveFit.FindMaxValueIndex(rowTotals, seed, 2);
                 subpixelLineNumbers[index1] = subPixelLineNumber;
                 brightestLineValues[index1] = largestValueForThisRotation;
             });
@@ -668,6 +696,27 @@ namespace Bahtinov_Collimator
 
             FocusDataEvent?.Invoke(null, new FocusDataEventArgs(fd));
         }
+
+        // Center of mass inside the contiguous window above a fraction of the peak.
+        // Use frac=0.70..0.85 depending on how fat the spikes are.
+        private static float PeakCentroid(float[] v, int top, int bottom, int peakIndex, float frac = 0.80f)
+        {
+            float peak = v[peakIndex];
+            float thr = peak * frac;
+
+            int L = peakIndex, R = peakIndex;
+            while (L > top && v[L - 1] >= thr) L--;
+            while (R < bottom - 1 && v[R + 1] >= thr) R++;
+
+            double num = 0, den = 0;
+            for (int y = L; y <= R; y++)
+            {
+                double w = v[y];
+                num += y * w;
+                den += w;
+            }
+            return den > 0 ? (float)(num / den) : peakIndex;
+        }
         #endregion
     }
 
@@ -751,5 +800,5 @@ namespace Bahtinov_Collimator
             return (x0 - d * A, y0 - d * B);
         }
     }
-    #endregion
+        #endregion
 }
