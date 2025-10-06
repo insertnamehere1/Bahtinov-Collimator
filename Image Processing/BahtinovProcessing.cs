@@ -697,8 +697,13 @@ namespace Bahtinov_Collimator
             FocusDataEvent?.Invoke(null, new FocusDataEventArgs(fd));
         }
 
-        // Center of mass inside the contiguous window above a fraction of the peak.
-        // Use frac=0.70..0.85 depending on how fat the spikes are.
+        /// <summary>Returns the intensity-weighted centroid within a plateau around a peak index.</summary>
+        /// <param name="v">Profile values (e.g., per-row totals).</param>
+        /// <param name="top">Inclusive lower bound index.</param>
+        /// <param name="bottom">Exclusive upper bound index.</param>
+        /// <param name="peakIndex">Index of the peak inside [top, bottom).</param>
+        /// <param name="frac">Fraction of peak height to define the plateau (default 0.80).</param>
+        /// <returns>Centroid index as a float; falls back to peakIndex if window is empty.</returns>
         private static float PeakCentroid(float[] v, int top, int bottom, int peakIndex, float frac = 0.80f)
         {
             float peak = v[peakIndex];
