@@ -148,6 +148,15 @@ namespace Bahtinov_Collimator
                 }
             }
 
+            // Estimate background on green channel and subtract it in working space.
+            float bgLevel = EstimateBackgroundLevelFromHistogram(
+                starImageArray, stride, bytesPerPixel,
+                leftEdge, rightEdge, topEdge, bottomEdge,
+                channelIndex: 1, // 0=R,1=G,2=B
+                divisionFactor: DIVISION_FACTOR);
+
+            SubtractBackgroundInPlace(starArray2D, leftEdge, rightEdge, topEdge, bottomEdge, 0.9f * bgLevel);
+
             float[] lineNumbersOfBrightestLines = new float[DEGREES180];
             float[] valuesOfBrightestLines = new float[DEGREES180];
 
@@ -352,6 +361,16 @@ namespace Bahtinov_Collimator
                     ++pixelsCounted;
                 }
             }
+
+            // Reuse green-channel background estimate for speed and stability.
+            float bgLevel2 = EstimateBackgroundLevelFromHistogram(
+                starImageArray, stride, bitmapData.Stride / width, // bytesPerPixel ~= Stride/width
+                leftEdge, rightEdge, topEdge, bottomEdge,
+                channelIndex: 1,
+                divisionFactor: divisionFactor);
+
+            SubtractBackgroundInPlace(starArray2D, leftEdge, rightEdge, topEdge, bottomEdge, 0.9f * bgLevel2);
+
 
             float[] subpixelLineNumbers = new float[lineCount];
             float[] brightestLineValues = new float[lineCount];
@@ -722,6 +741,71 @@ namespace Bahtinov_Collimator
             }
             return den > 0 ? (float)(num / den) : peakIndex;
         }
+
+
+
+
+
+
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static float EstimateBackgroundLevelFromHistogram(
+           byte[] img, int stride, int bytesPerPixel,
+           int left, int right, int top, int bottom,
+           int channelIndex, float divisionFactor)
+        {
+            // Build a small 256-bin histogram on the chosen channel (e.g., green).
+            // Using the 25th percentile as a robust sky background proxy.
+            int[] hist = new int[256];
+
+            for (int y = top; y < bottom; ++y)
+            {
+                int rowBase = y * stride;
+                for (int x = left; x < right; ++x)
+                {
+                    int p = rowBase + x * bytesPerPixel + channelIndex;
+                    hist[img[p]]++;
+                }
+            }
+
+            int total = (right - left) * (bottom - top);
+            int target = total >> 2; // 25th percentile
+            int acc = 0, bin = 0;
+            for (; bin < 256; ++bin)
+            {
+                acc += hist[bin];
+                if (acc >= target)
+                    break;
+            }
+
+            // Convert to your working scale (sqrt(g * DIVISION_FACTOR))
+            return (float)Math.Sqrt(bin * divisionFactor);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void SubtractBackgroundInPlace(
+            float[,] arr, int left, int right, int top, int bottom, float bg)
+        {
+            if (bg <= 0f) return;
+
+            for (int x = left; x < right; ++x)
+            {
+                for (int y = top; y < bottom; ++y)
+                {
+                    float v = arr[x, y] - bg;
+                    arr[x, y] = v > 0f ? v : 0f;
+                }
+            }
+        }
+
+
+
+
+
+
+
+
         #endregion
     }
 
