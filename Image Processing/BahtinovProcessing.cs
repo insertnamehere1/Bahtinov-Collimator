@@ -742,13 +742,35 @@ namespace Bahtinov_Collimator
             return den > 0 ? (float)(num / den) : peakIndex;
         }
 
-
-
-
-
-
-
-
+        /// <summary>
+        /// Estimates the background brightness level within a specified rectangular region
+        /// of an image by constructing a histogram of pixel intensities for a selected color channel.
+        /// The 25th percentile of the histogram is used as a robust estimator of sky background
+        /// brightness, minimizing the influence of bright stars or features.
+        /// </summary>
+        /// <param name="img">The source image byte array in RGB order.</param>
+        /// <param name="stride">The number of bytes per image row (bitmap stride).</param>
+        /// <param name="bytesPerPixel">The number of bytes per pixel (typically 3 for RGB).</param>
+        /// <param name="left">The left boundary of the region to analyze.</param>
+        /// <param name="right">The right boundary of the region to analyze.</param>
+        /// <param name="top">The top boundary of the region to analyze.</param>
+        /// <param name="bottom">The bottom boundary of the region to analyze.</param>
+        /// <param name="channelIndex">
+        /// The color channel index to measure (0 = Red, 1 = Green, 2 = Blue).
+        /// </param>
+        /// <param name="divisionFactor">
+        /// The division factor used in prior pixel normalization; typically matches
+        /// the constant used for scaling in Bahtinov image analysis.
+        /// </param>
+        /// <returns>
+        /// A floating-point background level scaled to match the working image units
+        /// (i.e., after applying sqrt(pixel * divisionFactor)).
+        /// </returns>
+        /// <remarks>
+        /// This method is designed for speed and numerical stability, avoiding floating-point
+        /// accumulation during histogram construction and applying a percentile-based approach
+        /// for better resilience to bright features in astronomical images.
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static float EstimateBackgroundLevelFromHistogram(
            byte[] img, int stride, int bytesPerPixel,
@@ -783,6 +805,28 @@ namespace Bahtinov_Collimator
             return (float)Math.Sqrt(bin * divisionFactor);
         }
 
+        /// <summary>
+        /// Subtracts a constant background level from the specified rectangular region
+        /// of a 2D floating-point image array in place. 
+        /// Values below zero after subtraction are clamped to zero to preserve valid intensity ranges.
+        /// </summary>
+        /// <param name="arr">
+        /// The 2D array of pixel intensities representing the working image data.
+        /// </param>
+        /// <param name="left">The left boundary (inclusive) of the region to modify.</param>
+        /// <param name="right">The right boundary (exclusive) of the region to modify.</param>
+        /// <param name="top">The top boundary (inclusive) of the region to modify.</param>
+        /// <param name="bottom">The bottom boundary (exclusive) of the region to modify.</param>
+        /// <param name="bg">
+        /// The background level to subtract, typically obtained from
+        /// <see cref="EstimateBackgroundLevelFromHistogram"/>.
+        /// </param>
+        /// <remarks>
+        /// This method performs the subtraction directly within the provided array for efficiency
+        /// and avoids negative intensity values by clamping to zero.
+        /// It is intended for rapid background normalization of star images prior to
+        /// line or centroid detection.
+        /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void SubtractBackgroundInPlace(
             float[,] arr, int left, int right, int top, int bottom, float bg)
@@ -798,14 +842,6 @@ namespace Bahtinov_Collimator
                 }
             }
         }
-
-
-
-
-
-
-
-
         #endregion
     }
 
