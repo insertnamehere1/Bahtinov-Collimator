@@ -215,12 +215,6 @@
     <Compile Include="Dialogs\DarkMessageBox.Designer.cs">
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utilities\DebugPictureBox.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Utilities\DebugPictureBox.Designer.cs">
-      <DependentUpon>DebugPictureBox.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utilities\Helper.cs" />
     <Compile Include="Image Processing\BahtinovProcessing.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -279,9 +273,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\DarkMessageBox.resx">
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Utilities\DebugPictureBox.resx">
-      <DependentUpon>DebugPictureBox.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="help.pdf" />
