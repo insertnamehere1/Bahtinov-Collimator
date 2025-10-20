@@ -61,3 +61,10 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+# Prevent line-ending normalization on ClickOnce payload
+*.application binary
+*.manifest    binary
+*.deploy      binary
+*.exe         binary
+*.dll         binary

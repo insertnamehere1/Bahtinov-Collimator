@@ -16,7 +16,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <PublishUrl>C:\Users\chris\OneDrive\Documents\Visual Studio 2022\Projects\Astronomy Projects\Bahtinov Collimator\published\</PublishUrl>
+    <PublishUrl>https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/master/published/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -34,7 +34,7 @@
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.1.0.0</ApplicationVersion>
+    <ApplicationVersion>3.0.0.5</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -109,7 +109,7 @@
     <ApplicationIcon>focusIcon2.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>5910F645802AF7EB362B74EAD07AF07F9B149FF0</ManifestCertificateThumbprint>
