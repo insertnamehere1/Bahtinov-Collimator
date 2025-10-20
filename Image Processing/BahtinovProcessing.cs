@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -327,6 +328,7 @@ namespace Bahtinov_Collimator
 
             int width = starImage.Width;
             int height = starImage.Height;
+            int stride = bitmapData.Stride;
 
             // Apply DPI scaling to the edgeOffset
             float edgeOffset = ((width < height ? width : height) * 0.707f - 8f);
