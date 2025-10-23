@@ -195,7 +195,7 @@ jobs:
           organization-id: ${{ secrets.SIGNPATH_ORG_ID }}
           project-slug: skycal
           signing-policy-slug: test-signing
-          github-artifact-id: ${{ needs.build.outputs.artifact_id }}
+          github-artifact-id: ${{ needs.build_test.outputs.artifact_id }}
           wait-for-completion: true
 
       - name: Replace unsigned ZIP with signed one
