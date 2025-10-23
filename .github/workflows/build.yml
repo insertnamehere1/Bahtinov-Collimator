@@ -113,6 +113,7 @@ jobs:
           "@@ Build: $env:GITHUB_RUN_ID`nRef: $env:GITHUB_REF`nSHA: $env:GITHUB_SHA" | Out-File artifacts\BUILD-METADATA.txt -Encoding UTF8
 
       - name: Upload CI artifacts
+        id: upload-artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-output-${{ github.run_number }}
@@ -192,6 +193,7 @@ jobs:
           organization-id: ${{ secrets.SIGNPATH_ORG_ID }}
           project-slug: skycal
           signing-policy-slug: release
+          github-artifact-id: ${{ steps.upload-artifacts.outputs.artifact-id }}
           artifact-path: dist/SkyCal-clickonce.zip
           wait-for-completion: true
 
