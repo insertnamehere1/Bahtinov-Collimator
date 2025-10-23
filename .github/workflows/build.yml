@@ -107,12 +107,12 @@ jobs:
           /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
 
 
-        - name: Rename ClickOnce setup.exe
-          shell: pwsh
-          run: |
-            if (Test-Path "out\clickonce\setup.exe") {
-                Rename-Item "out\clickonce\setup.exe" "SkyCal-Setup.exe" -Force
-            }
+      - name: Rename ClickOnce setup.exe
+        shell: pwsh
+        run: |
+          if (Test-Path "out\clickonce\setup.exe") {
+              Rename-Item "out\clickonce\setup.exe" "SkyCal-Setup.exe" -Force
+          }
 
 #      - name: Stage artifacts
 #        shell: pwsh
