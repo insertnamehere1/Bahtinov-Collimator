@@ -1,12 +1,6 @@
 name: Build, Test, and Release (ClickOnce)
 
 on:
-  push:
-    branches: [ master ]
-    tags: ['v*.*.*']   # releases are tag-driven
-  pull_request:
-    branches: [ master ]
-    
   workflow_dispatch:
 
 permissions:
@@ -23,6 +17,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: Signpath-Test
           fetch-depth: 0
 
       - name: Sync ApplicationVersion + AssemblyInfo from tag (no new XML nodes)
@@ -120,7 +115,7 @@ jobs:
       - name: Upload CI artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-output-${{ github.run_number }} 
+          name: build-output-${{ github.run_number }}
           path: artifacts/
 
   codeql:
@@ -133,6 +128,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: Signpath-Test
           fetch-depth: 0
 
       - name: Initialize CodeQL
@@ -158,7 +154,7 @@ jobs:
   release:
     name: Release (tag only)
     needs: [build_test]
-    if: startsWith(github.ref, 'refs/tags/')
+    if: always()
     runs-on: windows-latest
     permissions:
       contents: write
@@ -166,12 +162,10 @@ jobs:
       attestations: write
 
     steps:
-
-      # Publish to Master
-      - name: Checkout master (target branch)
+      - name: Checkout Signpath-Test branch
         uses: actions/checkout@v4
         with:
-          ref: master
+          ref: Signpath-Test
           fetch-depth: 0
 
       - name: Prepare clean dist/
@@ -183,8 +177,33 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-output-${{ github.run_number }} 
+          name: build-output-${{ github.run_number }}
           path: dist
+
+
+
+
+      # Submit once and wait for completion, then use outputs to download the signed ZIP
+      - name: Submit to SignPath and wait
+        id: sp
+        uses: SignPath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ secrets.SIGNPATH_ORG_ID }}
+          project-slug: skycal
+          signing-policy-slug: release
+          artifact-path: dist/SkyCal-clickonce.zip
+          wait-for-completion: true
+
+      - name: Replace unsigned ZIP with signed one
+        shell: pwsh
+        run: |
+          $url = "${{ steps.sp.outputs.signed-artifact-download-url }}"
+          Invoke-WebRequest -Uri $url -OutFile "dist/SkyCal-clickonce.zip"
+
+
+
+
 
       - name: Checksums
         shell: pwsh
@@ -195,67 +214,10 @@ jobs:
             "$hash  $($_.Name)" | Out-File -FilePath SHA256SUMS.txt -Append -Encoding ascii
           }
 
-      - name: SBOM (SPDX)
+      - name: SBOM (SPDX) for shipped artifacts
         uses: anchore/sbom-action@v0
         with:
-          path: .
+          path: dist
           format: spdx-json
-          output-file: sbom.spdx.json
+          output-file: dist/sbom.spdx.json
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: SkyCal ${{ github.ref_name }}
-          body: |
-            Source: ${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}
-            Commit: ${{ github.sha }}
-          files: |
-            dist/BUILD-METADATA.txt
-            dist/SkyCal-clickonce.zip
-            dist/setup.exe
-            dist/SHA256SUMS.txt
-            dist/sbom.spdx.json
-
-      - name: Attest build provenance
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-path: |
-            dist/SkyCal-clickonce.zip
-            dist/setup.exe
-
-      - name: Update published/ from clickonce.zip
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
-          unzip -o dist/SkyCal-clickonce.zip -d published
-          # Ensure Pages serves 'Application Files' folder correctly
-          touch .nojekyll
-
-      - name: Debug what changed in published/
-        shell: pwsh
-        run: |
-          Write-Host "== Dist contents =="
-          if (Test-Path dist) { Get-ChildItem -Recurse -File dist | Select-Object FullName, Length }
-      
-          Write-Host "== Published contents (after extract) =="
-          if (Test-Path published) { Get-ChildItem -Recurse -File published | Select-Object FullName, Length }
-      
-          Write-Host "== git status =="
-          git status --porcelain
-      
-          Write-Host "== Tracked changes =="
-          git diff --name-status
-      
-          Write-Host "== Untracked in published/ =="
-          git ls-files -o --exclude-standard published
-         
-      - name: Commit and push changes to master
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git add -f published .nojekyll
-          git commit -m "Update ClickOnce feed in /published" || echo "No changes to commit"
-          git push origin master
