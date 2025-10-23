@@ -196,7 +196,8 @@ jobs:
           project-slug: skycal
           signing-policy-slug: release
           github-artifact-id: ${{ steps.upload-artifacts.outputs.artifact-id }}
-          artifact-path: dist/SkyCal-clickonce.zip
+#          artifact-path: dist/SkyCal-clickonce.zip
+          output-artifact-directory: dist/
           wait-for-completion: true
 
       - name: Replace unsigned ZIP with signed one
@@ -204,7 +205,6 @@ jobs:
         run: |
           $url = "${{ steps.sp.outputs.signed-artifact-download-url }}"
           Invoke-WebRequest -Uri $url -OutFile "dist/SkyCal-clickonce.zip"
-
 
 
 
