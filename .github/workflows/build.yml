@@ -1,4 +1,4 @@
-name: Build, Test, and Release (ClickOnce)
+name: Test Signpath
 
 on:
   workflow_dispatch:
