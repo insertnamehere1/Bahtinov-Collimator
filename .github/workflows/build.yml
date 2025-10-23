@@ -13,6 +13,8 @@ jobs:
   build_test:
     name: Build & Test (Windows)
     runs-on: windows-latest
+    outputs:
+      artifact_id: ${{ steps.upload-artifacts.outputs.artifact-id }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -193,7 +195,7 @@ jobs:
           organization-id: ${{ secrets.SIGNPATH_ORG_ID }}
           project-slug: skycal
           signing-policy-slug: test-signing
-          artifact-path: dist
+          github-artifact-id: ${{ needs.build_test.outputs.artifact_id }}
           wait-for-completion: true
 
       - name: Replace unsigned ZIP with signed one
