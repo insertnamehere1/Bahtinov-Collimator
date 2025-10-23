@@ -194,17 +194,15 @@ jobs:
           api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
           organization-id: ${{ secrets.SIGNPATH_ORG_ID }}
           project-slug: skycal
-          signing-policy-slug: release
+          signing-policy-slug: test-signing
           github-artifact-id: ${{ steps.upload-artifacts.outputs.artifact-id }}
-#          artifact-path: dist/SkyCal-clickonce.zip
-          output-artifact-directory: dist/
           wait-for-completion: true
 
       - name: Replace unsigned ZIP with signed one
         shell: pwsh
-        run: |
-          $url = "${{ steps.sp.outputs.signed-artifact-download-url }}"
-          Invoke-WebRequest -Uri $url -OutFile "dist/SkyCal-clickonce.zip"
+       run: |
+          curl -L "${{ steps.SignPath_github_action_submit_signing_request.outputs.signed-artifact-download-url }}" -o SkyCal-clickonce.zip
+          tar -xf signed.zip -C signed
 
 
 
