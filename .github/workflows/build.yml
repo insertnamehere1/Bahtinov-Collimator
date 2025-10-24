@@ -1,7 +1,6 @@
 name: Build, Test, and Release (ClickOnce)
 
-on:
- reverse these changes, only for testing   
+on: 
   push:
     branches: [ master ]
     tags: ['v*.*.*']   # releases are tag-driven
