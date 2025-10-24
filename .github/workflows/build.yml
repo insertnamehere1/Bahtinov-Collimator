@@ -229,14 +229,20 @@ jobs:
 
 
 
-      - name: Checksums
+      - name: Generate SHA256 sums for dist
         shell: pwsh
+        working-directory: dist
         run: |
-          cd dist
-          Get-ChildItem * | ForEach-Object {
-            $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash
-            "$hash  $($_.Name)" | Out-File -FilePath SHA256SUMS.txt -Append -Encoding ascii
-          }
+          $out = "SHA256SUMS.txt"
+          if (Test-Path $out) { Remove-Item $out -Force }
+      
+          Get-ChildItem -Recurse -File -Force |
+            Where-Object { $_.Name -ne $out } |
+            ForEach-Object {
+              $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $_.FullName).Hash
+              $rel  = (Resolve-Path -Relative $_.FullName)
+              "$hash  $rel" | Out-File -FilePath $out -Append -Encoding ascii
+            }
 
       - name: SBOM (SPDX) for shipped artifacts
         uses: anchore/sbom-action@v0
