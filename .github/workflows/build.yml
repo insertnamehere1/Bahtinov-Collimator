@@ -241,54 +241,37 @@ jobs:
           format: spdx-json
           output-file: sbom.spdx.json
 
-#      - name: Create GitHub Release
-#        uses: softprops/action-gh-release@v2
-#        with:
-#          tag_name: ${{ github.ref_name }}
-#          name: SkyCal ${{ github.ref_name }}
-#          body: |
-#            Source: ${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}
-#            Commit: ${{ github.sha }}
-#          files: |
-#            dist/BUILD-METADATA.txt
-#            dist/SkyCal-clickonce.zip
-#            dist/setup.exe
-#            dist/SHA256SUMS.txt
-#            dist/sbom.spdx.json
+      - name: Create GitHub Release
+        if: ${{ false }}                          # <-- disables step during testing
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: SkyCal ${{ github.ref_name }}
+          body: |
+            Source: ${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+          files: |
+            dist/SkyCal-Setup.exe
+            dist/BUILD-METADATA.txt
+            dist/SHA256SUMS.txt
+            dist/sbom.spdx.json
 
-#      - name: Attest build provenance
-#        uses: actions/attest-build-provenance@v1
-#        with:
-#          subject-path: |
-#            dist/SkyCal-clickonce.zip
-#            dist/setup.exe
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: |
+            dist/SkyCal-Setup.exe
+            dist/BUILD-METADATA.txt
+            dist/SHA256SUMS.txt
+            dist/sbom.spdx.json
 
-#      - name: Update published/ from clickonce.zip
-#        shell: pwsh
-#        run: |
-#          $ErrorActionPreference = 'Stop'
-#          $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
-#          unzip -o dist/SkyCal-clickonce.zip -d published
-#          # Ensure Pages serves 'Application Files' folder correctly
-#          touch .nojekyll
-
-#      - name: Debug what changed in published/
-#        shell: pwsh
-#        run: |
-#          Write-Host "== Dist contents =="
-#          if (Test-Path dist) { Get-ChildItem -Recurse -File dist | Select-Object FullName, Length }
-      
-#          Write-Host "== Published contents (after extract) =="
-#          if (Test-Path published) { Get-ChildItem -Recurse -File published | Select-Object FullName, Length }
-      
-#          Write-Host "== git status =="
-#          git status --porcelain
-      
-#          Write-Host "== Tracked changes =="
-#          git diff --name-status
-      
-#          Write-Host "== Untracked in published/ =="
-#          git ls-files -o --exclude-standard published
+      - name: Update published/ from dist/
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $PSNativeCommandUseErrorActionPreference = $true  # propagate native tool errors
+          Copy-Item "dist\*" "published\" -Recurse -Force
+          New-Item -ItemType File -Force -Path "published\.nojekyll" | Out-Null
          
 #      - name: Commit and push changes to master
 #        run: |
