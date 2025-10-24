@@ -112,6 +112,13 @@ jobs:
           /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
           /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
 
+      - name: Rename ClickOnce setup.exe
+        shell: pwsh
+        run: |
+          if (Test-Path "out\clickonce\setup.exe") {
+              Rename-Item "out\clickonce\setup.exe" "SkyCal-Setup.exe" -Force
+          }
+
       - name: Stage artifacts
         shell: pwsh
         run: |
@@ -191,13 +198,6 @@ jobs:
         with:
           name: build-output-${{ github.run_number }} 
           path: dist
-
-      - name: Rename ClickOnce setup.exe
-        shell: pwsh
-        run: |
-          if (Test-Path "dist\setup.exe") {
-              Rename-Item "dist\setup.exe" "SkyCal-Setup.exe" -Force
-          }
 
       # Signpath - Submit once and wait for completion, then use outputs to download the signed ZIP
       - name: Submit to SignPath and wait
