@@ -177,7 +177,8 @@ jobs:
     if: always()
     runs-on: windows-latest
     permissions:
-      contents: write
+      actions: read
+      contents: read
       id-token: write
       attestations: write
 
@@ -214,14 +215,18 @@ jobs:
           signing-policy-slug: test-signing
           github-artifact-id: ${{ needs.build_test.outputs.artifact_id }}
           wait-for-completion: true
+          output-artifact-directory: signed-out 
 
-      - name: Download and overlay signed files
+      - name: Overlay signed files onto dist
         shell: pwsh
         run: |
-          $url = "${{ steps.sign.outputs.signed-artifact-download-url }}"
-          Invoke-WebRequest -Uri $url -OutFile signed.zip
-          Expand-Archive -Path signed.zip -DestinationPath dist -Force
+          if (-not (Test-Path "signed-out")) { throw "signed-out not found" }
+          if (-not (Test-Path "dist")) { New-Item -ItemType Directory -Path dist | Out-Null }
+          Copy-Item "signed-out\*" "dist" -Recurse -Force
       
+
+
+
 
 
       - name: Checksums
