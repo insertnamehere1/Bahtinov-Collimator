@@ -215,12 +215,13 @@ jobs:
           github-artifact-id: ${{ needs.build_test.outputs.artifact_id }}
           wait-for-completion: true
 
-      - name: Replace unsigned ZIP with signed one
+      - name: Download and overlay signed files
         shell: pwsh
         run: |
-          curl -L "${{ release.steps.sign.outputs.signed-artifact-download-url }}" -o signed.zip
-          tar -xf signed.zip -C signed
-
+          $url = "${{ steps.sign.outputs.signed-artifact-download-url }}"
+          Invoke-WebRequest -Uri $url -OutFile signed.zip
+          Expand-Archive -Path signed.zip -DestinationPath dist -Force
+      
 
 
       - name: Checksums
