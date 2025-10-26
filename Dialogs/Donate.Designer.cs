@@ -51,8 +51,8 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Gray;
-            this.pictureBox1.Image = global::Bahtinov_Collimator.Properties.Resources.focusImage;
+            this.pictureBox1.BackColor = System.Drawing.Color.LightGray;
+            this.pictureBox1.Image = global::Bahtinov_Collimator.Properties.Resources.SkyCal_logo;
             this.pictureBox1.Location = new System.Drawing.Point(-1, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
@@ -63,7 +63,7 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.BackColor = System.Drawing.Color.Gray;
+            this.pictureBox2.BackColor = System.Drawing.Color.LightGray;
             this.pictureBox2.Image = global::Bahtinov_Collimator.Properties.Resources.paypal;
             this.pictureBox2.Location = new System.Drawing.Point(16, 19);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(4);

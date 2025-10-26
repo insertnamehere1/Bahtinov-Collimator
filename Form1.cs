@@ -909,24 +909,5 @@ namespace Bahtinov_Collimator
 
         #endregion
 
-        private void WhatsNewToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // Extract the PDF from resources and save it to a temporary location
-                string tempPath = Path.Combine(Path.GetTempPath(), "whatsNew.pdf");
-
-                // Write the embedded PDF file to the temporary location
-                File.WriteAllBytes(tempPath, Properties.Resources.whatsNew);
-
-                // Open the PDF file with the default PDF viewer
-                Process.Start(tempPath);
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions if the file cannot be opened
-                MessageBox.Show("Unable to open the 'What's new' file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
     }
 }
