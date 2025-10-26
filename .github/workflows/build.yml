@@ -1,6 +1,6 @@
-name: Build, Test, and Release (ClickOnce)
+name: Build, Test, Signpath and Release (ClickOnce)
 
-on:
+on: 
   push:
     branches: [ master ]
     tags: ['v*.*.*']   # releases are tag-driven
@@ -16,9 +16,12 @@ permissions:
   security-events: write
 
 jobs:
-  build_test:
+  build:
     name: Build & Test (Windows)
     runs-on: windows-latest
+    outputs:
+      artifact_id: ${{ steps.upload-artifacts.outputs.artifact-id }}
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -99,7 +102,6 @@ jobs:
           /p:Deterministic=true
           /p:TreatWarningsAsErrors=true
           
-      # Publish ClickOnce
       - name: ClickOnce Publish
         shell: pwsh
         run: >
@@ -109,15 +111,23 @@ jobs:
           /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
           /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
 
+      - name: Rename ClickOnce setup.exe
+        shell: pwsh
+        run: |
+          if (Test-Path "out\clickonce\setup.exe") {
+              Rename-Item "out\clickonce\setup.exe" "SkyCal-Setup.exe" -Force
+          }
+
       - name: Stage artifacts
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path artifacts | Out-Null
-          if (Test-Path "out\clickonce\setup.exe") { Copy-Item "out\clickonce\setup.exe" artifacts\setup.exe -Force }
-          Compress-Archive -Path "out\clickonce\*" -DestinationPath "artifacts\SkyCal-clickonce.zip" -Force
-          "@@ Build: $env:GITHUB_RUN_ID`nRef: $env:GITHUB_REF`nSHA: $env:GITHUB_SHA" | Out-File artifacts\BUILD-METADATA.txt -Encoding UTF8
-
+          Copy-Item "out\clickonce\*" "artifacts\" -Recurse -Force
+          "@@ Build: $env:GITHUB_RUN_ID`nRef: $env:GITHUB_REF`nSHA: $env:GITHUB_SHA" |
+            Out-File artifacts\BUILD-METADATA.txt -Encoding UTF8
+            
       - name: Upload CI artifacts
+        id: upload-artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-output-${{ github.run_number }} 
@@ -157,17 +167,16 @@ jobs:
 
   release:
     name: Release (tag only)
-    needs: [build_test]
-    if: startsWith(github.ref, 'refs/tags/')
+    needs: [build, codeql]  
+    if: startsWith(github.ref, 'refs/tags/')  
     runs-on: windows-latest
     permissions:
+      actions: read
       contents: write
       id-token: write
       attestations: write
 
     steps:
-
-      # Publish to Master
       - name: Checkout master (target branch)
         uses: actions/checkout@v4
         with:
@@ -186,14 +195,33 @@ jobs:
           name: build-output-${{ github.run_number }} 
           path: dist
 
-      - name: Checksums
+      # Signpath - Submit once and wait for completion, then use outputs to download the signed ZIP
+      - name: Submit to SignPath and wait
+        id: sign
+        uses: SignPath/github-action-submit-signing-request@v2
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ secrets.SIGNPATH_ORG_ID }}
+          project-slug: Bahtinov-Collimator
+          signing-policy-slug: test-signing                             #<-- change to release-signing for production
+          github-artifact-id: ${{ needs.build.outputs.artifact_id }}
+          wait-for-completion: true
+          output-artifact-directory: dist 
+
+      - name: Generate SHA256 sums for dist
         shell: pwsh
+        working-directory: dist
         run: |
-          cd dist
-          Get-ChildItem * | ForEach-Object {
-            $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash
-            "$hash  $($_.Name)" | Out-File -FilePath SHA256SUMS.txt -Append -Encoding ascii
-          }
+          $out = "SHA256SUMS.txt"
+          if (Test-Path $out) { Remove-Item $out -Force }
+      
+          Get-ChildItem -Recurse -File -Force |
+            Where-Object { $_.Name -ne $out } |
+            ForEach-Object {
+              $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $_.FullName).Hash
+              $rel  = (Resolve-Path -Relative $_.FullName)
+              "$hash  $rel" | Out-File -FilePath $out -Append -Encoding ascii
+            }
 
       - name: SBOM (SPDX)
         uses: anchore/sbom-action@v0
@@ -201,7 +229,11 @@ jobs:
           path: .
           format: spdx-json
           output-file: sbom.spdx.json
-
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          dependency-snapshot: false
+          upload-artifact: true
+          upload-release-assets: true  
+          
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -211,9 +243,8 @@ jobs:
             Source: ${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}
             Commit: ${{ github.sha }}
           files: |
+            dist/SkyCal-Setup.exe
             dist/BUILD-METADATA.txt
-            dist/SkyCal-clickonce.zip
-            dist/setup.exe
             dist/SHA256SUMS.txt
             dist/sbom.spdx.json
 
@@ -221,35 +252,19 @@ jobs:
         uses: actions/attest-build-provenance@v1
         with:
           subject-path: |
-            dist/SkyCal-clickonce.zip
-            dist/setup.exe
+            dist/SkyCal-Setup.exe
+            dist/BUILD-METADATA.txt
+            dist/SHA256SUMS.txt
+            dist/sbom.spdx.json
 
-      - name: Update published/ from clickonce.zip
+      - name: Update published/ from dist/
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $PSNativeCommandUseErrorActionPreference = $true   # PowerShell 7+, propagates native tool errors
-          unzip -o dist/SkyCal-clickonce.zip -d published
-          # Ensure Pages serves 'Application Files' folder correctly
-          touch .nojekyll
-
-      - name: Debug what changed in published/
-        shell: pwsh
-        run: |
-          Write-Host "== Dist contents =="
-          if (Test-Path dist) { Get-ChildItem -Recurse -File dist | Select-Object FullName, Length }
-      
-          Write-Host "== Published contents (after extract) =="
-          if (Test-Path published) { Get-ChildItem -Recurse -File published | Select-Object FullName, Length }
-      
-          Write-Host "== git status =="
-          git status --porcelain
-      
-          Write-Host "== Tracked changes =="
-          git diff --name-status
-      
-          Write-Host "== Untracked in published/ =="
-          git ls-files -o --exclude-standard published
+          $PSNativeCommandUseErrorActionPreference = $true
+          Copy-Item "dist\*" "published\" -Recurse -Force
+          New-Item -ItemType File -Force -Path "published\.nojekyll" | Out-Null
+          Remove-Item -Recurse -Force "dist"
          
       - name: Commit and push changes to master
         run: |
