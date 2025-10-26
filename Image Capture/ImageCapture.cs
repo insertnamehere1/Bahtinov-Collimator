@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -489,52 +490,144 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Finds the centroid of the brightest area in a bitmap image. The method first calculates a brightness threshold that includes the top 10% of the brightest pixels. It then creates a binary image based on this threshold and determines the centroid of the brightest area from the binary image.
+        /// Finds the centroid of the brightest compact region in a bitmap, robust to
+        /// secondary fainter stars. It:
+        ///  1) Converts the image to 8-bit luminance (no thresholding).
+        ///  2) Builds an integral image (summed-area table).
+        ///  3) Slides a fixed-size square window to locate the maximum summed luminance.
+        ///  4) Refines the position with an intensity-weighted centroid in a small radius.
+        /// Returns image coordinates suitable for centering the Bahtinov pattern.
         /// </summary>
-        /// <param name="bitmap">The <see cref="Bitmap"/> image from which to find the brightest area.</param>
-        /// <returns>A <see cref="Point"/> representing the centroid of the brightest area in the image.</returns>
+        /// <param name="bitmap">The source bitmap (any common 24/32bpp format).</param>
+        /// <returns>Centroid of the brightest region. Falls back to image center if it cannot compute.</returns>
         public static Point FindBrightestAreaCentroid(Bitmap bitmap)
         {
-            long sumX = 0, sumY = 0, count = 0;
+            if (bitmap == null) return new Point(0, 0);
+
             int width = bitmap.Width;
             int height = bitmap.Height;
+            if (width < 8 || height < 8)
+                return new Point(0, 0);
 
-            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, width, height),
-                ImageLockMode.ReadOnly, PixelFormat.Format1bppIndexed);
+            PixelFormat pf = bitmap.PixelFormat;
+            bool supported = pf == PixelFormat.Format24bppRgb || pf == PixelFormat.Format32bppArgb ||
+                             pf == PixelFormat.Format32bppRgb || pf == PixelFormat.Format32bppPArgb;
 
-            unsafe
+            Bitmap src = supported ? bitmap : bitmap.Clone(
+                new Rectangle(0, 0, width, height), PixelFormat.Format24bppRgb);
+
+            BitmapData bd = null;
+            byte[] lum = new byte[width * height];
+            try
             {
-                byte* ptr = (byte*)bitmapData.Scan0;
-                int stride = bitmapData.Stride;
-
-                for (int y = 0; y < height; y++)
+                bd = src.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, src.PixelFormat);
+                int stride = bd.Stride;
+                int bpp = Image.GetPixelFormatSize(src.PixelFormat) / 8;
+                unsafe
                 {
-                    byte* row = ptr + y * stride;
-
-                    for (int x = 0; x < width; x++)
+                    byte* basePtr = (byte*)bd.Scan0;
+                    int idx = 0;
+                    for (int y = 0; y < height; y++)
                     {
-                        if ((row[x / 8] & (1 << (7 - (x % 8)))) != 0)
+                        byte* row = basePtr + y * stride;
+                        for (int x = 0; x < width; x++)
                         {
-                            sumX += x;
-                            sumY += y;
-                            count++;
+                            byte b = row[x * bpp + 0];
+                            byte g = row[x * bpp + 1];
+                            byte r1 = row[x * bpp + 2];
+                            int y8 = (int)(0.299 * r1 + 0.587 * g + 0.114 * b + 0.5);
+                            if (y8 > 255) y8 = 255;
+                            lum[idx++] = (byte)y8;
                         }
                     }
                 }
             }
-
-            bitmap.UnlockBits(bitmapData);
-
-            if (count == 0)
+            finally
             {
-                return new Point(width / 2, height / 2); // Default to center if no bright area is found
+                if (bd != null) src.UnlockBits(bd);
+                if (!ReferenceEquals(src, bitmap)) src.Dispose();
             }
 
-            // Calculate centroid
-            double centroidX = sumX / count;
-            double centroidY = sumY / count;
+            // Quick test: if average brightness is low, no meaningful centroid
+            double avg = lum.Average(b => (double)b);
+            if (avg < 5.0)  // all dark
+                return new Point(0, 0);
 
-            return new Point((int)Math.Round(centroidX), (int)Math.Round(centroidY));
+            // Build integral image
+            int W1 = width + 1;
+            int H1 = height + 1;
+            int[] ii = new int[W1 * H1];
+
+            for (int y = 1; y < H1; y++)
+            {
+                int rowSum = 0;
+                int offLum = (y - 1) * width;
+                int offII = y * W1;
+                for (int x = 1; x < W1; x++)
+                {
+                    rowSum += lum[offLum + (x - 1)];
+                    ii[offII + x] = ii[(y - 1) * W1 + x] + rowSum;
+                }
+            }
+
+            int win = Math.Max(9, Math.Min(width, height) / 16);
+            if ((win & 1) == 0) win++;
+            int r = win / 2;
+
+            int bestX = 0, bestY = 0;
+            int bestSum = -1;
+
+            for (int y = r; y < height - r; y++)
+            {
+                int y0 = y - r;
+                int y1 = y + r + 1;
+                int rowTop = y0 * W1;
+                int rowBot = y1 * W1;
+
+                for (int x = r; x < width - r; x++)
+                {
+                    int x0 = x - r;
+                    int x1 = x + r + 1;
+
+                    int sum = ii[rowBot + x1] - ii[rowBot + x0] - ii[rowTop + x1] + ii[rowTop + x0];
+                    if (sum > bestSum)
+                    {
+                        bestSum = sum;
+                        bestX = x;
+                        bestY = y;
+                    }
+                }
+            }
+
+            if (bestSum < 10000)  // nothing bright enough, adjust threshold as needed
+                return new Point(0, 0);
+
+            // Refine with intensity-weighted centroid
+            int refineRadius = Math.Max(3, win / 3);
+            long wSum = 0, wX = 0, wY = 0;
+
+            int xStart = Math.Max(0, bestX - refineRadius);
+            int xEnd = Math.Min(width - 1, bestX + refineRadius);
+            int yStart = Math.Max(0, bestY - refineRadius);
+            int yEnd = Math.Min(height - 1, bestY + refineRadius);
+
+            for (int y = yStart; y <= yEnd; y++)
+            {
+                int baseIdx = y * width;
+                for (int x = xStart; x <= xEnd; x++)
+                {
+                    int w = lum[baseIdx + x];
+                    if (w > 0) { wSum += w; wX += (long)w * x; wY += (long)w * y; }
+                }
+            }
+
+            if (wSum == 0)
+                return new Point(0, 0);
+
+            double cx = (double)wX / wSum;
+            double cy = (double)wY / wSum;
+
+            return new Point((int)Math.Round(cx), (int)Math.Round(cy));
         }
         #endregion
     }
