@@ -171,7 +171,7 @@
             this.Padding = new System.Windows.Forms.Padding(12, 11, 12, 11);
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "AboutBox";
+            this.Text = "About SkyCal";
             this.tableLayoutPanel.ResumeLayout(false);
             this.tableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();

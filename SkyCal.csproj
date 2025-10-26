@@ -7,7 +7,7 @@
     <ProjectGuid>{39E0141A-A5A6-43A9-A8F6-69DDCE441854}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Bahtinov_Collimator</RootNamespace>
-    <AssemblyName>SkyCal Focus and Collimation Tool</AssemblyName>
+    <AssemblyName>SkyCal</AssemblyName>
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -105,8 +105,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>output_fixed.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -131,6 +130,7 @@
     <Win32Resource>
     </Win32Resource>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup />
@@ -294,6 +294,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app.ico" />
+    <Content Include="app1.ico" />
+    <Content Include="output2.ico" />
+    <Content Include="output3.ico" />
+    <Content Include="output5.ico" />
+    <Content Include="output_fixed.ico" />
     <Content Include="published\.gitattributes" />
   </ItemGroup>
   <ItemGroup>
