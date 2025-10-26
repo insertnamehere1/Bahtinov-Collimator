@@ -1,341 +1,339 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-	<PropertyGroup>
-		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-		<ProjectGuid>{39E0141A-A5A6-43A9-A8F6-69DDCE441854}</ProjectGuid>
-		<OutputType>WinExe</OutputType>
-		<RootNamespace>Bahtinov_Collimator</RootNamespace>
-		<AssemblyName>SkyCal Focus and Collimation Tool</AssemblyName>
-		<TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
-		<FileAlignment>512</FileAlignment>
-		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-		<Deterministic>true</Deterministic>
-		<IsWebBootstrapper>true</IsWebBootstrapper>
-		<TargetFrameworkProfile />
-		<NuGetPackageImportStamp>
-		</NuGetPackageImportStamp>
-		<PublishUrl>https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/master/published/</PublishUrl>
-		<Install>true</Install>
-		<InstallFrom>Web</InstallFrom>
-		<UpdateEnabled>true</UpdateEnabled>
-		<UpdateMode>Background</UpdateMode>
-		<UpdateInterval>7</UpdateInterval>
-		<UpdateIntervalUnits>Days</UpdateIntervalUnits>
-		<UpdatePeriodically>false</UpdatePeriodically>
-		<UpdateRequired>false</UpdateRequired>
-		<MapFileExtensions>true</MapFileExtensions>
-		<InstallUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/master/published/</InstallUrl>
-		<UpdateUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/master/published/</UpdateUrl>
-		<ProductName>SkyCal Focus and Collimation Tool</ProductName>
-		<PublisherName>Chris Dowd</PublisherName>
-		<CreateWebPageOnPublish>false</CreateWebPageOnPublish>
-		<WebPage>publish.htm</WebPage>
-		<OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-		<ApplicationRevision>0</ApplicationRevision>
-		<ApplicationVersion>3.0.0.5</ApplicationVersion>
-		<UseApplicationTrust>false</UseApplicationTrust>
-		<CreateDesktopShortcut>true</CreateDesktopShortcut>
-		<PublishWizardCompleted>true</PublishWizardCompleted>
-		<BootstrapperEnabled>true</BootstrapperEnabled>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-		<PlatformTarget>AnyCPU</PlatformTarget>
-		<DebugSymbols>true</DebugSymbols>
-		<DebugType>full</DebugType>
-		<Optimize>false</Optimize>
-		<OutputPath>bin\Debug\</OutputPath>
-		<DefineConstants>DEBUG;TRACE</DefineConstants>
-		<ErrorReport>prompt</ErrorReport>
-		<WarningLevel>4</WarningLevel>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-		<PlatformTarget>AnyCPU</PlatformTarget>
-		<DebugType>pdbonly</DebugType>
-		<Optimize>true</Optimize>
-		<OutputPath>bin\Release\</OutputPath>
-		<DefineConstants>TRACE</DefineConstants>
-		<ErrorReport>prompt</ErrorReport>
-		<WarningLevel>4</WarningLevel>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == '64Bit|AnyCPU'">
-		<OutputPath>bin\64Bit\</OutputPath>
-		<DefineConstants>TRACE</DefineConstants>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<Optimize>true</Optimize>
-		<DebugType>pdbonly</DebugType>
-		<PlatformTarget>AnyCPU</PlatformTarget>
-		<LangVersion>7.3</LangVersion>
-		<ErrorReport>prompt</ErrorReport>
-		<Prefer32Bit>true</Prefer32Bit>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-		<DebugSymbols>true</DebugSymbols>
-		<OutputPath>bin\x64\Debug\</OutputPath>
-		<DefineConstants>DEBUG;TRACE</DefineConstants>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<DebugType>full</DebugType>
-		<PlatformTarget>x64</PlatformTarget>
-		<LangVersion>7.3</LangVersion>
-		<ErrorReport>prompt</ErrorReport>
-		<Prefer32Bit>true</Prefer32Bit>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-		<OutputPath>bin\x64\Release\</OutputPath>
-		<DefineConstants>TRACE</DefineConstants>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<Optimize>true</Optimize>
-		<DebugType>pdbonly</DebugType>
-		<PlatformTarget>x64</PlatformTarget>
-		<LangVersion>7.3</LangVersion>
-		<ErrorReport>prompt</ErrorReport>
-		<Prefer32Bit>true</Prefer32Bit>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == '64Bit|x64'">
-		<OutputPath>bin\x64\64Bit\</OutputPath>
-		<DefineConstants>TRACE</DefineConstants>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<Optimize>true</Optimize>
-		<DebugType>pdbonly</DebugType>
-		<PlatformTarget>x64</PlatformTarget>
-		<LangVersion>7.3</LangVersion>
-		<ErrorReport>prompt</ErrorReport>
-		<Prefer32Bit>true</Prefer32Bit>
-	</PropertyGroup>
-	<PropertyGroup>
-		<ApplicationIcon>focusIcon2.ico</ApplicationIcon>
-	</PropertyGroup>
-	<PropertyGroup>
-		<SignManifests>false</SignManifests>
-	</PropertyGroup>
-	<PropertyGroup>
-		<GenerateManifests>true</GenerateManifests>
-	</PropertyGroup>
-	<PropertyGroup>
-		<SignAssembly>false</SignAssembly>
-	</PropertyGroup>
-	<PropertyGroup>
-		<AssemblyOriginatorKeyFile>
-		</AssemblyOriginatorKeyFile>
-	</PropertyGroup>
-	<PropertyGroup>
-		<TargetZone>LocalIntranet</TargetZone>
-	</PropertyGroup>
-	<PropertyGroup />
-	<PropertyGroup />
-	<PropertyGroup />
-	<PropertyGroup>
-		<Win32Resource>
-		</Win32Resource>
-	</PropertyGroup>
-	<PropertyGroup />
-	<PropertyGroup />
-	<PropertyGroup />
-	<PropertyGroup>
-		<ApplicationManifest>app.manifest</ApplicationManifest>
-	</PropertyGroup>
-	<ItemGroup>
-		<Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-			<HintPath>packages\MathNet.Numerics.5.0.0\lib\net48\MathNet.Numerics.dll</HintPath>
-		</Reference>
-		<Reference Include="System" />
-		<Reference Include="System.Core" />
-		<Reference Include="System.Speech" />
-		<Reference Include="System.Xml.Linq" />
-		<Reference Include="System.Data.DataSetExtensions" />
-		<Reference Include="Microsoft.CSharp" />
-		<Reference Include="System.Data" />
-		<Reference Include="System.Deployment" />
-		<Reference Include="System.Drawing" />
-		<Reference Include="System.Net.Http" />
-		<Reference Include="System.Windows.Forms" />
-		<Reference Include="System.Xml" />
-	</ItemGroup>
-	<ItemGroup>
-		<Compile Include="AdjustAssist\AdjustAssistMCT.cs">
-			<SubType>Form</SubType>
-		</Compile>
-		<Compile Include="AdjustAssist\AdjustAssistSCT.cs">
-			<SubType>Form</SubType>
-		</Compile>
-		<Compile Include="AdjustAssist\AdjustAssistBase.cs">
-			<SubType>Form</SubType>
-		</Compile>
-		<Compile Include="AdjustAssist\AdjustAssistBase.Designer.cs">
-			<DependentUpon>AdjustAssistBase.cs</DependentUpon>
-		</Compile>
-		<Compile Include="Custom Components\SlideSwitchComponent.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Include="Custom Components\SlideSwitchComponent.Designer.cs">
-			<DependentUpon>SlideSwitchComponent.cs</DependentUpon>
-		</Compile>
-		<Compile Include="Dialogs\AboutBox.cs">
-			<SubType>Form</SubType>
-		</Compile>
-		<Compile Include="Dialogs\AboutBox.Designer.cs">
-			<DependentUpon>AboutBox.cs</DependentUpon>
-		</Compile>
-		<Compile Include="Custom Components\FocusChannelComponent.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Include="Custom Components\FocusChannelComponent.Designer.cs">
-			<DependentUpon>FocusChannelComponent.cs</DependentUpon>
-		</Compile>
-		<Compile Include="Image Capture\ImageCapture.cs" />
-		<Compile Include="Image Capture\ImageSelect.cs">
-			<SubType>Form</SubType>
-		</Compile>
-		<Compile Include="Image Processing\BahtinovData.cs" />
-		<Compile Include="Dialogs\Donate.cs">
-			<SubType>Form</SubType>
-		</Compile>
-		<Compile Include="Dialogs\Donate.Designer.cs">
-			<DependentUpon>Donate.cs</DependentUpon>
-		</Compile>
-		<Compile Include="Custom Components\ImageDisplayComponent.cs">
-			<SubType>UserControl</SubType>
-		</Compile>
-		<Compile Include="Custom Components\ImageDisplayComponent.Designer.cs">
-			<DependentUpon>ImageDisplayComponent.cs</DependentUpon>
-		</Compile>
-		<Compile Include="Image Processing\DefocusStarProcessing.cs" />
-		<Compile Include="Dialogs\DarkMessageBox.cs">
-			<SubType>Form</SubType>
-		</Compile>
-		<Compile Include="Dialogs\DarkMessageBox.Designer.cs">
-			<DependentUpon>DarkMessageBox.cs</DependentUpon>
-		</Compile>
-		<Compile Include="Utilities\Helper.cs" />
-		<Compile Include="Image Processing\BahtinovProcessing.cs" />
-		<Compile Include="Properties\Resources.Designer.cs">
-			<AutoGen>True</AutoGen>
-			<DesignTime>True</DesignTime>
-			<DependentUpon>Resources.resx</DependentUpon>
-		</Compile>
-		<Compile Include="Form1.cs">
-			<SubType>Form</SubType>
-		</Compile>
-		<Compile Include="Form1.Designer.cs">
-			<DependentUpon>Form1.cs</DependentUpon>
-		</Compile>
-		<Compile Include="Utilities\Events.cs" />
-		<Compile Include="Utilities\PolynomialCurveFit.cs" />
-		<Compile Include="Program.cs" />
-		<Compile Include="Properties\AssemblyInfo.cs" />
-		<Compile Include="Dialogs\Settings.cs">
-			<SubType>Form</SubType>
-		</Compile>
-		<Compile Include="Dialogs\Settings.Designer.cs">
-			<DependentUpon>Settings.cs</DependentUpon>
-		</Compile>
-		<Compile Include="Voice\VoiceControl.cs" />
-		<Compile Include="Utilities\UITheme.cs" />
-		<Compile Include="Utilities\Utilities.cs" />
-		<Content Include="SkyCal.logo.png" />
-		<EmbeddedResource Include="AdjustAssist\AdjustAssistBase.resx">
-			<DependentUpon>AdjustAssistBase.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Dialogs\AboutBox.resx">
-			<DependentUpon>AboutBox.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Dialogs\Donate.resx">
-			<DependentUpon>Donate.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Custom Components\FocusChannelComponent.resx">
-			<DependentUpon>FocusChannelComponent.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Custom Components\ImageDisplayComponent.resx">
-			<DependentUpon>ImageDisplayComponent.cs</DependentUpon>
-			<SubType>Designer</SubType>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Form1.resx">
-			<DependentUpon>Form1.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Image Capture\ImageSelect.resx">
-			<DependentUpon>ImageSelect.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Properties\Resources.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
-			<SubType>Designer</SubType>
-			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Dialogs\Settings.resx">
-			<DependentUpon>Settings.cs</DependentUpon>
-		</EmbeddedResource>
-		<EmbeddedResource Include="Dialogs\DarkMessageBox.resx">
-			<DependentUpon>DarkMessageBox.cs</DependentUpon>
-		</EmbeddedResource>
-		<None Include="app.manifest" />
-		<None Include="help.pdf" />
-		<None Include="Properties\help.pdf" />
-		<None Include="packages.config" />
-		<None Include="Properties\app.manifest" />
-		<None Include="Properties\Settings.settings">
-			<Generator>SettingsSingleFileGenerator</Generator>
-			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
-		</None>
-		<Compile Include="Properties\Settings.Designer.cs">
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Settings.settings</DependentUpon>
-			<DesignTimeSharedInput>True</DesignTimeSharedInput>
-		</Compile>
-		<Content Include="Resources\help.pdf">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<None Include="Resources\whatsNew.pdf" />
-		<None Include="SkyCal_TemporaryKey.pfx" />
-		<None Include="WhatsNew.pdf" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="App.config" />
-	</ItemGroup>
-	<ItemGroup>
-		<BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
-			<Visible>False</Visible>
-			<ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
-			<Install>true</Install>
-		</BootstrapperPackage>
-		<BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-			<Visible>False</Visible>
-			<ProductName>.NET Framework 3.5 SP1</ProductName>
-			<Install>false</Install>
-		</BootstrapperPackage>
-	</ItemGroup>
-	<ItemGroup>
-		<None Include="Images\imageLost.bmp" />
-	</ItemGroup>
-	<ItemGroup>
-		<Content Include="focusIcon2.ico" />
-		<Content Include="Images\Adjustments.png" />
-		<Content Include="Images\arrow.png" />
-		<None Include="Images\focusImage.png" />
-		<Content Include="Images\focusIcon2.ico" />
-		<Content Include="Images\paypal.png" />
-		<Content Include="published\.gitattributes" />
-	</ItemGroup>
-	<ItemGroup>
-		<PublishFile Include="published\.gitattributes">
-			<Visible>False</Visible>
-			<Group>
-			</Group>
-			<TargetPath>
-			</TargetPath>
-			<PublishState>Exclude</PublishState>
-			<IncludeHash>False</IncludeHash>
-			<FileType>File</FileType>
-		</PublishFile>
-	</ItemGroup>
-	<ItemGroup />
-	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-	<Import Project="packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets" Condition="Exists('packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" />
-	<Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-		<PropertyGroup>
-			<ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-		</PropertyGroup>
-		<Error Condition="!Exists('packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets'))" />
-	</Target>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{39E0141A-A5A6-43A9-A8F6-69DDCE441854}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Bahtinov_Collimator</RootNamespace>
+    <AssemblyName>SkyCal Focus and Collimation Tool</AssemblyName>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/master/published/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Background</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/master/published/</InstallUrl>
+    <UpdateUrl>https://github.com/insertnamehere1/Bahtinov-Collimator/raw/master/published/</UpdateUrl>
+    <ProductName>SkyCal Focus and Collimation Tool</ProductName>
+    <PublisherName>Chris Dowd</PublisherName>
+    <CreateWebPageOnPublish>false</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>3.0.0.5</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '64Bit|AnyCPU'">
+    <OutputPath>bin\64Bit\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == '64Bit|x64'">
+    <OutputPath>bin\x64\64Bit\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>focusIcon2.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <Win32Resource>
+    </Win32Resource>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\MathNet.Numerics.5.0.0\lib\net48\MathNet.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Speech" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdjustAssist\AdjustAssistMCT.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdjustAssist\AdjustAssistSCT.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdjustAssist\AdjustAssistBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdjustAssist\AdjustAssistBase.Designer.cs">
+      <DependentUpon>AdjustAssistBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\SlideSwitchComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Custom Components\SlideSwitchComponent.Designer.cs">
+      <DependentUpon>SlideSwitchComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\FocusChannelComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Custom Components\FocusChannelComponent.Designer.cs">
+      <DependentUpon>FocusChannelComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Image Capture\ImageCapture.cs" />
+    <Compile Include="Image Capture\ImageSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Image Processing\BahtinovData.cs" />
+    <Compile Include="Dialogs\Donate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\Donate.Designer.cs">
+      <DependentUpon>Donate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\ImageDisplayComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Custom Components\ImageDisplayComponent.Designer.cs">
+      <DependentUpon>ImageDisplayComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Image Processing\DefocusStarProcessing.cs" />
+    <Compile Include="Dialogs\DarkMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\DarkMessageBox.Designer.cs">
+      <DependentUpon>DarkMessageBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\Helper.cs" />
+    <Compile Include="Image Processing\BahtinovProcessing.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\Events.cs" />
+    <Compile Include="Utilities\PolynomialCurveFit.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Dialogs\Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\Settings.Designer.cs">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Voice\VoiceControl.cs" />
+    <Compile Include="Utilities\UITheme.cs" />
+    <Compile Include="Utilities\Utilities.cs" />
+    <Content Include="SkyCal.logo.png" />
+    <EmbeddedResource Include="AdjustAssist\AdjustAssistBase.resx">
+      <DependentUpon>AdjustAssistBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\Donate.resx">
+      <DependentUpon>Donate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Custom Components\FocusChannelComponent.resx">
+      <DependentUpon>FocusChannelComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Custom Components\ImageDisplayComponent.resx">
+      <DependentUpon>ImageDisplayComponent.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Image Capture\ImageSelect.resx">
+      <DependentUpon>ImageSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\Settings.resx">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\DarkMessageBox.resx">
+      <DependentUpon>DarkMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.manifest" />
+    <None Include="help.pdf" />
+    <None Include="Properties\help.pdf" />
+    <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Content Include="Resources\help.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="WhatsNew.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\imageLost.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="focusIcon2.ico" />
+    <Content Include="Images\Adjustments.png" />
+    <Content Include="Images\arrow.png" />
+    <None Include="Images\focusImage.png" />
+    <Content Include="Images\focusIcon2.ico" />
+    <Content Include="Images\paypal.png" />
+    <Content Include="published\.gitattributes" />
+  </ItemGroup>
+  <ItemGroup>
+    <PublishFile Include="published\.gitattributes">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>False</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets" Condition="Exists('packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets'))" />
+  </Target>
 </Project>
