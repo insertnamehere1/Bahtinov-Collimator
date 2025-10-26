@@ -563,6 +563,27 @@ namespace Bahtinov_Collimator
             donate.ShowDialog();
         }
 
+
+
+
+        /// <summary>
+        /// Handles the click event for the Donate menu item, showing the Donate dialog.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The event data.</param>
+        private void PleaseDonateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Donate donate = new Donate();
+            PositionDialogInsideMainWindow(donate);
+            donate.ShowDialog();
+        }
+
+
+
+
+
+
+
         /// <summary>
         /// Handles the click event for the Help menu item, displaying a help message.
         /// </summary>
@@ -891,11 +912,9 @@ namespace Bahtinov_Collimator
             protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
             {
                 // Set custom text color and font style for the "Buy me a Coffee?" menu item
-                if (e.Item.Text == "Buy me a Coffee?")
+                if (e.Item.Text == "Support SkyCal")
                 {
-                    e.TextColor = Color.Red;
-                    // Set the font to bold
-                    e.TextFont = new Font(e.TextFont, FontStyle.Bold);
+                    e.TextColor = UITheme.GetGroupBoxTextColor(0);
                 }
                 else
                 {
@@ -908,6 +927,5 @@ namespace Bahtinov_Collimator
         }
 
         #endregion
-
     }
 }

@@ -40,8 +40,8 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.pleaseDonateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.label1 = new System.Windows.Forms.Label();
             this.Label2 = new System.Windows.Forms.Label();
@@ -67,7 +67,8 @@
             this.fileToolStripMenuItem,
             this.AdjustAssistToolStripMenuItem,
             this.settingsToolStripMenuItem1,
-            this.aboutToolStripMenuItem});
+            this.aboutToolStripMenuItem,
+            this.pleaseDonateToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(734, 28);
@@ -86,7 +87,7 @@
             // quitToolStripMenuItem2
             // 
             this.quitToolStripMenuItem2.Name = "quitToolStripMenuItem2";
-            this.quitToolStripMenuItem2.Size = new System.Drawing.Size(224, 26);
+            this.quitToolStripMenuItem2.Size = new System.Drawing.Size(120, 26);
             this.quitToolStripMenuItem2.Text = "Quit";
             this.quitToolStripMenuItem2.Click += new System.EventHandler(this.QuitToolStripMenuItem2_Click);
             // 
@@ -109,7 +110,6 @@
             this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.helpToolStripMenuItem,
             this.checkForUpdatesToolStripMenuItem,
-            this.donateToolStripMenuItem,
             this.aboutToolStripMenuItem2});
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
@@ -118,32 +118,30 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.helpToolStripMenuItem.Text = "User Manual";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
             // checkForUpdatesToolStripMenuItem
             // 
             this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.checkForUpdatesToolStripMenuItem.Text = "Check for Updates";
             this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.CheckForUpdatesToolStripMenuItem_Click);
-            // 
-            // donateToolStripMenuItem
-            // 
-            this.donateToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.donateToolStripMenuItem.ForeColor = System.Drawing.Color.Black;
-            this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
-            this.donateToolStripMenuItem.Size = new System.Drawing.Size(213, 26);
-            this.donateToolStripMenuItem.Text = "Buy me a Coffee?";
-            this.donateToolStripMenuItem.Click += new System.EventHandler(this.DonateToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem2
             // 
             this.aboutToolStripMenuItem2.Name = "aboutToolStripMenuItem2";
-            this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(213, 26);
+            this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(224, 26);
             this.aboutToolStripMenuItem2.Text = "About";
             this.aboutToolStripMenuItem2.Click += new System.EventHandler(this.AboutToolStripMenuItem2_Click);
+            // 
+            // pleaseDonateToolStripMenuItem
+            // 
+            this.pleaseDonateToolStripMenuItem.Name = "pleaseDonateToolStripMenuItem";
+            this.pleaseDonateToolStripMenuItem.Size = new System.Drawing.Size(123, 24);
+            this.pleaseDonateToolStripMenuItem.Text = "Support SkyCal";
+            this.pleaseDonateToolStripMenuItem.Click += new System.EventHandler(this.PleaseDonateToolStripMenuItem_Click);
             // 
             // label1
             // 
@@ -217,12 +215,12 @@
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem2;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem donateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem AdjustAssistToolStripMenuItem;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label Label2;
         private Custom_Components.SlideSwitch slideSwitch2;
+        private System.Windows.Forms.ToolStripMenuItem pleaseDonateToolStripMenuItem;
     }
 }
 
