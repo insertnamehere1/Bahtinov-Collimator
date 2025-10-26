@@ -105,7 +105,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>output_fixed.ico</ApplicationIcon>
+    <ApplicationIcon>SkyCal.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -294,13 +294,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app.ico" />
-    <Content Include="app1.ico" />
-    <Content Include="output2.ico" />
-    <Content Include="output3.ico" />
-    <Content Include="output5.ico" />
-    <Content Include="output_fixed.ico" />
     <Content Include="published\.gitattributes" />
+    <Content Include="SkyCal.ico" />
   </ItemGroup>
   <ItemGroup>
     <PublishFile Include="published\.gitattributes">
