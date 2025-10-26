@@ -13,5 +13,11 @@
 <h1></h1>
 
 
-- Attributions: 
-<a href="https://www.flaticon.com/free-icons/focus" title="focus icons">Focus icons created by Pixel perfect - Flaticon</a>
+## Sponsors
+
+<table style="border: none;">
+<tr>
+  <td><img align="left" style="height: 25px;" src="https://raw.githubusercontent.com/vkbo/novelWriter/main/setup/signpath_logo.png"></td>
+  <td>Free code signing for this project is provided by <a href="https://about.signpath.io/">SignPath.io</a>, certificate by <a href="https://signpath.org/">SignPath Foundation</a>.</td>
+</tr>
+</table>
