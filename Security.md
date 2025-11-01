@@ -6,5 +6,10 @@ Code signing is performed automatically through [SignPath.io](https://signpath.i
 
 This process verifies the authenticity and integrity of every SkyCal release and ensures the application has not been altered after signing.
 
-<b>SkyCal does not communicate with any external servers.
-It includes no telemetry, tracking, analytics, or background network activity of any kind.</b>
+<table style="border: none;">
+<tr>
+  <td><img align="left" style="height: 25px;" src="https://raw.githubusercontent.com/vkbo/novelWriter/main/setup/signpath_logo.png"></td>
+  <td>Free code signing for this project is provided by <a href="https://about.signpath.io/">SignPath.io</a>, certificate by <a href="https://signpath.org/">SignPath Foundation</a>.</td>
+</tr>
+</table>
+
