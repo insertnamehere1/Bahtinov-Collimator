@@ -151,7 +151,7 @@ namespace Bahtinov_Collimator
         /// Handles the click event of the OK button.
         /// Closes the form when the OK button is clicked.
         /// </summary>
-        private void okButton_Click(object sender, EventArgs e)
+        private void OkButton_Click(object sender, EventArgs e)
         {
             this.Close();
         }

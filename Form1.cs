@@ -563,6 +563,27 @@ namespace Bahtinov_Collimator
             donate.ShowDialog();
         }
 
+
+
+
+        /// <summary>
+        /// Handles the click event for the Donate menu item, showing the Donate dialog.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The event data.</param>
+        private void PleaseDonateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Donate donate = new Donate();
+            PositionDialogInsideMainWindow(donate);
+            donate.ShowDialog();
+        }
+
+
+
+
+
+
+
         /// <summary>
         /// Handles the click event for the Help menu item, displaying a help message.
         /// </summary>
@@ -891,11 +912,9 @@ namespace Bahtinov_Collimator
             protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
             {
                 // Set custom text color and font style for the "Buy me a Coffee?" menu item
-                if (e.Item.Text == "Buy me a Coffee?")
+                if (e.Item.Text == "Support SkyCal")
                 {
-                    e.TextColor = Color.Red;
-                    // Set the font to bold
-                    e.TextFont = new Font(e.TextFont, FontStyle.Bold);
+                    e.TextColor = UITheme.GetGroupBoxTextColor(0);
                 }
                 else
                 {
@@ -908,25 +927,5 @@ namespace Bahtinov_Collimator
         }
 
         #endregion
-
-        private void WhatsNewToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // Extract the PDF from resources and save it to a temporary location
-                string tempPath = Path.Combine(Path.GetTempPath(), "whatsNew.pdf");
-
-                // Write the embedded PDF file to the temporary location
-                File.WriteAllBytes(tempPath, Properties.Resources.whatsNew);
-
-                // Open the PDF file with the default PDF viewer
-                Process.Start(tempPath);
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions if the file cannot be opened
-                MessageBox.Show("Unable to open the 'What's new' file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
     }
 }

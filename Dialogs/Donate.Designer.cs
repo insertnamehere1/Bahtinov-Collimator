@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Donate));
-            this.donateButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -39,32 +38,21 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
-            // donateButton
-            // 
-            this.donateButton.Location = new System.Drawing.Point(228, 284);
-            this.donateButton.Margin = new System.Windows.Forms.Padding(4);
-            this.donateButton.Name = "donateButton";
-            this.donateButton.Size = new System.Drawing.Size(100, 28);
-            this.donateButton.TabIndex = 0;
-            this.donateButton.Text = "Contribute";
-            this.donateButton.UseVisualStyleBackColor = true;
-            this.donateButton.Click += new System.EventHandler(this.Button1_Click);
-            // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(379, 284);
+            this.cancelButton.Location = new System.Drawing.Point(402, 284);
             this.cancelButton.Margin = new System.Windows.Forms.Padding(4);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(100, 28);
             this.cancelButton.TabIndex = 2;
-            this.cancelButton.Text = "Maybe Later";
+            this.cancelButton.Text = "Close";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.Button2_Click);
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Gray;
-            this.pictureBox1.Image = global::Bahtinov_Collimator.Properties.Resources.focusImage;
+            this.pictureBox1.BackColor = System.Drawing.Color.LightGray;
+            this.pictureBox1.Image = global::Bahtinov_Collimator.Properties.Resources.SkyCal_logo;
             this.pictureBox1.Location = new System.Drawing.Point(-1, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
@@ -75,7 +63,7 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.BackColor = System.Drawing.Color.Gray;
+            this.pictureBox2.BackColor = System.Drawing.Color.LightGray;
             this.pictureBox2.Image = global::Bahtinov_Collimator.Properties.Resources.paypal;
             this.pictureBox2.Location = new System.Drawing.Point(16, 19);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(4);
@@ -120,7 +108,6 @@
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.donateButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -134,8 +121,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button donateButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;

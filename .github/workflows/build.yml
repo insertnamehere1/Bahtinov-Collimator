@@ -1,4 +1,4 @@
-name: Build, Test, and Release (ClickOnce)
+name: Build, Test, Signpath and Release (ClickOnce)
 
 on: 
   push:
@@ -172,7 +172,7 @@ jobs:
     runs-on: windows-latest
     permissions:
       actions: read
-      contents: read
+      contents: write
       id-token: write
       attestations: write
 
@@ -203,17 +203,10 @@ jobs:
           api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
           organization-id: ${{ secrets.SIGNPATH_ORG_ID }}
           project-slug: Bahtinov-Collimator
-          signing-policy-slug: test-signing
+          signing-policy-slug: test-signing                             #<-- change to release-signing for production
           github-artifact-id: ${{ needs.build.outputs.artifact_id }}
           wait-for-completion: true
-          output-artifact-directory: signed-out 
-
-      - name: Overlay signed files onto dist
-        shell: pwsh
-        run: |
-          if (-not (Test-Path "signed-out")) { throw "signed-out not found" }
-          if (-not (Test-Path "dist")) { New-Item -ItemType Directory -Path dist | Out-Null }
-          Copy-Item "signed-out\*" "dist" -Recurse -Force
+          output-artifact-directory: dist 
 
       - name: Generate SHA256 sums for dist
         shell: pwsh
@@ -236,7 +229,11 @@ jobs:
           path: .
           format: spdx-json
           output-file: sbom.spdx.json
-
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          dependency-snapshot: false
+          upload-artifact: true
+          upload-release-assets: true  
+          
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -264,9 +261,10 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $PSNativeCommandUseErrorActionPreference = $true  # propagate native tool errors
+          $PSNativeCommandUseErrorActionPreference = $true
           Copy-Item "dist\*" "published\" -Recurse -Force
           New-Item -ItemType File -Force -Path "published\.nojekyll" | Out-Null
+          Remove-Item -Recurse -Force "dist"
          
       - name: Commit and push changes to master
         run: |

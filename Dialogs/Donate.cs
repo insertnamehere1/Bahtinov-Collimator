@@ -1,13 +1,10 @@
-﻿using Bahtinov_Collimator.Helper;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Runtime.ConstrainedExecution;
+
 using System.Runtime.InteropServices;
-using System.Security.Policy;
+
 using System.Windows.Forms;
-using static System.Windows.Forms.LinkLabel;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Bahtinov_Collimator
 {
@@ -57,8 +54,10 @@ namespace Bahtinov_Collimator
             this.Font = newFont;
             richTextBox.Font = newFont;
             label1.Font = newFont;
-            donateButton.Font = newFont;
             cancelButton.Font = newFont;
+
+            string url = GenerateDonationUrl();
+            Process.Start(url);
         }
 
         /// <summary>
@@ -69,11 +68,6 @@ namespace Bahtinov_Collimator
             // Main form
             this.ForeColor = UITheme.DarkForeground;
             this.BackColor = UITheme.DarkBackground;
-
-            // Donate button
-            donateButton.BackColor = UITheme.ButtonDarkBackground;
-            donateButton.ForeColor = UITheme.ButtonDarkForeground;
-            donateButton.FlatStyle = FlatStyle.Popup;
 
             // Cancel button
             cancelButton.BackColor = UITheme.ButtonDarkBackground;
@@ -101,24 +95,11 @@ namespace Bahtinov_Collimator
             richTextBox.Text = "Thank you for using SkyCal!\n\n" +
             "If SkyCal has helped you achieve sharper focus, easier collimation, or simply made\n" +
             "your nights under the stars a little more rewarding, please consider showing your \n" +
-            "support by using the “Buy Me a Coffee” link in the Help menu. Every coffee keeps \n" +
-            "the project alive, keeps me awake while writing manuals, helps me keep improving \n" +
-            "the software, and reminds me that the effort was worthwhile.\n\n" +
+            "support. Every coffee keeps the project alive, keeps me awake while writing manuals,\n" +
+            "helps me keep improving the software, and reminds me that the effort was worthwhile.\n\n" +
             "Clear Skies and Sharp Stars\n" +
             "Chris Dowd,\n" +
             "Developer of SkyCal";
-        }
-
-        /// <summary>
-        /// Opens the PayPal donation page in the default web browser.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            string url = GenerateDonationUrl();
-            Process.Start(url);
-            Close();
         }
 
         /// <summary>
@@ -131,6 +112,7 @@ namespace Bahtinov_Collimator
             string description = Uri.EscapeDataString("Buy Chris a Coffee – SkyCal Project");
             string country = "AU";
             string currency = "USD";
+            string logoUrl = "https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/refs/heads/master/SkyCal.logo.png";
             string thankYouUrl = "https://yourdomain.com/thankyou";
 
             return "https://www.paypal.com/cgi-bin/webscr" +
@@ -142,6 +124,7 @@ namespace Bahtinov_Collimator
                    "&no_shipping=1" +
                    "&no_note=0" +
                    "&cn=Leave%20a%20message%20(optional)" +
+                   "&image_url=" + Uri.EscapeDataString(logoUrl) +
                    "&return=" + Uri.EscapeDataString(thankYouUrl) +
                    "&bn=PP-DonationsBF";
         }

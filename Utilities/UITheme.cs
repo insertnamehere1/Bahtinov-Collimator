@@ -164,7 +164,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the background color for the donate picture.
         /// </summary>
-        public static Color DonatePictureBackground { get; } = Color.Gray;
+        public static Color DonatePictureBackground { get; } = Color.LightGray;
 
         #endregion
 
@@ -178,7 +178,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the background color for the about picture.
         /// </summary>
-        public static Color AboutPictureBackground { get; } = Color.Gray;
+        public static Color AboutPictureBackground { get; } = Color.LightGray;
 
         #endregion
 
