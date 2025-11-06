@@ -1,7 +1,7 @@
 
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/refs/heads/master/SkyCal.logo.png" alt="SkyCal Logo" width="250">
+  <img src="https://github.com/insertnamehere1/Bahtinov-Collimator/blob/master/Resources/SkyCal.Icon.ico" alt="SkyCal Logo" width="250">
 </p>
 
 <h1 align="center">SkyCal Focus and Collimation Tool</h1>
