@@ -135,7 +135,7 @@ namespace Bahtinov_Collimator
                 g = Graphics.FromImage(updatedImage);
 
                 // Fill the entire image with black before drawing
-                g.Clear(Color.Black);
+                g.Clear(UITheme.DarkBackground);
 
                 if (TrackingType == 1) // bahtinov style image
                 {

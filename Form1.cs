@@ -22,17 +22,18 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
+using Bahtinov_Collimator.Custom_Components;
+using Bahtinov_Collimator.Image_Processing;
+using Bahtinov_Collimator.Voice;
 using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Bahtinov_Collimator.Voice;
-using Bahtinov_Collimator.Image_Processing;
-using Bahtinov_Collimator.Custom_Components;
-using System.Diagnostics;
-using System.IO;
 
 namespace Bahtinov_Collimator
 {
@@ -224,6 +225,7 @@ namespace Bahtinov_Collimator
 
             // Set the initial state of the defocus switch based on user settings.
             slideSwitch2.IsOn = Properties.Settings.Default.DefocusSwitch;
+            RoundedPanel1.FillColor = Color.FromArgb(50, UITheme.DarkBackground);
         }
 
         #endregion
@@ -259,7 +261,7 @@ namespace Bahtinov_Collimator
             // Apply the larger font to any labels
             label1.Font = newFont;
             Label2.Font = newFont;
-            StartButton.Font = newFont;
+            RoundedStartButton.Font = newFont;
         }
 
         /// <summary>
@@ -343,9 +345,9 @@ namespace Bahtinov_Collimator
             SetMenuItemsColor(menuStrip1.Items, UITheme.MenuDarkBackground, UITheme.MenuDarkForeground);
 
             // Apply color scheme to the start button
-            StartButton.BackColor = UITheme.ButtonDarkBackground;
-            StartButton.ForeColor = UITheme.ButtonDarkForeground;
-            StartButton.FlatStyle = FlatStyle.Popup;
+            RoundedStartButton.BackColor = UITheme.ButtonDarkBackground;
+            RoundedStartButton.ForeColor = UITheme.ButtonDarkForeground;
+            RoundedStartButton.FlatStyle = FlatStyle.Popup;
 
             // Apply color scheme to the title bar using DWM API
             var color = UITheme.DarkBackground;
@@ -416,7 +418,8 @@ namespace Bahtinov_Collimator
                 }
 
                 screenCaptureRunningFlag = true;
-                StartButton.Text = "Stop";
+                RoundedStartButton.Text = "Stop";
+                RoundedStartButton.Image = Properties.Resources.Stop;
             }
             else
             {
@@ -427,7 +430,8 @@ namespace Bahtinov_Collimator
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                 AdjustAssistToolStripMenuItem.Enabled = false;
                 screenCaptureRunningFlag = false;
-                StartButton.Text = "Select Star";
+                RoundedStartButton.Text = "Select Star";
+                RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 firstPassCompleted = false;
             }
         }
@@ -472,7 +476,8 @@ namespace Bahtinov_Collimator
             if (toggle)
             {
                 screenCaptureRunningFlag = false;
-                StartButton.Text = "Select Star";
+                RoundedStartButton.Text = "Select Star";
+                RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue, groupBoxRed);
                 adjustAssistDialog?.Close();
                 AdjustAssistToolStripMenuItem.Enabled = false;
@@ -480,7 +485,8 @@ namespace Bahtinov_Collimator
             else
             {
                 screenCaptureRunningFlag = false;
-                StartButton.Text = "Select Star";
+                RoundedStartButton.Text = "Select Star";
+                RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                 InitializeRedFocusBox();
             }
@@ -505,7 +511,8 @@ namespace Bahtinov_Collimator
                 Invoke(new Action(() =>
                 {
                     RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
-                    StartButton.Text = "Select Star";
+                    RoundedStartButton.Text = "Select Star";
+                    RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                     AdjustAssistToolStripMenuItem.Enabled = false;
                     DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
                 }));
@@ -513,7 +520,8 @@ namespace Bahtinov_Collimator
             else
             {
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
-                StartButton.Text = "Select Star";
+                RoundedStartButton.Text = "Select Star";
+                RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 AdjustAssistToolStripMenuItem.Enabled = false;
                 DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
             }
@@ -577,12 +585,6 @@ namespace Bahtinov_Collimator
             PositionDialogInsideMainWindow(donate);
             donate.ShowDialog();
         }
-
-
-
-
-
-
 
         /// <summary>
         /// Handles the click event for the Help menu item, displaying a help message.

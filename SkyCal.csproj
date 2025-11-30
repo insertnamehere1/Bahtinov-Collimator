@@ -164,6 +164,30 @@
     <Compile Include="AdjustAssist\AdjustAssistBase.Designer.cs">
       <DependentUpon>AdjustAssistBase.cs</DependentUpon>
     </Compile>
+    <Compile Include="Custom Components\RoundedButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\RoundedButton.Designer.cs">
+      <DependentUpon>RoundedButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\RoundedGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\RoundedGroupBox.Designer.cs">
+      <DependentUpon>RoundedGroupBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\RoundedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\RoundedPanel.Designer.cs">
+      <DependentUpon>RoundedPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\RoundedPictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\RoundedPictureBox.Designer.cs">
+      <DependentUpon>RoundedPictureBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Custom Components\SlideSwitchComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>

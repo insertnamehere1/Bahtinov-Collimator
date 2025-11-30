@@ -1,4 +1,6 @@
-﻿namespace Bahtinov_Collimator
+﻿using Bahtinov_Collimator.Custom_Components;
+
+namespace Bahtinov_Collimator
 {
     partial class FocusChannelComponent
     {
@@ -15,7 +17,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
             this.WithinCriticalFocusLabel = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -151,7 +153,7 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
+        private Bahtinov_Collimator.Custom_Components.RoundedGroupBox groupBox1;
         private System.Windows.Forms.Label WithinCriticalFocusLabel;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;

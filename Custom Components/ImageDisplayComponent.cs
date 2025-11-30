@@ -66,6 +66,7 @@ namespace Bahtinov_Collimator
         private void SetupPictureBox()
         {
             pictureBox1.BackColor = UITheme.DisplayBackgroundColor;
+            pictureBox1.CornerRadius = 10;
         }
 
         /// <summary>
@@ -376,7 +377,7 @@ namespace Bahtinov_Collimator
             PointF textPosition = new PointF(start.X - textSize.Width / 2, start.Y - textSize.Height / 2);
 
             // draw opaque background
-            g.FillRectangle(new SolidBrush(Color.Black), textPosition.X, textPosition.Y, textSize.Width, textSize.Height);
+            g.FillRectangle(new SolidBrush(UITheme.DarkBackground), textPosition.X, textPosition.Y, textSize.Width, textSize.Height);
 
             // Draw the text
             g.DrawString(text, font, brush, textPosition);
@@ -509,6 +510,8 @@ namespace Bahtinov_Collimator
 
                 // Force the PictureBox to redraw itself as blank
                 pictureBox1.Invalidate();
+                pictureBox1.Image = Properties.Resources.TBMask_DarkGray;
+                pictureBox1.BackColor = UITheme.DarkBackground;
             }
         }
         #endregion
