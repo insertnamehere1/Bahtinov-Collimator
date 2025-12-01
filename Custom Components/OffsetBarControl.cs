@@ -156,9 +156,9 @@ namespace Bahtinov_Collimator.Custom_Components
             var g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            int margin = 10;
-            int left = margin + 30;                 // space for minimum label
-            int right = Width - margin - 30;        // space for maximum label
+            int margin = 0;
+            int left = margin + 40;                 // space for minimum label
+            int right = Width - margin - 35;        // space for maximum label
             int centerY = Height / 2;
 
             // Draw minimum label
@@ -266,6 +266,15 @@ namespace Bahtinov_Collimator.Custom_Components
                     markerRect.Top - valSize.Height - 2f    // small gap above marker
                 );
             }
+        }
+        /// <summary>
+        /// Clears the stored history values and refreshes the control.
+        /// </summary>
+        public void ResetHistory()
+        {
+            Value = 0.0f;
+            valueHistory.Clear();
+            Invalidate();         // force redraw without old markers
         }
     }
 }

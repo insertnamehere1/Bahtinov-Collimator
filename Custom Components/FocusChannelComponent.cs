@@ -296,6 +296,7 @@ namespace Bahtinov_Collimator
                 {
                     insideCriticalFocusColor = UITheme.GetGroupBoxTextColor(groupID);
                     SetLabelText();
+                    offsetBarControl1.ResetHistory();
                 }
             }
         }

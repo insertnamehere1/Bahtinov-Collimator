@@ -277,8 +277,8 @@ namespace Bahtinov_Collimator
 
             groupBoxRed = new FocusChannelComponent(0)
             {
-                Size = new Size(230, 144),
-                Location = new Point(12, 35)
+                Size = new Size(240, 144),
+                Location = new Point(8, 35)
             };
             this.Controls.Add(groupBoxRed);
         }
