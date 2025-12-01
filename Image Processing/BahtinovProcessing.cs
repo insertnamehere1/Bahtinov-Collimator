@@ -110,7 +110,7 @@ namespace Bahtinov_Collimator
             const int LINES = 9;
             const int DEGREES180 = 180;
             const float RADIANS_PER_DEGREE = (float)Math.PI / DEGREES180;
-            const float DIVISION_FACTOR = 3f / byte.MaxValue;
+            const float DIVISION_FACTOR = 3f / 255f;
             const int DEG_5 = 5;
 
             Rectangle rect = new Rectangle(0, 0, starImage.Width, starImage.Height);
@@ -142,9 +142,15 @@ namespace Bahtinov_Collimator
                 for (int y = topEdge; y < bottomEdge; ++y)
                 {
                     int pixelIndex = y * stride + x * bytesPerPixel;
-                    byte greenValue = starImageArray[pixelIndex + 1];
 
-                    starArray2D[x, y] = (float)Math.Sqrt(greenValue * DIVISION_FACTOR);
+                    // GDI+ order: B, G, R, (A)
+                    byte b = starImageArray[pixelIndex + 0];
+                    byte g = starImageArray[pixelIndex + 1];
+                    byte r = starImageArray[pixelIndex + 2];
+
+                    float sumRgb = r + g + b;                 // 0..765
+                    float v = sumRgb * DIVISION_FACTOR;       // scale
+                    starArray2D[x, y] = (float)Math.Sqrt(v);  // match FindSubpixelLines
                 }
             }
 
@@ -155,7 +161,8 @@ namespace Bahtinov_Collimator
                 channelIndex: 1, // 0=R,1=G,2=B
                 divisionFactor: DIVISION_FACTOR);
 
-            SubtractBackgroundInPlace(starArray2D, leftEdge, rightEdge, topEdge, bottomEdge, 0.9f * bgLevel);
+            SubtractBackgroundInPlace(starArray2D, leftEdge, rightEdge, topEdge, bottomEdge, bgLevel);
+            NormalizeRegion(starArray2D, leftEdge, rightEdge, topEdge, bottomEdge);
 
             float[] lineNumbersOfBrightestLines = new float[DEGREES180];
             float[] valuesOfBrightestLines = new float[DEGREES180];
@@ -388,8 +395,9 @@ namespace Bahtinov_Collimator
                         divisionFactor: divisionFactor);
 
                     // Subtract a slightly conservative level, then clamp to zero
-                    SubtractBackgroundInPlace(starArray2D, leftEdge, rightEdge, topEdge, bottomEdge, 0.9f * bgLevel2);
+                    SubtractBackgroundInPlace(starArray2D, leftEdge, rightEdge, topEdge, bottomEdge, bgLevel2);
                     ClampNonNegative(starArray2D, leftEdge, rightEdge, topEdge, bottomEdge);
+                    NormalizeRegion(starArray2D, leftEdge, rightEdge, topEdge, bottomEdge);
 
                     // Output arrays
                     float[] subpixelLineNumbers = new float[lineCount];
@@ -801,12 +809,11 @@ namespace Bahtinov_Collimator
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static float EstimateBackgroundLevelFromHistogram(
-           byte[] img, int stride, int bytesPerPixel,
-           int left, int right, int top, int bottom,
-           int channelIndex, float divisionFactor)
+            byte[] img, int stride, int bytesPerPixel,
+            int left, int right, int top, int bottom,
+            int channelIndex, float divisionFactor)
         {
-            // Build a small 256-bin histogram on the chosen channel (e.g., green).
-            // Using the 25th percentile as a robust sky background proxy.
+            // Histogram over average brightness 0..255
             int[] hist = new int[256];
 
             for (int y = top; y < bottom; ++y)
@@ -814,23 +821,40 @@ namespace Bahtinov_Collimator
                 int rowBase = y * stride;
                 for (int x = left; x < right; ++x)
                 {
-                    int p = rowBase + x * bytesPerPixel + channelIndex;
-                    hist[img[p]]++;
+                    int p = rowBase + x * bytesPerPixel;
+
+                    // B, G, R, (A)
+                    byte b = img[p + 0];
+                    byte g = img[p + 1];
+                    byte r = img[p + 2];
+
+                    float avg = (r + g + b) / 3f;                   // 0..255
+                    int bin = (int)Math.Min(255f, avg + 0.5f);
+                    hist[bin]++;
                 }
             }
 
             int total = (right - left) * (bottom - top);
             int target = total >> 2; // 25th percentile
-            int acc = 0, bin = 0;
-            for (; bin < 256; ++bin)
+            int acc = 0;
+            int binIndex = 0;
+
+            for (; binIndex < 256; ++binIndex)
             {
-                acc += hist[bin];
+                acc += hist[binIndex];
                 if (acc >= target)
                     break;
             }
 
-            // Convert to your working scale (sqrt(g * DIVISION_FACTOR))
-            return (float)Math.Sqrt(bin * divisionFactor);
+            // Convert that bin (an average channel value) into the same
+            // working scale as starArray2D = sqrt((r+g+b) * divisionFactor).
+            //
+            // If avg ≈ bin, then sumRGB ≈ 3 * bin.
+            // So we approximate: v_bg ≈ (3 * bin) * divisionFactor
+            float vBg = 3f * binIndex * divisionFactor;
+            if (vBg <= 0f) return 0f;
+
+            return (float)Math.Sqrt(vBg);
         }
 
         /// <summary>
@@ -889,6 +913,46 @@ namespace Bahtinov_Collimator
             for (int y = y0; y < y1; ++y)
                 for (int x = x0; x < x1; ++x)
                     if (a[x, y] < 0f) a[x, y] = 0f;
+        }
+
+        /// <summary>
+        /// Normalizes the intensity values within a specified rectangular region
+        /// of a 2D float image so that the brightest pixel becomes 1.0.
+        /// 
+        /// This enhances contrast after background subtraction by scaling all
+        /// values proportionally, improving the stability of peak and line
+        /// detection in low-contrast star images.
+        /// </summary>
+        /// <param name="arr"> The 2D floating-point array representing the image data.</param>
+        /// <param name="left">The left boundary (inclusive) of the region to normalize.</param>
+        /// <param name="right">The right boundary (exclusive) of the region to normalize.</param>
+        /// <param name="top">The top boundary (inclusive) of the region to normalize.</param>
+        /// <param name="bottom">The bottom boundary (exclusive) of the region to normalize.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void NormalizeRegion(float[,] arr, int left, int right, int top, int bottom)
+        {
+            float max = 0f;
+
+            for (int y = top; y < bottom; ++y)
+            {
+                for (int x = left; x < right; ++x)
+                {
+                    float v = arr[x, y];
+                    if (v > max) max = v;
+                }
+            }
+
+            if (max <= 0f) return;
+
+            float invMax = 1f / max;
+
+            for (int y = top; y < bottom; ++y)
+            {
+                for (int x = left; x < right; ++x)
+                {
+                    arr[x, y] *= invMax;
+                }
+            }
         }
 
         #endregion
