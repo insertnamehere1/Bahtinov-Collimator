@@ -60,7 +60,7 @@ namespace Bahtinov_Collimator
             this.offsetBarControl1.Maximum = 1F;
             this.offsetBarControl1.Minimum = -1F;
             this.offsetBarControl1.Name = "offsetBarControl1";
-            this.offsetBarControl1.Size = new System.Drawing.Size(222, 60);
+            this.offsetBarControl1.Size = new System.Drawing.Size(239, 60);
             this.offsetBarControl1.TabIndex = 8;
             this.offsetBarControl1.Text = "offsetBarControl1";
             this.offsetBarControl1.TextColor = System.Drawing.Color.White;

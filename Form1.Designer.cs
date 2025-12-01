@@ -43,10 +43,10 @@
             this.pleaseDonateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.RoundedPanel1 = new Bahtinov_Collimator.Custom_Components.RoundedPanel();
-            this.RoundedStartButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
             this.slideSwitch2 = new Bahtinov_Collimator.Custom_Components.SlideSwitch();
             this.label1 = new System.Windows.Forms.Label();
             this.Label2 = new System.Windows.Forms.Label();
+            this.RoundedStartButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
             this.menuStrip1.SuspendLayout();
             this.RoundedPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -146,10 +146,42 @@
             this.RoundedPanel1.CornerRadius = 12;
             this.RoundedPanel1.FillColor = System.Drawing.Color.DimGray;
             this.RoundedPanel1.ForeColor = System.Drawing.Color.White;
-            this.RoundedPanel1.Location = new System.Drawing.Point(13, 511);
+            this.RoundedPanel1.Location = new System.Drawing.Point(11, 511);
             this.RoundedPanel1.Name = "RoundedPanel1";
-            this.RoundedPanel1.Size = new System.Drawing.Size(231, 134);
+            this.RoundedPanel1.Size = new System.Drawing.Size(254, 134);
             this.RoundedPanel1.TabIndex = 27;
+            // 
+            // slideSwitch2
+            // 
+            this.slideSwitch2.IsOn = false;
+            this.slideSwitch2.Location = new System.Drawing.Point(104, 22);
+            this.slideSwitch2.Margin = new System.Windows.Forms.Padding(2);
+            this.slideSwitch2.Name = "slideSwitch2";
+            this.slideSwitch2.OffColor = System.Drawing.Color.Gray;
+            this.slideSwitch2.OnColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(69)))), ((int)(((byte)(96)))));
+            this.slideSwitch2.Size = new System.Drawing.Size(50, 25);
+            this.slideSwitch2.TabIndex = 24;
+            this.slideSwitch2.ToggleColor = System.Drawing.Color.White;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(27, 25);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(59, 16);
+            this.label1.TabIndex = 22;
+            this.label1.Text = "Bahtinov";
+            // 
+            // Label2
+            // 
+            this.Label2.AutoSize = true;
+            this.Label2.Location = new System.Drawing.Point(158, 26);
+            this.Label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.Label2.Name = "Label2";
+            this.Label2.Size = new System.Drawing.Size(57, 16);
+            this.Label2.TabIndex = 23;
+            this.Label2.Text = "Defocus";
             // 
             // RoundedStartButton
             // 
@@ -168,7 +200,7 @@
             this.RoundedStartButton.ImageOffsetX = 50;
             this.RoundedStartButton.ImageOffsetY = 0;
             this.RoundedStartButton.ImageWidth = 32;
-            this.RoundedStartButton.Location = new System.Drawing.Point(34, 67);
+            this.RoundedStartButton.Location = new System.Drawing.Point(46, 67);
             this.RoundedStartButton.Name = "RoundedStartButton";
             this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.RoundedStartButton.Size = new System.Drawing.Size(160, 44);
@@ -178,38 +210,6 @@
             this.RoundedStartButton.TextOffsetX = 10;
             this.RoundedStartButton.UseVisualStyleBackColor = false;
             this.RoundedStartButton.Click += new System.EventHandler(this.StartButton_Click);
-            // 
-            // slideSwitch2
-            // 
-            this.slideSwitch2.IsOn = false;
-            this.slideSwitch2.Location = new System.Drawing.Point(92, 22);
-            this.slideSwitch2.Margin = new System.Windows.Forms.Padding(2);
-            this.slideSwitch2.Name = "slideSwitch2";
-            this.slideSwitch2.OffColor = System.Drawing.Color.Gray;
-            this.slideSwitch2.OnColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(69)))), ((int)(((byte)(96)))));
-            this.slideSwitch2.Size = new System.Drawing.Size(50, 25);
-            this.slideSwitch2.TabIndex = 24;
-            this.slideSwitch2.ToggleColor = System.Drawing.Color.White;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 25);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 16);
-            this.label1.TabIndex = 22;
-            this.label1.Text = "Bahtinov";
-            // 
-            // Label2
-            // 
-            this.Label2.AutoSize = true;
-            this.Label2.Location = new System.Drawing.Point(146, 26);
-            this.Label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.Label2.Name = "Label2";
-            this.Label2.Size = new System.Drawing.Size(57, 16);
-            this.Label2.TabIndex = 23;
-            this.Label2.Text = "Defocus";
             // 
             // Form1
             // 

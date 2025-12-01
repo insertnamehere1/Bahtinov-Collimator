@@ -25,7 +25,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// The number of previous values to keep and render as semi-opaque markers.
         /// </summary>
-        private const int HistoryCapacity = 5;
+        private const int HistoryCapacity = 6;
 
         /// <summary>
         /// Gets or sets the minimum value of the scale.
@@ -78,7 +78,7 @@ namespace Bahtinov_Collimator.Custom_Components
                     return; // no change
 
                 // Store the previous value in the history
-                AddToHistory(this.value);
+                AddToHistory(value);
 
                 this.value = value;
                 Invalidate();
@@ -272,7 +272,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         public void ResetHistory()
         {
-            Value = 0.0f;
+            value = 0.0f;
             valueHistory.Clear();
             Invalidate();         // force redraw without old markers
         }
