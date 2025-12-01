@@ -66,9 +66,22 @@ namespace Bahtinov_Collimator
             ApplyTheme();
             SubscribeToEvents();
 
-            groupBox1.Text = $"Channel {groupID + 1}";
-            groupBox1.Tag = groupID;
+            switch(groupID)
+            {
+                case 0:
+                    groupBox1.Text = "Red Group";
+                    break;
+                case 1:
+                    groupBox1.Text = "Green Group";
+                    break;
+                case 2:
+                    groupBox1.Text = "Blue Group";
+                    break;
+                default:
+                    break;
+            }
 
+            groupBox1.Tag = groupID;
             focusChannelCount++;
         }
 
