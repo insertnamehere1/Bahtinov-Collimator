@@ -74,9 +74,6 @@ namespace Bahtinov_Collimator.Custom_Components
             get => value;
             set
             {
-                if (Math.Abs(value - this.value) < float.Epsilon)
-                    return; // no change
-
                 // Store the previous value in the history
                 AddToHistory(value);
 
@@ -97,7 +94,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         [Category("Appearance")]
         [Description("Color of the marker (the circular pointer).")]
-        public Color MarkerColor { get; set; } = Color.OrangeRed;
+        public Color MarkerColor { get; set; } = Color.Green;
 
         /// <summary>
         /// Gets or sets the color of the zero tick mark in the center of the bar.
@@ -203,10 +200,9 @@ namespace Bahtinov_Collimator.Custom_Components
 
             // Draw history markers (semi opaque, smaller, behind current marker)
             float historyRadius = 7f;
-            //            Color historyColor = Color.FromArgb(80, MarkerColor.R, MarkerColor.G, MarkerColor.B);
-            Color historyColor = Color.FromArgb(100, Color.White);
+            Color historyColor = Color.FromArgb(128, Color.White);
             using (var historyBrush = new SolidBrush(historyColor))
-            using (var historyPen = new Pen(Color.FromArgb(120, Color.Black)))
+            using (var historyPen = new Pen(Color.FromArgb(255, Color.Black)))
             {
                 foreach (float histValue in valueHistory)
                 {
@@ -250,10 +246,17 @@ namespace Bahtinov_Collimator.Custom_Components
             SizeF valSize = g.MeasureString(valueStr, Font);
 
             Color valueTextColor = TextColor;
-            if (value > maximum || value < minimum)
+
+            if (value < minimum || value > maximum)
             {
-                // Highlight that the raw value is outside the defined range
-                valueTextColor = Color.Red;
+                using (var alertPen = new Pen(Color.OrangeRed, 1f))
+                {
+                    g.DrawEllipse(alertPen,
+                        markerRect.X - 3,
+                        markerRect.Y - 3,
+                        markerRect.Width + 6,
+                        markerRect.Height + 6);
+                }
             }
 
             using (var textBrush = new SolidBrush(valueTextColor))

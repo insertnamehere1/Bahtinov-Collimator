@@ -135,14 +135,14 @@ namespace Bahtinov_Collimator
         {
             // First column: Positioning labels in the first column
             label1.Location = new Point(9, 26);
-            label5.Location = new Point(9, 50);
+            label5.Location = new Point(9, 53);
 
             // Second column: Positioning labels in the second column
-            FocusErrorLabel.Location = new Point(141, 24);
-            WithinCriticalFocusLabel.Location = new Point(175, 51);
+            FocusErrorLabel.Location = new Point(170, 24);
+            WithinCriticalFocusLabel.Location = new Point(181, 53);
 
             // Third column: Positioning labels in the third column
-            label2.Location = new Point(177, 25);
+            label2.Location = new Point(208, 25);
         }
 
         /// <summary>
@@ -287,9 +287,9 @@ namespace Bahtinov_Collimator
                 if (!e.FocusData.ClearDisplay)
                 {
                     FocusErrorLabel.Text = e.FocusData.BahtinovOffset.ToString("F1");
+                    offsetBarControl1.MarkerColor = e.FocusData.InsideFocus ? Color.Green : Color.OrangeRed;
                     offsetBarControl1.Value = (float)e.FocusData.BahtinovOffset;    
                     WithinCriticalFocusLabel.Text = e.FocusData.InsideFocus ? "YES" : "NO";
-                    offsetBarControl1.MarkerColor = e.FocusData.InsideFocus ? Color.Green : Color.Red;
                     insideCriticalFocusColor = e.FocusData.InsideFocus ? UITheme.GetGroupBoxTextColor(groupID) : UITheme.GetGroupBoxCriticalColor;
                 }
                 else

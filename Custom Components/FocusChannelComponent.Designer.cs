@@ -56,7 +56,7 @@ namespace Bahtinov_Collimator
             this.offsetBarControl1.BarColor = System.Drawing.Color.Gray;
             this.offsetBarControl1.Enabled = false;
             this.offsetBarControl1.Location = new System.Drawing.Point(6, 79);
-            this.offsetBarControl1.MarkerColor = System.Drawing.Color.OrangeRed;
+            this.offsetBarControl1.MarkerColor = System.Drawing.Color.Green;
             this.offsetBarControl1.Maximum = 1F;
             this.offsetBarControl1.Minimum = -1F;
             this.offsetBarControl1.Name = "offsetBarControl1";
