@@ -1,4 +1,6 @@
-﻿namespace Bahtinov_Collimator
+﻿using Bahtinov_Collimator.Custom_Components;
+
+namespace Bahtinov_Collimator
 {
     partial class Settings
     {
@@ -29,7 +31,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
             this.label13 = new System.Windows.Forms.Label();
             this.CriticalFocusLabel = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -44,13 +46,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.okButton = new System.Windows.Forms.Button();
             this.CancelSettingsButton = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.VoiceCheckBox = new System.Windows.Forms.CheckBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
             this.MakCassRadioButton = new System.Windows.Forms.RadioButton();
             this.SCTRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox2.SuspendLayout();
@@ -60,6 +62,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.BorderColor = System.Drawing.Color.Gray;
+            this.groupBox2.BorderThickness = 2;
             this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Controls.Add(this.CriticalFocusLabel);
             this.groupBox2.Controls.Add(this.label11);
@@ -72,6 +76,7 @@
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.CornerRadius = 12;
             this.groupBox2.Location = new System.Drawing.Point(13, 13);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
@@ -144,7 +149,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(225, 95);
+            this.label7.Location = new System.Drawing.Point(225, 102);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(25, 16);
@@ -164,7 +169,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(225, 63);
+            this.label4.Location = new System.Drawing.Point(225, 70);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(29, 16);
@@ -174,7 +179,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(225, 31);
+            this.label3.Location = new System.Drawing.Point(225, 38);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 16);
@@ -203,7 +208,7 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(346, 282);
+            this.okButton.Location = new System.Drawing.Point(356, 285);
             this.okButton.Margin = new System.Windows.Forms.Padding(4);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(100, 28);
@@ -214,7 +219,7 @@
             // 
             // CancelSettingsButton
             // 
-            this.CancelSettingsButton.Location = new System.Drawing.Point(454, 282);
+            this.CancelSettingsButton.Location = new System.Drawing.Point(464, 285);
             this.CancelSettingsButton.Margin = new System.Windows.Forms.Padding(4);
             this.CancelSettingsButton.Name = "CancelSettingsButton";
             this.CancelSettingsButton.Size = new System.Drawing.Size(100, 28);
@@ -225,11 +230,14 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.BorderColor = System.Drawing.Color.Gray;
+            this.groupBox1.BorderThickness = 2;
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.VoiceCheckBox);
+            this.groupBox1.CornerRadius = 12;
             this.groupBox1.Location = new System.Drawing.Point(13, 187);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
@@ -289,9 +297,12 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.BorderColor = System.Drawing.Color.Gray;
+            this.groupBox3.BorderThickness = 2;
             this.groupBox3.Controls.Add(this.MakCassRadioButton);
             this.groupBox3.Controls.Add(this.SCTRadioButton);
-            this.groupBox3.Location = new System.Drawing.Point(320, 13);
+            this.groupBox3.CornerRadius = 12;
+            this.groupBox3.Location = new System.Drawing.Point(329, 13);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(261, 255);
             this.groupBox3.TabIndex = 36;
@@ -325,7 +336,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(595, 329);
+            this.ClientSize = new System.Drawing.Size(603, 329);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.CancelSettingsButton);
@@ -350,8 +361,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label4;
@@ -363,7 +372,6 @@
         private System.Windows.Forms.TextBox ApertureTextBox;
         private System.Windows.Forms.TextBox PixelSizeTextBox;
         private System.Windows.Forms.TextBox FocalLengthTextBox;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox VoiceCheckBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label8;
@@ -372,8 +380,10 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label CriticalFocusLabel;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RadioButton MakCassRadioButton;
         private System.Windows.Forms.RadioButton SCTRadioButton;
+        private RoundedGroupBox groupBox2;
+        private RoundedGroupBox groupBox1;
+        private RoundedGroupBox groupBox3;
     }
 }
