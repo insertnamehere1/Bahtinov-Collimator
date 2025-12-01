@@ -85,9 +85,9 @@ namespace Bahtinov_Collimator
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(12, 50);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(145, 18);
+            this.label5.Size = new System.Drawing.Size(148, 18);
             this.label5.TabIndex = 6;
-            this.label5.Text = "Inside Critical Focus:";
+            this.label5.Text = "Within Critical Focus:";
             // 
             // label2
             // 
@@ -117,9 +117,9 @@ namespace Bahtinov_Collimator
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 28);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(92, 18);
+            this.label1.Size = new System.Drawing.Size(108, 18);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Focus Error:";
+            this.label1.Text = "Error Distance:";
             // 
             // FocusChannelComponent
             // 

@@ -24,7 +24,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Thickness of the border line in pixels.
         /// </summary>
-        public int BorderThickness { get; set; } = 2;
+        public int BorderThickness { get; set; } = 3;
 
         /// <summary>
         /// Background fill color inside the panel.

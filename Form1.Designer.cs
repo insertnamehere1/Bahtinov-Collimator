@@ -138,7 +138,7 @@
             // 
             this.RoundedPanel1.BackColor = System.Drawing.Color.Transparent;
             this.RoundedPanel1.BorderColor = System.Drawing.Color.Gray;
-            this.RoundedPanel1.BorderThickness = 3;
+            this.RoundedPanel1.BorderThickness = 4;
             this.RoundedPanel1.Controls.Add(this.RoundedStartButton);
             this.RoundedPanel1.Controls.Add(this.slideSwitch2);
             this.RoundedPanel1.Controls.Add(this.label1);
@@ -146,7 +146,7 @@
             this.RoundedPanel1.CornerRadius = 12;
             this.RoundedPanel1.FillColor = System.Drawing.Color.DimGray;
             this.RoundedPanel1.ForeColor = System.Drawing.Color.White;
-            this.RoundedPanel1.Location = new System.Drawing.Point(11, 511);
+            this.RoundedPanel1.Location = new System.Drawing.Point(11, 512);
             this.RoundedPanel1.Name = "RoundedPanel1";
             this.RoundedPanel1.Size = new System.Drawing.Size(254, 134);
             this.RoundedPanel1.TabIndex = 27;
