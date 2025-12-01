@@ -277,7 +277,7 @@ namespace Bahtinov_Collimator
 
             groupBoxRed = new FocusChannelComponent(0)
             {
-                Size = new Size(230, 114),
+                Size = new Size(230, 144),
                 Location = new Point(12, 35)
             };
             this.Controls.Add(groupBoxRed);
@@ -296,8 +296,8 @@ namespace Bahtinov_Collimator
 
             groupBoxGreen = new FocusChannelComponent(1)
             {
-                Size = new Size(230, 114),
-                Location = new Point(12, 150)
+                Size = new Size(230, 144),
+                Location = new Point(12, 190)
             };
             this.Controls.Add(groupBoxGreen);
         }
@@ -315,8 +315,8 @@ namespace Bahtinov_Collimator
 
             groupBoxBlue = new FocusChannelComponent(2)
             {
-                Size = new Size(230, 114),
-                Location = new Point(12, 265)
+                Size = new Size(230, 144),
+                Location = new Point(12, 345)
             };
             this.Controls.Add(groupBoxBlue);
         }
@@ -570,9 +570,6 @@ namespace Bahtinov_Collimator
             PositionDialogInsideMainWindow(donate);
             donate.ShowDialog();
         }
-
-
-
 
         /// <summary>
         /// Handles the click event for the Donate menu item, showing the Donate dialog.

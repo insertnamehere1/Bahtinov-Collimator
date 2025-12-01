@@ -123,6 +123,8 @@ namespace Bahtinov_Collimator
             SetLabelTextDirection();
             SetLabelAutoSize(false);
             SetLabelText();
+            offsetBarControl1.Maximum = 2.0f;
+            offsetBarControl1.Minimum = -2.0f;
         }
 
         /// <summary>
@@ -132,18 +134,15 @@ namespace Bahtinov_Collimator
         private void SetupLabelLocation()
         {
             // First column: Positioning labels in the first column
-            label1.Location = new Point(9, 24);
-            label3.Location = new Point(9, 49);
-            label5.Location = new Point(9, 74);
+            label1.Location = new Point(9, 26);
+            label5.Location = new Point(9, 53);
 
             // Second column: Positioning labels in the second column
-            FocusErrorLabel.Location = new Point(141, 22);
-            AbsoluteFocusErrorLabel.Location = new Point(133, 49);
-            WithinCriticalFocusLabel.Location = new Point(170, 74);
+            FocusErrorLabel.Location = new Point(141, 24);
+            WithinCriticalFocusLabel.Location = new Point(175, 54);
 
             // Third column: Positioning labels in the third column
-            label2.Location = new Point(177, 24);
-            label4.Location = new Point(177, 49);
+            label2.Location = new Point(177, 28);
         }
 
         /// <summary>
@@ -164,7 +163,6 @@ namespace Bahtinov_Collimator
         private void SetLabelText()
         {
             FocusErrorLabel.Text = "0.0";
-            AbsoluteFocusErrorLabel.Text = "0.0";
             WithinCriticalFocusLabel.Text = "---";
         }
 
@@ -205,7 +203,6 @@ namespace Bahtinov_Collimator
         private void SetLabelAutoSize(bool autoSize)
         {
             FocusErrorLabel.AutoSize = autoSize;
-            AbsoluteFocusErrorLabel.AutoSize = autoSize;
             WithinCriticalFocusLabel.AutoSize = true;
         }
 
@@ -290,8 +287,9 @@ namespace Bahtinov_Collimator
                 if (!e.FocusData.ClearDisplay)
                 {
                     FocusErrorLabel.Text = e.FocusData.BahtinovOffset.ToString("F1");
-                    AbsoluteFocusErrorLabel.Text = e.FocusData.DefocusError.ToString("F1");
+                    offsetBarControl1.Value = (float)e.FocusData.BahtinovOffset;    
                     WithinCriticalFocusLabel.Text = e.FocusData.InsideFocus ? "YES" : "NO";
+                    offsetBarControl1.MarkerColor = e.FocusData.InsideFocus ? Color.Green : Color.Red;
                     insideCriticalFocusColor = e.FocusData.InsideFocus ? UITheme.GetGroupBoxTextColor(groupID) : UITheme.GetGroupBoxCriticalColor;
                 }
                 else
@@ -366,7 +364,7 @@ namespace Bahtinov_Collimator
         /// <returns>An array of labels.</returns>
         private Label[] GetAllLabels()
         {
-            return new Label[] { label1, label2, label3, label4, label5, FocusErrorLabel, AbsoluteFocusErrorLabel, WithinCriticalFocusLabel };
+            return new Label[] { label1, label2, label5, FocusErrorLabel, WithinCriticalFocusLabel };
         }
 
         #endregion
