@@ -383,9 +383,6 @@ namespace Bahtinov_Collimator
             // Calculate the position to center the text at the start point
             PointF textPosition = new PointF(start.X - textSize.Width / 2, start.Y - textSize.Height / 2);
 
-            // draw opaque background
-            g.FillRectangle(new SolidBrush(UITheme.DarkBackground), textPosition.X, textPosition.Y, textSize.Width, textSize.Height);
-
             // Draw the text
             g.DrawString(text, font, brush, textPosition);
         }
