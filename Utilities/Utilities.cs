@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -40,27 +42,42 @@ namespace Bahtinov_Collimator
         /// <param name="bitmap">The bitmap image to compute the hash for.</param>
         /// <returns>A hexadecimal string representing the SHA-256 hash of the bitmap.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="bitmap"/> parameter is null.</exception>
-        public static string ComputeHash(Bitmap bitmap)
+        public static string ComputeHash(Bitmap bmp)
         {
-            if (bitmap == null)
-                throw new ArgumentNullException(nameof(bitmap));
+            if (bmp == null)
+                throw new ArgumentNullException(nameof(bmp));
 
-            // Convert the Bitmap to a byte array more efficiently
-            byte[] imageBytes = ImageToByteArray(bitmap);
+            const int regionSize = 100;
 
-            // Compute the SHA-256 hash
-            using (SHA256 sha256 = SHA256.Create())
+            int startX = (bmp.Width - regionSize) / 2;
+            int startY = (bmp.Height - regionSize) / 2;
+
+            var rect = new Rectangle(startX, startY, regionSize, regionSize);
+
+            // Lock only the 100×100 region
+            BitmapData data = bmp.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+            try
             {
-                byte[] hashBytes = sha256.ComputeHash(imageBytes);
+                int bytes = Math.Abs(data.Stride) * regionSize;
+                byte[] buffer = new byte[bytes];
 
-                // Convert the byte array to a hexadecimal string
-                StringBuilder hexString = new StringBuilder(hashBytes.Length * 2);
-                foreach (byte b in hashBytes)
+                Marshal.Copy(data.Scan0, buffer, 0, bytes);
+
+                using (SHA256 sha = SHA256.Create())
                 {
-                    hexString.AppendFormat("{0:x2}", b);
-                }
+                    byte[] hashBytes = sha.ComputeHash(buffer);
 
-                return hexString.ToString();
+                    StringBuilder sb = new StringBuilder(hashBytes.Length * 2);
+                    foreach (byte b in hashBytes)
+                        sb.AppendFormat("{0:x2}", b);
+
+                    return sb.ToString();
+                }
+            }
+            finally
+            {
+                bmp.UnlockBits(data);
             }
         }
 
@@ -78,10 +95,23 @@ namespace Bahtinov_Collimator
             if (image == null)
                 throw new ArgumentNullException(nameof(image));
 
-            using (MemoryStream stream = new MemoryStream())
+            // Lock the bitmap's bits for fast, unmanaged access
+            var rect = new Rectangle(0, 0, image.Width, image.Height);
+            var bmpData = image.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+            try
             {
-                image.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-                return stream.ToArray();
+                int bytes = Math.Abs(bmpData.Stride) * bmpData.Height;
+                byte[] buffer = new byte[bytes];
+
+                // Copy the RGB values into the managed array
+                Marshal.Copy(bmpData.Scan0, buffer, 0, bytes);
+
+                return buffer;
+            }
+            finally
+            {
+                image.UnlockBits(bmpData);
             }
         }
 
