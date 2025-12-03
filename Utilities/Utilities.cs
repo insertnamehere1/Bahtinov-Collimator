@@ -37,7 +37,7 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Computes the SHA-256 hash of the given bitmap image.
+        /// Computes the SHA-256 hash for the centre 100x100 pixels of the given bitmap image.
         /// </summary>
         /// <param name="bitmap">The bitmap image to compute the hash for.</param>
         /// <returns>A hexadecimal string representing the SHA-256 hash of the bitmap.</returns>
@@ -49,17 +49,26 @@ namespace Bahtinov_Collimator
 
             const int regionSize = 100;
 
-            int startX = (bmp.Width - regionSize) / 2;
-            int startY = (bmp.Height - regionSize) / 2;
+            int width = bmp.Width;
+            int height = bmp.Height;
 
-            var rect = new Rectangle(startX, startY, regionSize, regionSize);
+            if (width <= 0 || height <= 0)
+                return string.Empty;
 
-            // Lock only the 100×100 region
+            // Determine actual region size (use smaller when needed)
+            int sampleWidth = Math.Min(regionSize, width);
+            int sampleHeight = Math.Min(regionSize, height);
+
+            int startX = (width - sampleWidth) / 2;
+            int startY = (height - sampleHeight) / 2;
+
+            Rectangle rect = new Rectangle(startX, startY, sampleWidth, sampleHeight);
+
             BitmapData data = bmp.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             try
             {
-                int bytes = Math.Abs(data.Stride) * regionSize;
+                int bytes = Math.Abs(data.Stride) * sampleHeight;
                 byte[] buffer = new byte[bytes];
 
                 Marshal.Copy(data.Scan0, buffer, 0, bytes);
@@ -78,40 +87,6 @@ namespace Bahtinov_Collimator
             finally
             {
                 bmp.UnlockBits(data);
-            }
-        }
-
-        #endregion
-
-        #region Image Conversion
-
-        /// <summary>
-        /// Converts a bitmap image to a byte array.
-        /// </summary>
-        /// <param name="image">The bitmap image to convert.</param>
-        /// <returns>A byte array representation of the bitmap image.</returns>
-        private static byte[] ImageToByteArray(Bitmap image)
-        {
-            if (image == null)
-                throw new ArgumentNullException(nameof(image));
-
-            // Lock the bitmap's bits for fast, unmanaged access
-            var rect = new Rectangle(0, 0, image.Width, image.Height);
-            var bmpData = image.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-
-            try
-            {
-                int bytes = Math.Abs(bmpData.Stride) * bmpData.Height;
-                byte[] buffer = new byte[bytes];
-
-                // Copy the RGB values into the managed array
-                Marshal.Copy(bmpData.Scan0, buffer, 0, bytes);
-
-                return buffer;
-            }
-            finally
-            {
-                image.UnlockBits(bmpData);
             }
         }
 

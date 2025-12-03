@@ -60,7 +60,7 @@ namespace Bahtinov_Collimator
         private const int PW_RENDERFULLCONTENT = 0x2;
 
         // Threshold for detecting significant movement
-        private const int MovementThreshold = 5;
+        private const int MovementThreshold = 1;
         #endregion
 
         #region Private Fields
@@ -212,8 +212,7 @@ namespace Bahtinov_Collimator
             {
                 g?.Dispose();
                 latestImage?.Dispose();
-                image?.Dispose();   // You were leaking this
-                                    // Do not dispose updatedImage here because it is handed to ImageReceivedEvent
+                image?.Dispose();
             }
         }
 
