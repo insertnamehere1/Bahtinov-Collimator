@@ -1,6 +1,6 @@
 ﻿namespace Bahtinov_Collimator.Custom_Components
 {
-    partial class OffsetBarControl
+    partial class HistoryBar
     {
         /// <summary>
         /// Required designer variable.
@@ -18,7 +18,7 @@
         {
             this.SuspendLayout();
             // 
-            // OffsetBarControl
+            // HistoryBar
             // 
             this.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 

@@ -14,7 +14,7 @@ namespace Bahtinov_Collimator.Custom_Components
     /// Intended for visualizing Bahtinov line offsets or similar signed values.
     /// Now DPI aware by scaling layout and drawing based on DeviceDpi.
     /// </summary>
-    public partial class OffsetBarControl : Control
+    public partial class HistoryBar : Control
     {
         private float minimum = -1.0f;
         private float maximum = 1.0f;
@@ -127,10 +127,10 @@ namespace Bahtinov_Collimator.Custom_Components
         public Color TextColor { get; set; } = Color.White;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OffsetBarControl"/> class.
+        /// Initializes a new instance of the <see cref="HistoryBar"/> class.
         /// Sets up double buffering and a sensible default size, scaled for the current DPI.
         /// </summary>
-        public OffsetBarControl()
+        public HistoryBar()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint |
                      ControlStyles.OptimizedDoubleBuffer |

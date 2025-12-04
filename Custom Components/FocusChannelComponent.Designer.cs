@@ -18,7 +18,7 @@ namespace Bahtinov_Collimator
         private void InitializeComponent()
         {
             this.groupBox1 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
-            this.offsetBarControl1 = new Bahtinov_Collimator.Custom_Components.OffsetBarControl();
+            this.offsetBarControl1 = new Bahtinov_Collimator.Custom_Components.HistoryBar();
             this.WithinCriticalFocusLabel = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -146,6 +146,6 @@ namespace Bahtinov_Collimator
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label FocusErrorLabel;
         private System.Windows.Forms.Label label1;
-        private OffsetBarControl offsetBarControl1;
+        private HistoryBar offsetBarControl1;
     }
 }

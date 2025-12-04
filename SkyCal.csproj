@@ -164,11 +164,11 @@
     <Compile Include="AdjustAssist\AdjustAssistBase.Designer.cs">
       <DependentUpon>AdjustAssistBase.cs</DependentUpon>
     </Compile>
-    <Compile Include="Custom Components\OffsetBarControl.cs">
+    <Compile Include="Custom Components\HistoryBar.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Custom Components\OffsetBarControl.Designer.cs">
-      <DependentUpon>OffsetBarControl.cs</DependentUpon>
+    <Compile Include="Custom Components\HistoryBar.Designer.cs">
+      <DependentUpon>HistoryBar.cs</DependentUpon>
     </Compile>
     <Compile Include="Custom Components\RoundedButton.cs">
       <SubType>Component</SubType>
@@ -265,8 +265,8 @@
     <EmbeddedResource Include="AdjustAssist\AdjustAssistBase.resx">
       <DependentUpon>AdjustAssistBase.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Custom Components\OffsetBarControl.resx">
-      <DependentUpon>OffsetBarControl.cs</DependentUpon>
+    <EmbeddedResource Include="Custom Components\HistoryBar.resx">
+      <DependentUpon>HistoryBar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
