@@ -55,9 +55,6 @@ namespace Bahtinov_Collimator
         // to be checked for relevance
         private const float ErrorMarkerScalingValue = 20.0f;
 
-        // single pixel offset
-        private const int yOffset = 1;
-
         // retain last error value
         private float lastFocusErrorValue = 0.0f;
         #endregion
