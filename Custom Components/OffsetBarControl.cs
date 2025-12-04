@@ -12,6 +12,7 @@ namespace Bahtinov_Collimator.Custom_Components
     /// value is rendered above the marker.
     /// 
     /// Intended for visualizing Bahtinov line offsets or similar signed values.
+    /// Now DPI aware by scaling layout and drawing based on DeviceDpi.
     /// </summary>
     public partial class OffsetBarControl : Control
     {
@@ -26,6 +27,19 @@ namespace Bahtinov_Collimator.Custom_Components
         /// The number of previous values to keep and render as semi-opaque markers.
         /// </summary>
         private const int HistoryCapacity = 6;
+
+        /// <summary>
+        /// Design-time DPI (WinForms baseline).
+        /// All coordinates and sizes in this control are expressed as if at 96 DPI,
+        /// then scaled at runtime based on DeviceDpi.
+        /// </summary>
+        private const int DesignDpi = 96;
+
+        /// <summary>
+        /// Gets the current DPI scale factor relative to the design DPI.
+        /// For example, at 150 percent scaling this will be 1.5.
+        /// </summary>
+        private float DpiScale => DeviceDpi / (float)DesignDpi;
 
         /// <summary>
         /// Gets or sets the minimum value of the scale.
@@ -75,7 +89,7 @@ namespace Bahtinov_Collimator.Custom_Components
             set
             {
                 // Store the previous value in the history
-                AddToHistory(value);
+                AddToHistory(this.value);
 
                 this.value = value;
                 Invalidate();
@@ -114,7 +128,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OffsetBarControl"/> class.
-        /// Sets up double buffering and a sensible default size.
+        /// Sets up double buffering and a sensible default size, scaled for the current DPI.
         /// </summary>
         public OffsetBarControl()
         {
@@ -125,7 +139,24 @@ namespace Bahtinov_Collimator.Custom_Components
                      true);
 
             DoubleBuffered = true;
-            Size = new Size(300, 80);
+
+            // Base design size is 300x80 at 96 DPI.
+            // Multiply by DpiScale so the default matches the current monitor DPI.
+            var scale = DpiScale;
+            Size = new Size(
+                (int)(300 * scale),
+                (int)(60 * scale));
+        }
+
+        /// <summary>
+        /// Ensures preferred size is also DPI aware when the designer or layout engine asks.
+        /// </summary>
+        public override Size GetPreferredSize(Size proposedSize)
+        {
+            var scale = DpiScale;
+            return new Size(
+                (int)(300 * scale),
+                (int)(60 * scale));
         }
 
         /// <summary>
@@ -134,7 +165,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <param name="oldValue">The previous value to store for history rendering.</param>
         private void AddToHistory(float oldValue)
         {
-            // You may optionally ignore NaN or infinities if that is a concern.
             valueHistory.Enqueue(oldValue);
 
             while (valueHistory.Count > HistoryCapacity)
@@ -144,6 +174,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Performs custom painting of the bar, labels, zero tick, history markers,
         /// the current marker, and the numeric value above the marker.
+        /// Layout and stroke sizes are scaled according to the current DPI.
         /// </summary>
         /// <param name="e">Paint event data.</param>
         protected override void OnPaint(PaintEventArgs e)
@@ -153,10 +184,37 @@ namespace Bahtinov_Collimator.Custom_Components
             var g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
+            float scale = DpiScale;
+
+            // Base design values at 96 DPI
+            float designLeftPad = 40f;     // space for minimum label
+            float designRightPad = 35f;    // space for maximum label
+            float designZeroTickUp = 12f;
+            float designZeroTickDown = 12f;
+            float designHistoryRadius = 8f;
+            float designMarkerRadius = 7f;
+            float designBarThickness = 2f;
+            float designZeroThickness = 2f;
+            float designMarkerOutlineThickness = 0f;
+            float designAlertOutlineThickness = 1f;
+            float designValueGap = 2f;
+
+            // Scaled values
             int margin = 0;
-            int left = margin + 40;                 // space for minimum label
-            int right = Width - margin - 35;        // space for maximum label
-            int centerY = Height / 2;
+            int left = margin + (int)(designLeftPad * scale);
+            int right = Width - margin - (int)(designRightPad * scale);
+            int centerY = Height / 2 + 10;
+
+            float zeroTickUp = designZeroTickUp * scale;
+            float zeroTickDown = designZeroTickDown * scale;
+            float historyRadius = designHistoryRadius * scale;
+            float markerRadius = designMarkerRadius * scale;
+
+            float barThickness = designBarThickness * scale;
+            float zeroThickness = designZeroThickness * scale;
+            float markerOutlineThickness = designMarkerOutlineThickness * scale;
+            float alertOutlineThickness = designAlertOutlineThickness * scale;
+            float valueGap = designValueGap * scale;
 
             // Draw minimum label
             using (var textBrush = new SolidBrush(TextColor))
@@ -171,13 +229,16 @@ namespace Bahtinov_Collimator.Custom_Components
 
             using (var textBrush = new SolidBrush(TextColor))
             {
-                g.DrawString(maxText, Font, textBrush,
+                g.DrawString(
+                    maxText,
+                    Font,
+                    textBrush,
                     Width - margin - maxSize.Width,
                     centerY - Font.Height / 2);
             }
 
             // Draw main bar line
-            using (var barPen = new Pen(BarColor, 2f))
+            using (var barPen = new Pen(BarColor, barThickness))
             {
                 g.DrawLine(barPen, left, centerY, right, centerY);
             }
@@ -193,13 +254,12 @@ namespace Bahtinov_Collimator.Custom_Components
             float zeroT = (0f - minimum) / range;        // position 0..1 along the bar
             float zeroX = left + zeroT * (right - left);
 
-            using (var zeroPen = new Pen(ZeroTickColor, 2f))
+            using (var zeroPen = new Pen(ZeroTickColor, zeroThickness))
             {
-                g.DrawLine(zeroPen, zeroX, centerY - 8, zeroX, centerY + 12);
+                g.DrawLine(zeroPen, zeroX, centerY - zeroTickUp, zeroX, centerY + zeroTickDown);
             }
 
             // Draw history markers (semi opaque, smaller, behind current marker)
-            float historyRadius = 7f;
             Color historyColor = Color.FromArgb(128, Color.White);
             using (var historyBrush = new SolidBrush(historyColor))
             using (var historyPen = new Pen(Color.FromArgb(255, Color.Black)))
@@ -217,7 +277,6 @@ namespace Bahtinov_Collimator.Custom_Components
                         historyRadius * 2);
 
                     g.FillEllipse(historyBrush, histRect);
-                    g.DrawEllipse(historyPen, histRect);
                 }
             }
 
@@ -225,7 +284,6 @@ namespace Bahtinov_Collimator.Custom_Components
             float clampedValue = Math.Max(minimum, Math.Min(maximum, value));
             float t = (clampedValue - minimum) / range;
             float markerX = left + t * (right - left);
-            float markerRadius = 8f;
 
             var markerRect = new RectangleF(
                 markerX - markerRadius,
@@ -233,12 +291,11 @@ namespace Bahtinov_Collimator.Custom_Components
                 markerRadius * 2,
                 markerRadius * 2);
 
-            // Draw current marker (●)
+            // Draw current marker
             using (var markerBrush = new SolidBrush(MarkerColor))
-            using (var markerPen = new Pen(Color.Black, 1f))
+            using (var markerPen = new Pen(Color.Black, markerOutlineThickness))
             {
                 g.FillEllipse(markerBrush, markerRect);
-                g.DrawEllipse(markerPen, markerRect);
             }
 
             // Draw numeric value above marker
@@ -249,13 +306,13 @@ namespace Bahtinov_Collimator.Custom_Components
 
             if (value < minimum || value > maximum)
             {
-                using (var alertPen = new Pen(Color.OrangeRed, 1f))
+                using (var alertPen = new Pen(Color.OrangeRed, alertOutlineThickness))
                 {
                     g.DrawEllipse(alertPen,
-                        markerRect.X - 3,
-                        markerRect.Y - 3,
-                        markerRect.Width + 6,
-                        markerRect.Height + 6);
+                        markerRect.X - 3 * scale,
+                        markerRect.Y - 3 * scale,
+                        markerRect.Width + 6 * scale,
+                        markerRect.Height + 6 * scale);
                 }
             }
 
@@ -265,11 +322,11 @@ namespace Bahtinov_Collimator.Custom_Components
                     valueStr,
                     Font,
                     textBrush,
-                    markerX - valSize.Width / 2f,           // centered above marker
-                    markerRect.Top - valSize.Height - 2f    // small gap above marker
-                );
+                    markerX - valSize.Width / 2f,
+                    markerRect.Top - valSize.Height - valueGap);
             }
         }
+
         /// <summary>
         /// Clears the stored history values and refreshes the control.
         /// </summary>
