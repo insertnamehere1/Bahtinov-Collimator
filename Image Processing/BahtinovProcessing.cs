@@ -558,7 +558,7 @@ namespace Bahtinov_Collimator
                     errorDir += Math.PI * 2.0;
 
                 // Invert direction by rotating π radians
-                errorDir = errorDir + Math.PI;
+                errorDir += Math.PI;
                 if (errorDir >= Math.PI * 2.0)
                     errorDir -= Math.PI * 2.0;
 
