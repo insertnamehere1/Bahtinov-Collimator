@@ -61,6 +61,7 @@ namespace Bahtinov_Collimator
 
         #region Public Fields
         public static Dictionary<int, double> ErrorValues { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -549,17 +550,41 @@ namespace Bahtinov_Collimator
                 double dx2 = secondLineEndX - secondLineStartX;
                 double dy2 = secondLineEndY - secondLineStartY;
 
+                // Compute perpendicular direction of the error vector (radians)
+                double errorDir = Math.Atan2(dyErr, dxErr);
+
+                // Normalize to [0, 2π)
+                if (errorDir < 0.0)
+                    errorDir += Math.PI * 2.0;
+
+                // Invert direction by rotating π radians
+                errorDir = errorDir + Math.PI;
+                if (errorDir >= Math.PI * 2.0)
+                    errorDir -= Math.PI * 2.0;
+
+                // Determine sign based on radial window per group
                 float errorSign;
-                try
+
+                switch (group)
                 {
-                    // cross product z of (error vector) x (second line direction)
-                    errorSign = (float)(-Math.Sign(dxErr * dy2 - dyErr * dx2));
-                }
-                catch
-                {
-                    ImageLostEventProvider.OnImageLost("Image Lost", "Bahtinov Processing: ", MessageBoxIcon.Error, MessageBoxButtons.OK);
-                    lastFocusErrorValue = 0.0f;
-                    return false;
+                    case 0:
+                        // 0 < angle < π
+                        errorSign = (errorDir > 0.0 && errorDir < Math.PI) ? 1f : -1f;
+                        break;
+
+                    case 1:
+                        // π/3 < angle < 4π/3  (60°–240°) => sign is NEGATIVE there
+                        errorSign = (errorDir > Math.PI / 3.0 && errorDir < 4.0 * Math.PI / 3.0) ? -1f : 1f;
+                        break;
+
+                    case 2:
+                        // 2π/3 < angle < 5π/3  (120°–300°)
+                        errorSign = (errorDir > 2.0 * Math.PI / 3.0 && errorDir < 5.0 * Math.PI / 3.0) ? 1f : -1f;
+                        break;
+
+                    default:
+                        errorSign = -1f;
+                        break;
                 }
 
                 double errorDistanceD = Math.Sqrt(dxErr * dxErr + dyErr * dyErr);
