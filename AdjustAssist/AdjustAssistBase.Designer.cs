@@ -31,21 +31,21 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdjustAssistBase));
             this.saveButton = new System.Windows.Forms.Button();
             this.closeButton = new System.Windows.Forms.Button();
-            this.swapGreenCheckbox = new System.Windows.Forms.CheckBox();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.pictureBox1 = new Bahtinov_Collimator.Custom_Components.RoundedPictureBox();
             this.groupBox1 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
             this.blueReverseBox = new System.Windows.Forms.CheckBox();
+            this.swapGreenCheckbox = new System.Windows.Forms.CheckBox();
             this.greenReverseBox = new System.Windows.Forms.CheckBox();
             this.redReverseBox = new System.Windows.Forms.CheckBox();
-            this.pictureBox1 = new Bahtinov_Collimator.Custom_Components.RoundedPictureBox();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(32, 336);
+            this.saveButton.Location = new System.Drawing.Point(38, 331);
             this.saveButton.Margin = new System.Windows.Forms.Padding(4);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(100, 28);
@@ -56,7 +56,7 @@
             // 
             // closeButton
             // 
-            this.closeButton.Location = new System.Drawing.Point(31, 372);
+            this.closeButton.Location = new System.Drawing.Point(37, 367);
             this.closeButton.Margin = new System.Windows.Forms.Padding(4);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(100, 28);
@@ -65,17 +65,29 @@
             this.closeButton.UseVisualStyleBackColor = true;
             this.closeButton.Click += new System.EventHandler(this.CloseButton_Click);
             // 
-            // swapGreenCheckbox
+            // trackBar1
             // 
-            this.swapGreenCheckbox.AutoSize = true;
-            this.swapGreenCheckbox.Location = new System.Drawing.Point(8, 23);
-            this.swapGreenCheckbox.Margin = new System.Windows.Forms.Padding(4);
-            this.swapGreenCheckbox.Name = "swapGreenCheckbox";
-            this.swapGreenCheckbox.Size = new System.Drawing.Size(134, 20);
-            this.swapGreenCheckbox.TabIndex = 28;
-            this.swapGreenCheckbox.Text = "Swap Green/Blue";
-            this.swapGreenCheckbox.UseVisualStyleBackColor = true;
-            this.swapGreenCheckbox.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
+            this.trackBar1.Location = new System.Drawing.Point(235, 355);
+            this.trackBar1.Margin = new System.Windows.Forms.Padding(4);
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(329, 56);
+            this.trackBar1.TabIndex = 32;
+            this.trackBar1.ValueChanged += new System.EventHandler(this.TrackBar1_ValueChanged);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.BorderColor = System.Drawing.Color.Gray;
+            this.pictureBox1.BorderThickness = 2;
+            this.pictureBox1.CornerRadius = 12;
+            this.pictureBox1.Location = new System.Drawing.Point(182, 15);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(435, 387);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 31;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.PictureBox1_Paint);
             // 
             // groupBox1
             // 
@@ -86,7 +98,7 @@
             this.groupBox1.Controls.Add(this.greenReverseBox);
             this.groupBox1.Controls.Add(this.redReverseBox);
             this.groupBox1.CornerRadius = 12;
-            this.groupBox1.Location = new System.Drawing.Point(13, 15);
+            this.groupBox1.Location = new System.Drawing.Point(10, 8);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
@@ -106,6 +118,18 @@
             this.blueReverseBox.Text = "Blue Reverse";
             this.blueReverseBox.UseVisualStyleBackColor = true;
             this.blueReverseBox.CheckedChanged += new System.EventHandler(this.ReverseBox_CheckedChanged);
+            // 
+            // swapGreenCheckbox
+            // 
+            this.swapGreenCheckbox.AutoSize = true;
+            this.swapGreenCheckbox.Location = new System.Drawing.Point(8, 23);
+            this.swapGreenCheckbox.Margin = new System.Windows.Forms.Padding(4);
+            this.swapGreenCheckbox.Name = "swapGreenCheckbox";
+            this.swapGreenCheckbox.Size = new System.Drawing.Size(134, 20);
+            this.swapGreenCheckbox.TabIndex = 28;
+            this.swapGreenCheckbox.Text = "Swap Green/Blue";
+            this.swapGreenCheckbox.UseVisualStyleBackColor = true;
+            this.swapGreenCheckbox.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
             // greenReverseBox
             // 
@@ -131,35 +155,11 @@
             this.redReverseBox.UseVisualStyleBackColor = true;
             this.redReverseBox.CheckedChanged += new System.EventHandler(this.ReverseBox_CheckedChanged);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.BorderColor = System.Drawing.Color.Gray;
-            this.pictureBox1.BorderThickness = 2;
-            this.pictureBox1.CornerRadius = 12;
-            this.pictureBox1.Location = new System.Drawing.Point(182, 25);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(435, 387);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 31;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.PictureBox1_Paint);
-            // 
-            // trackBar1
-            // 
-            this.trackBar1.Location = new System.Drawing.Point(239, 361);
-            this.trackBar1.Margin = new System.Windows.Forms.Padding(4);
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(329, 56);
-            this.trackBar1.TabIndex = 32;
-            this.trackBar1.ValueChanged += new System.EventHandler(this.TrackBar1_ValueChanged);
-            // 
             // AdjustAssistBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(630, 421);
+            this.ClientSize = new System.Drawing.Size(628, 414);
             this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox1);
@@ -173,10 +173,10 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Adjustment Assistant";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CheatSheet_FormClosed);
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
