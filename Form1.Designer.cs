@@ -43,10 +43,10 @@
             this.pleaseDonateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.RoundedPanel1 = new Bahtinov_Collimator.Custom_Components.RoundedPanel();
+            this.RoundedStartButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
             this.slideSwitch2 = new Bahtinov_Collimator.Custom_Components.SlideSwitch();
             this.label1 = new System.Windows.Forms.Label();
             this.Label2 = new System.Windows.Forms.Label();
-            this.RoundedStartButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
             this.menuStrip1.SuspendLayout();
             this.RoundedPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -151,6 +151,34 @@
             this.RoundedPanel1.Size = new System.Drawing.Size(254, 134);
             this.RoundedPanel1.TabIndex = 27;
             // 
+            // RoundedStartButton
+            // 
+            this.RoundedStartButton.BackColor = System.Drawing.Color.Gray;
+            this.RoundedStartButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.RoundedStartButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.RoundedStartButton.BevelThickness = 4;
+            this.RoundedStartButton.CornerRadius = 8;
+            this.RoundedStartButton.FlatAppearance.BorderSize = 0;
+            this.RoundedStartButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.RoundedStartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.RoundedStartButton.ForeColor = System.Drawing.Color.White;
+            this.RoundedStartButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.RoundedStartButton.Image = global::Bahtinov_Collimator.Properties.Resources.SelectionCircle;
+            this.RoundedStartButton.ImageHeight = 32;
+            this.RoundedStartButton.ImageOffsetX = 50;
+            this.RoundedStartButton.ImageOffsetY = 0;
+            this.RoundedStartButton.ImageWidth = 32;
+            this.RoundedStartButton.Location = new System.Drawing.Point(46, 67);
+            this.RoundedStartButton.Name = "RoundedStartButton";
+            this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.RoundedStartButton.Size = new System.Drawing.Size(160, 44);
+            this.RoundedStartButton.TabIndex = 25;
+            this.RoundedStartButton.Text = "    Select Star";
+            this.RoundedStartButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.RoundedStartButton.TextOffsetX = 10;
+            this.RoundedStartButton.UseVisualStyleBackColor = false;
+            this.RoundedStartButton.Click += new System.EventHandler(this.StartButton_Click);
+            // 
             // slideSwitch2
             // 
             this.slideSwitch2.IsOn = false;
@@ -182,34 +210,6 @@
             this.Label2.Size = new System.Drawing.Size(57, 16);
             this.Label2.TabIndex = 23;
             this.Label2.Text = "Defocus";
-            // 
-            // RoundedStartButton
-            // 
-            this.RoundedStartButton.BackColor = System.Drawing.Color.Gray;
-            this.RoundedStartButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
-            this.RoundedStartButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
-            this.RoundedStartButton.BevelThickness = 4;
-            this.RoundedStartButton.CornerRadius = 8;
-            this.RoundedStartButton.FlatAppearance.BorderSize = 0;
-            this.RoundedStartButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RoundedStartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.RoundedStartButton.ForeColor = System.Drawing.Color.White;
-            this.RoundedStartButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.RoundedStartButton.Image = global::Bahtinov_Collimator.Properties.Resources.SelectionCircle;
-            this.RoundedStartButton.ImageHeight = 32;
-            this.RoundedStartButton.ImageOffsetX = 50;
-            this.RoundedStartButton.ImageOffsetY = 0;
-            this.RoundedStartButton.ImageWidth = 32;
-            this.RoundedStartButton.Location = new System.Drawing.Point(46, 67);
-            this.RoundedStartButton.Name = "RoundedStartButton";
-            this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.RoundedStartButton.Size = new System.Drawing.Size(160, 44);
-            this.RoundedStartButton.TabIndex = 25;
-            this.RoundedStartButton.Text = "    Select Star";
-            this.RoundedStartButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.RoundedStartButton.TextOffsetX = 10;
-            this.RoundedStartButton.UseVisualStyleBackColor = false;
-            this.RoundedStartButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
             // Form1
             // 
