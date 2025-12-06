@@ -32,11 +32,11 @@
             this.saveButton = new System.Windows.Forms.Button();
             this.closeButton = new System.Windows.Forms.Button();
             this.swapGreenCheckbox = new System.Windows.Forms.CheckBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
             this.blueReverseBox = new System.Windows.Forms.CheckBox();
             this.greenReverseBox = new System.Windows.Forms.CheckBox();
             this.redReverseBox = new System.Windows.Forms.CheckBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new Bahtinov_Collimator.Custom_Components.RoundedPictureBox();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -45,7 +45,7 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(18, 433);
+            this.saveButton.Location = new System.Drawing.Point(32, 336);
             this.saveButton.Margin = new System.Windows.Forms.Padding(4);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(100, 28);
@@ -56,7 +56,7 @@
             // 
             // closeButton
             // 
-            this.closeButton.Location = new System.Drawing.Point(138, 433);
+            this.closeButton.Location = new System.Drawing.Point(31, 372);
             this.closeButton.Margin = new System.Windows.Forms.Padding(4);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(100, 28);
@@ -79,10 +79,13 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.BorderColor = System.Drawing.Color.Gray;
+            this.groupBox1.BorderThickness = 2;
             this.groupBox1.Controls.Add(this.blueReverseBox);
             this.groupBox1.Controls.Add(this.swapGreenCheckbox);
             this.groupBox1.Controls.Add(this.greenReverseBox);
             this.groupBox1.Controls.Add(this.redReverseBox);
+            this.groupBox1.CornerRadius = 12;
             this.groupBox1.Location = new System.Drawing.Point(13, 15);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
@@ -130,17 +133,22 @@
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.BorderColor = System.Drawing.Color.Gray;
+            this.pictureBox1.BorderThickness = 2;
+            this.pictureBox1.CornerRadius = 12;
             this.pictureBox1.Location = new System.Drawing.Point(182, 25);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(435, 387);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 31;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.PictureBox1_Paint);
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(267, 433);
+            this.trackBar1.Location = new System.Drawing.Point(239, 361);
             this.trackBar1.Margin = new System.Windows.Forms.Padding(4);
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(329, 56);
@@ -151,7 +159,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(630, 478);
+            this.ClientSize = new System.Drawing.Size(630, 421);
             this.Controls.Add(this.trackBar1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox1);
@@ -179,11 +187,11 @@
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Button closeButton;
         protected System.Windows.Forms.CheckBox swapGreenCheckbox;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private Bahtinov_Collimator.Custom_Components.RoundedGroupBox groupBox1;
         protected System.Windows.Forms.CheckBox blueReverseBox;
         protected System.Windows.Forms.CheckBox greenReverseBox;
         protected System.Windows.Forms.CheckBox redReverseBox;
-        protected System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TrackBar trackBar1;
+        protected Custom_Components.RoundedPictureBox pictureBox1;
     }
 }
