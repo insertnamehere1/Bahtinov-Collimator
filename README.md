@@ -39,7 +39,7 @@ Whether you are setting up a telescope for the first time or fine-tuning your eq
 
 - Click here to download SkyCal setup.exe [Setup](https://github.com/insertnamehere1/Bahtinov-Collimator/releases/download/SetupV3/setup.exe)
 
-- For detailed documentation, please refer to the [User Manual](https://github.com/insertnamehere1/Bahtinov-Collimator/blob/master/help.pdf)
+- For detailed documentation, please refer to the [User Manual](https://github.com/insertnamehere1/Bahtinov-Collimator/blob/master/Properties/help.pdf)
 
 <h1></h1>
 

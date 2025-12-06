@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -35,53 +37,56 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Computes the SHA-256 hash of the given bitmap image.
+        /// Computes the SHA-256 hash for the centre 100x100 pixels of the given bitmap image.
         /// </summary>
         /// <param name="bitmap">The bitmap image to compute the hash for.</param>
         /// <returns>A hexadecimal string representing the SHA-256 hash of the bitmap.</returns>
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="bitmap"/> parameter is null.</exception>
-        public static string ComputeHash(Bitmap bitmap)
+        public static string ComputeHash(Bitmap bmp)
         {
-            if (bitmap == null)
-                throw new ArgumentNullException(nameof(bitmap));
+            if (bmp == null)
+                throw new ArgumentNullException(nameof(bmp));
 
-            // Convert the Bitmap to a byte array more efficiently
-            byte[] imageBytes = ImageToByteArray(bitmap);
+            const int regionSize = 100;
 
-            // Compute the SHA-256 hash
-            using (SHA256 sha256 = SHA256.Create())
+            int width = bmp.Width;
+            int height = bmp.Height;
+
+            if (width <= 0 || height <= 0)
+                return string.Empty;
+
+            // Determine actual region size (use smaller when needed)
+            int sampleWidth = Math.Min(regionSize, width);
+            int sampleHeight = Math.Min(regionSize, height);
+
+            int startX = (width - sampleWidth) / 2;
+            int startY = (height - sampleHeight) / 2;
+
+            Rectangle rect = new Rectangle(startX, startY, sampleWidth, sampleHeight);
+
+            BitmapData data = bmp.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+            try
             {
-                byte[] hashBytes = sha256.ComputeHash(imageBytes);
+                int bytes = Math.Abs(data.Stride) * sampleHeight;
+                byte[] buffer = new byte[bytes];
 
-                // Convert the byte array to a hexadecimal string
-                StringBuilder hexString = new StringBuilder(hashBytes.Length * 2);
-                foreach (byte b in hashBytes)
+                Marshal.Copy(data.Scan0, buffer, 0, bytes);
+
+                using (SHA256 sha = SHA256.Create())
                 {
-                    hexString.AppendFormat("{0:x2}", b);
+                    byte[] hashBytes = sha.ComputeHash(buffer);
+
+                    StringBuilder sb = new StringBuilder(hashBytes.Length * 2);
+                    foreach (byte b in hashBytes)
+                        sb.AppendFormat("{0:x2}", b);
+
+                    return sb.ToString();
                 }
-
-                return hexString.ToString();
             }
-        }
-
-        #endregion
-
-        #region Image Conversion
-
-        /// <summary>
-        /// Converts a bitmap image to a byte array.
-        /// </summary>
-        /// <param name="image">The bitmap image to convert.</param>
-        /// <returns>A byte array representation of the bitmap image.</returns>
-        private static byte[] ImageToByteArray(Bitmap image)
-        {
-            if (image == null)
-                throw new ArgumentNullException(nameof(image));
-
-            using (MemoryStream stream = new MemoryStream())
+            finally
             {
-                image.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-                return stream.ToArray();
+                bmp.UnlockBits(data);
             }
         }
 

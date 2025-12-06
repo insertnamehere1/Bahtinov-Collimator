@@ -33,7 +33,7 @@
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.0.0.5</ApplicationVersion>
+    <ApplicationVersion>4.0.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -111,7 +111,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
+    <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -134,8 +134,13 @@
   <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
+  <PropertyGroup />
   <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -163,6 +168,36 @@
     </Compile>
     <Compile Include="AdjustAssist\AdjustAssistBase.Designer.cs">
       <DependentUpon>AdjustAssistBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\HistoryBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\HistoryBar.Designer.cs">
+      <DependentUpon>HistoryBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\RoundedButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\RoundedButton.Designer.cs">
+      <DependentUpon>RoundedButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\RoundedGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\RoundedGroupBox.Designer.cs">
+      <DependentUpon>RoundedGroupBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\RoundedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\RoundedPanel.Designer.cs">
+      <DependentUpon>RoundedPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\RoundedPictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\RoundedPictureBox.Designer.cs">
+      <DependentUpon>RoundedPictureBox.cs</DependentUpon>
     </Compile>
     <Compile Include="Custom Components\SlideSwitchComponent.cs">
       <SubType>UserControl</SubType>
@@ -235,6 +270,9 @@
     <EmbeddedResource Include="AdjustAssist\AdjustAssistBase.resx">
       <DependentUpon>AdjustAssistBase.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Custom Components\HistoryBar.resx">
+      <DependentUpon>HistoryBar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -265,8 +303,6 @@
     <EmbeddedResource Include="Dialogs\DarkMessageBox.resx">
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="app.manifest" />
-    <None Include="Properties\help.pdf" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -277,9 +313,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

@@ -101,6 +101,16 @@ namespace Bahtinov_Collimator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SelectionCircle {
+            get {
+                object obj = ResourceManager.GetObject("SelectionCircle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] SkyCal {
@@ -116,6 +126,26 @@ namespace Bahtinov_Collimator.Properties {
         internal static System.Drawing.Bitmap SkyCal_logo {
             get {
                 object obj = ResourceManager.GetObject("SkyCal.logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Stop {
+            get {
+                object obj = ResourceManager.GetObject("Stop", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap TBMask_DarkGray {
+            get {
+                object obj = ResourceManager.GetObject("TBMask_DarkGray", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

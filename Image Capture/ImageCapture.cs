@@ -4,6 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Speech.Synthesis.TtsEngine;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
@@ -59,7 +60,7 @@ namespace Bahtinov_Collimator
         private const int PW_RENDERFULLCONTENT = 0x2;
 
         // Threshold for detecting significant movement
-        private const int MovementThreshold = 5;
+        private const int MovementThreshold = 1;
         #endregion
 
         #region Private Fields
@@ -68,6 +69,8 @@ namespace Bahtinov_Collimator
         private static IntPtr targetWindowHandle;
         private static Rectangle selectedStarBox;
         private static string firstHash = "";
+        private static bool notEqualLastTick = true;
+        private static bool newImageSend = false;
         #endregion
 
         #region Public Fields
@@ -102,66 +105,71 @@ namespace Bahtinov_Collimator
             captureTimer = null;
         }
 
-        /// <summary>
-        /// Handles the Timer.Tick event to capture an image and invoke the ImageReceivedEvent.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">Event arguments for the tick event.</param>
+        ///// <summary>
+        ///// Handles the Timer.Tick event to capture an image and invoke the ImageReceivedEvent.
+        ///// </summary>
+        ///// <param name="sender">The source of the event.</param>
+        ///// <param name="e">Event arguments for the tick event.</param>
         private static void CaptureTimer_Tick(object sender, EventArgs e)
         {
             Bitmap image = GetImage();
-
             if (image == null)
                 return;
 
-            // Check if this is a new image
+            // Hash check for duplicate frames
             string secondHash = Utilities.ComputeHash(image);
+            bool isSameImage = firstHash.Equals(secondHash);
 
-            if (firstHash.Equals(secondHash))
+            if (isSameImage)
             {
-                captureTimer.Interval = 200;
-                return;
+                if (notEqualLastTick)
+                {
+                    newImageSend = true;
+                    notEqualLastTick = false;
+                }
+                else
+                {
+                    return;
+                }
             }
             else
+            {
                 firstHash = secondHash;
+                notEqualLastTick = true;
+            }
 
-            Bitmap latestImage = CreateCircularImage(image);
-            Bitmap updatedImage = new Bitmap(UITheme.DisplayWindow.X, UITheme.DisplayWindow.Y);
-
+            Bitmap latestImage = null;
+            Bitmap updatedImage = null;
             Graphics g = null;
 
             try
             {
+                latestImage = CreateCircularImage(image);
+                updatedImage = new Bitmap(UITheme.DisplayWindow.X, UITheme.DisplayWindow.Y);
+
                 g = Graphics.FromImage(updatedImage);
+                g.Clear(UITheme.DarkBackground);
 
-                // Fill the entire image with black before drawing
-                g.Clear(Color.Black);
+                // Compute movement offset
+                Point offset = Point.Empty;
 
-                if (TrackingType == 1) // bahtinov style image
+                if (TrackingType == 1)        // bahtinov
                 {
-                    // Get offset for the brightest area
-                    Point offset = FindBrightestAreaCentroid(latestImage);
+                    offset = FindBrightestAreaCentroid(latestImage);
 
                     if (Math.Abs(offset.X) > MovementThreshold || Math.Abs(offset.Y) > MovementThreshold)
                         captureTimer.Interval = 10;
 
-                    // Calculate translation
-                    int delta_X = (latestImage.Width / 2) - offset.X;
-                    int delta_Y = (latestImage.Height / 2) - offset.Y;
+                    int dx = (latestImage.Width / 2) - offset.X;
+                    int dy = (latestImage.Height / 2) - offset.Y;
 
-                    // Update selectedStarBox with new position
-                    selectedStarBox.Offset(-delta_X, -delta_Y);
-
-                    // Apply translation transformation to the Graphics object
-                    g.TranslateTransform(delta_X, delta_Y);
+                    selectedStarBox.Offset(-dx, -dy);
+                    g.TranslateTransform(dx, dy);
                 }
-                else if (TrackingType == 2) // defocus style image
+                else if (TrackingType == 2)   // defocus
                 {
-                    Point offset;
-
                     try
                     {
-                        // Get offset for the inner circle
                         offset = FindInnerCircleOffset(latestImage);
                     }
                     catch (InvalidOperationException)
@@ -173,41 +181,38 @@ namespace Bahtinov_Collimator
                     if (Math.Abs(offset.X) > MovementThreshold || Math.Abs(offset.Y) > MovementThreshold)
                         captureTimer.Interval = 10;
 
-                    // Update selectedStarBox with new position
                     selectedStarBox.Offset(offset.X, offset.Y);
-
-                    // Apply translation transformation to the Graphics object
                     g.TranslateTransform(-offset.X, -offset.Y);
                 }
 
-                // Calculate the center position
+                // Draw centered image
                 int x = (UITheme.DisplayWindow.X - latestImage.Width) / 2;
                 int y = (UITheme.DisplayWindow.Y - latestImage.Height) / 2;
 
-                // Draw the image at the calculated position
                 g.DrawImage(latestImage, x, y);
                 g.ResetTransform();
 
-                // distribut new image
-                ImageReceivedEvent?.Invoke(null, new ImageReceivedEventArgs(updatedImage));
+                // Only send when next frame is stable
+                if (newImageSend)
+                {
+                    ImageReceivedEvent?.Invoke(null, new ImageReceivedEventArgs(updatedImage));
+                    newImageSend = false;
+                    captureTimer.Interval = 200;
+                }
             }
-            catch(Exception)
+            catch
             {
-                if(captureTimer != null)
+                if (captureTimer != null)
+                {
                     DarkMessageBox.Show("Invalid image selection", "Capture Timer", MessageBoxIcon.Information, MessageBoxButtons.OK);
-
+                }
                 return;
             }
             finally
             {
-                // Dispose of the Graphics object if it was created
-                if (g != null)
-                {
-                    g?.Dispose();
-                }
-
-                // Dispose of the original image
-                latestImage.Dispose();
+                g?.Dispose();
+                latestImage?.Dispose();
+                image?.Dispose();
             }
         }
 

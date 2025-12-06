@@ -22,17 +22,18 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
+using Bahtinov_Collimator.Custom_Components;
+using Bahtinov_Collimator.Image_Processing;
+using Bahtinov_Collimator.Voice;
 using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Bahtinov_Collimator.Voice;
-using Bahtinov_Collimator.Image_Processing;
-using Bahtinov_Collimator.Custom_Components;
-using System.Diagnostics;
-using System.IO;
 
 namespace Bahtinov_Collimator
 {
@@ -51,26 +52,6 @@ namespace Bahtinov_Collimator
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
-        /// <summary>
-        /// Retrieves a handle to the display monitor that is closest to the specified window.
-        /// </summary>
-        /// <param name="hwnd">A handle to the window of interest.</param>
-        /// <param name="dwFlags">Determines the return value if the window does not intersect any display monitor. Use MONITOR_DEFAULTTONEAREST to get the handle to the monitor closest to the window.</param>
-        /// <returns>A handle to the monitor closest to the specified window.</returns>
-        [DllImport("user32.dll")]
-        private static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
-
-        /// <summary>
-        /// Retrieves the DPI (Dots Per Inch) for a specified monitor.
-        /// </summary>
-        /// <param name="hmonitor">A handle to the monitor of interest.</param>
-        /// <param name="dpiType">The DPI type to retrieve. Use MDT_EFFECTIVE_DPI to get the effective DPI for scaling.</param>
-        /// <param name="dpiX">Outputs the DPI value for the X (horizontal) dimension of the monitor.</param>
-        /// <param name="dpiY">Outputs the DPI value for the Y (vertical) dimension of the monitor.</param>
-        /// <returns>An HRESULT indicating success or failure.</returns>
-        [DllImport("shcore.dll")]
-        private static extern int GetDpiForMonitor(IntPtr hmonitor, int dpiType, out uint dpiX, out uint dpiY);
-  
         #endregion
 
         #region Constants
@@ -79,18 +60,6 @@ namespace Bahtinov_Collimator
         /// Specifies the attribute for enabling or disabling immersive dark mode for a window using the Desktop Window Manager (DWM) API.
         /// </summary>
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
-        
-        /// <summary>
-        /// Flag that specifies the function should return the handle to the monitor closest to a specified window.
-        /// Used with the MonitorFromWindow function.
-        /// </summary>
-        private const uint MONITOR_DEFAULTTONEAREST = 2;
-
-        /// <summary>
-        /// Specifies that the effective DPI (Dots Per Inch) of a monitor should be retrieved.
-        /// Used with the GetDpiForMonitor function.
-        /// </summary>
-        private const int MDT_EFFECTIVE_DPI = 0;
 
         #endregion
 
@@ -224,6 +193,7 @@ namespace Bahtinov_Collimator
 
             // Set the initial state of the defocus switch based on user settings.
             slideSwitch2.IsOn = Properties.Settings.Default.DefocusSwitch;
+            RoundedPanel1.FillColor = Color.FromArgb(50, UITheme.DarkBackground);
         }
 
         #endregion
@@ -237,7 +207,7 @@ namespace Bahtinov_Collimator
         {
             this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent
             {
-                Location = new System.Drawing.Point(256, 45),
+                Location = new System.Drawing.Point(276, 45),
                 Margin = new System.Windows.Forms.Padding(2),
                 Name = "imageDisplayComponent1",
                 Size = new System.Drawing.Size(600, 600),
@@ -259,7 +229,7 @@ namespace Bahtinov_Collimator
             // Apply the larger font to any labels
             label1.Font = newFont;
             Label2.Font = newFont;
-            StartButton.Font = newFont;
+            RoundedStartButton.Font = newFont;
         }
 
         /// <summary>
@@ -275,8 +245,8 @@ namespace Bahtinov_Collimator
 
             groupBoxRed = new FocusChannelComponent(0)
             {
-                Size = new Size(230, 114),
-                Location = new Point(12, 35)
+                Size = new Size(255, 144),
+                Location = new Point(8, 34)
             };
             this.Controls.Add(groupBoxRed);
         }
@@ -294,8 +264,8 @@ namespace Bahtinov_Collimator
 
             groupBoxGreen = new FocusChannelComponent(1)
             {
-                Size = new Size(230, 114),
-                Location = new Point(12, 150)
+                Size = new Size(255, 144),
+                Location = new Point(8, 190)
             };
             this.Controls.Add(groupBoxGreen);
         }
@@ -313,8 +283,8 @@ namespace Bahtinov_Collimator
 
             groupBoxBlue = new FocusChannelComponent(2)
             {
-                Size = new Size(230, 114),
-                Location = new Point(12, 265)
+                Size = new Size(255, 144),
+                Location = new Point(8, 346)
             };
             this.Controls.Add(groupBoxBlue);
         }
@@ -343,9 +313,9 @@ namespace Bahtinov_Collimator
             SetMenuItemsColor(menuStrip1.Items, UITheme.MenuDarkBackground, UITheme.MenuDarkForeground);
 
             // Apply color scheme to the start button
-            StartButton.BackColor = UITheme.ButtonDarkBackground;
-            StartButton.ForeColor = UITheme.ButtonDarkForeground;
-            StartButton.FlatStyle = FlatStyle.Popup;
+            RoundedStartButton.BackColor = UITheme.ButtonDarkBackground;
+            RoundedStartButton.ForeColor = UITheme.ButtonDarkForeground;
+            RoundedStartButton.FlatStyle = FlatStyle.Popup;
 
             // Apply color scheme to the title bar using DWM API
             var color = UITheme.DarkBackground;
@@ -416,7 +386,8 @@ namespace Bahtinov_Collimator
                 }
 
                 screenCaptureRunningFlag = true;
-                StartButton.Text = "Stop";
+                RoundedStartButton.Text = "Stop";
+                RoundedStartButton.Image = Properties.Resources.Stop;
             }
             else
             {
@@ -427,7 +398,8 @@ namespace Bahtinov_Collimator
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                 AdjustAssistToolStripMenuItem.Enabled = false;
                 screenCaptureRunningFlag = false;
-                StartButton.Text = "Select Star";
+                RoundedStartButton.Text = "Select Star";
+                RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 firstPassCompleted = false;
             }
         }
@@ -472,7 +444,8 @@ namespace Bahtinov_Collimator
             if (toggle)
             {
                 screenCaptureRunningFlag = false;
-                StartButton.Text = "Select Star";
+                RoundedStartButton.Text = "Select Star";
+                RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue, groupBoxRed);
                 adjustAssistDialog?.Close();
                 AdjustAssistToolStripMenuItem.Enabled = false;
@@ -480,7 +453,8 @@ namespace Bahtinov_Collimator
             else
             {
                 screenCaptureRunningFlag = false;
-                StartButton.Text = "Select Star";
+                RoundedStartButton.Text = "Select Star";
+                RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                 InitializeRedFocusBox();
             }
@@ -505,7 +479,8 @@ namespace Bahtinov_Collimator
                 Invoke(new Action(() =>
                 {
                     RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
-                    StartButton.Text = "Select Star";
+                    RoundedStartButton.Text = "Select Star";
+                    RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                     AdjustAssistToolStripMenuItem.Enabled = false;
                     DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
                 }));
@@ -513,7 +488,8 @@ namespace Bahtinov_Collimator
             else
             {
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
-                StartButton.Text = "Select Star";
+                RoundedStartButton.Text = "Select Star";
+                RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 AdjustAssistToolStripMenuItem.Enabled = false;
                 DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
             }
@@ -563,9 +539,6 @@ namespace Bahtinov_Collimator
             donate.ShowDialog();
         }
 
-
-
-
         /// <summary>
         /// Handles the click event for the Donate menu item, showing the Donate dialog.
         /// </summary>
@@ -577,12 +550,6 @@ namespace Bahtinov_Collimator
             PositionDialogInsideMainWindow(donate);
             donate.ShowDialog();
         }
-
-
-
-
-
-
 
         /// <summary>
         /// Handles the click event for the Help menu item, displaying a help message.

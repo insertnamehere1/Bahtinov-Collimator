@@ -66,6 +66,7 @@ namespace Bahtinov_Collimator
         private void SetupPictureBox()
         {
             pictureBox1.BackColor = UITheme.DisplayBackgroundColor;
+            pictureBox1.CornerRadius = 10;
         }
 
         /// <summary>
@@ -300,16 +301,23 @@ namespace Bahtinov_Collimator
         /// Draws a group of lines on the PictureBox based on the provided line group data.
         /// </summary>
         /// <param name="group">The group line data for the bahtinov lines.</param>
-        /// <param name="clippingRegion">The clipping circle.</param>
+        /// <param name="clippingRegion">The clipping circle.</param> 
         private void DrawGroupLines(BahtinovLineDataEventArgs.LineGroup group, GraphicsPath clippingRegion)
         {
             using (var g = Graphics.FromImage(layers[group.GroupId + 1]))
             {
                 g.SetClip(clippingRegion);
 
+                const int alpha = 150;   // 0–255  lower = more transparent, higher = more opaque
+
                 foreach (var line in group.Lines)
                 {
                     var pen = UITheme.GetDisplayLinePen(group.GroupId, line.LineId);
+
+                    // Modify opacity
+                    var c = pen.Color;
+                    pen.Color = Color.FromArgb(alpha, c.R, c.G, c.B);
+
                     g.DrawLine(pen, line.Start, line.End);
                 }
 
@@ -374,9 +382,6 @@ namespace Bahtinov_Collimator
 
             // Calculate the position to center the text at the start point
             PointF textPosition = new PointF(start.X - textSize.Width / 2, start.Y - textSize.Height / 2);
-
-            // draw opaque background
-            g.FillRectangle(new SolidBrush(Color.Black), textPosition.X, textPosition.Y, textSize.Width, textSize.Height);
 
             // Draw the text
             g.DrawString(text, font, brush, textPosition);
@@ -509,6 +514,8 @@ namespace Bahtinov_Collimator
 
                 // Force the PictureBox to redraw itself as blank
                 pictureBox1.Invalidate();
+                pictureBox1.Image = Properties.Resources.TBMask_DarkGray;
+                pictureBox1.BackColor = UITheme.DarkBackground;
             }
         }
         #endregion
