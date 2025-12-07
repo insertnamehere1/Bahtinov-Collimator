@@ -195,10 +195,10 @@ jobs:
           name: build-output-${{ github.run_number }} 
           path: dist
 
-      - name: Remove SkyCal.exe (ClickOnce cleanup)
-        shell: pwsh
-        run: |
-          Remove-Item "dist/SkyCal.exe" -Force -ErrorAction SilentlyContinue
+#      - name: Remove SkyCal.exe (ClickOnce cleanup)
+#        shell: pwsh
+#        run: |
+#          Remove-Item "dist/SkyCal.exe" -Force -ErrorAction SilentlyContinue
 
       # Signpath - Submit once and wait for completion, then use outputs to download the signed ZIP
 #      - name: Submit to SignPath and wait
@@ -267,8 +267,6 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $PSNativeCommandUseErrorActionPreference = $true
-          Remove-Item "dist/SkyCal.exe" -Force -ErrorAction SilentlyContinue
-          Remove-Item "dist/SkyCal-Setup.exe" -Force -ErrorAction SilentlyContinue
           Copy-Item "dist\*" "published\" -Recurse -Force
           New-Item -ItemType File -Force -Path "published\.nojekyll" | Out-Null
           Remove-Item -Recurse -Force "dist"
