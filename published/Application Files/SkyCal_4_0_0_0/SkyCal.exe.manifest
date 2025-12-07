@@ -31,14 +31,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SkyCal.exe" size="7856128">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SkyCal.exe" size="7854592">
       <assemblyIdentity name="SkyCal" version="4.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>55DMmdDgJCW5JnOrbDEio8Y1XH8kbjwbgbwISMZJuPY=</dsig:DigestValue>
+        <dsig:DigestValue>+FF6KzotFmn4GUXPcgHRD0ftNK4ovvjWWtS7B+oxI94=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
