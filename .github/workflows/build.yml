@@ -195,6 +195,11 @@ jobs:
           name: build-output-${{ github.run_number }} 
           path: dist
 
+      - name: Remove SkyCal.exe (ClickOnce cleanup)
+        shell: pwsh
+        run: |
+          Remove-Item "dist/SkyCal.exe" -Force -ErrorAction SilentlyContinue
+
       # Signpath - Submit once and wait for completion, then use outputs to download the signed ZIP
       - name: Submit to SignPath and wait
         id: sign
