@@ -328,7 +328,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="published\.gitattributes" />
-    <Resource Include="SkyCal.ico" />
   </ItemGroup>
   <ItemGroup>
     <PublishFile Include="published\.gitattributes">
