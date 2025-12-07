@@ -328,7 +328,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="published\.gitattributes" />
-    <None Include="SkyCal.ico" />
+    <Resource Include="SkyCal.ico" />
   </ItemGroup>
   <ItemGroup>
     <PublishFile Include="published\.gitattributes">
