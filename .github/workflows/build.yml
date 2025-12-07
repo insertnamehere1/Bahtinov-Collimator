@@ -208,11 +208,6 @@ jobs:
           wait-for-completion: true
           output-artifact-directory: dist 
 
-      - name: Remove SkyCal.exe (ClickOnce cleanup)
-        shell: pwsh
-        run: |
-          Remove-Item "dist/SkyCal.exe" -Force -ErrorAction SilentlyContinue
-
       - name: Generate SHA256 sums for dist
         shell: pwsh
         working-directory: dist
@@ -267,6 +262,8 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $PSNativeCommandUseErrorActionPreference = $true
+          Remove-Item "dist/SkyCal.exe" -Force -ErrorAction SilentlyContinue
+          Remove-Item "dist/SkyCal-Setup.exe" -Force -ErrorAction SilentlyContinue
           Copy-Item "dist\*" "published\" -Recurse -Force
           New-Item -ItemType File -Force -Path "published\.nojekyll" | Out-Null
           Remove-Item -Recurse -Force "dist"
