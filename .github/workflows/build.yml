@@ -27,9 +27,56 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-
           
+      - name: Sync ApplicationVersion + AssemblyInfo from tag (no new XML nodes)
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+      
+          $raw = $env:GITHUB_REF -replace '^refs/tags/', ''
+          $version = $raw -replace '^v', ''
+          if ($version -notmatch '^\d+\.\d+\.\d+(\.\d+)?$') { throw "Tag must be vX.Y.Z or vX.Y.Z.W. Got: '$raw'" }
+          if ($version -notmatch '^\d+\.\d+\.\d+\.\d+$') { $version = "$version.0" }
+          Write-Host "Version from tag: $version"
+      
+          # Update SkyCal.csproj
+          $csproj = 'SkyCal.csproj'
+          if (-not (Test-Path $csproj)) { throw "Missing $csproj" }
+          $orig = Get-Content -Raw $csproj
+          $pattern = '<ApplicationVersion(?<attrs>[^>]*)>\s*.*?\s*</ApplicationVersion>'
+          if ($orig -notmatch $pattern) { throw "ApplicationVersion tag not found in $csproj" }
+      
+          $new = [regex]::Replace(
+            $orig,
+            $pattern,
+            { param($m) "<ApplicationVersion$($m.Groups['attrs'].Value)>$version</ApplicationVersion>" },
+            [System.Text.RegularExpressions.RegexOptions]::Singleline
+          )
+          if ($new -ne $orig) {
+            Set-Content -Path $csproj -Value $new -Encoding UTF8
+            Write-Host "Updated ApplicationVersion in $csproj"
+          } else {
+            throw "Regex matched but produced no change in $csproj"
+          }
+      
+          # Update AssemblyInfo.cs
+          $ai = 'Properties/AssemblyInfo.cs'
+          if (-not (Test-Path $ai)) { throw "Missing $ai" }
+          $origAi = Get-Content -Raw $ai
+          $updAi = $origAi `
+            -replace '\[assembly:\s*AssemblyVersion\(".*?"\)\]',     "[assembly: AssemblyVersion(`"$version`")]" `
+            -replace '\[assembly:\s*AssemblyFileVersion\(".*?"\)\]', "[assembly: AssemblyFileVersion(`"$version`")]"
+          if ($updAi -ne $origAi) {
+            Set-Content -Path $ai -Value $updAi -Encoding UTF8
+            Write-Host "Updated AssemblyVersion and AssemblyFileVersion in $ai"
+          } else {
+            Write-Host "No changes made to $ai"
+          }
+      
+          git add -A
+          git diff --staged -- . | Write-Host
+
       - name: Set up MSBuild
         uses: microsoft/setup-msbuild@v2
 
