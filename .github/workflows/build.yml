@@ -208,6 +208,11 @@ jobs:
           wait-for-completion: true
           output-artifact-directory: dist 
 
+      - name: Remove SkyCal.exe (ClickOnce cleanup)
+        shell: pwsh
+        run: |
+          Remove-Item "dist/SkyCal.exe" -Force -ErrorAction SilentlyContinue
+
       - name: Generate SHA256 sums for dist
         shell: pwsh
         working-directory: dist
