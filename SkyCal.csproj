@@ -7,7 +7,7 @@
     <ProjectGuid>{39E0141A-A5A6-43A9-A8F6-69DDCE441854}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Bahtinov_Collimator</RootNamespace>
-    <AssemblyName>SkyCal</AssemblyName>
+    <AssemblyName>SkyCal Focus and Collimation Tool</AssemblyName>
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
