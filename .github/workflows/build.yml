@@ -195,10 +195,10 @@ jobs:
           name: build-output-${{ github.run_number }} 
           path: dist
 
-#      - name: Remove SkyCal.exe (ClickOnce cleanup)
-#        shell: pwsh
-#        run: |
-#          Remove-Item "dist/SkyCal.exe" -Force -ErrorAction SilentlyContinue
+      - name: Remove SkyCal.exe (ClickOnce cleanup)
+        shell: pwsh
+        run: |
+          Remove-Item "dist/SkyCal Focus and Collimation Tool.exe" -Force -ErrorAction SilentlyContinue
 
       # Signpath - Submit once and wait for completion, then use outputs to download the signed ZIP
       - name: Submit to SignPath and wait
@@ -261,6 +261,13 @@ jobs:
             dist/BUILD-METADATA.txt
             dist/SHA256SUMS.txt
             dist/sbom.spdx.json
+
+      - name: Remove SkyCal.exe (ClickOnce cleanup)
+        shell: pwsh
+        run: |
+          Remove-Item "dist/BUILD-METADATA.txt" -Force -ErrorAction SilentlyContinue
+          Remove-Item "dist/SHA256SUMS.txt" -Force -ErrorAction SilentlyContinue
+          Remove-Item "dist/SkyCal-Setup.exe" -Force -ErrorAction SilentlyContinue
 
       - name: Update published/ from dist/
         shell: pwsh
