@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -78,28 +79,80 @@ namespace Bahtinov_Collimator
         /// </returns>
         public bool ValidateBahtinovLines()
         {
-            bool result = true;
             int length = lineAngles.Length;
 
-            if (!(length == 3 || length == 9))
-                return false;
-
-            for (int i = 0; i < length; i += 3)
+            if (length == 3)
             {
-                float line1 = lineAngles[i];
-                float line2 = lineAngles[i + 1];
-                float line3 = lineAngles[i + 2];
+                float line1 = lineAngles[0];
+                float line2 = lineAngles[1];
+                float line3 = lineAngles[2];
 
-                // Check the differences between the lines against the tolerances.
-                result = CheckAngleDifference(line1, line3, length == 9 ? 25.0f : 42.0f) &&
-                         CheckAngleDifference(line1, line2, length == 9 ? 12.0f : 22.0f) &&
-                         CheckAngleDifference(line2, line3, length == 9 ? 12.0f : 22.0f);
-                
-                if (result == false)
-                    break;
+                // Existing tolerances (your current checks)
+                bool withinExpectedSpacing =
+                    CheckAngleBetween(line1, line3, 22.0f, 65.0f) &&
+                    CheckAngleBetween(line1, line2, 11.0f, 35.0f) &&
+                    CheckAngleBetween(line2, line3, 11.0f, 35.0f);
+
+                // New symmetry check: (line1->line2) matches (line2->line3) within 3 degrees
+                bool symmetric =
+                    CheckAdjacentSpacingSymmetry(line1, line2, line3, 3.0);
+
+                return withinExpectedSpacing && symmetric;
+            }
+            else if (length == 9)
+            {
+                for (int i = 0; i < length; i += 3)
+                {
+                    float line1 = lineAngles[i];
+                    float line2 = lineAngles[i + 1];
+                    float line3 = lineAngles[i + 2];
+
+                    // Existing tolerances (your current checks per group)
+                    bool withinExpectedSpacing =
+                        CheckAngleBetween(line1, line3, 12.0f, 25.0f) &&
+                        CheckAngleBetween(line1, line2, 6.0f, 12.0f) &&
+                        CheckAngleBetween(line2, line3, 6.0f, 12.0f);
+
+                    // New symmetry check per 3-line group
+                    bool symmetric =
+                        CheckAdjacentSpacingSymmetry(line1, line2, line3, 3.0);
+
+                    if (!(withinExpectedSpacing && symmetric))
+                        return false;
+                }
+
+                return true;
             }
 
-            return result;
+            return false;
+        }
+
+        /// <summary>
+        /// Checks that the adjacent spacings in a 3-line group are equal within toleranceDeg.
+        /// i.e. |(line1->line2) - (line2->line3)| <= toleranceDeg.
+        /// </summary>
+        private static bool CheckAdjacentSpacingSymmetry(double line1Rad, double line2Rad, double line3Rad, double toleranceDeg)
+        {
+            double d12 = LineAngleDiffRad(line1Rad, line2Rad);
+            double d23 = LineAngleDiffRad(line2Rad, line3Rad);
+
+            double tolRad = toleranceDeg * (Math.PI / 180.0);
+            return Math.Abs(d12 - d23) <= tolRad;
+        }
+
+        /// <summary>
+        /// Smallest angular difference between two line orientations, modulo PI (not 2*PI),
+        /// because a line at angle θ is equivalent to θ ± PI.
+        /// </summary>
+        private static double LineAngleDiffRad(double aRad, double bRad)
+        {
+            double diff = Math.Abs(aRad - bRad);
+
+            // Normalize modulo PI (line orientation periodicity)
+            diff %= Math.PI;
+
+            // After modulo, diff is in [0, PI). Keep as-is.
+            return diff;
         }
 
         /// <summary>
@@ -250,7 +303,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         /// <param name="angle1Radians">The first angle in radians.</param>
         /// <param name="angle2Radians">The second angle in radians.</param>
-        /// <param name="degrees">The range in degrees.</param>
+        /// <param name="degrees">The minimum value in degrees.</param>
         /// <returns><c>true</c> if the angle difference is within the range; otherwise, <c>false</c>.</returns>
         public static bool CheckAngleDifference(double angle1Radians, double angle2Radians, double degrees)
         {
