@@ -148,7 +148,7 @@ namespace Bahtinov_Collimator
                 updatedImage = new Bitmap(UITheme.DisplayWindow.X, UITheme.DisplayWindow.Y);
 
                 g = Graphics.FromImage(updatedImage);
-                g.Clear(UITheme.DarkBackground);
+                g.Clear(Color.Black);
 
                 // Compute movement offset
                 Point offset = Point.Empty;
