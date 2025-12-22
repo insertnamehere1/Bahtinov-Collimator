@@ -101,28 +101,76 @@ jobs:
           /p:Configuration=Release
           /p:Deterministic=true
           /p:TreatWarningsAsErrors=true
-          
-      - name: ClickOnce Publish
+
+      - name: Clean publish folders
+        shell: pwsh
+        run: |
+          Remove-Item -Recurse -Force out\clickonce-online  -ErrorAction SilentlyContinue
+          Remove-Item -Recurse -Force out\clickonce-offline -ErrorAction SilentlyContinue
+
+      - name: ClickOnce Publish (Online feed)
         shell: pwsh
         run: >
           msbuild "SkyCal.csproj"
           /t:Publish
           /p:Configuration=Release
-          /p:PublishProfile="Properties\PublishProfiles\ClickOnceProfile.pubxml"
-          /p:PublishDir="$(Resolve-Path .)\out\clickonce\"
+          /p:PublishProfile="Properties\PublishProfiles\ClickOnceOnline.pubxml"
+          /p:PublishDir="$(Resolve-Path .)\out\clickonce-online\"
+          /p:InstallFrom=Web
+          /p:UpdateEnabled=true
+          /p:UpdateMode=Foreground
+          /p:GenerateDeploymentProviderUrl=true
+          /p:DeploymentUrl=https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/master/published/SkyCal.application
+          /p:InstallUrl=https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/master/published/
+          /p:UpdateUrl=https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/master/published/
 
-      - name: Rename ClickOnce setup.exe
+      - name: ClickOnce Publish (Offline)
+        shell: pwsh
+        run: >
+          msbuild "SkyCal.csproj"
+          /t:Publish
+          /p:Configuration=Release
+          /p:PublishProfile="Properties\PublishProfiles\ClickOnceOffline.pubxml"
+          /p:PublishDir="$(Resolve-Path .)\out\clickonce-offline\"
+          /p:InstallFrom=Disk
+          /p:UpdateEnabled=false
+          /p:GenerateDeploymentProviderUrl=false
+          /p:DeploymentUrl=
+          /p:InstallUrl=
+          /p:UpdateUrl=
+          /p:PublishUrl=
+          /p:IsWebBootstrapper=false
+
+      - name: Rename ClickOnce setup.exe (Online)
         shell: pwsh
         run: |
-          if (Test-Path "out\clickonce\setup.exe") {
-              Rename-Item "out\clickonce\setup.exe" "SkyCal-Setup.exe" -Force
+          if (Test-Path "out\clickonce-online\setup.exe") {
+            Rename-Item "out\clickonce-online\setup.exe" "SkyCal-Setup.exe" -Force
           }
 
-      - name: Stage artifacts
+      - name: Rename ClickOnce setup.exe (Offline)
         shell: pwsh
         run: |
+          if (Test-Path "out\clickonce-offline\setup.exe") {
+            Rename-Item "out\clickonce-offline\setup.exe" "SkyCal-Offline-Setup.exe" -Force
+          }
+
+      - name: Stage artifacts (Online + Offline)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
           New-Item -ItemType Directory -Force -Path artifacts | Out-Null
-          Copy-Item "out\clickonce\*" "artifacts\" -Recurse -Force
+
+          if (-not (Test-Path "out\clickonce-online")) { throw "Missing out\clickonce-online" }
+          if (-not (Test-Path "out\clickonce-offline")) { throw "Missing out\clickonce-offline" }
+
+          New-Item -ItemType Directory -Force -Path artifacts\online | Out-Null
+          Copy-Item "out\clickonce-online\*" "artifacts\online\" -Recurse -Force
+
+          New-Item -ItemType Directory -Force -Path artifacts\offline | Out-Null
+          Copy-Item "out\clickonce-offline\*" "artifacts\offline\" -Recurse -Force
+
           "@@ Build: $env:GITHUB_RUN_ID`nRef: $env:GITHUB_REF`nSHA: $env:GITHUB_SHA" |
             Out-File artifacts\BUILD-METADATA.txt -Encoding UTF8
             
@@ -213,6 +261,20 @@ jobs:
           wait-for-completion: true
           output-artifact-directory: dist 
 
+      - name: Create signed offline ClickOnce ZIP
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $offlineDir = "dist\offline"
+          if (-not (Test-Path $offlineDir)) { throw "Missing $offlineDir" }
+
+          $zip = "dist\SkyCal-ClickOnce-Offline-${{ github.ref_name }}.zip"
+          if (Test-Path $zip) { Remove-Item $zip -Force }
+
+          Compress-Archive -Path "$offlineDir\*" -DestinationPath $zip -Force
+          Write-Host "Created $zip"
+
       - name: Generate SHA256 sums for dist
         shell: pwsh
         working-directory: dist
@@ -248,10 +310,12 @@ jobs:
             Source: ${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}
             Commit: ${{ github.sha }}
           files: |
-            dist/SkyCal-Setup.exe
+            dist/online/SkyCal-Setup.exe
+            dist/SkyCal-ClickOnce-Offline-${{ github.ref_name }}.zip
             dist/BUILD-METADATA.txt
             dist/SHA256SUMS.txt
             dist/sbom.spdx.json
+
 
       - name: Attest build provenance
         uses: actions/attest-build-provenance@v1
@@ -265,16 +329,20 @@ jobs:
       - name: Remove SkyCal.exe (ClickOnce cleanup)
         shell: pwsh
         run: |
-          Remove-Item "dist/BUILD-METADATA.txt" -Force -ErrorAction SilentlyContinue
+          Remove-Item "dist/online/SkyCal Focus and Collimation Tool.exe" -Force -ErrorAction SilentlyContinue
+          Remove-Item "dist/offline/SkyCal Focus and Collimation Tool.exe" -Force -ErrorAction SilentlyContinue
           Remove-Item "dist/SHA256SUMS.txt" -Force -ErrorAction SilentlyContinue
           Remove-Item "dist/SkyCal-Setup.exe" -Force -ErrorAction SilentlyContinue
 
-      - name: Update published/ from dist/
+      - name: Update published/ from dist/online
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $PSNativeCommandUseErrorActionPreference = $true
-          Copy-Item "dist\*" "published\" -Recurse -Force
+
+          if (-not (Test-Path "dist\online")) { throw "Missing dist\online" }
+
+          Copy-Item "dist\online\*" "published\" -Recurse -Force
           New-Item -ItemType File -Force -Path "published\.nojekyll" | Out-Null
           Remove-Item -Recurse -Force "dist"
          
@@ -286,3 +354,11 @@ jobs:
           git add -f published .nojekyll
           git commit -m "Update ClickOnce feed in /published" || echo "No changes to commit"
           git push origin master
+
+      - name: Cleanup dist (optional)
+        shell: pwsh
+        run: |
+          Remove-Item "dist/BUILD-METADATA.txt" -Force -ErrorAction SilentlyContinue
+          Remove-Item "dist/SHA256SUMS.txt" -Force -ErrorAction SilentlyContinue
+          Remove-Item "dist/SkyCal-ClickOnce-Offline-${{ github.ref_name }}.zip" -Force -ErrorAction SilentlyContinue
+          Remove-Item "dist/online/SkyCal-Setup.exe" -Force -ErrorAction SilentlyContinue
