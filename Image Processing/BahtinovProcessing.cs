@@ -396,8 +396,10 @@ namespace Bahtinov_Collimator
                     }
                 }
 
-                float subPixelLineNumber = (float)PolynomialCurveFit.FindMaxValueIndex(rowTotals, (int)lineNumberOfLargestValue, 2);
-                subpixelLineNumbers[index1] = subPixelLineNumber;
+                int yPeak = (int)lineNumberOfLargestValue;
+                float centerY = FindSymmetryCenter(rowTotals, yPeak, topEdge, bottomEdge);
+                subpixelLineNumbers[index1] = centerY;
+
                 brightestLineValues[index1] = largestValueForThisRotation;
             });
 
@@ -407,6 +409,141 @@ namespace Bahtinov_Collimator
             }
 
             return bahtinovLines;
+        }
+
+        /// <summary>
+        /// Determines the centre position of a Bahtinov diffraction line using symmetry
+        /// analysis of a one-dimensional brightness profile.
+        ///
+        /// The method performs the following steps:
+        /// 1. Estimates the background level from the profile edges.
+        /// 2. Determines an adaptive analysis window around an initial peak estimate.
+        /// 3. Evaluates left–right symmetry of the profile within this window.
+        /// 4. Selects the position that minimises asymmetry and refines it to subpixel
+        ///    accuracy.
+        ///
+        /// Returns the subpixel-accurate centre position of the diffraction line.
+        /// 
+        /// <param name="profile">One-dimensional brightness profile derived from the rotated image.</param>
+        /// <param name="yPeak">Initial estimate of the line position, typically the brightest row.</param>
+        /// <param name="yMin">Inclusive lower bound of valid profile indices.</param>
+        /// <param name="yMax">Exclusive upper bound of valid profile indices.</param>
+        /// <returns>The subpixel-accurate centre position of the diffraction line, or
+        /// <paramref name="yPeak"/> if a reliable result cannot be determined.</returns>
+        /// </summary>
+        private static float FindSymmetryCenter(
+            float[] profile,
+            int yPeak,
+            int yMin,
+            int yMax)
+        {
+            if (profile == null) throw new ArgumentNullException(nameof(profile));
+            if (yPeak < yMin || yPeak >= yMax) return yPeak;
+
+            // 1) Background estimate: use a robust-ish edge mean (keeps it fast)
+            // We pick the smaller edge mean to avoid bias if one edge contains signal.
+            const int edgeN = 8;
+
+            float Mean(int a, int b)
+            {
+                a = Math.Max(a, yMin);
+                b = Math.Min(b, yMax);
+                int n = b - a;
+                if (n <= 0) return 0f;
+                double s = 0;
+                for (int i = a; i < b; i++) s += profile[i];
+                return (float)(s / n);
+            }
+
+            float bgLeft = Mean(yMin, yMin + edgeN);
+            float bgRight = Mean(yMax - edgeN, yMax);
+            float bg = Math.Min(bgLeft, bgRight);
+
+            float peak = profile[yPeak];
+            float amp = peak - bg;
+            if (amp <= 1e-6f) return yPeak;
+
+            // 2) Choose a window size automatically from the profile (no fixed line width)
+            // Use a low fraction of peak above bg to capture the band wings.
+            float level = bg + 0.20f * amp;
+
+            int left = yPeak;
+            while (left > yMin && profile[left] > level) left--;
+            int right = yPeak;
+            while (right < yMax - 1 && profile[right] > level) right++;
+
+            // Width estimate for matching. Clamp to keep it stable.
+            int halfW = Math.Max(4, (right - left) / 2);
+            halfW = Math.Min(halfW, 35);
+
+            // Search range around the peak: allow small shifts.
+            int searchR = Math.Max(3, halfW / 2);
+            searchR = Math.Min(searchR, 20);
+
+            double BestScoreForCenter(int c)
+            {
+                // Compare mirrored samples. Use background-subtracted weights so the band matters.
+                int maxI = Math.Min(halfW, Math.Min(c - yMin, (yMax - 1) - c));
+                if (maxI < 2) return double.PositiveInfinity;
+
+                double score = 0;
+                double wsum = 0;
+
+                for (int i = 1; i <= maxI; i++)
+                {
+                    float l = profile[c - i] - bg;
+                    float r = profile[c + i] - bg;
+                    if (l < 0f) l = 0f;
+                    if (r < 0f) r = 0f;
+
+                    // Weight by signal so noisy wings do not dominate
+                    double w = l + r;
+                    if (w <= 1e-9) continue;
+
+                    double d = l - r;
+                    score += w * d * d;
+                    wsum += w;
+                }
+
+                if (wsum <= 1e-9) return double.PositiveInfinity;
+                return score / wsum;
+            }
+
+            int c0 = yPeak;
+            int cMin = Math.Max(yMin + halfW, c0 - searchR);
+            int cMax = Math.Min(yMax - 1 - halfW, c0 + searchR);
+
+            double best = double.PositiveInfinity;
+            int bestC = c0;
+
+            for (int c = cMin; c <= cMax; c++)
+            {
+                double s = BestScoreForCenter(c);
+                if (s < best)
+                {
+                    best = s;
+                    bestC = c;
+                }
+            }
+
+            // 3) Subpixel refinement by parabolic fit on score(bestC-1..bestC+1)
+            if (bestC > cMin && bestC < cMax)
+            {
+                double s1 = BestScoreForCenter(bestC - 1);
+                double s2 = BestScoreForCenter(bestC);
+                double s3 = BestScoreForCenter(bestC + 1);
+
+                double denom = (s1 - 2.0 * s2 + s3);
+                if (Math.Abs(denom) > 1e-12)
+                {
+                    // Vertex of parabola through (-1,s1), (0,s2), (+1,s3)
+                    double delta = 0.5 * (s1 - s3) / denom;
+                    delta = Math.Max(-0.5, Math.Min(0.5, delta));
+                    return (float)(bestC + delta);
+                }
+            }
+
+            return bestC;
         }
 
         /// <summary>
