@@ -14,7 +14,7 @@ namespace Bahtinov_Collimator
     {
         #region Fields
         // List to hold multiple layers of Bitmap images
-        private List<Bitmap> layers;
+        readonly private List<Bitmap> layers;
 
         // Index to track the currently selected group
         private int selectedGroup = 0;
@@ -38,10 +38,6 @@ namespace Bahtinov_Collimator
             AddNewLayers(4);
 
             SetupSubscriptions();
-
-            int width = pictureBox1.Size.Width;
-            int height = pictureBox1.Size.Height;
-
         }
         #endregion
 
@@ -57,7 +53,7 @@ namespace Bahtinov_Collimator
             ImageLostEventProvider.ImageLostEvent += HandleImageLost;
             DefocusStarProcessing.DefocusCircleEvent += OnDefocusCirceReceived;
 
-            this.pictureBox1.Paint += new PaintEventHandler(this.pictureBoxPaint);
+            this.pictureBox1.Paint += new PaintEventHandler(this.PictureBoxPaint);
         }
 
         /// <summary>
@@ -273,7 +269,11 @@ namespace Bahtinov_Collimator
         {
             using (var g = Graphics.FromImage(layers[1]))
             {
-                Pen dashedPen = new Pen(UITheme.GetGroupBoxTextColor(0), 3);
+                Pen dashedPen = new Pen(UITheme.GetGroupBoxTextColor(0), 3)
+                {
+                    DashStyle = DashStyle.Dash
+                };
+
                 dashedPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
 
                 double layerCentreX = UITheme.DisplayWindow.X / 2.0f;
@@ -356,14 +356,12 @@ namespace Bahtinov_Collimator
             var textStart = group.Lines[1].Start;
             var textEnd = group.Lines[1].End;
 
-            var adjustedPoints = AdjustPointsForRadius(textStart, textEnd, this.Width, this.Height, radius);
-
-            var textLocation = group.GroupId != 1 ? adjustedPoints.end : adjustedPoints.start;
+            var (adjustedStart, adjustedEnd) = AdjustPointsForRadius(textStart, textEnd, this.Width, this.Height, radius);
 
             if (group.GroupId == 1)
-                DrawLineWithCenteredText(g, adjustedPoints.start, adjustedPoints.end, group.ErrorCircle.ErrorValue, errorFont, solidBrush);
+                DrawLineWithCenteredText(g, adjustedStart, group.ErrorCircle.ErrorValue, errorFont, solidBrush);
             else
-                DrawLineWithCenteredText(g, adjustedPoints.end, adjustedPoints.start, group.ErrorCircle.ErrorValue, errorFont, solidBrush);
+                DrawLineWithCenteredText(g, adjustedEnd, group.ErrorCircle.ErrorValue, errorFont, solidBrush);
         }
 
         /// <summary>
@@ -375,7 +373,7 @@ namespace Bahtinov_Collimator
         /// <param name="text">The text string to be drawn.</param>
         /// <param name="font">The <see cref="Font"/> used to draw the text.</param>
         /// <param name="brush">The <see cref="Brush"/> used to color the text.</param>
-        private void DrawLineWithCenteredText(Graphics g, Point start, Point end, string text, Font font, Brush brush)
+        private void DrawLineWithCenteredText(Graphics g, Point start, string text, Font font, Brush brush)
         {
             // Measure the size of the text
             SizeF textSize = g.MeasureString(text, font);
@@ -408,7 +406,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         /// <param name="sender">The source of the event, typically the PictureBox control.</param>
         /// <param name="e">An <see cref="PaintEventArgs"/> that contains information about the paint event, including the <see cref="Graphics"/> object used for drawing.</param>
-        private void pictureBoxPaint(object sender, PaintEventArgs e)
+        private void PictureBoxPaint(object sender, PaintEventArgs e)
         {
             e.Graphics.DrawImage(layers[0], 0, 0);
 
@@ -506,11 +504,8 @@ namespace Bahtinov_Collimator
                 ClearAllLayers();
 
                 // Dispose of the current image if it exists
-                if (pictureBox1.Image != null)
-                {
-                    pictureBox1.Image.Dispose();
-                    pictureBox1.Image = null;
-                }
+                pictureBox1.Image?.Dispose();
+                pictureBox1.Image = null;
 
                 // Force the PictureBox to redraw itself as blank
                 pictureBox1.Invalidate();

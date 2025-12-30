@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Bahtinov_Collimator.Helper;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Bahtinov_Collimator.Helper;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Bahtinov_Collimator
 {
@@ -25,9 +26,7 @@ namespace Bahtinov_Collimator
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="image"/> parameter is null.</exception>
         protected internal ImageReceivedEventArgs(Bitmap image)
         {
-            if (image == null)
-                throw new ArgumentNullException(nameof(image));
-
+            _ = image ?? throw new ArgumentNullException(nameof(image));
             Image = image;
         }
     }
@@ -59,8 +58,7 @@ namespace Bahtinov_Collimator
         /// <exception cref="ArgumentException">Thrown when the length of <paramref name="data"/> does not match the <paramref name="channelCount"/>.</exception>
         protected internal ChannelSelectEventArgs(bool[] data, int channelCount)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            _ = data ?? throw new ArgumentNullException(nameof(data));
 
             ChannelSelected = data;
             ChannelCount = channelCount;
