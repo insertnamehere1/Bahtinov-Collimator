@@ -93,9 +93,14 @@ namespace Bahtinov_Collimator
             // Group Boxes
             ChangeLabelColors(groupBox1, UITheme.MenuDarkForeground);
             ChangeLabelColors(groupBox3, UITheme.MenuDarkForeground);
+            ChangeLabelColors(groupBox4, UITheme.MenuDarkForeground);
             groupBox1.ForeColor = UITheme.MenuDarkForeground;
             groupBox3.ForeColor = UITheme.MenuDarkForeground;
+            groupBox4.ForeColor = UITheme.MenuDarkForeground;
             ErrorSignGroupBox.ForeColor = UITheme.MenuDarkForeground;
+
+            // text boxes
+            ChangeTextBoxColors(groupBox4);
         }
 
         /// <summary>
@@ -153,6 +158,7 @@ namespace Bahtinov_Collimator
                 // Parse input values and save them to application settings
                 Properties.Settings.Default.VoiceEnabled = VoiceCheckBox.Checked;
                 Properties.Settings.Default.SignChange = errorSignCheckBox.Checked;
+                Properties.Settings.Default.historyCount = int.Parse(historyMakersTextBox.Text);
 
                 // Save settings
                 Properties.Settings.Default.Save();

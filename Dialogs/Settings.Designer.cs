@@ -33,7 +33,7 @@ namespace Bahtinov_Collimator
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             this.okButton = new System.Windows.Forms.Button();
             this.CancelSettingsButton = new System.Windows.Forms.Button();
-            this.roundedGroupBox1 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
+            this.groupBox4 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
             this.historyMakersTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.ErrorSignGroupBox = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
@@ -47,7 +47,7 @@ namespace Bahtinov_Collimator
             this.label8 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.VoiceCheckBox = new System.Windows.Forms.CheckBox();
-            this.roundedGroupBox1.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.ErrorSignGroupBox.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -75,37 +75,39 @@ namespace Bahtinov_Collimator
             this.CancelSettingsButton.UseVisualStyleBackColor = true;
             this.CancelSettingsButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
-            // roundedGroupBox1
+            // groupBox4
             // 
-            this.roundedGroupBox1.BorderColor = System.Drawing.Color.Gray;
-            this.roundedGroupBox1.BorderThickness = 2;
-            this.roundedGroupBox1.Controls.Add(this.historyMakersTextBox);
-            this.roundedGroupBox1.Controls.Add(this.label1);
-            this.roundedGroupBox1.CornerRadius = 12;
-            this.roundedGroupBox1.Location = new System.Drawing.Point(13, 230);
-            this.roundedGroupBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.roundedGroupBox1.Name = "roundedGroupBox1";
-            this.roundedGroupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.roundedGroupBox1.Size = new System.Drawing.Size(300, 83);
-            this.roundedGroupBox1.TabIndex = 39;
-            this.roundedGroupBox1.TabStop = false;
-            this.roundedGroupBox1.Text = "History Markers";
+            this.groupBox4.BorderColor = System.Drawing.Color.Gray;
+            this.groupBox4.BorderThickness = 2;
+            this.groupBox4.Controls.Add(this.historyMakersTextBox);
+            this.groupBox4.Controls.Add(this.label1);
+            this.groupBox4.CornerRadius = 12;
+            this.groupBox4.Location = new System.Drawing.Point(13, 230);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox4.Size = new System.Drawing.Size(300, 83);
+            this.groupBox4.TabIndex = 39;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "History Markers";
             // 
             // historyMakersTextBox
             // 
-            this.historyMakersTextBox.Location = new System.Drawing.Point(212, 34);
+            this.historyMakersTextBox.Location = new System.Drawing.Point(220, 38);
+            this.historyMakersTextBox.MaxLength = 20;
             this.historyMakersTextBox.Name = "historyMakersTextBox";
-            this.historyMakersTextBox.Size = new System.Drawing.Size(59, 22);
+            this.historyMakersTextBox.Size = new System.Drawing.Size(46, 22);
             this.historyMakersTextBox.TabIndex = 1;
+            this.historyMakersTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 37);
+            this.label1.Location = new System.Drawing.Point(41, 37);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(196, 16);
+            this.label1.Size = new System.Drawing.Size(138, 16);
             this.label1.TabIndex = 0;
-            this.label1.Text = "No. of History Makers to display";
+            this.label1.Text = "No. of History Makers:";
             // 
             // ErrorSignGroupBox
             // 
@@ -242,7 +244,7 @@ namespace Bahtinov_Collimator
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(603, 329);
-            this.Controls.Add(this.roundedGroupBox1);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.ErrorSignGroupBox);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
@@ -256,8 +258,8 @@ namespace Bahtinov_Collimator
             this.Name = "Settings";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Settings";
-            this.roundedGroupBox1.ResumeLayout(false);
-            this.roundedGroupBox1.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ErrorSignGroupBox.ResumeLayout(false);
             this.ErrorSignGroupBox.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -282,7 +284,7 @@ namespace Bahtinov_Collimator
         private RoundedGroupBox groupBox3;
         private System.Windows.Forms.CheckBox errorSignCheckBox;
         private RoundedGroupBox ErrorSignGroupBox;
-        private RoundedGroupBox roundedGroupBox1;
+        private RoundedGroupBox groupBox4;
         private System.Windows.Forms.TextBox historyMakersTextBox;
         private System.Windows.Forms.Label label1;
     }

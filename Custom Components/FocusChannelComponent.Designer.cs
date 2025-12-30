@@ -111,12 +111,12 @@ namespace Bahtinov_Collimator
             | System.Windows.Forms.AnchorStyles.Right)));
             this.offsetBarControl1.BarColor = System.Drawing.Color.Gray;
             this.offsetBarControl1.Enabled = false;
-            this.offsetBarControl1.Location = new System.Drawing.Point(6, 32);
+            this.offsetBarControl1.Location = new System.Drawing.Point(6, 37);
             this.offsetBarControl1.MarkerColor = System.Drawing.Color.Green;
             this.offsetBarControl1.Maximum = 1F;
             this.offsetBarControl1.Minimum = -1F;
             this.offsetBarControl1.Name = "offsetBarControl1";
-            this.offsetBarControl1.Size = new System.Drawing.Size(225, 99);
+            this.offsetBarControl1.Size = new System.Drawing.Size(225, 69);
             this.offsetBarControl1.TabIndex = 8;
             this.offsetBarControl1.Text = "offsetBarControl1";
             this.offsetBarControl1.TextColor = System.Drawing.Color.White;
