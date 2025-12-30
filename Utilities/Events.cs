@@ -338,11 +338,6 @@ namespace Bahtinov_Collimator
             public int Width { get; set; }
 
             /// <summary>
-            /// Gets or sets a value indicating whether the error circle is inside the focus range.
-            /// </summary>
-            public bool InsideFocus { get; set; }
-
-            /// <summary>
             /// Gets or sets the error value associated with the error circle.
             /// </summary>
             public string ErrorValue { get; set; }
@@ -353,7 +348,6 @@ namespace Bahtinov_Collimator
             /// <param name="origin">The origin point of the error circle.</param>
             /// <param name="height">The height of the error circle.</param>
             /// <param name="width">The width of the error circle.</param>
-            /// <param name="insideFocus">Indicates whether the error circle is inside the focus range.</param>
             /// <param name="errorValue">The error value associated with the error circle.</param>
             public ErrorCircle(Point origin, int height, int width, string errorValue)
             {

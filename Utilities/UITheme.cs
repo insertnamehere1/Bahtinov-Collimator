@@ -337,12 +337,12 @@ namespace Bahtinov_Collimator
         /// <param name="groupId">The group ID.</param>
         /// <param name="insideFocus">Whether the focus is inside or outside.</param>
         /// <returns>The pen for drawing error circles.</returns>
-        public static Pen GetErrorCirclePen(int groupId, bool insideFocus)
+        public static Pen GetErrorCirclePen(int groupId)
         {
             if (ErrorCirclePens.ContainsKey(groupId))
             {
                 Pen pen = ErrorCirclePens[groupId];
-                pen.DashStyle = insideFocus ? DashStyle.Solid : DashStyle.Dash;
+                pen.DashStyle = DashStyle.Solid;
                 return pen;
             }
             return new Pen(Color.White); // Default color if not found

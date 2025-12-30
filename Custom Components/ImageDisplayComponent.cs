@@ -335,7 +335,7 @@ namespace Bahtinov_Collimator
         /// <param name="group">An instance of <see cref="BahtinovLineDataEventArgs.LineGroup"/> containing the data for the error circle and line.</param>
         private void DrawErrorCircleAndLine(Graphics g, BahtinovLineDataEventArgs.LineGroup group)
         {
-            var errorPen = UITheme.GetErrorCirclePen(group.GroupId, group.ErrorCircle.InsideFocus);
+            var errorPen = UITheme.GetErrorCirclePen(group.GroupId);
             var circleRadius = UITheme.ErrorCircleRadius;
 
             g.DrawEllipse(errorPen, group.ErrorCircle.Origin.X, group.ErrorCircle.Origin.Y, circleRadius * 2, circleRadius * 2);
