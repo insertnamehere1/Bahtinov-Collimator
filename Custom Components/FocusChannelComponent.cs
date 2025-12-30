@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+//using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -9,9 +10,6 @@ namespace Bahtinov_Collimator
     {
         #region Fields
 
-        [DllImport("user32.dll")]
-        public static extern bool SetProcessDPIAware();
-
         public delegate void ChannelSelectEventHandler(object sender, ChannelSelectEventArgs e);
         public static event ChannelSelectEventHandler ChannelSelectDataEvent;
 
@@ -20,7 +18,6 @@ namespace Bahtinov_Collimator
 
         private bool disposed = false; // To detect redundant calls
         private int groupID;
-        private Color insideCriticalFocusColor;
         private Font labelFont;
 
         #endregion
@@ -37,13 +34,8 @@ namespace Bahtinov_Collimator
             this.UpdateStyles();
 
             this.groupID = groupID;
-            insideCriticalFocusColor = UITheme.GetGroupBoxTextColor(groupID);
-
-            SetProcessDPIAware();
             InitializeComponent();
-
             this.AutoScaleMode = AutoScaleMode.None;
-
 
             // Get the current DPI of the display
             using (Graphics g = this.CreateGraphics())
@@ -51,13 +43,13 @@ namespace Bahtinov_Collimator
                 float dpi = g.DpiX; // Horizontal DPI (DpiY can also be used)
 
                 // Set the base font size in points (e.g., 12 points)
-                float baseFontSize = 12.0f;
+                float baseFontSize = 10.0f;
 
                 // Calculate the font size based on DPI (assuming 96 DPI as standard)
-                float scaledFontSize = baseFontSize * 96f / dpi;
+//                float scaledFontSize = baseFontSize * 96f / dpi;
 
                 // Apply the scaled font to the form or controls
-                this.labelFont = new Font(this.Font.FontFamily, scaledFontSize);
+                this.labelFont = new Font(this.Font.FontFamily, baseFontSize);
             }
 
             this.groupBox1.Font = labelFont;
@@ -134,7 +126,6 @@ namespace Bahtinov_Collimator
             SetLabelFont(newFont);
             SetLabelTextAlignment();
             SetLabelTextDirection();
-            SetLabelAutoSize(false);
             SetLabelText();
             offsetBarControl1.Maximum = 2.0f;
             offsetBarControl1.Minimum = -2.0f;
@@ -146,14 +137,21 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void SetupLabelLocation()
         {
-            // First column: Positioning labels in the first column
             label1.Location = new Point(9, 26);
+            FocusErrorLabel.Location = new Point(190, 26);
+            label3.Location = new Point(31, 97);
+            label4.Location = new Point(190, 97);
+            label5.Location = new Point(116, 97);
+            label2.Location = new Point(28, 113);
+            label6.Location = new Point(175, 113);
 
-            // Second column: Positioning labels in the second column
-            FocusErrorLabel.Location = new Point(170, 24);
-
-            // Third column: Positioning labels in the third column
-            label2.Location = new Point(208, 25);
+            label1.BringToFront();
+            FocusErrorLabel.BringToFront();
+            label3.BringToFront();
+            label4.BringToFront();
+            label5.BringToFront();
+            label2.BringToFront();
+            label6.BringToFront();
         }
 
         /// <summary>
@@ -164,7 +162,12 @@ namespace Bahtinov_Collimator
         {
             foreach (var label in GetAllLabels())
             {
-                label.Font = newFont;
+                var smallLabelFont = new Font(this.Font.FontFamily, 8.0f);
+                
+                if(label == label3 || label == label4 || label == label5 || label == label2 || label == label6)
+                    label.Font = smallLabelFont;
+                else
+                    label.Font = newFont;
             }
         }
 
@@ -173,7 +176,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void SetLabelText()
         {
-            FocusErrorLabel.Text = "0.0";
+            FocusErrorLabel.Text = "0.0 px";
         }
 
         /// <summary>
@@ -196,15 +199,6 @@ namespace Bahtinov_Collimator
             {
                 label.RightToLeft = RightToLeft.No;
             }
-        }
-
-        /// <summary>
-        /// Sets the auto-size property of the labels.
-        /// </summary>
-        /// <param name="autoSize">If set to <c>true</c>, the labels will auto-size.</param>
-        private void SetLabelAutoSize(bool autoSize)
-        {
-            FocusErrorLabel.AutoSize = autoSize;
         }
 
         /// <summary>
@@ -247,22 +241,13 @@ namespace Bahtinov_Collimator
                 TextFormatFlags flags = TextFormatFlags.Default;
 
                 // Check label name to set text format flags
-                if (label.Name == "AbsoluteFocusErrorLabel" ||
-                    label.Name == "FocusErrorLabel" ||
-                    label.Name == "WithinCriticalFocusLabel")
+                if (label.Name == "FocusErrorLabel" )
                 {
                     flags = TextFormatFlags.VerticalCenter | TextFormatFlags.Right;
                 }
 
-                if (label.Name == "WithinCriticalFocusLabel")
-                {
-                    TextRenderer.DrawText(e.Graphics, label.Text, label.Font, label.ClientRectangle, insideCriticalFocusColor, flags);
-                }
-                else
-                {
-                    // Draw the text with the specified color and format
-                    TextRenderer.DrawText(e.Graphics, label.Text, label.Font, label.ClientRectangle, textColor, flags);
-                }
+                 // Draw the text with the specified color and format
+                 TextRenderer.DrawText(e.Graphics, label.Text, label.Font, label.ClientRectangle, textColor, flags);
             }
         }
 
@@ -287,7 +272,7 @@ namespace Bahtinov_Collimator
             {
                 if (!e.FocusData.ClearDisplay)
                 {
-                    FocusErrorLabel.Text = e.FocusData.BahtinovOffset.ToString("F1");
+                    FocusErrorLabel.Text = e.FocusData.BahtinovOffset.ToString("F1") + " px";
                     offsetBarControl1.MarkerColor = UITheme.ErrorBarMarkerColorInRange;
                     offsetBarControl1.Value = (float)e.FocusData.BahtinovOffset;    
                 }
@@ -364,7 +349,7 @@ namespace Bahtinov_Collimator
         /// <returns>An array of labels.</returns>
         private Label[] GetAllLabels()
         {
-            return new Label[] { label1, label2, FocusErrorLabel };
+            return new Label[] { label1, FocusErrorLabel, label3, label4, label5, label2, label6 };
         }
 
         #endregion
