@@ -42,22 +42,8 @@ namespace Bahtinov_Collimator
             this.label8 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.VoiceCheckBox = new System.Windows.Forms.CheckBox();
-            this.groupBox2 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.CriticalFocusLabel = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.PixelSizeTextBox = new System.Windows.Forms.TextBox();
-            this.FocalLengthTextBox = new System.Windows.Forms.TextBox();
-            this.ApertureTextBox = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // okButton
@@ -129,7 +115,7 @@ namespace Bahtinov_Collimator
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.VoiceCheckBox);
             this.groupBox1.CornerRadius = 12;
-            this.groupBox1.Location = new System.Drawing.Point(13, 187);
+            this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
@@ -186,152 +172,6 @@ namespace Bahtinov_Collimator
             this.VoiceCheckBox.Text = "Voice Guidance";
             this.VoiceCheckBox.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
-            // 
-            this.groupBox2.BorderColor = System.Drawing.Color.Gray;
-            this.groupBox2.BorderThickness = 2;
-            this.groupBox2.Controls.Add(this.label13);
-            this.groupBox2.Controls.Add(this.CriticalFocusLabel);
-            this.groupBox2.Controls.Add(this.label11);
-            this.groupBox2.Controls.Add(this.PixelSizeTextBox);
-            this.groupBox2.Controls.Add(this.FocalLengthTextBox);
-            this.groupBox2.Controls.Add(this.ApertureTextBox);
-            this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.CornerRadius = 12;
-            this.groupBox2.Location = new System.Drawing.Point(13, 13);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox2.Size = new System.Drawing.Size(300, 166);
-            this.groupBox2.TabIndex = 8;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Optics";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(225, 132);
-            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(25, 16);
-            this.label13.TabIndex = 20;
-            this.label13.Text = "µm";
-            // 
-            // CriticalFocusLabel
-            // 
-            this.CriticalFocusLabel.Location = new System.Drawing.Point(179, 132);
-            this.CriticalFocusLabel.Name = "CriticalFocusLabel";
-            this.CriticalFocusLabel.Size = new System.Drawing.Size(50, 16);
-            this.CriticalFocusLabel.TabIndex = 19;
-            this.CriticalFocusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(37, 132);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(90, 16);
-            this.label11.TabIndex = 18;
-            this.label11.Text = "Critical Focus:";
-            // 
-            // PixelSizeTextBox
-            // 
-            this.PixelSizeTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PixelSizeTextBox.Location = new System.Drawing.Point(136, 96);
-            this.PixelSizeTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.PixelSizeTextBox.Name = "PixelSizeTextBox";
-            this.PixelSizeTextBox.Size = new System.Drawing.Size(87, 26);
-            this.PixelSizeTextBox.TabIndex = 17;
-            this.PixelSizeTextBox.TabStop = false;
-            this.PixelSizeTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // FocalLengthTextBox
-            // 
-            this.FocalLengthTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FocalLengthTextBox.Location = new System.Drawing.Point(136, 64);
-            this.FocalLengthTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.FocalLengthTextBox.Name = "FocalLengthTextBox";
-            this.FocalLengthTextBox.Size = new System.Drawing.Size(87, 26);
-            this.FocalLengthTextBox.TabIndex = 16;
-            this.FocalLengthTextBox.TabStop = false;
-            this.FocalLengthTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // ApertureTextBox
-            // 
-            this.ApertureTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ApertureTextBox.Location = new System.Drawing.Point(135, 32);
-            this.ApertureTextBox.Margin = new System.Windows.Forms.Padding(4);
-            this.ApertureTextBox.Name = "ApertureTextBox";
-            this.ApertureTextBox.Size = new System.Drawing.Size(87, 26);
-            this.ApertureTextBox.TabIndex = 15;
-            this.ApertureTextBox.TabStop = false;
-            this.ApertureTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(225, 95);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(25, 16);
-            this.label7.TabIndex = 13;
-            this.label7.Text = "µm";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(37, 97);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(65, 16);
-            this.label6.TabIndex = 11;
-            this.label6.Text = "Pixel Size";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(225, 63);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(29, 16);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "mm";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(225, 31);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(29, 16);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "mm";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(37, 65);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(84, 16);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Focal Length";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(37, 32);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 16);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Aperture";
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -341,7 +181,6 @@ namespace Bahtinov_Collimator
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.CancelSettingsButton);
             this.Controls.Add(this.okButton);
-            this.Controls.Add(this.groupBox2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -354,35 +193,20 @@ namespace Bahtinov_Collimator
             this.groupBox3.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button CancelSettingsButton;
-        private System.Windows.Forms.TextBox ApertureTextBox;
-        private System.Windows.Forms.TextBox PixelSizeTextBox;
-        private System.Windows.Forms.TextBox FocalLengthTextBox;
         private System.Windows.Forms.CheckBox VoiceCheckBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label CriticalFocusLabel;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.RadioButton MakCassRadioButton;
         private System.Windows.Forms.RadioButton SCTRadioButton;
-        private RoundedGroupBox groupBox2;
         private RoundedGroupBox groupBox1;
         private RoundedGroupBox groupBox3;
     }

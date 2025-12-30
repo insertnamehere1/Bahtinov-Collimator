@@ -47,11 +47,6 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Private Fields
-        // Settings
-        private float apertureSetting;
-        private float focalLengthSetting;
-        private double pixelSizeSetting;
-
         // to be checked for relevance
         private const float ErrorMarkerScalingValue = 20.0f;
 
@@ -83,10 +78,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         public void LoadSettings()
         {
-            // load settings
-            apertureSetting = Properties.Settings.Default.Aperture;
-            focalLengthSetting = Properties.Settings.Default.FocalLength;
-            pixelSizeSetting = Properties.Settings.Default.PixelSize;
+
         }
 
         /// <summary>
@@ -726,27 +718,11 @@ namespace Bahtinov_Collimator
 
                 double errorDistanceD = Math.Sqrt(dxErr * dxErr + dyErr * dyErr);
                 double bahtinovOffset = errorSign * Math.Floor(errorDistanceD * 10.0) / 10.0;
-
-                float radianPerDegree = (float)Math.PI / 180f;
                 float bahtinovAngle = Math.Abs((bahtinovLines.LineAngles[2] - bahtinovLines.LineAngles[0]) / 2.0f);
-
-                float pixelsPerMicron = (float)(9.0f / 32.0f * (apertureSetting / 1000.0f) /
-                                        ((focalLengthSetting / 1000.0f) * pixelSizeSetting) *
-                                        (1.0f + Math.Cos(45.0f * radianPerDegree) * (1.0f + (float)Math.Tan(bahtinovAngle))));
-
-                double focusErrorInMicrons = errorDistanceD / pixelsPerMicron;
-
-                float criticalFocusValue = 8.99999974990351E-07f * (focalLengthSetting / 1000.0f) /
-                                           (apertureSetting / 1000.0f) * (focalLengthSetting / 1000.0f) /
-                                           (apertureSetting / 1000.0f);
-
-                bool withinCriticalFocus = Math.Abs(focusErrorInMicrons * 1E-06) < Math.Abs(criticalFocusValue);
 
                 FocusData fd = new FocusData
                 {
                     BahtinovOffset = bahtinovOffset,
-                    DefocusError = focusErrorInMicrons,
-                    InsideFocus = withinCriticalFocus,
                     Id = group
                 };
 
@@ -775,7 +751,7 @@ namespace Bahtinov_Collimator
                 string errorValue = (errorSign * (Math.Floor((float)errorDistanceD * 10) / 10)).ToString("F1");
 
                 lineGroup.ErrorCircle = new BahtinovLineDataEventArgs.ErrorCircle(
-                    new Point(circle_x, circle_y), circle_width, circle_height, withinCriticalFocus, errorValue);
+                    new Point(circle_x, circle_y), circle_width, circle_height, errorValue);
 
                 // Error line is drawn perpendicular to the 2nd line at the error marker location
                 float lineX1 = errorMarker_X + circleRadius;

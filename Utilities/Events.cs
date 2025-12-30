@@ -184,16 +184,6 @@ namespace Bahtinov_Collimator
         public double BahtinovOffset { get; set; }
 
         /// <summary>
-        /// Gets or sets the defocus error value.
-        /// </summary>
-        public double DefocusError { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the focus is inside the desired focus range.
-        /// </summary>
-        public bool InsideFocus { get; set; }
-
-        /// <summary>
         /// Gets or sets the identifier for the focus data.
         /// </summary>
         public int Id { get; set; }
@@ -365,12 +355,11 @@ namespace Bahtinov_Collimator
             /// <param name="width">The width of the error circle.</param>
             /// <param name="insideFocus">Indicates whether the error circle is inside the focus range.</param>
             /// <param name="errorValue">The error value associated with the error circle.</param>
-            public ErrorCircle(Point origin, int height, int width, bool insideFocus, string errorValue)
+            public ErrorCircle(Point origin, int height, int width, string errorValue)
             {
                 Origin = origin;
                 Height = height;
                 Width = width;
-                InsideFocus = insideFocus;
                 ErrorValue = errorValue;
             }
         }

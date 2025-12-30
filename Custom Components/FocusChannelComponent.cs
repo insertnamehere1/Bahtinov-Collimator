@@ -148,11 +148,9 @@ namespace Bahtinov_Collimator
         {
             // First column: Positioning labels in the first column
             label1.Location = new Point(9, 26);
-            label5.Location = new Point(9, 51);
 
             // Second column: Positioning labels in the second column
             FocusErrorLabel.Location = new Point(170, 24);
-            WithinCriticalFocusLabel.Location = new Point(181, 51);
 
             // Third column: Positioning labels in the third column
             label2.Location = new Point(208, 25);
@@ -176,7 +174,6 @@ namespace Bahtinov_Collimator
         private void SetLabelText()
         {
             FocusErrorLabel.Text = "0.0";
-            WithinCriticalFocusLabel.Text = "---";
         }
 
         /// <summary>
@@ -186,15 +183,7 @@ namespace Bahtinov_Collimator
         {
             foreach (var label in GetAllLabels())
             {
-                // Check if the current label is WithinCriticalFocusLabel
-                if (label == WithinCriticalFocusLabel)
-                {
-                    label.TextAlign = ContentAlignment.MiddleLeft;
-                }
-                else
-                {
-                    label.TextAlign = ContentAlignment.MiddleRight;
-                }
+                label.TextAlign = ContentAlignment.MiddleRight;
             }
         }
 
@@ -216,7 +205,6 @@ namespace Bahtinov_Collimator
         private void SetLabelAutoSize(bool autoSize)
         {
             FocusErrorLabel.AutoSize = autoSize;
-            WithinCriticalFocusLabel.AutoSize = true;
         }
 
         /// <summary>
@@ -300,14 +288,11 @@ namespace Bahtinov_Collimator
                 if (!e.FocusData.ClearDisplay)
                 {
                     FocusErrorLabel.Text = e.FocusData.BahtinovOffset.ToString("F1");
-                    offsetBarControl1.MarkerColor = e.FocusData.InsideFocus ? Color.Green : Color.OrangeRed;
+                    offsetBarControl1.MarkerColor = UITheme.ErrorBarMarkerColorInRange;
                     offsetBarControl1.Value = (float)e.FocusData.BahtinovOffset;    
-                    WithinCriticalFocusLabel.Text = e.FocusData.InsideFocus ? "YES" : "NO";
-                    insideCriticalFocusColor = e.FocusData.InsideFocus ? UITheme.GetGroupBoxTextColor(groupID) : UITheme.GetGroupBoxCriticalColor;
                 }
                 else
                 {
-                    insideCriticalFocusColor = UITheme.GetGroupBoxTextColor(groupID);
                     SetLabelText();
                     offsetBarControl1.ResetHistory();
                     offsetBarControl1.MarkerColor = Color.Green;
@@ -379,7 +364,7 @@ namespace Bahtinov_Collimator
         /// <returns>An array of labels.</returns>
         private Label[] GetAllLabels()
         {
-            return new Label[] { label1, label2, label5, FocusErrorLabel, WithinCriticalFocusLabel };
+            return new Label[] { label1, label2, FocusErrorLabel };
         }
 
         #endregion

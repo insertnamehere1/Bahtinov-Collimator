@@ -23,12 +23,6 @@ namespace Bahtinov_Collimator
 
         #region Variables
 
-        // settings value for focal length
-        private float focalLength = 0.0f;
-
-        // settings value for aperture
-        private float aperture = 0.0f;
-
         #endregion
 
         #region Constructor
@@ -41,72 +35,11 @@ namespace Bahtinov_Collimator
             InitializeComponent();
             LoadSettings();
             SetColorScheme();
-
-            // Set the CriticalFocusLabel properties for left expanding text
-            CriticalFocusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            CriticalFocusLabel.RightToLeft = RightToLeft.Yes;
-            CriticalFocusLabel.AutoSize = false; 
-
-            // Subscribe to the TextChanged events
-            FocalLengthTextBox.TextChanged += FocalLengthTextBox_TextChanged;
-            ApertureTextBox.TextChanged += ApertureTextBox_TextChanged;
         }
 
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Handles the TextChanged event for the FocalLengthTextBox.
-        /// This method is called whenever the text in the FocalLengthTextBox changes.
-        /// It triggers the update of the critical focus calculation to reflect the new focal length input.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
-        private void FocalLengthTextBox_TextChanged(object sender, EventArgs e)
-        {
-            UpdateCriticalFocus();
-        }
-
-        /// <summary>
-        /// Handles the TextChanged event for the ApertureTextBox.
-        /// This method is called whenever the text in the ApertureTextBox changes.
-        /// It triggers the update of the critical focus calculation to reflect the new aperture input.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
-        private void ApertureTextBox_TextChanged(object sender, EventArgs e)
-        {
-            UpdateCriticalFocus();
-        }
-
-        /// <summary>
-        /// Updates the critical focus based on the current values of the focal length and aperture inputs.
-        /// This method attempts to parse the input values from the respective text boxes.
-        /// If valid numeric values are provided and the aperture is greater than zero,
-        /// it updates the corresponding class variables and recalculates the critical focus.
-        /// If the input is invalid, it sets the CriticalFocusLabel to indicate an error.
-        /// </summary>
-        private void UpdateCriticalFocus()
-        {
-            // Try to parse the input values
-            if (float.TryParse(FocalLengthTextBox.Text, out float newFocalLength) &&
-                float.TryParse(ApertureTextBox.Text, out float newAperture) &&
-                newAperture > 0) // Ensure the aperture is greater than zero
-            {
-                // Update the class variables
-                focalLength = newFocalLength;
-                aperture = newAperture;
-
-                // Calculate and update the critical focus label
-                CalculateCriticalFocus();
-            }
-            else
-            {
-                // Optionally, you can clear or reset the critical focus label if input is invalid
-                CriticalFocusLabel.Text = "Invalid Input";
-            }
-        }
 
         /// <summary>
         /// Handles the Load event of the form. Increases the font size of the form and its controls.
@@ -122,23 +55,10 @@ namespace Bahtinov_Collimator
             // Adjust fonts
             this.Font = newFont;
             groupBox1.Font = newFont;
-            groupBox2.Font = newFont;
-            label1.Font = newFont;
-            label2.Font = newFont;
-            label3.Font = newFont;
-            label4.Font = newFont;
             label5.Font = newFont;
-            label6.Font = newFont;
-            label7.Font = newFont;
             label8.Font = newFont;
             label9.Font = newFont;
             label10.Font = newFont;
-            label11.Font = newFont;
-            label13.Font = newFont;
-            CriticalFocusLabel.Font = newFont;
-            ApertureTextBox.Font = newFont;
-            PixelSizeTextBox.Font = newFont;
-            FocalLengthTextBox.Font = newFont;
             CancelSettingsButton.Font = newFont;
             okButton.Font = newFont;
             SCTRadioButton.Font = newFont;
@@ -171,13 +91,9 @@ namespace Bahtinov_Collimator
 
             // Group Boxes
             ChangeLabelColors(groupBox1, UITheme.MenuDarkForeground);
-            ChangeLabelColors(groupBox2, UITheme.MenuDarkForeground);
             ChangeLabelColors(groupBox3, UITheme.MenuDarkForeground);
             groupBox1.ForeColor = UITheme.MenuDarkForeground;
-            groupBox2.ForeColor = UITheme.MenuDarkForeground;
             groupBox3.ForeColor = UITheme.MenuDarkForeground;
-
-            ChangeTextBoxColors(groupBox2);
         }
 
         /// <summary>
@@ -218,31 +134,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void LoadSettings()
         {
-            this.aperture = Properties.Settings.Default.Aperture;
-            this.focalLength = Properties.Settings.Default.FocalLength;
-
-            // Use "0.##" to show up to two decimals but trim trailing zeros (e.g. 1.50 -> 1.5, 1.00 -> 1)
-            ApertureTextBox.Text = aperture.ToString("0.##");
-
-            FocalLengthTextBox.Text = focalLength.ToString("0.##");
-            PixelSizeTextBox.Text = Properties.Settings.Default.PixelSize.ToString("F2");
             VoiceCheckBox.Checked = Properties.Settings.Default.VoiceEnabled;
-
-            // set the Adjust Assist Display settings
-            switch(Properties.Settings.Default.AdjustDisplayType)
-            {
-                case 0:
-                    SCTRadioButton.Checked = true;
-                    break;
-                case 1:
-                    MakCassRadioButton.Checked = true;
-                    break;
-                default:
-                    SCTRadioButton.Checked = true;
-                    break;    
-            };
-
-            CalculateCriticalFocus();
         }
 
         /// <summary>
@@ -255,16 +147,7 @@ namespace Bahtinov_Collimator
             try
             {
                 // Parse input values and save them to application settings
-                Properties.Settings.Default.Aperture = float.Parse(ApertureTextBox.Text);
-                Properties.Settings.Default.FocalLength = float.Parse(FocalLengthTextBox.Text);
-                Properties.Settings.Default.PixelSize = float.Parse(PixelSizeTextBox.Text);
                 Properties.Settings.Default.VoiceEnabled = VoiceCheckBox.Checked;
-
-                // set Adjust Display Type
-                if(SCTRadioButton.Checked) 
-                    Properties.Settings.Default.AdjustDisplayType = 0;
-                else if(MakCassRadioButton.Checked)
-                    Properties.Settings.Default.AdjustDisplayType = 1;
 
                 // Save settings
                 Properties.Settings.Default.Save();
@@ -292,15 +175,6 @@ namespace Bahtinov_Collimator
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
-        }
-
-        private void CalculateCriticalFocus()
-        {
-            float focalApertureRatio = focalLength / aperture;
-
-            float criticalFocusValue = 8.99999974990351E-01f * focalApertureRatio * focalApertureRatio;
-
-            CriticalFocusLabel.Text = criticalFocusValue.ToString("F0");
         }
 
         #endregion

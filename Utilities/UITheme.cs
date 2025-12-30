@@ -182,21 +182,47 @@ namespace Bahtinov_Collimator
 
         #endregion
 
-        #region Adjust Assist Theme
-        /// <summary>
-        /// Gets the color used for the high state of the adjustment assist knob.
-        /// </summary>
-        public static Color AdjustAssistKnobHi { get; } = Color.FromArgb(100, 100, 100);
+        #region ErrorBars Theme
 
         /// <summary>
-        /// Gets the color used for the low state of the adjustment assist knob.
+        /// Gets the Error Bar color.
         /// </summary>
-        public static Color AdjustAssistKnobLo { get; } = Color.FromArgb(200, 200, 200);
+        public static Color ErrorBarColor { get; } = Color.Gray;
 
         /// <summary>
-        /// Gets the color used for the text displayed on the adjustment assist knob.
+        /// Gets the Error Bar zero tick mark color.
         /// </summary>
-        public static Color AdjustAssistTextColor { get; } = Color.Black;
+        public static Color ZeroTickColor { get; } = Color.DarkGray;
+
+        /// <summary>
+        /// Gets the Error Bar text color.
+        /// </summary>
+        public static Color ErrorBarTextColor { get; } = Color.White;
+
+        /// <summary>
+        /// Gets the Error Marker color for the Error Bar when the marker is in the valid range.
+        /// </summary>
+        public static Color ErrorBarMarkerColorInRange { get; } = Color.Green;
+
+        /// <summary>
+        /// Gets the Error Marker color for the Error Bar when the marker is outside the valid range.
+        /// </summary>
+        public static Color ErrorBarMarkerColorOutOfRange { get; } = Color.OrangeRed;
+
+        /// <summary>
+        /// Gets the Error Marker History dot color for the Error Bar.
+        /// </summary>
+        public static Color ErrorBarHistoryColor { get; } = Color.FromArgb(128, Color.White);
+
+        /// <summary>
+        /// Gets the Error Marker History dot Pen color for the Error Bar.
+        /// </summary>
+        public static Color ErrorBarHistoryPenColor { get; } = Color.FromArgb(255, Color.Black);
+
+        /// <summary>
+        /// Gets the Error Marker Outline Pen color for the Error Bar.
+        /// </summary>
+        public static Color ErrorBarMarkerPen { get; } = Color.Black;
 
         #endregion
 

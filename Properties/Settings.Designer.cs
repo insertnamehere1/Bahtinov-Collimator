@@ -25,102 +25,6 @@ namespace Bahtinov_Collimator.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("72")]
-        public float Aperture {
-            get {
-                return ((float)(this["Aperture"]));
-            }
-            set {
-                this["Aperture"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("450")]
-        public float FocalLength {
-            get {
-                return ((float)(this["FocalLength"]));
-            }
-            set {
-                this["FocalLength"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4.76")]
-        public double PixelSize {
-            get {
-                return ((double)(this["PixelSize"]));
-            }
-            set {
-                this["PixelSize"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int CS_Slider {
-            get {
-                return ((int)(this["CS_Slider"]));
-            }
-            set {
-                this["CS_Slider"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool CS_Swap {
-            get {
-                return ((bool)(this["CS_Swap"]));
-            }
-            set {
-                this["CS_Swap"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool CS_RedReverse {
-            get {
-                return ((bool)(this["CS_RedReverse"]));
-            }
-            set {
-                this["CS_RedReverse"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool CS_GreenReverse {
-            get {
-                return ((bool)(this["CS_GreenReverse"]));
-            }
-            set {
-                this["CS_GreenReverse"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool CS_BlueReverse {
-            get {
-                return ((bool)(this["CS_BlueReverse"]));
-            }
-            set {
-                this["CS_BlueReverse"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool VoiceEnabled {
             get {
@@ -140,18 +44,6 @@ namespace Bahtinov_Collimator.Properties {
             }
             set {
                 this["DefocusSwitch"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int AdjustDisplayType {
-            get {
-                return ((int)(this["AdjustDisplayType"]));
-            }
-            set {
-                this["AdjustDisplayType"] = value;
             }
         }
     }

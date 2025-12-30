@@ -101,21 +101,21 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         [Category("Appearance")]
         [Description("Color of the main bar line.")]
-        public Color BarColor { get; set; } = Color.Gray;
+        public Color BarColor { get; set; } = UITheme.ErrorBarColor;
 
         /// <summary>
         /// Gets or sets the color of the marker (the circular pointer).
         /// </summary>
         [Category("Appearance")]
         [Description("Color of the marker (the circular pointer).")]
-        public Color MarkerColor { get; set; } = Color.Green;
+        public Color MarkerColor { get; set; } = UITheme.ErrorBarMarkerColorInRange;
 
         /// <summary>
         /// Gets or sets the color of the zero tick mark in the center of the bar.
         /// </summary>
         [Category("Appearance")]
         [Description("Color of the zero tick mark.")]
-        public Color ZeroTickColor { get; set; } = Color.DarkGray;
+        public Color ZeroTickColor { get; set; } = UITheme.ZeroTickColor;
 
         /// <summary>
         /// Gets or sets the base color used for text (labels and value).
@@ -124,7 +124,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         [Category("Appearance")]
         [Description("Base text color for labels and value.")]
-        public Color TextColor { get; set; } = Color.White;
+        public Color TextColor { get; set; } = UITheme.ErrorBarTextColor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HistoryBar"/> class.
@@ -260,9 +260,9 @@ namespace Bahtinov_Collimator.Custom_Components
             }
 
             // Draw history markers (semi opaque, smaller, behind current marker)
-            Color historyColor = Color.FromArgb(128, Color.White);
+            Color historyColor = UITheme.ErrorBarHistoryColor; 
             using (var historyBrush = new SolidBrush(historyColor))
-            using (var historyPen = new Pen(Color.FromArgb(255, Color.Black)))
+            using (var historyPen = new Pen(UITheme.ErrorBarHistoryPenColor))
             {
                 foreach (float histValue in valueHistory)
                 {
@@ -292,8 +292,13 @@ namespace Bahtinov_Collimator.Custom_Components
                 markerRadius * 2);
 
             // Draw current marker
+            if (value < minimum || value > maximum)
+                MarkerColor = UITheme.ErrorBarMarkerColorOutOfRange;
+            else
+                MarkerColor = UITheme.ErrorBarMarkerColorInRange;
+
             using (var markerBrush = new SolidBrush(MarkerColor))
-            using (var markerPen = new Pen(Color.Black, markerOutlineThickness))
+            using (var markerPen = new Pen(UITheme.ErrorBarMarkerPen, markerOutlineThickness))
             {
                 g.FillEllipse(markerBrush, markerRect);
             }
@@ -306,7 +311,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
             if (value < minimum || value > maximum)
             {
-                using (var alertPen = new Pen(Color.OrangeRed, alertOutlineThickness))
+                using (var alertPen = new Pen(UITheme.ErrorBarMarkerColorOutOfRange , alertOutlineThickness))
                 {
                     g.DrawEllipse(alertPen,
                         markerRect.X - 3 * scale,

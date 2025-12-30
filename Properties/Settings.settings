@@ -2,38 +2,11 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Bahtinov_Collimator.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Aperture" Type="System.Single" Scope="User">
-      <Value Profile="(Default)">72</Value>
-    </Setting>
-    <Setting Name="FocalLength" Type="System.Single" Scope="User">
-      <Value Profile="(Default)">450</Value>
-    </Setting>
-    <Setting Name="PixelSize" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">4.76</Value>
-    </Setting>
-    <Setting Name="CS_Slider" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="CS_Swap" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="CS_RedReverse" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="CS_GreenReverse" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="CS_BlueReverse" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="VoiceEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="DefocusSwitch" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="AdjustDisplayType" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>
