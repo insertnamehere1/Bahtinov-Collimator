@@ -18,6 +18,8 @@ namespace Bahtinov_Collimator
         private void InitializeComponent()
         {
             this.groupBox1 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.offsetBarControl1 = new Bahtinov_Collimator.Custom_Components.HistoryBar();
             this.label2 = new System.Windows.Forms.Label();
             this.FocusErrorLabel = new System.Windows.Forms.Label();
@@ -32,6 +34,8 @@ namespace Bahtinov_Collimator
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.BorderColor = System.Drawing.Color.Gray;
             this.groupBox1.BorderThickness = 2;
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.offsetBarControl1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.FocusErrorLabel);
@@ -46,6 +50,24 @@ namespace Bahtinov_Collimator
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "FocusChannel";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(174, 109);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(61, 18);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Too Far";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 109);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(78, 18);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Too Close";
             // 
             // offsetBarControl1
             // 
@@ -119,5 +141,7 @@ namespace Bahtinov_Collimator
         private System.Windows.Forms.Label FocusErrorLabel;
         private System.Windows.Forms.Label label1;
         private HistoryBar offsetBarControl1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
     }
 }

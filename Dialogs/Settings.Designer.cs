@@ -42,8 +42,11 @@ namespace Bahtinov_Collimator
             this.label8 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.VoiceCheckBox = new System.Windows.Forms.CheckBox();
+            this.errorSignCheckBox = new System.Windows.Forms.CheckBox();
+            this.ErrorSignGroupBox = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.ErrorSignGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // okButton
@@ -172,11 +175,38 @@ namespace Bahtinov_Collimator
             this.VoiceCheckBox.Text = "Voice Guidance";
             this.VoiceCheckBox.UseVisualStyleBackColor = true;
             // 
+            // errorSignCheckBox
+            // 
+            this.errorSignCheckBox.AutoSize = true;
+            this.errorSignCheckBox.Location = new System.Drawing.Point(32, 34);
+            this.errorSignCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.errorSignCheckBox.Name = "errorSignCheckBox";
+            this.errorSignCheckBox.Size = new System.Drawing.Size(97, 20);
+            this.errorSignCheckBox.TabIndex = 33;
+            this.errorSignCheckBox.Text = "Sign Switch";
+            this.errorSignCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // ErrorSignGroupBox
+            // 
+            this.ErrorSignGroupBox.BorderColor = System.Drawing.Color.Gray;
+            this.ErrorSignGroupBox.BorderThickness = 2;
+            this.ErrorSignGroupBox.Controls.Add(this.errorSignCheckBox);
+            this.ErrorSignGroupBox.CornerRadius = 12;
+            this.ErrorSignGroupBox.Location = new System.Drawing.Point(13, 152);
+            this.ErrorSignGroupBox.Margin = new System.Windows.Forms.Padding(4);
+            this.ErrorSignGroupBox.Name = "ErrorSignGroupBox";
+            this.ErrorSignGroupBox.Padding = new System.Windows.Forms.Padding(4);
+            this.ErrorSignGroupBox.Size = new System.Drawing.Size(300, 84);
+            this.ErrorSignGroupBox.TabIndex = 38;
+            this.ErrorSignGroupBox.TabStop = false;
+            this.ErrorSignGroupBox.Text = "Change Error Sign";
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(603, 329);
+            this.Controls.Add(this.ErrorSignGroupBox);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.CancelSettingsButton);
@@ -193,6 +223,8 @@ namespace Bahtinov_Collimator
             this.groupBox3.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.ErrorSignGroupBox.ResumeLayout(false);
+            this.ErrorSignGroupBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -209,5 +241,7 @@ namespace Bahtinov_Collimator
         private System.Windows.Forms.RadioButton SCTRadioButton;
         private RoundedGroupBox groupBox1;
         private RoundedGroupBox groupBox3;
+        private System.Windows.Forms.CheckBox errorSignCheckBox;
+        private RoundedGroupBox ErrorSignGroupBox;
     }
 }

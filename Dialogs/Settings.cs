@@ -63,6 +63,7 @@ namespace Bahtinov_Collimator
             okButton.Font = newFont;
             SCTRadioButton.Font = newFont;
             MakCassRadioButton.Font = newFont;
+            errorSignCheckBox.Font = newFont;
         }
 
         /// <summary>
@@ -94,6 +95,7 @@ namespace Bahtinov_Collimator
             ChangeLabelColors(groupBox3, UITheme.MenuDarkForeground);
             groupBox1.ForeColor = UITheme.MenuDarkForeground;
             groupBox3.ForeColor = UITheme.MenuDarkForeground;
+            ErrorSignGroupBox.ForeColor = UITheme.MenuDarkForeground;
         }
 
         /// <summary>
@@ -135,6 +137,7 @@ namespace Bahtinov_Collimator
         private void LoadSettings()
         {
             VoiceCheckBox.Checked = Properties.Settings.Default.VoiceEnabled;
+            errorSignCheckBox.Checked = Properties.Settings.Default.SignChange;
         }
 
         /// <summary>
@@ -148,6 +151,7 @@ namespace Bahtinov_Collimator
             {
                 // Parse input values and save them to application settings
                 Properties.Settings.Default.VoiceEnabled = VoiceCheckBox.Checked;
+                Properties.Settings.Default.SignChange = errorSignCheckBox.Checked;
 
                 // Save settings
                 Properties.Settings.Default.Save();

@@ -716,6 +716,8 @@ namespace Bahtinov_Collimator
                         break;
                 }
 
+                errorSign = errorSign * (Properties.Settings.Default.SignChange ? -1f : 1f);
+
                 double errorDistanceD = Math.Sqrt(dxErr * dxErr + dyErr * dyErr);
                 double bahtinovOffset = errorSign * Math.Floor(errorDistanceD * 10.0) / 10.0;
                 float bahtinovAngle = Math.Abs((bahtinovLines.LineAngles[2] - bahtinovLines.LineAngles[0]) / 2.0f);

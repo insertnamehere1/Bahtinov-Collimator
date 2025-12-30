@@ -46,5 +46,17 @@ namespace Bahtinov_Collimator.Properties {
                 this["DefocusSwitch"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SignChange {
+            get {
+                return ((bool)(this["SignChange"]));
+            }
+            set {
+                this["SignChange"] = value;
+            }
+        }
     }
 }
