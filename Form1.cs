@@ -104,12 +104,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         private BahtinovData bahtinovLineData;
 
-        // Adjust Assistant
-        /// <summary>
-        /// Represents the dialog for adjusting assistive features.
-        /// </summary>
-        private AdjustAssistant.AdjustAssistBase adjustAssistDialog;
-
         // Voice Generation
         /// <summary>
         /// Manages the voice control for audio notifications and speech synthesis.
@@ -294,7 +288,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void SetFormUI()
         {
-            AdjustAssistToolStripMenuItem.Enabled = false;
             SetWindowTitleWithVersion();
         }
 
@@ -396,7 +389,6 @@ namespace Bahtinov_Collimator
                 imageDisplayComponent1.ClearDisplay();
                 bahtinovProcessing.StopImageProcessing();
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
-                AdjustAssistToolStripMenuItem.Enabled = false;
                 screenCaptureRunningFlag = false;
                 RoundedStartButton.Text = "Select Star";
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
@@ -447,8 +439,6 @@ namespace Bahtinov_Collimator
                 RoundedStartButton.Text = "Select Star";
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue, groupBoxRed);
-                adjustAssistDialog?.Close();
-                AdjustAssistToolStripMenuItem.Enabled = false;
             }
             else
             {
@@ -481,7 +471,6 @@ namespace Bahtinov_Collimator
                     RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                     RoundedStartButton.Text = "Select Star";
                     RoundedStartButton.Image = Properties.Resources.SelectionCircle;
-                    AdjustAssistToolStripMenuItem.Enabled = false;
                     DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
                 }));
             }
@@ -490,7 +479,6 @@ namespace Bahtinov_Collimator
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                 RoundedStartButton.Text = "Select Star";
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
-                AdjustAssistToolStripMenuItem.Enabled = false;
                 DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
             }
         }
@@ -587,16 +575,6 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Handles the FormClosed event for the CheatSheet form, setting the adjust assist dialog reference to null.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
-        private void CheatSheet_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            adjustAssistDialog = null;
-        }
-
-        /// <summary>
         /// Removes and disposes of specified controls from the form.
         /// </summary>
         /// <param name="controls">The controls to be removed and disposed of.</param>
@@ -619,8 +597,6 @@ namespace Bahtinov_Collimator
         /// <param name="e">The event data.</param>
         private void SettingsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            int displayType = Properties.Settings.Default.AdjustDisplayType;
-
             // Settings Dialog
             Settings settingsDialog = new Settings();
             PositionDialogInsideMainWindow(settingsDialog);
@@ -629,12 +605,6 @@ namespace Bahtinov_Collimator
 
             if (result == DialogResult.OK)
             {
-                // restart Adjust Assist, to display any changes
-                if (displayType != Properties.Settings.Default.AdjustDisplayType && (adjustAssistDialog != null))
-                {
-                    adjustAssistDialog.Close();     
-                }
-
                 bahtinovProcessing.LoadSettings();
                 voiceControl.LoadSettings();
             }
@@ -648,34 +618,6 @@ namespace Bahtinov_Collimator
         private void Form1_MouseEnter(object sender, EventArgs e)
         {
             this.Activate();
-        }
-
-        /// <summary>
-        /// Handles the click event for the Cheat Sheet menu item, showing the AdjustAssistBase dialog if it's not already open.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
-        private void CheatSheetToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (adjustAssistDialog == null || adjustAssistDialog.IsDisposed)
-            {
-                switch(Properties.Settings.Default.AdjustDisplayType)
-                {
-                    case 0:
-                        adjustAssistDialog = new AdjustAssistant.AdjustAssistSCT(this);
-                        break;
-                    case 1:
-                        adjustAssistDialog = new AdjustAssistant.AdjustAssistMCT(this);
-                        break;
-                    default:
-                        adjustAssistDialog = new AdjustAssistant.AdjustAssistSCT(this);
-                        break;
-
-                }
-                PositionDialogInsideMainWindow(adjustAssistDialog);
-                adjustAssistDialog.Show(this);
-                adjustAssistDialog.FormClosed += CheatSheet_FormClosed;
-            }
         }
 
         #endregion
@@ -786,11 +728,6 @@ namespace Bahtinov_Collimator
                     InitializeRedFocusBox();
                     InitializeGreenFocusBox();
                     InitializeBlueFocusBox();
-                    AdjustAssistToolStripMenuItem.Enabled = true;
-                }
-                else
-                {
-                    AdjustAssistToolStripMenuItem.Enabled = false;
                 }
 
                 firstPassCompleted = true;

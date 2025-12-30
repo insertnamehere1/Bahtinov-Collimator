@@ -157,18 +157,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdjustAssist\AdjustAssistMCT.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AdjustAssist\AdjustAssistSCT.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AdjustAssist\AdjustAssistBase.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AdjustAssist\AdjustAssistBase.Designer.cs">
-      <DependentUpon>AdjustAssistBase.cs</DependentUpon>
-    </Compile>
     <Compile Include="Custom Components\HistoryBar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -267,9 +255,6 @@
     <Compile Include="Voice\VoiceControl.cs" />
     <Compile Include="Utilities\UITheme.cs" />
     <Compile Include="Utilities\Utilities.cs" />
-    <EmbeddedResource Include="AdjustAssist\AdjustAssistBase.resx">
-      <DependentUpon>AdjustAssistBase.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Custom Components\HistoryBar.resx">
       <DependentUpon>HistoryBar.cs</DependentUpon>
     </EmbeddedResource>

@@ -34,7 +34,6 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.AdjustAssistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,7 +55,6 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.AdjustAssistToolStripMenuItem,
             this.settingsToolStripMenuItem1,
             this.aboutToolStripMenuItem,
             this.pleaseDonateToolStripMenuItem});
@@ -81,13 +79,6 @@
             this.quitToolStripMenuItem2.Size = new System.Drawing.Size(120, 26);
             this.quitToolStripMenuItem2.Text = "Quit";
             this.quitToolStripMenuItem2.Click += new System.EventHandler(this.QuitToolStripMenuItem2_Click);
-            // 
-            // AdjustAssistToolStripMenuItem
-            // 
-            this.AdjustAssistToolStripMenuItem.Name = "AdjustAssistToolStripMenuItem";
-            this.AdjustAssistToolStripMenuItem.Size = new System.Drawing.Size(106, 24);
-            this.AdjustAssistToolStripMenuItem.Text = "Adjust Assist";
-            this.AdjustAssistToolStripMenuItem.Click += new System.EventHandler(this.CheatSheetToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem1
             // 
@@ -249,7 +240,6 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem AdjustAssistToolStripMenuItem;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label Label2;
         private Custom_Components.SlideSwitch slideSwitch2;
