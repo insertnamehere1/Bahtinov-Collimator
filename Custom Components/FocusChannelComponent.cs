@@ -138,11 +138,11 @@ namespace Bahtinov_Collimator
         {
 
 
-            label3.Location = new Point(31, 77);
-            label4.Location = new Point(190, 77);
-            label5.Location = new Point(116, 77);
-            label2.Location = new Point(28, 93);
-            label6.Location = new Point(175, 93);
+            label3.Location = new Point(31, 93);
+            label4.Location = new Point(190, 93);
+            label5.Location = new Point(115, 93);
+            label2.Location = new Point(28, 108);
+            label6.Location = new Point(175, 108);
 
             label3.BringToFront();
             label4.BringToFront();

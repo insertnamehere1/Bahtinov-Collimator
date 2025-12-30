@@ -138,6 +138,7 @@ namespace Bahtinov_Collimator
         {
             VoiceCheckBox.Checked = Properties.Settings.Default.VoiceEnabled;
             errorSignCheckBox.Checked = Properties.Settings.Default.SignChange;
+            historyMakersTextBox.Text = Properties.Settings.Default.historyCount.ToString();
         }
 
         /// <summary>

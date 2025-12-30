@@ -58,5 +58,17 @@ namespace Bahtinov_Collimator.Properties {
                 this["SignChange"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        public int historyCount {
+            get {
+                return ((int)(this["historyCount"]));
+            }
+            set {
+                this["historyCount"] = value;
+            }
+        }
     }
 }

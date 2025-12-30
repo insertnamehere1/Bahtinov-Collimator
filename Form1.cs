@@ -31,6 +31,8 @@
 // 5. add HowTo menu item for help collimating
 // 6. add first start message box about setup
 // 7. turn off too close / too far until wizard has run
+// 8. finish history markers settings
+// 9. make sure all comments are included for new functions
 
 using Bahtinov_Collimator.Custom_Components;
 using Bahtinov_Collimator.Image_Processing;

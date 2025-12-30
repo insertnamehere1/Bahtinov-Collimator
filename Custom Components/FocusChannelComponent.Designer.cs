@@ -18,12 +18,12 @@ namespace Bahtinov_Collimator
         private void InitializeComponent()
         {
             this.groupBox1 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.offsetBarControl1 = new Bahtinov_Collimator.Custom_Components.HistoryBar();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,6 +50,37 @@ namespace Bahtinov_Collimator
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "FocusChannel";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Enabled = false;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(160, 124);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(69, 18);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "Far Away";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Enabled = false;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(6, 124);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(47, 18);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Close";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(104, 105);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(30, 18);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "OK";
             // 
             // label4
             // 
@@ -85,43 +116,12 @@ namespace Bahtinov_Collimator
             this.offsetBarControl1.Maximum = 1F;
             this.offsetBarControl1.Minimum = -1F;
             this.offsetBarControl1.Name = "offsetBarControl1";
-            this.offsetBarControl1.Size = new System.Drawing.Size(222, 67);
+            this.offsetBarControl1.Size = new System.Drawing.Size(225, 99);
             this.offsetBarControl1.TabIndex = 8;
             this.offsetBarControl1.Text = "offsetBarControl1";
             this.offsetBarControl1.TextColor = System.Drawing.Color.White;
             this.offsetBarControl1.Value = 0F;
             this.offsetBarControl1.ZeroTickColor = System.Drawing.Color.DarkGray;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(104, 105);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(30, 18);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "OK";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Enabled = false;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(6, 124);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(47, 18);
-            this.label2.TabIndex = 13;
-            this.label2.Text = "Close";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Enabled = false;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(160, 124);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(69, 18);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "Far Away";
             // 
             // FocusChannelComponent
             // 
