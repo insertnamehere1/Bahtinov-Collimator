@@ -27,9 +27,10 @@
 //TODO
 // 1. make online/offline aware for updates and donations
 // 2. add switch for sign reversal on error values
-// 3. add text for too close / too far on error bars.
 // 4. add wizard for sign detection of focus changes , test if movement is positive or negative and set the sign accordinly, too fat is + to close is -
-// 5. add HowTo menu item for help collimating.
+// 5. add HowTo menu item for help collimating
+// 6. add first start message box about setup
+// 7. turn off too close / too far until wizard has run
 
 using Bahtinov_Collimator.Custom_Components;
 using Bahtinov_Collimator.Image_Processing;

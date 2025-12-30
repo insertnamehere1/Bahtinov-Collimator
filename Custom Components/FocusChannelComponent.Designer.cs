@@ -18,11 +18,9 @@ namespace Bahtinov_Collimator
         private void InitializeComponent()
         {
             this.groupBox1 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
-            this.FocusErrorLabel = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.offsetBarControl1 = new Bahtinov_Collimator.Custom_Components.HistoryBar();
-            this.label1 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -39,11 +37,9 @@ namespace Bahtinov_Collimator
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.FocusErrorLabel);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.offsetBarControl1);
-            this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.CornerRadius = 12;
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(3, 2);
@@ -54,17 +50,6 @@ namespace Bahtinov_Collimator
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "FocusChannel";
-            // 
-            // FocusErrorLabel
-            // 
-            this.FocusErrorLabel.AutoSize = true;
-            this.FocusErrorLabel.Enabled = false;
-            this.FocusErrorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.FocusErrorLabel.Location = new System.Drawing.Point(126, 28);
-            this.FocusErrorLabel.Name = "FocusErrorLabel";
-            this.FocusErrorLabel.Size = new System.Drawing.Size(47, 18);
-            this.FocusErrorLabel.TabIndex = 11;
-            this.FocusErrorLabel.Text = "0.0 px";
             // 
             // label4
             // 
@@ -95,7 +80,7 @@ namespace Bahtinov_Collimator
             | System.Windows.Forms.AnchorStyles.Right)));
             this.offsetBarControl1.BarColor = System.Drawing.Color.Gray;
             this.offsetBarControl1.Enabled = false;
-            this.offsetBarControl1.Location = new System.Drawing.Point(6, 54);
+            this.offsetBarControl1.Location = new System.Drawing.Point(6, 32);
             this.offsetBarControl1.MarkerColor = System.Drawing.Color.Green;
             this.offsetBarControl1.Maximum = 1F;
             this.offsetBarControl1.Minimum = -1F;
@@ -106,17 +91,6 @@ namespace Bahtinov_Collimator
             this.offsetBarControl1.TextColor = System.Drawing.Color.White;
             this.offsetBarControl1.Value = 0F;
             this.offsetBarControl1.ZeroTickColor = System.Drawing.Color.DarkGray;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Enabled = false;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 28);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(108, 18);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Error Distance:";
             // 
             // label5
             // 
@@ -166,11 +140,9 @@ namespace Bahtinov_Collimator
         #endregion
 
         private Bahtinov_Collimator.Custom_Components.RoundedGroupBox groupBox1;
-        private System.Windows.Forms.Label label1;
         private HistoryBar offsetBarControl1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label FocusErrorLabel;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label6;

@@ -126,7 +126,6 @@ namespace Bahtinov_Collimator
             SetLabelFont(newFont);
             SetLabelTextAlignment();
             SetLabelTextDirection();
-            SetLabelText();
             offsetBarControl1.Maximum = 2.0f;
             offsetBarControl1.Minimum = -2.0f;
         }
@@ -137,16 +136,14 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void SetupLabelLocation()
         {
-            label1.Location = new Point(9, 26);
-            FocusErrorLabel.Location = new Point(190, 26);
-            label3.Location = new Point(31, 97);
-            label4.Location = new Point(190, 97);
-            label5.Location = new Point(116, 97);
-            label2.Location = new Point(28, 113);
-            label6.Location = new Point(175, 113);
 
-            label1.BringToFront();
-            FocusErrorLabel.BringToFront();
+
+            label3.Location = new Point(31, 77);
+            label4.Location = new Point(190, 77);
+            label5.Location = new Point(116, 77);
+            label2.Location = new Point(28, 93);
+            label6.Location = new Point(175, 93);
+
             label3.BringToFront();
             label4.BringToFront();
             label5.BringToFront();
@@ -169,14 +166,6 @@ namespace Bahtinov_Collimator
                 else
                     label.Font = newFont;
             }
-        }
-
-        /// <summary>
-        /// Sets the initial text of the labels.
-        /// </summary>
-        private void SetLabelText()
-        {
-            FocusErrorLabel.Text = "0.0 px";
         }
 
         /// <summary>
@@ -272,13 +261,11 @@ namespace Bahtinov_Collimator
             {
                 if (!e.FocusData.ClearDisplay)
                 {
-                    FocusErrorLabel.Text = e.FocusData.BahtinovOffset.ToString("F1") + " px";
                     offsetBarControl1.MarkerColor = UITheme.ErrorBarMarkerColorInRange;
                     offsetBarControl1.Value = (float)e.FocusData.BahtinovOffset;    
                 }
                 else
                 {
-                    SetLabelText();
                     offsetBarControl1.ResetHistory();
                     offsetBarControl1.MarkerColor = Color.Green;
                 }
@@ -349,7 +336,7 @@ namespace Bahtinov_Collimator
         /// <returns>An array of labels.</returns>
         private Label[] GetAllLabels()
         {
-            return new Label[] { label1, FocusErrorLabel, label3, label4, label5, label2, label6 };
+            return new Label[] { label3, label4, label5, label2, label6 };
         }
 
         #endregion
