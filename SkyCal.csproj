@@ -145,6 +145,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Speech" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -163,6 +164,7 @@
     <Compile Include="Custom Components\HistoryBar.Designer.cs">
       <DependentUpon>HistoryBar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Custom Components\RichTextBoxExtensions.cs" />
     <Compile Include="Custom Components\RoundedButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -229,11 +231,17 @@
     <Compile Include="Dialogs\DarkMessageBox.Designer.cs">
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="NextStep\NextStepDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NextStep\NextStepGuidance.cs" />
+    <Compile Include="NextStep\NextStepTextPack.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="NextStep\NextStep.cs" />
     <Compile Include="Utilities\Helper.cs" />
     <Compile Include="Image Processing\BahtinovProcessing.cs" />
     <Compile Include="Form1.cs">
@@ -289,6 +297,9 @@
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="Language\NextStepText_SCT_en.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

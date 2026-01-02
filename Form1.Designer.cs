@@ -46,6 +46,7 @@
             this.slideSwitch2 = new Bahtinov_Collimator.Custom_Components.SlideSwitch();
             this.label1 = new System.Windows.Forms.Label();
             this.Label2 = new System.Windows.Forms.Label();
+            this.whatDoIDoNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.RoundedPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -55,6 +56,7 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.whatDoIDoNextToolStripMenuItem,
             this.settingsToolStripMenuItem1,
             this.aboutToolStripMenuItem,
             this.pleaseDonateToolStripMenuItem});
@@ -202,6 +204,13 @@
             this.Label2.TabIndex = 23;
             this.Label2.Text = "Defocus";
             // 
+            // whatDoIDoNextToolStripMenuItem
+            // 
+            this.whatDoIDoNextToolStripMenuItem.Name = "whatDoIDoNextToolStripMenuItem";
+            this.whatDoIDoNextToolStripMenuItem.Size = new System.Drawing.Size(156, 24);
+            this.whatDoIDoNextToolStripMenuItem.Text = "What Do I Do Next?";
+            this.whatDoIDoNextToolStripMenuItem.Click += new System.EventHandler(this.whatDoIDoNextToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -246,6 +255,7 @@
         private System.Windows.Forms.ToolStripMenuItem pleaseDonateToolStripMenuItem;
         private Custom_Components.RoundedButton RoundedStartButton;
         private Custom_Components.RoundedPanel RoundedPanel1;
+        private System.Windows.Forms.ToolStripMenuItem whatDoIDoNextToolStripMenuItem;
     }
 }
 

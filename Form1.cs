@@ -26,6 +26,7 @@ using Bahtinov_Collimator.Custom_Components;
 using Bahtinov_Collimator.Image_Processing;
 using Bahtinov_Collimator.Voice;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -830,5 +831,40 @@ namespace Bahtinov_Collimator
         }
 
         #endregion
+
+        private void whatDoIDoNextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var screwMap = new Dictionary<string, string>
+            {
+                ["Red"] = "top screw",
+                ["Green"] = "lower-left screw",
+                ["Blue"] = "lower-right screw"
+            };
+
+            double redError = groupBoxRed?.ErrorOffset ?? 0.0;
+            double greenError = groupBoxGreen?.ErrorOffset ?? 0.0;
+            double blueError = groupBoxBlue?.ErrorOffset ?? 0.0;
+
+            try
+            {
+                NextStepText.LoadFromJson(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Language\\NextStepText_SCT_en.json"));
+
+                NextStepGuidance guidance = NextStep.GetNextStepGuidance(
+                    capturing: imageType == 1 ? true : false,
+                    triBahtinovVisible: bahtinovLineData?.LineAngles.Length == 9 ? true : false,
+                    red: redError,
+                    green: greenError,
+                    blue: blueError,
+                    tolerance: 0.15,
+                    groupToScrewLabel: screwMap);
+
+                using (var dlg = new NextStepDialog(guidance, this.Icon))
+                    dlg.ShowDialog(this);
+            }
+            catch(FileNotFoundException err)
+            {
+                DarkMessageBox.Show($"Could not find Language json file: {err.Message}", "File Not Found", MessageBoxIcon.Error, MessageBoxButtons.OK);
+            }
+        }
     }
 }

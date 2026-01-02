@@ -16,6 +16,8 @@ namespace Bahtinov_Collimator
         private static int focusChannelCount = 0;
         private static bool[] mouseOver = new bool[3] { false, false, false };
 
+        public double ErrorOffset { private set; get; } = 0.0f;
+
         private bool disposed = false; // To detect redundant calls
         private int groupID;
         private Font labelFont;
@@ -44,9 +46,6 @@ namespace Bahtinov_Collimator
 
                 // Set the base font size in points (e.g., 12 points)
                 float baseFontSize = 10.0f;
-
-                // Calculate the font size based on DPI (assuming 96 DPI as standard)
-//                float scaledFontSize = baseFontSize * 96f / dpi;
 
                 // Apply the scaled font to the form or controls
                 this.labelFont = new Font(this.Font.FontFamily, baseFontSize);
@@ -262,12 +261,14 @@ namespace Bahtinov_Collimator
                 if (!e.FocusData.ClearDisplay)
                 {
                     offsetBarControl1.MarkerColor = UITheme.ErrorBarMarkerColorInRange;
-                    offsetBarControl1.Value = (float)e.FocusData.BahtinovOffset;    
+                    offsetBarControl1.Value = (float)e.FocusData.BahtinovOffset; 
+                    ErrorOffset = e.FocusData.BahtinovOffset;
                 }
                 else
                 {
                     offsetBarControl1.ResetHistory();
                     offsetBarControl1.MarkerColor = Color.Green;
+                    offsetBarControl1.Value = 0.0f;
                 }
             }
         }

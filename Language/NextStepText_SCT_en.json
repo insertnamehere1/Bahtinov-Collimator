@@ -1,0 +1,48 @@
+{
+  "DialogTitle": "What should I do next?",
+  "DebugLineFormat": "Values:  Red {0}   Green {1}   Blue {2}",
+
+  "SectionWhatToDoTitle": "What to do",
+
+  "CaptureHeader": "Capture required",
+  "CaptureSummary": "Please capture a bahtinov image to start any adjustments.",
+  "CaptureBullet1": "Start capture and ensure the star is centered and not saturated.",
+  "CaptureBullet2": "Then press “What should I do next?” again.",
+
+  "FocusOnlyHeader": "Focus guidance",
+  "FocusOnlyNeedsAdjustingSummary": "Focus needs adjusting.",
+  "FocusOnlyGoodSummary": "Focus is good.",
+  "FocusOnlyMoveInBullet1": "Move the focuser IN slightly and re-check.",
+  "FocusOnlyMoveInBullet2": "If needed, continue with small steps.",
+  "FocusOnlyMoveOutBullet1": "Move the focuser OUT slightly and re-check.",
+  "FocusOnlyMoveOutBullet2": "If needed, continue with small steps.",
+  "FocusOnlyGoodBullet": "No focus adjustment required.",
+
+  "FocusBalancedHeader": "Step 1: Balance focus around 0",
+  "FocusBalancedSummary": "Before adjusting collimation screws, focus so the three values are centered around 0 and similar in magnitude.",
+  "FocusAllPositiveBullet": "All values are positive. Move the focuser IN in small steps.",
+  "FocusAllNegativeBullet": "All values are negative. Move the focuser OUT in small steps.",
+  "FocusStraddleNotBalancedBullet1": "Values straddle 0, but they are not balanced yet.",
+  "FocusStraddleNotBalancedBullet2Format": "Move the focuser {0} using small focus moves to bring the three values toward 0 evenly.",
+  "FocusTargetLineFormat": "Target: average near 0 and similar magnitudes (mean={0}, max|v|={1}).",
+  "FocusOnlyBeginScrewsBullet": "Only begin screw adjustments once the three values are balanced around 0.",
+  "FocusFooterHint": "Tip: Re-center the star after each focus change. Drift can mimic imbalance.",
+
+  "CollimationHeader": "Step 2: Balanced collimation adjustment",
+  "CollimationSummary": "Values straddle 0. Proceed with balanced collimation using 2 or more screws at the same time.",
+
+  "DoneHeader": "Looks good",
+  "DoneSummary": "All values are close to zero.",
+  "DoneBullet": "No adjustment required.",
+
+  "CollimationIntroBullet": "Values straddle zero. Proceed with balanced collimation.\n",
+  "CollimationPositiveInstructionFormat": "{0} is positive ({1}). The area under {2} is too far from the primary. loosen {2} very slightly.\n",
+  "CollimationNegativeInstructionFormat": "{0} is negative ({1}). The area under {2} is too close to the primary. Tighten {2} very slightly.\n",
+  "CollimationAdjustTogetherBullet": "Adjust these screws together to keep tension balanced.",
+  "CollimationRepeatCycleBullet": "Re-center the star, re-measure, then refocus until the values straddle 0 again before repeating.\n",
+
+  "DirectionIn": "IN",
+  "DirectionOut": "OUT",
+
+  "ScrewFallbackFormat": "the {0} screw"
+}
