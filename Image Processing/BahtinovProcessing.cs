@@ -252,6 +252,374 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
+        /// Attempts to detect very faint Bahtinov / Tri-Bahtinov diffraction spikes by scanning all angles and
+        /// selecting row-peaks using a local-contrast (z-score) metric rather than raw brightness.
+        ///
+        /// The method works as follows:
+        /// 1. Converts the bitmap into a float luminance image with a gentle gamma (sqrt) to lift faint structure.
+        /// 2. Applies a soft central mask (core + feather) to suppress the saturated star core and halo dominance,
+        ///    improving the visibility of faint spikes in the projection profile.
+        /// 3. For each angle from 0..179 degrees, rotates the image (bilinear sampling) and computes a 1D profile
+        ///    of mean brightness per row.
+        /// 4. Smooths the 1D profile with a 5-tap kernel to reduce noise.
+        /// 5. Computes a local z-score for each row using a sliding window mean and standard deviation.
+        ///    This emphasizes narrow peaks that stand out from their local background.
+        /// 6. Picks the strongest local peak for each angle and finally selects the best 9 angles, suppressing
+        ///    nearby angles (±5°) to avoid duplicates.
+        ///
+        /// This function is intended as a fallback when the normal bright-line detector fails, because it is more
+        /// sensitive but can be more prone to selecting spurious peaks in high-contrast or unusual images.
+        /// </summary>
+        public BahtinovData FindFaintLines(Bitmap starImage)
+        {
+            const int LINES = 9;
+            const int DEGREES180 = 180;
+            const float RADIANS_PER_DEGREE = (float)Math.PI / DEGREES180;
+            const int DEG_5 = 5;
+
+            // Profile processing parameters (tweak if you like)
+            const int LOCAL_STATS_WINDOW = 23;     // odd number: 17..31 are typical
+            const float EPS_STD = 1e-6f;
+
+            // Core suppression: mask a small central disk (reduces halo/core dominance)
+            // 0.06..0.12 are typical depending on star size and crop.
+            const float CORE_RADIUS_FRACTION = 0.08f;
+            const float CORE_FEATHER_FRACTION = 0.03f;
+
+            Rectangle rect = new Rectangle(0, 0, starImage.Width, starImage.Height);
+            BahtinovData result = new BahtinovData(LINES, rect);
+
+            BitmapData bitmapData = starImage.LockBits(rect, ImageLockMode.ReadWrite, starImage.PixelFormat);
+
+            try
+            {
+                IntPtr scan0 = bitmapData.Scan0;
+                int stride = bitmapData.Stride;
+                int bytesPerPixel = System.Drawing.Image.GetPixelFormatSize(starImage.PixelFormat) / 8;
+                int width = starImage.Width;
+                int height = starImage.Height;
+
+                // ------------------------------------------------------------
+                // Convert to float luminance image (with gentle gamma), and
+                // suppress the saturated core so faint spikes can win.
+                // ------------------------------------------------------------
+                float[,] starArray2D = new float[width, height];
+
+                float cx = (width - 1) * 0.5f;
+                float cy = (height - 1) * 0.5f;
+                float minDim = Math.Min(width, height);
+                float coreRadius = CORE_RADIUS_FRACTION * minDim;
+                float coreFeather = CORE_FEATHER_FRACTION * minDim;
+
+                unsafe
+                {
+                    byte* basePtr = (byte*)scan0.ToPointer();
+
+                    for (int y = 0; y < height; y++)
+                    {
+                        byte* rowPtr = basePtr + (y * stride);
+                        for (int x = 0; x < width; x++)
+                        {
+                            byte* px = rowPtr + (x * bytesPerPixel);
+
+                            // Most formats you’ll see here are 24/32bpp (BGR/BGRA).
+                            // Fallback: if bytesPerPixel < 3, just treat first as intensity.
+                            float r, g, b;
+                            if (bytesPerPixel >= 3)
+                            {
+                                b = px[0];
+                                g = px[1];
+                                r = px[2];
+                            }
+                            else
+                            {
+                                r = g = b = px[0];
+                            }
+
+                            // Luminance
+                            float lum = (0.299f * r + 0.587f * g + 0.114f * b) / 255f;
+
+                            // Gentle gamma to lift faint structure
+                            float v = (float)Math.Sqrt(Math.Max(0.0f, lum));
+
+                            // Core mask (soft)
+                            float dx = x - cx;
+                            float dy = y - cy;
+                            float rr = (float)Math.Sqrt(dx * dx + dy * dy);
+
+                            float w = 1.0f;
+                            if (rr <= coreRadius)
+                            {
+                                w = 0.0f;
+                            }
+                            else if (rr < coreRadius + coreFeather)
+                            {
+                                // Linear feather from 0 -> 1
+                                w = (rr - coreRadius) / coreFeather;
+                            }
+
+                            starArray2D[x, y] = v * w;
+                        }
+                    }
+                }
+
+                // Compute ROI used for row projections (keep your original "safe" margins)
+                int leftEdge = 0;
+                int rightEdge = width;
+                int topEdge = 0;
+                int bottomEdge = height;
+
+                // If you have a known crop logic elsewhere, keep it. Otherwise this uses full image.
+                // You can tighten edges to reduce border interpolation noise:
+                // int margin = Math.Max(1, Math.Min(width, height) / 50);
+                // leftEdge += margin; rightEdge -= margin; topEdge += margin; bottomEdge -= margin;
+
+                float[] lineNumbersOfBrightestLines = new float[DEGREES180];
+                float[] valuesOfBrightestLines = new float[DEGREES180];
+
+                Parallel.For(0, DEGREES180, angleIndex =>
+                {
+                    // Rotate (bilinear) into rotatedImage
+                    float[,] rotatedImage = new float[width, height];
+
+                    float currentRadians = RADIANS_PER_DEGREE * angleIndex;
+                    float sin = (float)Math.Sin(currentRadians);
+                    float cos = (float)Math.Cos(currentRadians);
+
+                    // Rotate around center
+                    float cxf = (width - 1) * 0.5f;
+                    float cyf = (height - 1) * 0.5f;
+
+                    for (int y = topEdge; y < bottomEdge; y++)
+                    {
+                        float yy = y - cyf;
+                        for (int x = leftEdge; x < rightEdge; x++)
+                        {
+                            float xx = x - cxf;
+
+                            // Inverse rotation to sample source
+                            float srcXf = (xx * cos + yy * sin) + cxf;
+                            float srcYf = (-xx * sin + yy * cos) + cyf;
+
+                            int srcX0 = (int)srcXf;
+                            int srcY0 = (int)srcYf;
+
+                            if (srcX0 >= 0 && srcX0 < width - 1 && srcY0 >= 0 && srcY0 < height - 1)
+                            {
+                                float fx = srcXf - srcX0;
+                                float fy = srcYf - srcY0;
+                                float oneMinusFx = 1f - fx;
+                                float oneMinusFy = 1f - fy;
+
+                                float v1 = starArray2D[srcX0, srcY0];
+                                float v2 = starArray2D[srcX0 + 1, srcY0];
+                                float v3 = starArray2D[srcX0, srcY0 + 1];
+                                float v4 = starArray2D[srcX0 + 1, srcY0 + 1];
+
+                                rotatedImage[x, y] =
+                                    v1 * oneMinusFx * oneMinusFy +
+                                    v2 * fx * oneMinusFy +
+                                    v3 * oneMinusFx * fy +
+                                    v4 * fx * fy;
+                            }
+                        }
+                    }
+
+                    // Build 1D profile: mean brightness per row
+                    float[] rowTotals = new float[height];
+                    int rowWidth = Math.Max(1, rightEdge - leftEdge);
+
+                    for (int y = topEdge; y < bottomEdge; y++)
+                    {
+                        float sum = 0f;
+                        for (int x = leftEdge; x < rightEdge; x++)
+                            sum += rotatedImage[x, y];
+
+                        rowTotals[y] = sum / rowWidth;
+                    }
+
+                    // Smooth the profile (Gaussian-ish 5 tap) to reduce noise
+                    float[] smoothed = Smooth1D5(rowTotals, topEdge, bottomEdge);
+
+                    // Compute local mean/std quickly using prefix sums, then z-score
+                    float[] z = ComputeLocalZScore(smoothed, topEdge, bottomEdge, LOCAL_STATS_WINDOW, EPS_STD);
+
+                    // Pick strongest local maximum by z-score (faint but distinct spikes win here)
+                    float bestScore = -1f;
+                    int bestY = -1;
+
+                    for (int y = topEdge + 2; y < bottomEdge - 2; y++)
+                    {
+                        float s = z[y];
+                        if (s <= 0f)
+                            continue;
+
+                        // Enforce a peak (helps ignore ramps/plateaus)
+                        if (smoothed[y] >= smoothed[y - 1] && smoothed[y] >= smoothed[y + 1])
+                        {
+                            if (s > bestScore)
+                            {
+                                bestScore = s;
+                                bestY = y;
+                            }
+                        }
+                    }
+
+                    // Fallback if nothing qualified (very low contrast)
+                    if (bestY < 0)
+                    {
+                        float largest = -1f;
+                        int ly = topEdge;
+                        for (int y = topEdge; y < bottomEdge; y++)
+                        {
+                            if (smoothed[y] > largest)
+                            {
+                                largest = smoothed[y];
+                                ly = y;
+                            }
+                        }
+                        bestY = ly;
+                        bestScore = largest;
+                    }
+
+                    lineNumbersOfBrightestLines[angleIndex] = bestY;
+                    valuesOfBrightestLines[angleIndex] = bestScore;
+                });
+
+                // Select top LINES distinct angles (keep your original suppression around peaks)
+                for (int i = 0; i < LINES; ++i)
+                {
+                    float maxValue = -1f;
+                    float angleInRadians = -1f;
+                    float lineNumber = -1f;
+                    int brightestLineIndex = -1;
+
+                    for (int j = 0; j < DEGREES180; ++j)
+                    {
+                        if (valuesOfBrightestLines[j] > maxValue)
+                        {
+                            maxValue = valuesOfBrightestLines[j];
+                            lineNumber = lineNumbersOfBrightestLines[j];
+                            angleInRadians = j * RADIANS_PER_DEGREE;
+                            brightestLineIndex = j;
+                        }
+                    }
+
+                    result.LineIndex[i] = lineNumber;
+                    result.LineAngles[i] = angleInRadians;
+                    result.LineValue[i] = maxValue;
+
+                    for (int j = brightestLineIndex - DEG_5; j <= brightestLineIndex + DEG_5; ++j)
+                    {
+                        int index = (j + DEGREES180) % DEGREES180;
+                        valuesOfBrightestLines[index] = 0.0f;
+                    }
+                }
+
+                return result;
+            }
+            finally
+            {
+                starImage.UnlockBits(bitmapData);
+            }
+        }
+
+        /// <summary>
+        /// Smooths a 1D profile using a stable 5-tap kernel [1, 4, 6, 4, 1] / 16.
+        ///
+        /// The smoothing reduces noise while preserving peak locations reasonably well, which improves the
+        /// reliability of subsequent peak detection (especially on faint, noisy profiles).
+        ///
+        /// Only rows that have 2 valid neighbors on each side are filtered; the edges are copied unchanged.
+        /// </summary>
+        private static float[] Smooth1D5(float[] src, int topEdge, int bottomEdge)
+        {
+            // 5-tap kernel: [1 4 6 4 1] / 16
+            int n = src.Length;
+            float[] dst = new float[n];
+
+            // Copy edges
+            for (int i = 0; i < n; i++)
+                dst[i] = src[i];
+
+            for (int y = topEdge + 2; y < bottomEdge - 2; y++)
+            {
+                dst[y] = (src[y - 2] + 4f * src[y - 1] + 6f * src[y] + 4f * src[y + 1] + src[y + 2]) / 16f;
+            }
+
+            return dst;
+        }
+
+        /// <summary>
+        /// Computes a positive-only local z-score for each element of a 1D profile over a sliding window.
+        ///
+        /// For each y in [topEdge, bottomEdge):
+        /// - Computes localMean and localStd over a window centered on y (clamped to the provided bounds),
+        ///   using prefix sums for speed.
+        /// - Computes z[y] = (profile[y] - localMean) / (localStd + epsStd).
+        /// - Negative values are clamped to 0 so only upward deviations (peak-like features) are retained.
+        ///
+        /// This highlights narrow peaks that rise above the local background and de-emphasizes broad gradients
+        /// and slowly-varying structure, which is useful for detecting faint diffraction spikes.
+        /// </summary>
+        private static float[] ComputeLocalZScore(float[] profile, int topEdge, int bottomEdge, int window, float epsStd)
+        {
+            // z[y] = (profile[y] - localMean[y]) / (localStd[y] + eps)
+            // localMean/localStd over a sliding window using prefix sums for speed.
+
+            if (window < 5) window = 5;
+            if ((window & 1) == 0) window++; // force odd
+
+            int n = profile.Length;
+            float[] z = new float[n];
+
+            double[] prefix = new double[n + 1];
+            double[] prefix2 = new double[n + 1];
+
+            for (int i = 0; i < n; i++)
+            {
+                double v = profile[i];
+                prefix[i + 1] = prefix[i] + v;
+                prefix2[i + 1] = prefix2[i] + v * v;
+            }
+
+            int half = window / 2;
+
+            for (int y = topEdge; y < bottomEdge; y++)
+            {
+                int a = y - half;
+                int b = y + half;
+
+                if (a < topEdge) a = topEdge;
+                if (b > bottomEdge - 1) b = bottomEdge - 1;
+
+                int count = (b - a + 1);
+                if (count <= 1)
+                {
+                    z[y] = 0f;
+                    continue;
+                }
+
+                double sum = prefix[b + 1] - prefix[a];
+                double sum2 = prefix2[b + 1] - prefix2[a];
+
+                double mean = sum / count;
+                double var = (sum2 / count) - (mean * mean);
+                if (var < 0.0) var = 0.0;
+
+                double std = Math.Sqrt(var);
+                double denom = std + epsStd;
+
+                double zz = (profile[y] - mean) / denom;
+
+                // We only care about positive deviations (spikes)
+                z[y] = (float)(zz > 0.0 ? zz : 0.0);
+            }
+
+            return z;
+        }
+
+        /// <summary>
         /// Enhances the accuracy of line detection in a star image by performing subpixel interpolation.
         /// 
         /// The method performs the following steps:

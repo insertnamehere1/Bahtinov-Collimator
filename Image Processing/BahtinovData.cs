@@ -95,7 +95,7 @@ namespace Bahtinov_Collimator
 
                 // New symmetry check: (line1->line2) matches (line2->line3) within 3 degrees
                 bool symmetric =
-                    CheckAdjacentSpacingSymmetry(line1, line2, line3, 3.0);
+                    CheckAdjacentSpacingSymmetry(line1, line2, line3, 3.5);
 
                 return withinExpectedSpacing && symmetric;
             }

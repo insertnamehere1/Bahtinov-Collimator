@@ -682,7 +682,15 @@ namespace Bahtinov_Collimator
 
                     // validate the line groups
                     if (bahtinovLineData.ValidateBahtinovLines() == false)
-                        throw new InvalidOperationException("Invalid Bahtinov line group.");
+                    {
+                        // try again
+                        bahtinovLineData = bahtinovProcessing.FindFaintLines(image);
+                        bahtinovLineData.Sort();
+
+                        // validate the line groups
+                        if (bahtinovLineData.ValidateBahtinovLines() == false)
+                            throw new InvalidOperationException("Invalid Bahtinov line group.");
+                    }
                 }
 
                 // Perform a second pass to find fine details of Bahtinov lines
