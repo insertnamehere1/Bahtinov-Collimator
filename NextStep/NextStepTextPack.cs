@@ -106,9 +106,9 @@ namespace Bahtinov_Collimator
             using (var fs = File.OpenRead(filePath))
             {
                 var ser = new DataContractJsonSerializer(typeof(NextStepTextPack));
-                var obj = ser.ReadObject(fs) as NextStepTextPack;
-                if (obj == null)
-                    throw new SerializationException("Failed to deserialize NextStepTextPack from JSON.");
+
+                var obj = ser.ReadObject(fs) as NextStepTextPack
+                    ?? throw new SerializationException("Failed to deserialize NextStepTextPack from JSON.");
 
                 _current = obj;
             }

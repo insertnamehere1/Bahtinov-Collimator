@@ -90,9 +90,6 @@ namespace Bahtinov_Collimator.Image_Processing
         /// <returns>A tuple containing the calculated distance and direction (in degrees).</returns>
         private static (double Distance, double Direction) CalculateDistanceAndDirection(PointD innerCentre, PointD outerCentre, double innerRadius)
         {
-            double deltaX = outerCentre.X - innerCentre.X;
-            double deltaY = outerCentre.Y - innerCentre.Y;
-
             double distance = ((innerCentre.DistanceTo(outerCentre)) / innerRadius) * 50;
             double directionRadians = innerCentre.DirectionTo(outerCentre);
             double directionDegrees = directionRadians * (180.0 / Math.PI);

@@ -61,7 +61,7 @@ namespace Bahtinov_Collimator
 
             // STEP 1: Focus until values are BALANCED around 0
             if (!IsBalancedAroundZero(channels))
-                return FocusToBalancedGuidance(g, channels, tolerance);
+                return FocusToBalancedGuidance(g, channels);
 
             // STEP 2: Balanced -> collimation
             return BalancedCollimationGuidance(g, channels, tolerance, groupToScrewLabel, inv);
@@ -154,7 +154,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Guidance shown when TB is visible but focus is not yet balanced around zero.
         /// </summary>
-        private static NextStepGuidance FocusToBalancedGuidance(NextStepGuidance g, Channel[] channels, double tolerance)
+        private static NextStepGuidance FocusToBalancedGuidance(NextStepGuidance g, Channel[] channels)
         {
             var T = NextStepText.Current;
 

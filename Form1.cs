@@ -840,7 +840,7 @@ namespace Bahtinov_Collimator
 
         #endregion
 
-        private void whatDoIDoNextToolStripMenuItem_Click(object sender, EventArgs e)
+        private void WhatDoIDoNextToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var screwMap = new Dictionary<string, string>
             {
@@ -858,8 +858,8 @@ namespace Bahtinov_Collimator
                 NextStepText.LoadFromJson(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Language\\NextStepText_SCT_en.json"));
 
                 NextStepGuidance guidance = NextStep.GetNextStepGuidance(
-                    capturing: imageType == 1 ? true : false,
-                    triBahtinovVisible: bahtinovLineData?.LineAngles.Length == 9 ? true : false,
+                    capturing: imageType == 1,
+                    triBahtinovVisible: (bahtinovLineData?.LineAngles.Length == 9),
                     red: redError,
                     green: greenError,
                     blue: blueError,

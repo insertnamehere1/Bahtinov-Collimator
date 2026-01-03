@@ -230,16 +230,13 @@ namespace Bahtinov_Collimator.Custom_Components
 
                 // scaled is the final rectangle used when drawing the image.
                 // It enforces the ImageWidth and ImageHeight.
-                Rectangle scaled = new Rectangle(
-                    imageRect.X,
-                    imageRect.Y,
+                // Center the scaled image within the aligned rectangle if imageRect is larger.
+                var scaled = new Rectangle(
+                    imageRect.X + (imageRect.Width - ImageWidth) / 2,
+                    imageRect.Y + (imageRect.Height - ImageHeight) / 2,
                     ImageWidth,
                     ImageHeight
                 );
-
-                // Center the scaled image within the aligned rectangle if imageRect is larger.
-                scaled.X = imageRect.X + (imageRect.Width - ImageWidth) / 2;
-                scaled.Y = imageRect.Y + (imageRect.Height - ImageHeight) / 2;
 
                 // Draw the image scaled to the target size.
                 g.DrawImage(Image, scaled);
@@ -312,8 +309,8 @@ namespace Bahtinov_Collimator.Custom_Components
         private Rectangle GetAlignedRectangle(Size contentSize, Rectangle bounds, ContentAlignment align)
         {
             // x and y are the top-left coordinates of the aligned content.
-            int x = bounds.X;
-            int y = bounds.Y;
+            int x;
+            int y;
 
             // Horizontal alignment.
             if (align == ContentAlignment.TopLeft ||

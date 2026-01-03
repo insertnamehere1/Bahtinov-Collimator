@@ -1084,7 +1084,7 @@ namespace Bahtinov_Collimator
                         break;
                 }
 
-                errorSign = errorSign * (Properties.Settings.Default.SignChange ? -1f : 1f);
+                errorSign *= (Properties.Settings.Default.SignChange ? -1f : 1f);
 
                 double errorDistanceD = Math.Sqrt(dxErr * dxErr + dyErr * dyErr);
                 double bahtinovOffset = errorSign * Math.Floor(errorDistanceD * 10.0) / 10.0;

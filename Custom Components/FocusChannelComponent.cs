@@ -14,13 +14,13 @@ namespace Bahtinov_Collimator
         public static event ChannelSelectEventHandler ChannelSelectDataEvent;
 
         private static int focusChannelCount = 0;
-        private static bool[] mouseOver = new bool[3] { false, false, false };
+        private static readonly bool[] mouseOver = new bool[3] { false, false, false };
 
         public double ErrorOffset { private set; get; } = 0.0f;
 
         private bool disposed = false; // To detect redundant calls
-        private int groupID;
-        private Font labelFont;
+        private readonly int groupID;
+        private readonly Font labelFont;
 
         #endregion
 

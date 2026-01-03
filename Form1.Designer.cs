@@ -209,7 +209,7 @@
             this.whatDoIDoNextToolStripMenuItem.Name = "whatDoIDoNextToolStripMenuItem";
             this.whatDoIDoNextToolStripMenuItem.Size = new System.Drawing.Size(156, 24);
             this.whatDoIDoNextToolStripMenuItem.Text = "What Do I Do Next?";
-            this.whatDoIDoNextToolStripMenuItem.Click += new System.EventHandler(this.whatDoIDoNextToolStripMenuItem_Click);
+            this.whatDoIDoNextToolStripMenuItem.Click += new System.EventHandler(this.WhatDoIDoNextToolStripMenuItem_Click);
             // 
             // Form1
             // 

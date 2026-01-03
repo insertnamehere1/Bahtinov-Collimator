@@ -136,7 +136,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         /// <param name="sender">The source of the event, typically the OK button.</param>
         /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        private void okButton_Click(object sender, EventArgs e)
+        private void OkButton_Click(object sender, EventArgs e)
         {
             UserResponse = DialogResult.OK;
             this.DialogResult = DialogResult.Yes;
@@ -148,7 +148,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         /// <param name="sender">The source of the event, typically the Cancel button.</param>
         /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        private void cancelButton_Click(object sender, EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             UserResponse = DialogResult.Cancel;
             this.DialogResult = DialogResult.No;
