@@ -30,12 +30,6 @@ namespace Bahtinov_Collimator
         // Focus only (TB not visible)
         [DataMember] public string FocusOnlyHeader { get; set; }
         [DataMember] public string FocusOnlyNeedsAdjustingSummary { get; set; }
-        [DataMember] public string FocusOnlyGoodSummary { get; set; }
-        [DataMember] public string FocusOnlyMoveInBullet1 { get; set; }
-        [DataMember] public string FocusOnlyMoveInBullet2 { get; set; }
-        [DataMember] public string FocusOnlyMoveOutBullet1 { get; set; }
-        [DataMember] public string FocusOnlyMoveOutBullet2 { get; set; }
-        [DataMember] public string FocusOnlyGoodBullet { get; set; }
 
         // Focus to balanced (TB visible but not balanced)
         [DataMember] public string FocusBalancedHeader { get; set; }
@@ -63,6 +57,7 @@ namespace Bahtinov_Collimator
         [DataMember] public string CollimationNegativeInstructionFormat { get; set; } // {0}=channel name, {1}=value, {2}=screw label
         [DataMember] public string CollimationAdjustTogetherBullet { get; set; }
         [DataMember] public string CollimationRepeatCycleBullet { get; set; }
+        [DataMember] public string CollimationFooterHint { get; set; }
 
         // Focus direction words
         [DataMember] public string DirectionIn { get; set; }

@@ -206,28 +206,7 @@ namespace Bahtinov_Collimator
             g.Kind = NextStepKind.Focus;
             g.Icon = NextStepIcon.Focus;
             g.Header = T.FocusOnlyHeader;
-
-            var s = new GuidanceSection { Title = T.SectionWhatToDoTitle, EmphasizeTitle = true };
-
-            if (channels[0].Value > tolerance)
-            {
-                g.Summary = T.FocusOnlyNeedsAdjustingSummary;
-                s.Bullets.Add(T.FocusOnlyMoveInBullet1);
-                s.Bullets.Add(T.FocusOnlyMoveInBullet2);
-            }
-            else if (channels[0].Value < -tolerance)
-            {
-                g.Summary = T.FocusOnlyNeedsAdjustingSummary;
-                s.Bullets.Add(T.FocusOnlyMoveOutBullet1);
-                s.Bullets.Add(T.FocusOnlyMoveOutBullet2);
-            }
-            else
-            {
-                g.Summary = T.FocusOnlyGoodSummary;
-                s.Bullets.Add(T.FocusOnlyGoodBullet);
-            }
-
-            g.Sections.Add(s);
+            g.Summary = T.FocusOnlyNeedsAdjustingSummary;
             return g;
         }
 

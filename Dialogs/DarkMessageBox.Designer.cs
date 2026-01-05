@@ -1,4 +1,6 @@
-﻿namespace Bahtinov_Collimator
+﻿using Bahtinov_Collimator.Custom_Components;
+
+namespace Bahtinov_Collimator
 {
     partial class DarkMessageBox
     {
@@ -31,8 +33,8 @@
             this.messageLabel = new System.Windows.Forms.Label();
             this.iconBox = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.cancelButton = new System.Windows.Forms.Button();
-            this.okButton = new System.Windows.Forms.Button();
+            this.cancelButton = new RoundedButton();
+            this.okButton = new RoundedButton();
             ((System.ComponentModel.ISupportInitialize)(this.iconBox)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -118,7 +120,7 @@
         private System.Windows.Forms.Label messageLabel;
         private System.Windows.Forms.PictureBox iconBox;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.Button cancelButton;
+        private RoundedButton okButton;
+        private RoundedButton cancelButton;
     }
 }

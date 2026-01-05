@@ -1,4 +1,6 @@
-﻿namespace Bahtinov_Collimator
+﻿using Bahtinov_Collimator.Custom_Components;
+
+namespace Bahtinov_Collimator
 {
     partial class AboutBox
     {
@@ -35,7 +37,7 @@
             this.labelCopyright = new System.Windows.Forms.Label();
             this.labelCompanyName = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
-            this.okButton = new System.Windows.Forms.Button();
+            this.okButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
             this.tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.SuspendLayout();
@@ -146,13 +148,25 @@
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.okButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.okButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.okButton.BevelThickness = 2;
+            this.okButton.CornerRadius = 12;
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.okButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.okButton.ImageHeight = 32;
+            this.okButton.ImageOffsetX = 60;
+            this.okButton.ImageOffsetY = 0;
+            this.okButton.ImageWidth = 32;
             this.okButton.Location = new System.Drawing.Point(452, 321);
             this.okButton.Margin = new System.Windows.Forms.Padding(4);
             this.okButton.Name = "okButton";
+            this.okButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.okButton.Size = new System.Drawing.Size(100, 27);
             this.okButton.TabIndex = 24;
             this.okButton.Text = "&OK";
+            this.okButton.TextOffsetX = 10;
             this.okButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
             // AboutBox
@@ -188,6 +202,6 @@
         private System.Windows.Forms.Label labelCopyright;
         private System.Windows.Forms.Label labelCompanyName;
         private System.Windows.Forms.TextBox textBoxDescription;
-        private System.Windows.Forms.Button okButton;
+        private RoundedButton okButton;
     }
 }

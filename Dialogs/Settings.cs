@@ -79,11 +79,19 @@ namespace Bahtinov_Collimator
             okButton.BackColor = UITheme.ButtonDarkBackground;
             okButton.ForeColor = UITheme.ButtonDarkForeground;
             okButton.FlatStyle = FlatStyle.Popup;
+            okButton.CornerRadius = 4;
+            okButton.TextOffsetX = 0;
+            okButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
+            okButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
 
             // Cancel button
             CancelSettingsButton.BackColor = UITheme.ButtonDarkBackground;
             CancelSettingsButton.ForeColor = UITheme.ButtonDarkForeground;
             CancelSettingsButton.FlatStyle = FlatStyle.Popup;
+            CancelSettingsButton.CornerRadius = 4;
+            CancelSettingsButton.TextOffsetX = 0;
+            CancelSettingsButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
+            CancelSettingsButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
 
             // Title bar
             var color = UITheme.DarkBackground;

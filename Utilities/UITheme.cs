@@ -223,8 +223,17 @@ namespace Bahtinov_Collimator
         /// Gets the Error Marker Outline Pen color for the Error Bar.
         /// </summary>
         public static Color ErrorBarMarkerPen { get; } = Color.Black;
-
         #endregion
+
+        #region Calibration
+
+        /// <summary>
+        /// Gets the width of the calibration side frame to the main form.
+        /// </summary>
+        public static int CalibrateFrameWidth { get; } = 400;
+        
+        #endregion
+
 
         #region Dictionaries
 

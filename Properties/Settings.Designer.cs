@@ -70,5 +70,29 @@ namespace Bahtinov_Collimator.Properties {
                 this["historyCount"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowStartupCalibrationPrompt {
+            get {
+                return ((bool)(this["ShowStartupCalibrationPrompt"]));
+            }
+            set {
+                this["ShowStartupCalibrationPrompt"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CalibrationCompleted {
+            get {
+                return ((bool)(this["CalibrationCompleted"]));
+            }
+            set {
+                this["CalibrationCompleted"] = value;
+            }
+        }
     }
 }

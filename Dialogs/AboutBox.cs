@@ -206,6 +206,10 @@ namespace Bahtinov_Collimator
             okButton.BackColor = UITheme.ButtonDarkBackground;
             okButton.ForeColor = UITheme.ButtonDarkForeground;
             okButton.FlatStyle = FlatStyle.Popup;
+            okButton.CornerRadius = 4;
+            okButton.TextOffsetX = 0;
+            okButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
+            okButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
 
             // Set colors for titlebar
             var color = UITheme.DarkBackground;

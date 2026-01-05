@@ -65,6 +65,12 @@ namespace Bahtinov_Collimator
 
         #region Private Fields
 
+        // Calibration User Component
+        /// <summary>
+        /// Allows for calibration of the focus direction.
+        /// </summary>
+        private CalibrationComponent calibrationComponent;
+
         // Focus Group Boxes
         /// <summary>
         /// Represents the red focus channel component for visualizing focus adjustments.
@@ -193,6 +199,23 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Configure Form
+
+        /// <summary>
+        /// Invoked when the main form is first shown to the user.
+        ///
+        /// This override is used to display the optional startup calibration prompt
+        /// after the main window has been created and activated. Showing the dialog
+        /// at this point avoids focus and z-order issues that can occur if modal
+        /// dialogs are displayed earlier in the application startup sequence.
+        /// </summary>
+        /// <param name="e">
+        /// Event data associated with the form being shown.
+        /// </param>
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            ShowStartupCalibrationPromptIfNeeded(this);
+        }
 
         /// <summary>
         /// Initializes and configures the <see cref="ImageDisplayComponent"/> control, setting its location, size, and other properties.
@@ -591,26 +614,6 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Handles the click event for the Settings menu item, showing the Settings dialog and loading updated settings if dialog result is OK.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
-        private void SettingsToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            // Settings Dialog
-            Settings settingsDialog = new Settings();
-            PositionDialogInsideMainWindow(settingsDialog);
-
-            DialogResult result = settingsDialog.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                bahtinovProcessing.LoadSettings();
-                voiceControl.LoadSettings();
-            }
-        }
-
-        /// <summary>
         /// Activates the form when the mouse enters the form area.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -872,6 +875,109 @@ namespace Bahtinov_Collimator
             catch(FileNotFoundException err)
             {
                 DarkMessageBox.Show($"Could not find Language json file: {err.Message}", "File Not Found", MessageBoxIcon.Error, MessageBoxButtons.OK);
+            }
+        }
+
+        /// <summary>
+        /// Handles the click event for the Settings menu item, showing the Settings dialog and loading updated settings if dialog result is OK.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The event data.</param>
+        private void GeneralSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Settings Dialog
+            Settings settingsDialog = new Settings();
+            PositionDialogInsideMainWindow(settingsDialog);
+
+            DialogResult result = settingsDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                bahtinovProcessing.LoadSettings();
+                voiceControl.LoadSettings();
+            }
+        }
+
+        private void focusCalibrationToolStripMenuItem_Click(object sender, EventArgs e)
+        { 
+            StartCalibration();
+
+            //// Calibration Dialog
+            //CalibrationDialog calibrationDialog = new CalibrationDialog();
+            //PositionDialogInsideMainWindow(calibrationDialog);
+
+            //DialogResult result = calibrationDialog.ShowDialog();
+
+            //if (result == DialogResult.OK)
+            //{
+            //    // TODO : Apply calibration settings to bahtinovProcessing
+            //    bahtinovProcessing.LoadSettings();
+            //}
+        }
+
+        private void StartCalibration()
+        {
+            if (calibrationComponent != null)
+                return;
+
+            this.AutoSizeMode = AutoSizeMode.GrowOnly;
+            this.Width += UITheme.CalibrateFrameWidth;
+
+            calibrationComponent = new CalibrationComponent(this);
+            calibrationComponent.Width = UITheme.CalibrateFrameWidth;
+            calibrationComponent.Location = new Point(this.Width - calibrationComponent.Width - 19, 22);
+            calibrationComponent.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            this.Controls.Add(calibrationComponent);
+        }
+
+        public void StopCalibration()
+        {
+            if (calibrationComponent == null)
+                return;
+            this.Controls.Remove(calibrationComponent);
+            calibrationComponent.Dispose();
+            calibrationComponent = null;
+            this.Width -= UITheme.CalibrateFrameWidth;
+            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        }
+
+        /// <summary>
+        /// Displays the startup calibration prompt if the user has not disabled it.
+        ///
+        /// The dialog recommends running the Settings Calibration workflow to ensure
+        /// SkyCal is correctly tuned for the user's optical setup. If the user selects
+        /// "Do not show again", the preference is persisted to user-scoped settings
+        /// and the prompt will be suppressed on future application launches.
+        ///
+        /// If the user chooses to proceed, the Settings Calibration workflow is
+        /// launched using the application's existing calibration entry point.
+        /// </summary>
+        /// <param name="owner">
+        /// The window that will own the modal dialog, typically the main application form.
+        /// </param>
+        private void ShowStartupCalibrationPromptIfNeeded(IWin32Window owner)
+        {
+
+            Properties.Settings.Default.ShowStartupCalibrationPrompt = true;
+            Properties.Settings.Default.Save();
+
+            if (!Properties.Settings.Default.ShowStartupCalibrationPrompt)
+                return;
+
+            using (var dlg = new SkyCal.StartupDialog())
+            {
+                DialogResult result = dlg.ShowDialog(owner);
+
+                if (dlg.DontShowAgain)
+                {
+                    Properties.Settings.Default.ShowStartupCalibrationPrompt = false;
+                    Properties.Settings.Default.Save();
+                }
+
+                if (result == DialogResult.OK)
+                {
+                    StartCalibration();
+                }
             }
         }
     }

@@ -158,6 +158,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Custom Components\CalibrationComponent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Custom Components\CalibrationComponent.Designer.cs">
+      <DependentUpon>CalibrationComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Custom Components\HistoryBar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -189,11 +195,20 @@
     <Compile Include="Custom Components\RoundedPictureBox.Designer.cs">
       <DependentUpon>RoundedPictureBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Custom Components\RoundedRichTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Custom Components\RoundedRichTextBox.Designer.cs">
+      <DependentUpon>RoundedRichTextBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Custom Components\SlideSwitchComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Custom Components\SlideSwitchComponent.Designer.cs">
       <DependentUpon>SlideSwitchComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\TitleBox.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Dialogs\AboutBox.cs">
       <SubType>Form</SubType>
@@ -206,6 +221,9 @@
     </Compile>
     <Compile Include="Custom Components\FocusChannelComponent.Designer.cs">
       <DependentUpon>FocusChannelComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\StartupDialog.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Image Capture\ImageCapture.cs" />
     <Compile Include="Image Capture\ImageSelect.cs">
@@ -263,6 +281,9 @@
     <Compile Include="Voice\VoiceControl.cs" />
     <Compile Include="Utilities\UITheme.cs" />
     <Compile Include="Utilities\Utilities.cs" />
+    <EmbeddedResource Include="Custom Components\CalibrationComponent.resx">
+      <DependentUpon>CalibrationComponent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Custom Components\HistoryBar.resx">
       <DependentUpon>HistoryBar.cs</DependentUpon>
     </EmbeddedResource>

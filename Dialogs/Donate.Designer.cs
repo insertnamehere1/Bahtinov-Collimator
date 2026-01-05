@@ -1,4 +1,6 @@
-﻿namespace Bahtinov_Collimator
+﻿using Bahtinov_Collimator.Custom_Components;
+
+namespace Bahtinov_Collimator
 {
     partial class Donate
     {
@@ -29,7 +31,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Donate));
-            this.cancelButton = new System.Windows.Forms.Button();
+            this.cancelButton = new RoundedButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.richTextBox = new System.Windows.Forms.RichTextBox();
@@ -121,7 +123,7 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button cancelButton;
+        private RoundedButton cancelButton;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.RichTextBox richTextBox;

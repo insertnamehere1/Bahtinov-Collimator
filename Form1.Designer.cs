@@ -35,18 +35,20 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.generalSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.focusCalibrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.pleaseDonateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.whatDoIDoNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.RoundedPanel1 = new Bahtinov_Collimator.Custom_Components.RoundedPanel();
             this.RoundedStartButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
             this.slideSwitch2 = new Bahtinov_Collimator.Custom_Components.SlideSwitch();
             this.label1 = new System.Windows.Forms.Label();
             this.Label2 = new System.Windows.Forms.Label();
-            this.whatDoIDoNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.RoundedPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -56,13 +58,13 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.whatDoIDoNextToolStripMenuItem,
             this.settingsToolStripMenuItem1,
             this.aboutToolStripMenuItem,
-            this.pleaseDonateToolStripMenuItem});
+            this.pleaseDonateToolStripMenuItem,
+            this.whatDoIDoNextToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(920, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(917, 28);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.MouseEnter += new System.EventHandler(this.MenuStrip1_MouseEnter);
@@ -84,10 +86,26 @@
             // 
             // settingsToolStripMenuItem1
             // 
+            this.settingsToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.generalSettingsToolStripMenuItem,
+            this.focusCalibrationToolStripMenuItem});
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(76, 24);
-            this.settingsToolStripMenuItem1.Text = "Settings";
-            this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.SettingsToolStripMenuItem1_Click);
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(61, 24);
+            this.settingsToolStripMenuItem1.Text = "Setup";
+            // 
+            // generalSettingsToolStripMenuItem
+            // 
+            this.generalSettingsToolStripMenuItem.Name = "generalSettingsToolStripMenuItem";
+            this.generalSettingsToolStripMenuItem.Size = new System.Drawing.Size(200, 26);
+            this.generalSettingsToolStripMenuItem.Text = "General Settings";
+            this.generalSettingsToolStripMenuItem.Click += new System.EventHandler(this.GeneralSettingsToolStripMenuItem_Click);
+            // 
+            // focusCalibrationToolStripMenuItem
+            // 
+            this.focusCalibrationToolStripMenuItem.Name = "focusCalibrationToolStripMenuItem";
+            this.focusCalibrationToolStripMenuItem.Size = new System.Drawing.Size(200, 26);
+            this.focusCalibrationToolStripMenuItem.Text = "Calibration";
+            this.focusCalibrationToolStripMenuItem.Click += new System.EventHandler(this.focusCalibrationToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -126,6 +144,13 @@
             this.pleaseDonateToolStripMenuItem.Size = new System.Drawing.Size(123, 24);
             this.pleaseDonateToolStripMenuItem.Text = "Support SkyCal";
             this.pleaseDonateToolStripMenuItem.Click += new System.EventHandler(this.PleaseDonateToolStripMenuItem_Click);
+            // 
+            // whatDoIDoNextToolStripMenuItem
+            // 
+            this.whatDoIDoNextToolStripMenuItem.Name = "whatDoIDoNextToolStripMenuItem";
+            this.whatDoIDoNextToolStripMenuItem.Size = new System.Drawing.Size(182, 24);
+            this.whatDoIDoNextToolStripMenuItem.Text = "What Should I Do Next?";
+            this.whatDoIDoNextToolStripMenuItem.Click += new System.EventHandler(this.WhatDoIDoNextToolStripMenuItem_Click);
             // 
             // RoundedPanel1
             // 
@@ -204,19 +229,12 @@
             this.Label2.TabIndex = 23;
             this.Label2.Text = "Defocus";
             // 
-            // whatDoIDoNextToolStripMenuItem
-            // 
-            this.whatDoIDoNextToolStripMenuItem.Name = "whatDoIDoNextToolStripMenuItem";
-            this.whatDoIDoNextToolStripMenuItem.Size = new System.Drawing.Size(156, 24);
-            this.whatDoIDoNextToolStripMenuItem.Text = "What Do I Do Next?";
-            this.whatDoIDoNextToolStripMenuItem.Click += new System.EventHandler(this.WhatDoIDoNextToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(930, 652);
+            this.ClientSize = new System.Drawing.Size(927, 652);
             this.Controls.Add(this.RoundedPanel1);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -256,6 +274,8 @@
         private Custom_Components.RoundedButton RoundedStartButton;
         private Custom_Components.RoundedPanel RoundedPanel1;
         private System.Windows.Forms.ToolStripMenuItem whatDoIDoNextToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem generalSettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem focusCalibrationToolStripMenuItem;
     }
 }
 
