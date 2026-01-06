@@ -82,49 +82,59 @@ namespace SkyCal
             Padding = new Padding(14);
             ClientSize = new Size(520, 220);
 
-            _titleLabel = new Label();
-            _titleLabel.AutoSize = true;
-            _titleLabel.Text = "Recommended: Run Settings Calibration";
-            _titleLabel.Font = new Font(Font, FontStyle.Bold);
-            _titleLabel.Location = new Point(14, 14);
+            _titleLabel = new Label
+            {
+                AutoSize = true,
+                Text = "Recommended: Run Settings Calibration",
+                Font = new Font(Font, FontStyle.Bold),
+                Location = new Point(14, 14)
+            };
 
-            _bodyLabel = new Label();
-            _bodyLabel.AutoSize = false;
-            _bodyLabel.Text =
-                "SkyCal works best when the Settings Calibration has been run.\r\n" +
+            _bodyLabel = new Label
+            {
+                AutoSize = false,
+                Text = "SkyCal works best when the Settings Calibration has been run.\r\n" +
                 "This helps tune capture and measurement thresholds for your setup.\r\n\r\n" +
-                "Would you like to run it now?";
-            _bodyLabel.Location = new Point(14, _titleLabel.Bottom + 10);
-            _bodyLabel.Size = new Size(ClientSize.Width - 28, 110);
+                "Would you like to run it now?",
+                Location = new Point(14, _titleLabel.Bottom + 10),
+                Size = new Size(ClientSize.Width - 28, 110)
+            };
 
-            _dontShowAgainCheckBox = new CheckBox();
-            _dontShowAgainCheckBox.AutoSize = true;
-            _dontShowAgainCheckBox.Text = "Do not show again";
-            _dontShowAgainCheckBox.Location = new Point(14, _bodyLabel.Bottom + 6);
 
-            _runButton = new RoundedButton();
-            _runButton.Text = "Run Calibration";
-            _runButton.DialogResult = DialogResult.OK;
-            _runButton.Size = new Size(120, 35);
-            _runButton.CornerRadius = 4;
-            _runButton.BackColor = UITheme.ButtonDarkBackground;
-            _runButton.ForeColor = UITheme.ButtonDarkForeground;
-            _runButton.FlatStyle = FlatStyle.Popup;
-            _runButton.TextOffsetX = 0;
-            _runButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
-            _runButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
+            _dontShowAgainCheckBox = new CheckBox
+            {
+                AutoSize = true,
+                Text = "Do not show again",
+                Location = new Point(14, _bodyLabel.Bottom + 6)
+            };
 
-            _notNowButton = new RoundedButton();
-            _notNowButton.Text = "Not now";
-            _notNowButton.DialogResult = DialogResult.Cancel;
-            _notNowButton.Size = new Size(120, 35);
-            _notNowButton.CornerRadius = 4;
-            _notNowButton.BackColor = UITheme.ButtonDarkBackground;
-            _notNowButton.ForeColor = UITheme.ButtonDarkForeground;
-            _notNowButton.FlatStyle = FlatStyle.Popup;
-            _notNowButton.TextOffsetX = 0;
-            _notNowButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
-            _notNowButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
+            _runButton = new RoundedButton
+            {
+                Text = "Run Calibration",
+                DialogResult = DialogResult.OK,
+                Size = new Size(120, 35),
+                CornerRadius = 4,
+                BackColor = UITheme.ButtonDarkBackground,
+                ForeColor = UITheme.ButtonDarkForeground,
+                FlatStyle = FlatStyle.Popup,
+                TextOffsetX = 0,
+                BevelDark = Color.FromArgb(180, 90, 90, 90),
+                BevelLight = Color.FromArgb(220, 160, 160, 160)
+            };
+
+            _notNowButton = new RoundedButton
+            { 
+                Text = "Not now",
+                DialogResult = DialogResult.Cancel,
+                Size = new Size(120, 35),
+                CornerRadius = 4,
+                BackColor = UITheme.ButtonDarkBackground,
+                ForeColor = UITheme.ButtonDarkForeground,
+                FlatStyle = FlatStyle.Popup,
+                TextOffsetX = 0,
+                BevelDark = Color.FromArgb(180, 90, 90, 90),
+                BevelLight = Color.FromArgb(220, 160, 160, 160)
+            };
 
             AcceptButton = _runButton;
             CancelButton = _notNowButton;

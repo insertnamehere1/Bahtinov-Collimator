@@ -898,7 +898,7 @@ namespace Bahtinov_Collimator
             }
         }
 
-        private void focusCalibrationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void FocusCalibrationToolStripMenuItem_Click(object sender, EventArgs e)
         { 
             StartCalibration();
 
@@ -923,10 +923,15 @@ namespace Bahtinov_Collimator
             this.AutoSizeMode = AutoSizeMode.GrowOnly;
             this.Width += UITheme.CalibrateFrameWidth;
 
-            calibrationComponent = new CalibrationComponent(this);
-            calibrationComponent.Width = UITheme.CalibrateFrameWidth;
-            calibrationComponent.Location = new Point(this.Width - calibrationComponent.Width - 19, 22);
-            calibrationComponent.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            int calWidth = UITheme.CalibrateFrameWidth;
+
+            calibrationComponent = new CalibrationComponent(this)
+            { 
+                Width = UITheme.CalibrateFrameWidth,
+                Location = new Point(this.Width - calWidth - 19, 22),
+                Anchor = AnchorStyles.Top | AnchorStyles.Right
+            };
+
             this.Controls.Add(calibrationComponent);
         }
 

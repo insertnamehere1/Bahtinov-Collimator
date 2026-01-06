@@ -70,11 +70,11 @@ namespace Bahtinov_Collimator
             this.panel1.Size = new System.Drawing.Size(333, 46);
             this.panel1.TabIndex = 4;
             // 
-            // cancelButton
+            // closeButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.Location = new System.Drawing.Point(138, 8);
-            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Name = "closeButton";
             this.cancelButton.Size = new System.Drawing.Size(82, 30);
             this.cancelButton.TabIndex = 2;
             this.cancelButton.Text = "Cancel";

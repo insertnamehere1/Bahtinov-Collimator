@@ -57,7 +57,7 @@ namespace Bahtinov_Collimator
 
             // If TB mask is not visible, this is focus-only behaviour
             if (!triBahtinovVisible)
-                return FocusOnlyGuidance(g, channels, tolerance);
+                return FocusOnlyGuidance(g);
 
             // STEP 1: Focus until values are BALANCED around 0
             if (!IsBalancedAroundZero(channels))
@@ -199,7 +199,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Focus-only guidance used when TB is not visible; uses Red channel as the decision input.
         /// </summary>
-        private static NextStepGuidance FocusOnlyGuidance(NextStepGuidance g, Channel[] channels, double tolerance)
+        private static NextStepGuidance FocusOnlyGuidance(NextStepGuidance g)
         {
             var T = NextStepText.Current;
 

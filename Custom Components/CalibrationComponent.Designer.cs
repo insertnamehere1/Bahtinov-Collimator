@@ -28,58 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.saveButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
-            this.cancelButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
+            this.closeButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
             this.titledRoundedRichTextBox1 = new SkyCal.Custom_Components.TitledRoundedRichTextBox();
             this.roundedPanel1 = new Bahtinov_Collimator.Custom_Components.RoundedPanel();
             this.roundedPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // saveButton
+            // closeButton
             // 
-            this.saveButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.saveButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.saveButton.BevelThickness = 2;
-            this.saveButton.CornerRadius = 12;
-            this.saveButton.FlatAppearance.BorderSize = 0;
-            this.saveButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.saveButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.saveButton.ImageHeight = 32;
-            this.saveButton.ImageOffsetX = 60;
-            this.saveButton.ImageOffsetY = 0;
-            this.saveButton.ImageWidth = 32;
-            this.saveButton.Location = new System.Drawing.Point(29, 20);
-            this.saveButton.Name = "saveButton";
-            this.saveButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.saveButton.Size = new System.Drawing.Size(160, 44);
-            this.saveButton.TabIndex = 1;
-            this.saveButton.Text = "Save";
-            this.saveButton.TextOffsetX = 10;
-            this.saveButton.UseVisualStyleBackColor = true;
-            // 
-            // cancelButton
-            // 
-            this.cancelButton.BackColor = System.Drawing.Color.Gray;
-            this.cancelButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.cancelButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.cancelButton.BevelThickness = 2;
-            this.cancelButton.CornerRadius = 12;
-            this.cancelButton.FlatAppearance.BorderSize = 0;
-            this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cancelButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.cancelButton.ImageHeight = 32;
-            this.cancelButton.ImageOffsetX = 60;
-            this.cancelButton.ImageOffsetY = 0;
-            this.cancelButton.ImageWidth = 32;
-            this.cancelButton.Location = new System.Drawing.Point(197, 20);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.cancelButton.Size = new System.Drawing.Size(160, 44);
-            this.cancelButton.TabIndex = 0;
-            this.cancelButton.Text = "Cancel";
-            this.cancelButton.TextOffsetX = 10;
-            this.cancelButton.UseVisualStyleBackColor = false;
-            this.cancelButton.Click += new System.EventHandler(this.roundedButton1_Click);
+            this.closeButton.BackColor = System.Drawing.Color.Gray;
+            this.closeButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.closeButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.closeButton.BevelThickness = 2;
+            this.closeButton.CornerRadius = 12;
+            this.closeButton.FlatAppearance.BorderSize = 0;
+            this.closeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.closeButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.closeButton.ImageHeight = 32;
+            this.closeButton.ImageOffsetX = 60;
+            this.closeButton.ImageOffsetY = 0;
+            this.closeButton.ImageWidth = 32;
+            this.closeButton.Location = new System.Drawing.Point(108, 20);
+            this.closeButton.Name = "closeButton";
+            this.closeButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.closeButton.Size = new System.Drawing.Size(160, 44);
+            this.closeButton.TabIndex = 0;
+            this.closeButton.Text = "Close";
+            this.closeButton.TextOffsetX = 10;
+            this.closeButton.UseVisualStyleBackColor = false;
+            this.closeButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // titledRoundedRichTextBox1
             // 
@@ -96,7 +73,7 @@
             this.titledRoundedRichTextBox1.InnerRichTextBox.Location = new System.Drawing.Point(11, 41);
             this.titledRoundedRichTextBox1.InnerRichTextBox.Name = "";
             this.titledRoundedRichTextBox1.InnerRichTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.titledRoundedRichTextBox1.InnerRichTextBox.Size = new System.Drawing.Size(365, 417);
+            this.titledRoundedRichTextBox1.InnerRichTextBox.Size = new System.Drawing.Size(362, 454);
             this.titledRoundedRichTextBox1.InnerRichTextBox.TabIndex = 0;
             this.titledRoundedRichTextBox1.Location = new System.Drawing.Point(3, 23);
             this.titledRoundedRichTextBox1.Name = "titledRoundedRichTextBox1";
@@ -112,8 +89,7 @@
             this.roundedPanel1.BackColor = System.Drawing.Color.Transparent;
             this.roundedPanel1.BorderColor = System.Drawing.Color.Gray;
             this.roundedPanel1.BorderThickness = 3;
-            this.roundedPanel1.Controls.Add(this.cancelButton);
-            this.roundedPanel1.Controls.Add(this.saveButton);
+            this.roundedPanel1.Controls.Add(this.closeButton);
             this.roundedPanel1.CornerRadius = 8;
             this.roundedPanel1.FillColor = System.Drawing.Color.Transparent;
             this.roundedPanel1.Location = new System.Drawing.Point(0, 541);
@@ -136,8 +112,7 @@
 
         #endregion
 
-        private RoundedButton cancelButton;
-        private RoundedButton saveButton;
+        private RoundedButton closeButton;
         private SkyCal.Custom_Components.TitledRoundedRichTextBox titledRoundedRichTextBox1;
         private RoundedPanel roundedPanel1;
     }

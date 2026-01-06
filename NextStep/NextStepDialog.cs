@@ -177,7 +177,7 @@ namespace Bahtinov_Collimator
 
             if (g == null)
             {
-                _stack.Controls.Add(MakeLabel("No guidance available.", 11f, FontStyle.Italic, marginBottom: 0));
+                _stack.Controls.Add(MakeLabel("No guidance available.", 11f, FontStyle.Italic));
                 _stack.ResumeLayout(true);
                 return;
             }
@@ -188,7 +188,7 @@ namespace Bahtinov_Collimator
 
             // Summary
             if (!string.IsNullOrWhiteSpace(g.Summary))
-                _stack.Controls.Add(MakeLabel(g.Summary, 11f, FontStyle.Regular, marginBottom: 10));
+                _stack.Controls.Add(MakeLabel(g.Summary, 11f, FontStyle.Regular));
 
             // Sections
             if (g.Sections != null)
@@ -209,7 +209,7 @@ namespace Bahtinov_Collimator
 
             // Footer
             if (!string.IsNullOrWhiteSpace(g.FooterHint))
-                _stack.Controls.Add(MakeLabel(g.FooterHint, 10.5f, FontStyle.Italic, marginBottom: 0));
+                _stack.Controls.Add(MakeLabel(g.FooterHint, 10.5f, FontStyle.Italic));
 
             _stack.ResumeLayout(true);
         }
@@ -239,9 +239,8 @@ namespace Bahtinov_Collimator
         /// <param name="text">The text to display.</param>
         /// <param name="size">Font size in points.</param>
         /// <param name="style">Font style.</param>
-        /// <param name="marginBottom">Bottom margin applied after the label.</param>
         /// <returns>A fully sized label control.</returns>
-        private Label MakeLabel(string text, float size, FontStyle style, int marginBottom)
+        private Label MakeLabel(string text, float size, FontStyle style)
         {
             var lbl = new Label
             {
@@ -372,13 +371,13 @@ namespace Bahtinov_Collimator
                 Font = new Font("Segoe UI", 10.5f),
                 Width = ContentWidth(),
                 Margin = new Padding(0, 0, 0, 0),
-                DetectUrls = false
+                DetectUrls = false,
+                TabStop = false,
+                HideSelection = true,
+                Cursor = Cursors.Default
             };
 
-            rtb.TabStop = false;
-            rtb.HideSelection = true;
-            rtb.Cursor = Cursors.Default;
-            rtb.GotFocus += (s, e) => _ok.Focus();
+            GotFocus += (s, e) => _ok.Focus();
 
             if (section.Bullets != null)
             {

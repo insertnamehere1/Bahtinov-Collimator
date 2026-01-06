@@ -40,11 +40,11 @@ namespace Bahtinov_Collimator
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
-            // cancelButton
+            // closeButton
             // 
             this.cancelButton.Location = new System.Drawing.Point(402, 284);
             this.cancelButton.Margin = new System.Windows.Forms.Padding(4);
-            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Name = "closeButton";
             this.cancelButton.Size = new System.Drawing.Size(100, 28);
             this.cancelButton.TabIndex = 2;
             this.cancelButton.Text = "Close";
