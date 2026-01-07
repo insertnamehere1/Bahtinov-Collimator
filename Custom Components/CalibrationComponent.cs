@@ -76,7 +76,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
             // Adjust fonts
             roundedPanel1.Font = newFont;
-            closeButton.Font = newFont;
+            quitButton.Font = newFont;
             titledRoundedRichTextBox1.Font = newFont;
             titledRoundedRichTextBox1.TitleFont = new Font(this.Font.FontFamily, increasedSize + 2.0f, FontStyle.Bold);
 
@@ -84,13 +84,13 @@ namespace Bahtinov_Collimator.Custom_Components
             roundedPanel1.ForeColor = UITheme.MenuHighlightBackground;
 
             // Cancel Button Styling
-            closeButton.BackColor = UITheme.ButtonDarkBackground;
-            closeButton.ForeColor = UITheme.ButtonDarkForeground;
-            closeButton.FlatStyle = FlatStyle.Popup;
-            closeButton.CornerRadius = 6;
-            closeButton.TextOffsetX = 0;
-            closeButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
-            closeButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
+            quitButton.BackColor = UITheme.ButtonDarkBackground;
+            quitButton.ForeColor = UITheme.ButtonDarkForeground;
+            quitButton.FlatStyle = FlatStyle.Popup;
+            quitButton.CornerRadius = 6;
+            quitButton.TextOffsetX = 0;
+            quitButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
+            quitButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
 
             // RichTextBox Styling
             titledRoundedRichTextBox1.BackColor = UITheme.ButtonDarkBackground;
@@ -130,6 +130,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
             _state = CalibrationState.WaitingForFirstValidRead;
 
+            ImageCapture.ForceImageUpdate();
             UpdateInstructionText();
         }
 
@@ -221,6 +222,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 _state = CalibrationState.WaitingForFirstValidRead;
                 _baselineCaptured = false;
                 UpdateInstructionText();
+
                 return;
             }
 
@@ -319,9 +321,15 @@ namespace Bahtinov_Collimator.Custom_Components
 
                 signSwitch = (delta > 0f);
             }
-
-            Properties.Settings.Default.SignChange = signSwitch;
+  
+            if(signSwitch)
+                Properties.Settings.Default.SignChange = !Properties.Settings.Default.SignChange;
+            
+            Properties.Settings.Default.CalibrationCompleted = true;
             Properties.Settings.Default.Save();
+
+            // Capture new image to display changed sign.
+            ImageCapture.ForceImageUpdate();
 
             return true;
         }

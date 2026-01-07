@@ -105,6 +105,12 @@ namespace Bahtinov_Collimator
             captureTimer = null;
         }
 
+        public static void ForceImageUpdate()
+        {
+            // forces updated image on next tick
+            firstHash = "";
+        }
+
         ///// <summary>
         ///// Handles the Timer.Tick event to capture an image and invoke the ImageReceivedEvent.
         ///// </summary>

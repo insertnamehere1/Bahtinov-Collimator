@@ -194,8 +194,10 @@ namespace Bahtinov_Collimator
             // Set the initial state of the defocus switch based on user settings.
             slideSwitch2.IsOn = Properties.Settings.Default.DefocusSwitch;
             RoundedPanel1.FillColor = Color.FromArgb(50, UITheme.DarkBackground);
-        }
 
+            // disable and gray the "what should i do next" menu item if we havent been calibrated
+            menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted;
+        }
         #endregion
 
         #region Configure Form
@@ -871,6 +873,9 @@ namespace Bahtinov_Collimator
 
                 using (var dlg = new NextStepDialog(guidance, this.Icon))
                     dlg.ShowDialog(this);
+
+                // enable "what should i do next" menu item if we have been calibrated
+                menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted;
             }
             catch(FileNotFoundException err)
             {
@@ -964,6 +969,7 @@ namespace Bahtinov_Collimator
         {
 
             Properties.Settings.Default.ShowStartupCalibrationPrompt = true;
+            Properties.Settings.Default.CalibrationCompleted = false;
             Properties.Settings.Default.Save();
 
             if (!Properties.Settings.Default.ShowStartupCalibrationPrompt)

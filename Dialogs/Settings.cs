@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -152,6 +151,8 @@ namespace Bahtinov_Collimator
             VoiceCheckBox.Checked = Properties.Settings.Default.VoiceEnabled;
             errorSignCheckBox.Checked = Properties.Settings.Default.SignChange;
             historyMakersTextBox.Text = Properties.Settings.Default.historyCount.ToString();
+
+            SCTRadioButton.Checked = true;
         }
 
         /// <summary>
@@ -170,6 +171,9 @@ namespace Bahtinov_Collimator
 
                 // Save settings
                 Properties.Settings.Default.Save();
+
+                // display new image
+                ImageCapture.ForceImageUpdate();
 
                 // Indicate that the form was closed with OK result
                 this.DialogResult = DialogResult.OK;
