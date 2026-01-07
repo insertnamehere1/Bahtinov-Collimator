@@ -906,18 +906,6 @@ namespace Bahtinov_Collimator
         private void FocusCalibrationToolStripMenuItem_Click(object sender, EventArgs e)
         { 
             StartCalibration();
-
-            //// Calibration Dialog
-            //CalibrationDialog calibrationDialog = new CalibrationDialog();
-            //PositionDialogInsideMainWindow(calibrationDialog);
-
-            //DialogResult result = calibrationDialog.ShowDialog();
-
-            //if (result == DialogResult.OK)
-            //{
-            //    // TODO : Apply calibration settings to bahtinovProcessing
-            //    bahtinovProcessing.LoadSettings();
-            //}
         }
 
         private void StartCalibration()
@@ -949,6 +937,9 @@ namespace Bahtinov_Collimator
             calibrationComponent = null;
             this.Width -= UITheme.CalibrateFrameWidth;
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+            // enable "what should i do next" menu item if we have been calibrated
+            menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted;
         }
 
         /// <summary>

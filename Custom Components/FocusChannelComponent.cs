@@ -147,7 +147,21 @@ namespace Bahtinov_Collimator
             label5.BringToFront();
             label2.BringToFront();
             label6.BringToFront();
+
+            RefreshLabelVisibility();
+
         }
+
+        private void RefreshLabelVisibility()
+        {
+            bool visible = Properties.Settings.Default.CalibrationCompleted;
+
+            label2.Visible = visible;
+            label3.Visible = visible;
+            label4.Visible = visible;
+            label5.Visible = visible;
+            label6.Visible = visible;
+        }   
 
         /// <summary>
         /// Sets the font for all labels.
@@ -259,12 +273,14 @@ namespace Bahtinov_Collimator
             {
                 if (!e.FocusData.ClearDisplay)
                 {
+                    RefreshLabelVisibility();
                     offsetBarControl1.MarkerColor = UITheme.ErrorBarMarkerColorInRange;
                     offsetBarControl1.Value = (float)e.FocusData.BahtinovOffset; 
                     ErrorOffset = e.FocusData.BahtinovOffset;
                 }
                 else
                 {
+                    RefreshLabelVisibility();
                     offsetBarControl1.ResetHistory();
                     offsetBarControl1.MarkerColor = Color.Green;
                     offsetBarControl1.Value = 0.0f;
