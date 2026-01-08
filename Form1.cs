@@ -798,49 +798,73 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Custom renderer for the ToolStrip to customize the appearance of menu items, including background and text color.
         /// </summary>
-        private class CustomToolStripRenderer : ToolStripProfessionalRenderer
+        private sealed class CustomToolStripRenderer : ToolStripProfessionalRenderer
         {
-            /// <summary>
-            /// Customizes the rendering of the menu item background.
-            /// </summary>
-            /// <param name="e">Event arguments containing information about the menu item to render.</param>
-            protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
+            public CustomToolStripRenderer() : base(new DarkColorTable())
             {
-                // Render background with custom color if the item is selected or pressed
-                if (e.Item.Selected || e.Item.Pressed)
-                {
-                    SolidBrush menuBackgroundBrush = new SolidBrush(UITheme.MenuHighlightBackground);
+                RoundedEdges = false; // avoids odd light corners
+            }
 
-                    if (e.Item.Enabled)
-                        e.Graphics.FillRectangle(menuBackgroundBrush, e.Item.ContentRectangle);
+            protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
+            {
+                // This draws the border around the whole dropdown
+                Rectangle r = new Rectangle(0, 0, e.ToolStrip.Width - 1, e.ToolStrip.Height - 1);
 
-                    e.Item.ForeColor = UITheme.MenuDarkForeground;
-                }
-                else
+                Color border = UITheme.DarkBackground;
+
+                using (var pen = new Pen(border))
                 {
-                    base.OnRenderMenuItemBackground(e);
+                    e.Graphics.DrawRectangle(pen, r);
                 }
             }
 
-            /// <summary>
-            /// Customizes the rendering of the menu item text.
-            /// </summary>
-            /// <param name="e">Event arguments containing information about the text to render.</param>
+            protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
+            {
+                if (e.Item.Selected || e.Item.Pressed)
+                {
+                    Rectangle rect = new Rectangle(Point.Empty, e.Item.Size);
+
+                    using (var backBrush = new SolidBrush(UITheme.MenuHighlightBackground))
+                        e.Graphics.FillRectangle(backBrush, rect);
+
+                    Color back = UITheme.DarkBackground;
+
+                    // Optional: item border
+                    using (var pen = new Pen(back))
+                    {
+                        rect.Width -= 1;
+                        rect.Height -= 1;
+                        e.Graphics.DrawRectangle(pen, rect);
+                    }
+
+                    e.Item.ForeColor = UITheme.MenuDarkForeground;
+                    return; // critical: do not call base or you may get the white system effects back
+                }
+
+                base.OnRenderMenuItemBackground(e);
+            }
+
             protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
             {
-                // Set custom text color and font style for the "Buy me a Coffee?" menu item
-                if (e.Item.Text == "Support SkyCal")
-                {
-                    e.TextColor = UITheme.GetGroupBoxTextColor(0);
-                }
-                else
-                {
-                    // Use the default text color for other items
-                    e.TextColor = UITheme.MenuDarkForeground;
-                }
+                e.TextColor = (e.Item.Text == "Support SkyCal")
+                    ? UITheme.GetGroupBoxTextColor(0)
+                    : UITheme.MenuDarkForeground;
 
                 base.OnRenderItemText(e);
             }
+
+            private sealed class DarkColorTable : ProfessionalColorTable
+            {
+                public override Color ToolStripDropDownBackground => UITheme.DarkBackground;
+                public override Color MenuBorder => UITheme.DarkBackground;
+                public override Color ToolStripBorder => UITheme.DarkBackground;
+
+                // These prevent the default light image-margin / gradient strip
+                public override Color ImageMarginGradientBegin => UITheme.DarkBackground;
+                public override Color ImageMarginGradientMiddle => UITheme.DarkBackground;
+                public override Color ImageMarginGradientEnd => UITheme.DarkBackground;
+            }
+
         }
 
         #endregion
