@@ -55,9 +55,6 @@ namespace Bahtinov_Collimator
             this.Font = newFont;
             groupBox1.Font = newFont;
             label5.Font = newFont;
-            label8.Font = newFont;
-            label9.Font = newFont;
-            label10.Font = newFont;
             CancelSettingsButton.Font = newFont;
             okButton.Font = newFont;
             SCTRadioButton.Font = newFont;
