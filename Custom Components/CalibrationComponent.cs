@@ -1,7 +1,10 @@
-﻿using SkyCal.Custom_Components;
+﻿using Bahtinov_Collimator.Properties;
+using SkyCal.Custom_Components;
 using System;
 using System.Drawing;
+using System.Security.Policy;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Bahtinov_Collimator.Custom_Components
 {
@@ -334,21 +337,55 @@ namespace Bahtinov_Collimator.Custom_Components
             return true;
         }
 
+        private static void BoldLastLine(RichTextBox rtb)
+        {
+            if (rtb == null || rtb.TextLength == 0)
+                return;
+
+            // Save current selection/caret
+            int savedStart = rtb.SelectionStart;
+            int savedLength = rtb.SelectionLength;
+
+            // Ignore trailing newlines
+            int end = rtb.TextLength - 1;
+            while (end >= 0 && (rtb.Text[end] == '\n' || rtb.Text[end] == '\r'))
+                end--;
+
+            if (end < 0)
+                return;
+
+            // Find start of the last line
+            int start = rtb.Text.LastIndexOf('\n', end);
+            start = (start == -1) ? 0 : start + 1;
+
+            int length = end - start + 1;
+
+            // Bold just that line
+            rtb.Select(start, length);
+            Font f = rtb.SelectionFont ?? rtb.Font;
+            rtb.SelectionFont = new Font(f, f.Style | FontStyle.Bold);
+
+            // Restore selection/caret
+            rtb.Select(savedStart, savedLength);
+        }
+
+
         /// <summary>
         /// Updates the instruction text displayed in the titled rounded rich text box.
         /// </summary>
         private void UpdateInstructionText()
         {
+            var rtb = titledRoundedRichTextBox1.InnerRichTextBox;
+
             string mode = IsTriBahtinov ? "Tri-Bahtinov (3 values)" : "Bahtinov (1 value)";
-            string header = "This tells SkyCal which way the focus values move when you turn the focuser.";
+            string header1 = "Calibration allows SkyCal to assist with focusing, advise on collimation screw adjustments, and enable the ‘What Should I Do Next ?’ guidance.";
 
             if (_state == CalibrationState.WaitingForFirstValidRead)
-            { 
-                var rtb = titledRoundedRichTextBox1.InnerRichTextBox;
-
+            {
                 rtb.Clear();
-
-                rtb.AppendText(header + "\r\n\r\n Step 1 - Setup\r\n");
+            
+                rtb.AppendText(header1 + "\r\n\r\n\n Step 1 - Setup\r\n\n");
+                BoldLastLine(rtb);
 
                 rtb.SelectionBullet = true;
                 rtb.SelectionIndent = 20;
@@ -360,6 +397,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 rtb.SelectionBullet = false;
 
                 rtb.AppendText("\nWaiting for a valid Bahtinov image...\r\n");
+                BoldLastLine(rtb);
 
                 return;
             }
@@ -376,15 +414,15 @@ namespace Bahtinov_Collimator.Custom_Components
 
             if (_state == CalibrationState.MeasuringDirection)
             {
-
-                var rtb = titledRoundedRichTextBox1.InnerRichTextBox;
+                string header2 = "Understanding how focus adjustments translate into focuser and collimation screw guidance.";
 
                 rtb.Clear();
 
-
-                rtb.AppendText("Step 2 - Moving the focuser.\r\n\n");
+                rtb.AppendText(header2 + "\r\n\r\n\nStep 2 - Moving the focuser.\r\n\n");
+                BoldLastLine(rtb);
 
                 rtb.AppendText("If you telescope focuses by moving the primary mirror:\n");
+                BoldLastLine(rtb);
 
                 rtb.SelectionBullet = true;
                 rtb.SelectionIndent = 20;
@@ -395,7 +433,8 @@ namespace Bahtinov_Collimator.Custom_Components
                 rtb.SelectionBullet = false;
                 rtb.SelectionIndent = 0;
                 rtb.SelectionHangingIndent = 0;
-                rtb.AppendText("\n If your telescope focuses by moving the camera (for example, a Crayford focuser):\n");
+                rtb.AppendText("\n If your telescope focuses by moving the camera:\n");
+                BoldLastLine(rtb);
 
                 rtb.SelectionBullet = true;
                 rtb.SelectionIndent = 20;
@@ -407,19 +446,21 @@ namespace Bahtinov_Collimator.Custom_Components
                 rtb.SelectionIndent = 0;
                 rtb.SelectionHangingIndent = 0;
 
-                rtb.AppendText("\nCalibration will complete automatically once the change exceeds " + CompletionThresholdPixels.ToString("0.0") + " px.\r\n\r\n");
+                rtb.AppendText("\nCalibration will complete automatically. \r\n\r\n");
 
-                rtb.AppendText("Measuring direction...\r\n");
-                rtb.AppendText("Mode: " + mode);
+                rtb.AppendText("\nPlease move the focuser in...\r\n");
+                BoldLastLine(rtb);
 
                 return;
             }
 
-            // Complete
-            titledRoundedRichTextBox1.Text =
-                "Calibration complete.\r\n\r\n" +
-                "The SignSwitch setting has been updated and saved.\r\n" +
-                "You can now continue with normal focus/collimation.\r\n\r\n";
+
+//            string header3 = "Calibration Completed.";
+            rtb.Clear();
+
+            rtb.AppendText("\r\nSkyCal Calibration is complete\r\n\n");
+            BoldLastLine(rtb);
+            rtb.AppendText("The settings have been updated and saved.\r\n\n");
         }
 
         /// <summary>
