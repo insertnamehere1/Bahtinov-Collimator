@@ -82,6 +82,7 @@
             this.titledRoundedRichTextBox1.TabIndex = 0;
             this.titledRoundedRichTextBox1.TitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(245)))), ((int)(((byte)(245)))));
             this.titledRoundedRichTextBox1.TitleForeColor = System.Drawing.Color.Black;
+            this.titledRoundedRichTextBox1.TitleHeight = 50;
             this.titledRoundedRichTextBox1.TitleText = "Summary";
             // 
             // roundedPanel1

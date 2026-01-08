@@ -121,10 +121,10 @@ namespace Bahtinov_Collimator.Custom_Components
             // RichText box container
             titledRoundedRichTextBox1.Size = new Size(384, 506);
             titledRoundedRichTextBox1.Location = new Point(3, 23);
-            titledRoundedRichTextBox1.BackColor = UITheme.ButtonDarkBackground;
+            titledRoundedRichTextBox1.BackColor = UITheme.MenuDarkBackground;
             titledRoundedRichTextBox1.ForeColor = Color.White;
             titledRoundedRichTextBox1.TitleForeColor = Color.White;
-            titledRoundedRichTextBox1.TitleBackColor = UITheme.DarkBackground;
+            titledRoundedRichTextBox1.TitleBackColor = UITheme.ButtonDarkBackground;
             titledRoundedRichTextBox1.TitleText = "Calibration";
         }
 
