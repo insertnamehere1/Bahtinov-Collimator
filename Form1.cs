@@ -999,9 +999,9 @@ namespace Bahtinov_Collimator
         private void ShowStartupCalibrationPromptIfNeeded(IWin32Window owner)
         {
 
-//            Properties.Settings.Default.ShowStartupCalibrationPrompt = true;
-//            Properties.Settings.Default.CalibrationCompleted = false;
-//            Properties.Settings.Default.Save();
+            Properties.Settings.Default.ShowStartupCalibrationPrompt = true;
+            Properties.Settings.Default.CalibrationCompleted = false;
+            Properties.Settings.Default.Save();
 
             if (!Properties.Settings.Default.ShowStartupCalibrationPrompt)
                 return;

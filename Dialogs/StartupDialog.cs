@@ -82,12 +82,12 @@ namespace SkyCal
             Font = SystemFonts.MessageBoxFont;
 
             Padding = new Padding(14);
-            ClientSize = new Size(520, 220);
+            ClientSize = new Size(520, 250);
 
             _titleLabel = new Label
             {
                 AutoSize = true,
-                Text = "Recommended: Run Calibration",
+                Text = "Recommended",
                 Font = new Font(Font, FontStyle.Bold),
                 Location = new Point(14, 14)
             };
@@ -95,11 +95,11 @@ namespace SkyCal
             _bodyLabel = new Label
             {
                 AutoSize = false,
-                Text = "SkyCal works best when the Settings Calibration has been run.\r\n" +
-                "This helps tune capture and measurement thresholds for your setup.\r\n\r\n" +
+                Text = "Calibration enables full SkyCal functionality. Some features are unavailable until calibration is completed." + 
+                " (Calibration is also available from the Setup menu.)\r\n\r\n" +
                 "Would you like to run it now?",
                 Location = new Point(14, _titleLabel.Bottom + 10),
-                Size = new Size(ClientSize.Width - 28, 110)
+                Size = new Size(ClientSize.Width - 28, 150)
             };
 
 
@@ -107,12 +107,12 @@ namespace SkyCal
             {
                 AutoSize = true,
                 Text = "Do not show again",
-                Location = new Point(14, _bodyLabel.Bottom + 6)
+                Location = new Point(20, _bodyLabel.Bottom + 10)
             };
 
             _runButton = new RoundedButton
             {
-                Text = "Run Calibration",
+                Text = "Yes",
                 DialogResult = DialogResult.OK,
                 Size = new Size(120, 35),
                 CornerRadius = 4,

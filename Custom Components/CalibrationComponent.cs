@@ -451,7 +451,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 rtb.SelectionIndent = 20;
                 rtb.SelectionHangingIndent = 10;
 
-                rtb.AppendText("If the focuser moves the primary mirror, move it inward toward the secondary.\n");
+                rtb.AppendText("If the focuser moves the primary mirror, move it INWARD, toward the secondary.\n");
 
                 rtb.SelectionBullet = false;
                 rtb.SelectionIndent = 0;
@@ -461,13 +461,13 @@ namespace Bahtinov_Collimator.Custom_Components
                 rtb.SelectionIndent = 20;
                 rtb.SelectionHangingIndent = 10;
 
-                rtb.AppendText("If the focuser moves the camera, move it inward toward the telescope body.\n");
+                rtb.AppendText("If the focuser moves the camera, move it INWARD, toward the telescope body.\n");
 
                 rtb.SelectionBullet = false;
                 rtb.SelectionIndent = 0;
                 rtb.SelectionHangingIndent = 0;
 
-                rtb.AppendText("\nCalibration will complete automatically.\r\n\r\n");
+                rtb.AppendText("\nCalibration completes automatically once enough focus movement is detected.\r\n\r\n");
 
                 rtb.AppendText("\nPlease move the focuser inward now....\r\n");
                 BoldLastLine(rtb);
