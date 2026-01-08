@@ -404,13 +404,13 @@ namespace Bahtinov_Collimator.Custom_Components
             var rtb = titledRoundedRichTextBox1.InnerRichTextBox;
 
             string mode = IsTriBahtinov ? "Tri-Bahtinov (3 values)" : "Bahtinov (1 value)";
-            string header1 = "Calibration allows SkyCal to assist with focusing, advise on collimation screw adjustments, and enable the ‘What Should I Do Next ?’ guidance.";
+            string header1 = "\nPurpose - Calibration allows SkyCal to assist with focusing, advise on collimation screw adjustments, and enable the ‘What Should I Do Next ?’ guidance.";
 
             if (_state == CalibrationState.WaitingForFirstValidRead)
             {
                 rtb.Clear();
             
-                rtb.AppendText(header1 + "\r\n\r\n\n Step 1 - Setup\r\n\n");
+                rtb.AppendText(header1 + "\r\n\r\n Step 1 - Setup\r\n\n");
                 BoldLastLine(rtb);
 
                 rtb.SelectionBullet = true;
@@ -440,41 +440,36 @@ namespace Bahtinov_Collimator.Custom_Components
 
             if (_state == CalibrationState.MeasuringDirection)
             {
-                string header2 = "Understanding how focus adjustments translate into focuser and collimation screw guidance.";
+                string header2 = "\nPurpose - This step shows SkyCal how focus adjustments relate to focuser direction and collimation screw guidance.";
 
                 rtb.Clear();
 
                 rtb.AppendText(header2 + "\r\n\r\n\nStep 2 - Moving the focuser.\r\n\n");
                 BoldLastLine(rtb);
 
-                rtb.AppendText("If you telescope focuses by moving the primary mirror:\n");
-                BoldLastLine(rtb);
-
                 rtb.SelectionBullet = true;
                 rtb.SelectionIndent = 20;
                 rtb.SelectionHangingIndent = 10;
 
-                rtb.AppendText("Turn the focuser so that the primary mirror moves IN toward the secondary mirror.\n");
-
-                rtb.SelectionBullet = false;
-                rtb.SelectionIndent = 0;
-                rtb.SelectionHangingIndent = 0;
-                rtb.AppendText("\n If your telescope focuses by moving the camera:\n");
-                BoldLastLine(rtb);
-
-                rtb.SelectionBullet = true;
-                rtb.SelectionIndent = 20;
-                rtb.SelectionHangingIndent = 10;
-
-                rtb.AppendText("Turn the focuser to move the camera IN towards the telescope body.\n");
+                rtb.AppendText("If the focuser moves the primary mirror, move it inward toward the secondary.\n");
 
                 rtb.SelectionBullet = false;
                 rtb.SelectionIndent = 0;
                 rtb.SelectionHangingIndent = 0;
 
-                rtb.AppendText("\nCalibration will complete automatically. \r\n\r\n");
+                rtb.SelectionBullet = true;
+                rtb.SelectionIndent = 20;
+                rtb.SelectionHangingIndent = 10;
 
-                rtb.AppendText("\nPlease move the focuser in...\r\n");
+                rtb.AppendText("If the focuser moves the camera, move it inward toward the telescope body.\n");
+
+                rtb.SelectionBullet = false;
+                rtb.SelectionIndent = 0;
+                rtb.SelectionHangingIndent = 0;
+
+                rtb.AppendText("\nCalibration will complete automatically.\r\n\r\n");
+
+                rtb.AppendText("\nPlease move the focuser inward now....\r\n");
                 BoldLastLine(rtb);
 
                 return;
@@ -482,9 +477,9 @@ namespace Bahtinov_Collimator.Custom_Components
 
             rtb.Clear();
 
-            rtb.AppendText("\r\nSkyCal Calibration is complete\r\n\n");
+            rtb.AppendText("\r\nCalibration complete\r\n\n");
             BoldLastLine(rtb);
-            rtb.AppendText("The settings have been updated and saved.\r\n\n");
+            rtb.AppendText("SkyCal has finished calibration and updated its settings.\r\n\nAll changes have been saved.\r\n\n");
         }
 
         /// <summary>
