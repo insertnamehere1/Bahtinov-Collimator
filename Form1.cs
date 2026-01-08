@@ -181,6 +181,9 @@ namespace Bahtinov_Collimator
             // Apply the new font size to the form's controls.
             SetFontSize(largerFont);
 
+            // disable and gray the "what should i do next" menu item if we havent been calibrated
+            menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted;
+
             // Create instances of the image processing classes.
             bahtinovProcessing = new BahtinovProcessing();
             defocusStarProcessing = new DefocusStarProcessing();
@@ -194,9 +197,6 @@ namespace Bahtinov_Collimator
             // Set the initial state of the defocus switch based on user settings.
             slideSwitch2.IsOn = Properties.Settings.Default.DefocusSwitch;
             RoundedPanel1.FillColor = Color.FromArgb(50, UITheme.DarkBackground);
-
-            // disable and gray the "what should i do next" menu item if we havent been calibrated
-            menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted;
         }
         #endregion
 
@@ -464,6 +464,8 @@ namespace Bahtinov_Collimator
                 RoundedStartButton.Text = "Select Star";
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue, groupBoxRed);
+                whatDoIDoNextToolStripMenuItem.Enabled = false;
+                focusCalibrationToolStripMenuItem.Enabled = false;
             }
             else
             {
@@ -472,6 +474,8 @@ namespace Bahtinov_Collimator
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                 InitializeRedFocusBox();
+                whatDoIDoNextToolStripMenuItem.Enabled = Properties.Settings.Default.CalibrationCompleted;
+                focusCalibrationToolStripMenuItem.Enabled = true;
             }
         }
 
