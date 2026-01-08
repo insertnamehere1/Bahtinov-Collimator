@@ -97,6 +97,7 @@ namespace Bahtinov_Collimator.Custom_Components
             var titleFont = new Font(this.Font.FontFamily, 12.0f);
 
             titledRoundedRichTextBox1.TitleFont = titleFont;
+            titledRoundedRichTextBox1.TitlePaddingLeft = 140;
 
             // Scale form size (these were originally designed for 96 DPI).
             this.ClientSize = new Size(390, 624);

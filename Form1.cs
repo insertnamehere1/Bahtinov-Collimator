@@ -466,6 +466,7 @@ namespace Bahtinov_Collimator
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue, groupBoxRed);
                 whatDoIDoNextToolStripMenuItem.Enabled = false;
                 focusCalibrationToolStripMenuItem.Enabled = false;
+                StopCalibration();
             }
             else
             {
