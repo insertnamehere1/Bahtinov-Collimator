@@ -2,6 +2,7 @@
 using Bahtinov_Collimator.Custom_Components;
 using System;
 using System.Drawing;
+using System.Drawing.Design;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -12,7 +13,7 @@ namespace SkyCal
     /// Includes a "Do not show again" checkbox.
     /// The caller decides what to do with the checkbox state and persists it.
     /// </summary>
-    public sealed class StartupDialog : Form
+    public partial class StartupDialog : Form
     {
 
         #region DLL Imports
@@ -48,6 +49,7 @@ namespace SkyCal
         public StartupDialog()
         {
             InitializeComponent();
+            UISetup();
 
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
@@ -68,9 +70,9 @@ namespace SkyCal
         /// <summary>
         /// Builds the dialog UI.
         /// </summary>
-        private void InitializeComponent()
+        private void UISetup()
         {
-            Text = "SkyCal";
+            Text = "SkyCal Calibration";
             StartPosition = FormStartPosition.CenterParent;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
@@ -85,7 +87,7 @@ namespace SkyCal
             _titleLabel = new Label
             {
                 AutoSize = true,
-                Text = "Recommended: Run Settings Calibration",
+                Text = "Recommended: Run Calibration",
                 Font = new Font(Font, FontStyle.Bold),
                 Location = new Point(14, 14)
             };
@@ -123,7 +125,7 @@ namespace SkyCal
             };
 
             _notNowButton = new RoundedButton
-            { 
+            {
                 Text = "Not now",
                 DialogResult = DialogResult.Cancel,
                 Size = new Size(120, 35),
@@ -152,3 +154,4 @@ namespace SkyCal
         }
     }
 }
+

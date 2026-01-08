@@ -225,6 +225,9 @@
     <Compile Include="Dialogs\StartupDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Dialogs\StartupDialog.Designer.cs">
+      <DependentUpon>StartupDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Image Capture\ImageCapture.cs" />
     <Compile Include="Image Capture\ImageSelect.cs">
       <SubType>Form</SubType>
