@@ -38,6 +38,8 @@ namespace Bahtinov_Collimator.Custom_Components
 
         private CalibrationState _state = CalibrationState.WaitingForFirstValidRead;
 
+        private readonly Font labelFont;
+
         private enum CalibrationState
         {
             WaitingForFirstValidRead,
@@ -63,30 +65,51 @@ namespace Bahtinov_Collimator.Custom_Components
             };
             _aggregationTimer.Tick += AggregationTimer_Tick;
 
+            this.AutoScaleMode = AutoScaleMode.None;
+
+            // Get the current DPI of the display
+            using (Graphics g = this.CreateGraphics())
+            {
+                float dpi = g.DpiX; // Horizontal DPI (DpiY can also be used)
+
+                // Set the base font size in points (e.g., 12 points)
+                float baseFontSize = 10.0f;
+
+                // Apply the scaled font to the form or controls
+                this.labelFont = new Font(this.Font.FontFamily, baseFontSize);
+            }
+
             SetupUI();
             SubscribeToEvents();
-
             ResetCalibration();
         }
 
         /// <summary>
         /// Sets fonts and theme styling, then updates the instruction text.
+        /// Scales pixel-based sizes/positions using the current DPI so layout stays consistent.
         /// </summary>
         private void SetupUI()
         {
-            float increasedSize = this.Font.Size + 2.0f;
-            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
+            roundedPanel1.Font = labelFont;
+            quitButton.Font = labelFont;
+            titledRoundedRichTextBox1.Font = labelFont;
 
-            // Adjust fonts
-            roundedPanel1.Font = newFont;
-            quitButton.Font = newFont;
-            titledRoundedRichTextBox1.Font = newFont;
-            titledRoundedRichTextBox1.TitleFont = new Font(this.Font.FontFamily, increasedSize + 2.0f, FontStyle.Bold);
+            var titleFont = new Font(this.Font.FontFamily, 12.0f);
 
+            titledRoundedRichTextBox1.TitleFont = titleFont;
+
+            // Scale form size (these were originally designed for 96 DPI).
+            this.ClientSize = new Size(390, 624);
+
+            // Bottom panel
+            roundedPanel1.Size = new Size(390, 83);
+            roundedPanel1.Location = new Point(0, 541);
             roundedPanel1.BackColor = UITheme.DarkBackground;
             roundedPanel1.ForeColor = UITheme.MenuHighlightBackground;
 
-            // Cancel Button Styling
+            // Quit button
+            quitButton.Size = new Size(175, 44);
+            quitButton.Location = new Point(108, 20);
             quitButton.BackColor = UITheme.ButtonDarkBackground;
             quitButton.ForeColor = UITheme.ButtonDarkForeground;
             quitButton.FlatStyle = FlatStyle.Popup;
@@ -95,7 +118,9 @@ namespace Bahtinov_Collimator.Custom_Components
             quitButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
             quitButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
 
-            // RichTextBox Styling
+            // RichText box container
+            titledRoundedRichTextBox1.Size = new Size(384, 506);
+            titledRoundedRichTextBox1.Location = new Point(3, 23);
             titledRoundedRichTextBox1.BackColor = UITheme.ButtonDarkBackground;
             titledRoundedRichTextBox1.ForeColor = Color.White;
             titledRoundedRichTextBox1.TitleForeColor = Color.White;
@@ -454,8 +479,6 @@ namespace Bahtinov_Collimator.Custom_Components
                 return;
             }
 
-
-//            string header3 = "Calibration Completed.";
             rtb.Clear();
 
             rtb.AppendText("\r\nSkyCal Calibration is complete\r\n\n");
