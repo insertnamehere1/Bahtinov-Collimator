@@ -824,28 +824,39 @@ namespace Bahtinov_Collimator
 
             protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
             {
-                if (e.Item.Selected || e.Item.Pressed)
+                bool isDropDownItem = e.ToolStrip is ToolStripDropDown;
+                Rectangle rect = new Rectangle(Point.Empty, e.Item.Size);
+
+                if (isDropDownItem)
                 {
-                    Rectangle rect = new Rectangle(Point.Empty, e.Item.Size);
+                    // Always paint a dark background for dropdown items, even if disabled
+                    using (var back = new SolidBrush(UITheme.DarkBackground))
+                        e.Graphics.FillRectangle(back, rect);
 
-                    using (var backBrush = new SolidBrush(UITheme.MenuHighlightBackground))
-                        e.Graphics.FillRectangle(backBrush, rect);
-
-                    Color back = UITheme.DarkBackground;
-
-                    // Optional: item border
-                    using (var pen = new Pen(back))
+                    // Only draw highlight + border for enabled hot items
+                    if (e.Item.Enabled && (e.Item.Selected || e.Item.Pressed))
                     {
-                        rect.Width -= 1;
-                        rect.Height -= 1;
-                        e.Graphics.DrawRectangle(pen, rect);
+                        using (var hi = new SolidBrush(UITheme.MenuHighlightBackground))
+                            e.Graphics.FillRectangle(hi, rect);
+
+                        using (var pen = new Pen(Color.Black))
+                        {
+                            rect.Width -= 1;
+                            rect.Height -= 1;
+                            e.Graphics.DrawRectangle(pen, rect);
+                        }
                     }
 
-                    e.Item.ForeColor = UITheme.MenuDarkForeground;
-                    return; // critical: do not call base or you may get the white system effects back
+                    return;
                 }
 
-                base.OnRenderMenuItemBackground(e);
+                // Top-level menu strip items can use your existing logic
+                if (e.Item.Enabled && (e.Item.Selected || e.Item.Pressed))
+                {
+                    using (var hi = new SolidBrush(UITheme.MenuHighlightBackground))
+                        e.Graphics.FillRectangle(hi, e.Item.ContentRectangle);
+                    return;
+                }
             }
 
             protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
