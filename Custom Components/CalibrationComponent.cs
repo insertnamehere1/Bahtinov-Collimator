@@ -403,7 +403,6 @@ namespace Bahtinov_Collimator.Custom_Components
         {
             var rtb = titledRoundedRichTextBox1.InnerRichTextBox;
 
-            string mode = IsTriBahtinov ? "Tri-Bahtinov (3 values)" : "Bahtinov (1 value)";
             string header1 = "\nPurpose - Calibration allows SkyCal to assist with focusing, advise on collimation screw adjustments, and enable the ‘What Should I Do Next ?’ guidance.";
 
             if (_state == CalibrationState.WaitingForFirstValidRead)

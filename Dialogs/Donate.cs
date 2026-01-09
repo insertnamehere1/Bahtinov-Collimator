@@ -208,7 +208,6 @@ namespace Bahtinov_Collimator
         {
             // Don’t auto-launch browser; show clear instructions instead.
             // You can include your PayPal URL so they can copy it for later.
-            string paypalLink = GenerateDonationUrl();
             string githubLink = "https://insertnamehere1.github.io/Bahtinov-Collimator/";
 
             richTextBox.Text =
