@@ -109,12 +109,12 @@ namespace Bahtinov_Collimator.Custom_Components
             roundedPanel1.ForeColor = UITheme.MenuHighlightBackground;
 
             // Quit button
-            quitButton.Size = new Size(175, 44);
-            quitButton.Location = new Point(108, 20);
+            quitButton.Size = new Size(160, 44);
+            quitButton.Location = new Point(116, 20);
             quitButton.BackColor = UITheme.ButtonDarkBackground;
             quitButton.ForeColor = UITheme.ButtonDarkForeground;
             quitButton.FlatStyle = FlatStyle.Popup;
-            quitButton.CornerRadius = 6;
+            quitButton.CornerRadius = 8;
             quitButton.TextOffsetX = 0;
             quitButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
             quitButton.BevelLight = Color.FromArgb(220, 160, 160, 160);

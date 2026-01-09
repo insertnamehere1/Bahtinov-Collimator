@@ -39,7 +39,7 @@
             this.quitButton.BackColor = System.Drawing.Color.Gray;
             this.quitButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.quitButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.quitButton.BevelThickness = 2;
+            this.quitButton.BevelThickness = 4;
             this.quitButton.CornerRadius = 12;
             this.quitButton.FlatAppearance.BorderSize = 0;
             this.quitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -70,10 +70,10 @@
             this.titledRoundedRichTextBox1.InnerRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.titledRoundedRichTextBox1.InnerRichTextBox.DetectUrls = false;
             this.titledRoundedRichTextBox1.InnerRichTextBox.ForeColor = System.Drawing.Color.Black;
-            this.titledRoundedRichTextBox1.InnerRichTextBox.Location = new System.Drawing.Point(11, 41);
+            this.titledRoundedRichTextBox1.InnerRichTextBox.Location = new System.Drawing.Point(11, 61);
             this.titledRoundedRichTextBox1.InnerRichTextBox.Name = "";
             this.titledRoundedRichTextBox1.InnerRichTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.titledRoundedRichTextBox1.InnerRichTextBox.Size = new System.Drawing.Size(362, 454);
+            this.titledRoundedRichTextBox1.InnerRichTextBox.Size = new System.Drawing.Size(362, 434);
             this.titledRoundedRichTextBox1.InnerRichTextBox.TabIndex = 0;
             this.titledRoundedRichTextBox1.Location = new System.Drawing.Point(3, 23);
             this.titledRoundedRichTextBox1.Name = "titledRoundedRichTextBox1";

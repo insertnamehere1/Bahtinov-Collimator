@@ -72,7 +72,7 @@ namespace SkyCal
         /// </summary>
         private void UISetup()
         {
-            Text = "SkyCal Calibration";
+            Text = "SkyCal";
             StartPosition = FormStartPosition.CenterParent;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
@@ -87,7 +87,7 @@ namespace SkyCal
             _titleLabel = new Label
             {
                 AutoSize = true,
-                Text = "Recommended",
+                Text = "Calibration is Recommended:",
                 Font = new Font(Font, FontStyle.Bold),
                 Location = new Point(14, 14)
             };
