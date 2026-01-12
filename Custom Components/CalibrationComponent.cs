@@ -358,6 +358,8 @@ namespace Bahtinov_Collimator.Custom_Components
             Properties.Settings.Default.ShowStartupCalibrationPrompt = false;
             Properties.Settings.Default.Save();
 
+            quitButton.Text = "Close";
+
             // Capture new image to display changed sign.
             ImageCapture.ForceImageUpdate();
 
