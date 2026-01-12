@@ -9,8 +9,17 @@
   "CaptureBullet1": "Ensure a bright star is centered.",
   "CaptureBullet2": "Attach Tri-Bahtinov mask and click “Select Star”.",
 
-  "FocusOnlyHeader": "Focus Guidance is not Available",
-  "FocusOnlyNeedsAdjustingSummary": "Guidance is only available for Tri-Bahtinov images.",
+  "FocusOnlyHeader": "Focus using the Bahtinov mask",
+  "FocusOnlySummaryFormat": "Focus error is {0}. Move focus {1} until it is within tolerance.",
+
+  "FocusOnlyBullet1Format": "Adjust focus {0} in small steps.",
+  "FocusOnlyBullet2Format": "Aim for |error| ≤ {0}.",
+  "FocusOnlyBullet3": "Do not adjust collimation screws for a standard Bahtinov mask.",
+  "FocusOnlyDoneHeader": "Focus is good",
+  "FocusOnlyDoneSummaryFormat": "Focus error is {0}, which is within tolerance.",
+  "FocusOnlyDoneBullet1": "Capture a few more frames to confirm it stays stable.",
+  "FocusOnlyDoneBullet2": "You can now switch to your imaging target.",
+  "FocusOnlyFooterHint": "Tip: if the value flips sign while adjusting, you passed through best focus. Use smaller steps.",
 
   "FocusBalancedHeader": "Balance Error Markers Around 0",
   "FocusBalancedSummary": "Adjust focus until the three error values are balanced around 0.\n",
@@ -42,5 +51,5 @@
 
   "ChannelRed": "Red",
   "ChannelGreen": "Green",
-  "ChannelBlue":  "Blue"
+  "ChannelBlue": "Blue"
 }
