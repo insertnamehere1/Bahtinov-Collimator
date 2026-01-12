@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
-using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
@@ -52,19 +50,27 @@ namespace Bahtinov_Collimator
         [DataMember] public string DoneBullet { get; set; }
 
         // Collimation instruction block
-        [DataMember] public string CollimationIntroBullet { get; set; }
         [DataMember] public string CollimationPositiveInstructionFormat { get; set; } // {0}=channel name, {1}=value, {2}=screw label
         [DataMember] public string CollimationNegativeInstructionFormat { get; set; } // {0}=channel name, {1}=value, {2}=screw label
         [DataMember] public string CollimationAdjustTogetherBullet { get; set; }
-        [DataMember] public string CollimationRepeatCycleBullet { get; set; }
+        [DataMember] public string CollimationRepeatCycle { get; set; }
         [DataMember] public string CollimationFooterHint { get; set; }
 
         // Focus direction words
         [DataMember] public string DirectionIn { get; set; }
         [DataMember] public string DirectionOut { get; set; }
 
+        // textual new line
+        [DataMember] public string CollimationSpace { get; set; }
+
         // Screw fallback label
         [DataMember] public string ScrewFallbackFormat { get; set; } // {0}=group name
+
+        // Channel names
+        [DataMember] public string ChannelRed { get; set; }
+        [DataMember] public string ChannelGreen { get; set; }
+        [DataMember] public string ChannelBlue { get; set; }
+
     }
 
     /// <summary>

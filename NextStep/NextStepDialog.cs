@@ -60,7 +60,7 @@ namespace Bahtinov_Collimator
             MaximizeBox = false;
             AutoScaleMode = AutoScaleMode.Dpi;
 
-            ClientSize = new Size(760, 480);
+            ClientSize = new Size(760, 550);
 
             BackColor = UITheme.DarkBackground;
             ForeColor = Color.White;
@@ -379,12 +379,15 @@ namespace Bahtinov_Collimator
 
             GotFocus += (s, e) => _ok.Focus();
 
-            if (section.Bullets != null)
+            if (section.Lines != null)
             {
-                foreach (var bullet in section.Bullets)
+                foreach (var line in section.Lines)
                 {
-                    if (!string.IsNullOrWhiteSpace(bullet))
-                        rtb.AppendText("• " + bullet + Environment.NewLine);
+                    if (!string.IsNullOrWhiteSpace(line.Text))
+                        if(!line.Bullet)
+                            rtb.AppendText(line.Text + Environment.NewLine);
+                        else
+                            rtb.AppendText("• " + line.Text + Environment.NewLine);
                 }
             }
 

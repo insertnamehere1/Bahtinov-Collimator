@@ -355,6 +355,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 Properties.Settings.Default.SignChange = !Properties.Settings.Default.SignChange;
             
             Properties.Settings.Default.CalibrationCompleted = true;
+            Properties.Settings.Default.ShowStartupCalibrationPrompt = false;
             Properties.Settings.Default.Save();
 
             // Capture new image to display changed sign.

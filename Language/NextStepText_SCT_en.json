@@ -13,31 +13,34 @@
   "FocusOnlyNeedsAdjustingSummary": "Guidance is only available for Tri-Bahtinov images.",
 
   "FocusBalancedHeader": "Balance Error Markers Around 0",
-  "FocusBalancedSummary": "Before adjusting collimation screws, use the focus so the three error values are centered around 0 and similar in magnitude.",
+  "FocusBalancedSummary": "Adjust focus until the three error values are balanced around 0.\n",
   "FocusAllPositiveBullet": "All values are positive. Move the focuser IN in small steps.",
   "FocusAllNegativeBullet": "All values are negative. Move the focuser OUT in small steps.",
   "FocusStraddleNotBalancedBullet1": "Values straddle 0, but they are not balanced yet.",
   "FocusStraddleNotBalancedBullet2Format": "Move the focuser {0} until the 3 error values are evenly spaced around 0.",
-  "FocusTargetLineFormat": "Target: average near 0 and similar magnitudes.",
-  "FocusOnlyBeginScrewsBullet": "Only begin adjustments once the three values are balanced around 0.",
-  "FocusFooterHint": "Tip: After changing focus wait until the image settles before using “What Should I Do Next”.",
+  "FocusTargetLineFormat": "Target: An average near 0, with similar magnitudes.",
+  "FocusOnlyBeginScrewsBullet": "Begin collimation adjustments only after this balance is achieved.",
+  "FocusFooterHint": "Tip: IN is primary mirror towards secondary or camera towards telescope, \nOUT is primary away from secondary or camera away from telescope",
 
-  "CollimationHeader": "Collimation Adjustments",
-  "CollimationSummary": "Values straddle 0. Proceed with balanced collimation using 2 or more screws at the same time.",
+  "CollimationHeader": "Collimation Adjustments for SCT",
+  "CollimationSummary": "Values straddle 0. Proceed with balanced collimation using 2 or more screws at the same time.\n",
 
   "DoneHeader": "Looks Good",
-  "DoneSummary": "All values are close to zero.",
+  "DoneSummary": "All values are close to zero.\n",
   "DoneBullet": "No adjustment required.",
-
-  "CollimationIntroBullet": "Values straddle zero. Proceed with balanced collimation.\n",
   "CollimationPositiveInstructionFormat": "{0} adjustment - LOOSEN (Counter Clockwise). {0} is too far from the primary.",
   "CollimationNegativeInstructionFormat": "{0} adjustment - TIGHTEN (Clockwise). {0} is too close to the primary.",
-  "CollimationAdjustTogetherBullet": "Adjust these screws together to keep tension balanced.",
-  "CollimationRepeatCycleBullet": "Re-center the star, re-measure, then refocus until the values straddle 0 again before repeating.",
-  "CollimationFooterHint": "Tip: Center the star after each focus change. Drift can mimic imbalance.",
+  "CollimationAdjustTogetherBullet": "\r\nAdjust these screws together to keep tension balanced.",
+  "CollimationFooterHint": "Tip: Re-center the star, then refocus until the values straddle 0 again before repeating.",
 
   "DirectionIn": "IN",
   "DirectionOut": "OUT",
 
-  "ScrewFallbackFormat": "the {0} screw"
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "the {0} screw",
+
+  "ChannelRed": "Red",
+  "ChannelGreen": "Green",
+  "ChannelBlue":  "Blue"
 }

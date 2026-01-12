@@ -55,8 +55,9 @@ namespace Bahtinov_Collimator
                 if (!string.IsNullOrWhiteSpace(s.Title))
                     sb.AppendLine(s.Title);
 
-                foreach (var b in s.Bullets)
-                    sb.AppendLine("• " + b);
+                foreach (var b in s.Lines )
+                    if (b.Bullet == true)
+                        sb.AppendLine("• " + b);
 
                 sb.AppendLine();
             }
@@ -75,7 +76,7 @@ namespace Bahtinov_Collimator
     {
         // Text
         public string Title { get; set; }
-        public List<string> Bullets { get; } = new List<string>();
+        public List<StringBoolPair> Lines{get;} = new List<StringBoolPair>();
 
         // Semantic intent (NO UI types)
         public bool EmphasizeTitle { get; set; }     // major step
@@ -84,6 +85,18 @@ namespace Bahtinov_Collimator
 
         // Optional inline image (logic provides, UI renders)
         public Image InlineImage { get; set; }
+    }
+
+    public class StringBoolPair
+    {
+        public string Text { get; set; }
+        public bool Bullet { get; set; }
+
+        public StringBoolPair(string text, bool bullet)
+        {
+            Text = text;
+            Bullet = bullet;
+        }
     }
 }
 

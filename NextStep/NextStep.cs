@@ -35,9 +35,9 @@ namespace Bahtinov_Collimator
 
             var channels = new[]
             {
-                new Channel("Red", red),
-                new Channel("Green", green),
-                new Channel("Blue", blue)
+                new Channel(T.ChannelRed, red),
+                new Channel(T.ChannelGreen, green),
+                new Channel(T.ChannelBlue, blue)
             };
 
             if (!capturing)
@@ -48,8 +48,8 @@ namespace Bahtinov_Collimator
                 g.Summary = T.CaptureSummary;
 
                 var s = new GuidanceSection { Title = T.SectionWhatToDoTitle, EmphasizeTitle = true };
-                s.Bullets.Add(T.CaptureBullet1);
-                s.Bullets.Add(T.CaptureBullet2);
+                s.Lines.Add(new StringBoolPair(T.CaptureBullet1, true));
+                s.Lines.Add(new StringBoolPair(T.CaptureBullet2, true));
                 g.Sections.Add(s);
 
                 return g;
@@ -72,11 +72,14 @@ namespace Bahtinov_Collimator
         /// </summary>
         private static bool IsBalancedAroundZero(Channel[] channels)
         {
-            double tolerance = 0.5;     // tolerance must be quite close to 0
-            bool balanceSigned = ComputeSignedBalanceError(channels, tolerance);
-            bool balancePvs = IsPairVsSingleBalanced(channels, tolerance);
-            bool balanceLargest = IsLargestPosNegBalanced(channels, tolerance);
+            double signTolerance = 0.3;     // tolerance must be quite close to 0
+            double pvsTolerance = 0.5;
+            double largestTolerance = 0.5;
 
+            bool balanceSigned = ComputeSignedBalanceError(channels, signTolerance);
+            bool balancePvs = IsPairVsSingleBalanced(channels, pvsTolerance);
+            bool balanceLargest = IsLargestPosNegBalanced(channels, largestTolerance);
+            
             return balanceSigned || balancePvs || balanceLargest;
         }
 
@@ -170,25 +173,25 @@ namespace Bahtinov_Collimator
 
             if (channels.All(c => c.Value > 0))
             {
-                s.Bullets.Add(T.FocusAllPositiveBullet);
+                s.Lines.Add(new StringBoolPair(T.FocusAllPositiveBullet, true));
             }
             else if (channels.All(c => c.Value < 0))
             {
-                s.Bullets.Add(T.FocusAllNegativeBullet);
+                s.Lines.Add(new StringBoolPair(T.FocusAllNegativeBullet, true));
             }
             else
             {
-                s.Bullets.Add(T.FocusStraddleNotBalancedBullet1);
+                s.Lines.Add(new StringBoolPair(T.FocusStraddleNotBalancedBullet1, true));
 
                 string dir = mean > 0.0 ? T.DirectionIn : T.DirectionOut;
-                s.Bullets.Add(string.Format(CultureInfo.InvariantCulture, T.FocusStraddleNotBalancedBullet2Format, dir));
+                s.Lines.Add(new StringBoolPair(string.Format(CultureInfo.InvariantCulture, T.FocusStraddleNotBalancedBullet2Format, dir), true));
             }
 
             string meanStr = mean.ToString("+0.0;-0.0;0.0", CultureInfo.InvariantCulture);
             string maxAbsStr = maxAbs.ToString("0.0", CultureInfo.InvariantCulture);
 
-            s.Bullets.Add(string.Format(CultureInfo.InvariantCulture, T.FocusTargetLineFormat, meanStr, maxAbsStr));
-            s.Bullets.Add(T.FocusOnlyBeginScrewsBullet);
+            s.Lines.Add(new StringBoolPair(string.Format(CultureInfo.InvariantCulture, T.FocusTargetLineFormat, meanStr, maxAbsStr), true));
+            s.Lines.Add(new StringBoolPair(T.FocusOnlyBeginScrewsBullet, true));
 
             g.Sections.Add(s);
             g.FooterHint = T.FocusFooterHint;
@@ -227,8 +230,8 @@ namespace Bahtinov_Collimator
             g.Header = T.CollimationHeader;
             g.Summary = T.CollimationSummary;
 
-            var positives = channels.Where(c => c.Value > tolerance).OrderByDescending(c => c.Value).ToList();
-            var negatives = channels.Where(c => c.Value < -tolerance).OrderBy(c => c.Value).ToList();
+            var positives = channels.Where(c => c.Value > 0).OrderByDescending(c => c.Value).ToList();
+            var negatives = channels.Where(c => c.Value < 0).OrderBy(c => c.Value).ToList();
 
             // If we're basically done
             if (channels.All(c => Math.Abs(c.Value) <= tolerance))
@@ -239,7 +242,7 @@ namespace Bahtinov_Collimator
                 g.Summary = T.DoneSummary;
 
                 var sDone = new GuidanceSection { Title = T.SectionWhatToDoTitle, EmphasizeTitle = true };
-                sDone.Bullets.Add(T.DoneBullet);
+                sDone.Lines.Add(new StringBoolPair(T.DoneBullet, true));
                 g.Sections.Add(sDone);
 
                 return g;
@@ -303,25 +306,21 @@ namespace Bahtinov_Collimator
             CultureInfo inv)
         {
             var T = NextStepText.Current;
-
             var s = new GuidanceSection { Title = T.SectionWhatToDoTitle, EmphasizeTitle = true };
-
-            s.Bullets.Add(T.CollimationIntroBullet);
 
             foreach (var c in loosen)
             {
                 string screw = Screw(c.Name, map);
-                s.Bullets.Add(string.Format(inv, T.CollimationPositiveInstructionFormat, c.Name, Format(c.Value, inv), screw));
+                s.Lines.Add(new StringBoolPair(string.Format(inv, T.CollimationPositiveInstructionFormat, c.Name, Format(c.Value, inv), screw), true));
             }
 
             foreach (var c in tighten)
             {
                 string screw = Screw(c.Name, map);
-                s.Bullets.Add(string.Format(inv, T.CollimationNegativeInstructionFormat, c.Name, Format(c.Value, inv), screw));
+                s.Lines.Add(new StringBoolPair(string.Format(inv, T.CollimationNegativeInstructionFormat, c.Name, Format(c.Value, inv), screw), true));
             }
-
-            s.Bullets.Add(T.CollimationAdjustTogetherBullet);
-            s.Bullets.Add(T.CollimationRepeatCycleBullet);
+            s.Lines.Add(new StringBoolPair(T.CollimationAdjustTogetherBullet, false));
+            g.FooterHint = T.CollimationFooterHint;
 
             g.Sections.Add(s);
             return g;
