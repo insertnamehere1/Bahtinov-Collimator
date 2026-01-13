@@ -1065,8 +1065,12 @@ namespace Bahtinov_Collimator
                 switch (group)
                 {
                     case 0:
-                        // 0 < angle < π
-                        errorSign = (errorDir > 0.0 && errorDir < Math.PI) ? 1f : -1f;
+                        if (bahtinovLines.LineAngles.Length == 9)
+                            // 0 < angle < π
+                            errorSign = (errorDir > 0.0 && errorDir < Math.PI) ? 1f : -1f;
+                        else
+                            // Keep sign if this is a simple bahtinov mask
+                            errorSign = -1f;
                         break;
 
                     case 1:
