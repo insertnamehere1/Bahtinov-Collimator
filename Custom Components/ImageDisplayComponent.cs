@@ -115,9 +115,9 @@ namespace Bahtinov_Collimator
             Bitmap image = new Bitmap(e.Image);
 
             if (pictureBox1.InvokeRequired)
-                pictureBox1.Invoke(new Action(() => UpdatePictureBox(image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius, e.Distance, e.Direction)));
+                pictureBox1.Invoke(new Action(() => UpdatePictureBox(image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius)));
             else
-                UpdatePictureBox(image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius, e.Distance, e.Direction);
+                UpdatePictureBox(image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius);
         }
 
         /// <summary>
@@ -159,22 +159,18 @@ namespace Bahtinov_Collimator
 
         #region Update Methods
         /// <summary>
-        /// Updates the PictureBox with the provided image and drawing data, including defocus circles and arrows.
         /// </summary>
         /// <param name="image">The Bitmap image to display.</param>
         /// <param name="innerCentre">The center point of the inner defocus circle.</param>
         /// <param name="innerRadius">The radius of the inner defocus circle.</param>
         /// <param name="outerCentre">The center point of the outer defocus circle.</param>
         /// <param name="outerRadius">The radius of the outer defocus circle.</param>
-        /// <param name="distance">The distance value to display with the arrow.</param>
-        /// <param name="direction">The direction angle for the arrow.</param>
-        private void UpdatePictureBox(Bitmap image, PointD innerCentre, double innerRadius, PointD outerCentre, double outerRadius, double distance, double direction)
+        private void UpdatePictureBox(Bitmap image, PointD innerCentre, double innerRadius, PointD outerCentre, double outerRadius)
         {
             ClearAllLayers();
 
             DrawImageOnFirstLayer(image);
             DrawDefocusCircles(innerCentre, innerRadius, outerCentre, outerRadius);
-            DrawArrow(direction, distance, image.Height, image.Width, outerRadius);
             pictureBox1.Invalidate();
         }
 
@@ -207,82 +203,58 @@ namespace Bahtinov_Collimator
         #region Drawing Methods
 
         /// <summary>
-        /// Draws an arrow on the PictureBox indicating the direction and distance.
+        /// Draws inner (green) and outer (red) defocus circles, plus 20x20px center crosses.
+        /// Crosses are semi-transparent so overlapping areas blend (red+green -> yellow).
         /// </summary>
-        /// <param name="angleInDegrees">The angle of the arrow in degrees.</param>
-        /// <param name="distance">The distance value to display with the arrow.</param>
-        /// <param name="imageHeight">The height of the image.</param>
-        /// <param name="imageWidth">The width of the image.</param>
-        /// <param name="outerRadius">The radius of the outer defocus circle.</param>
-        private void DrawArrow(double angleInDegrees, double distance, int imageHeight, int imageWidth, double outerRadius)
-        {
-            double circleRadius = outerRadius + 100;
-            int arrowLength = 70;
-
-            using (var g = Graphics.FromImage(layers[1]))
-            {
-                // Convert angle to radians
-                double angleInRadians = (angleInDegrees + 180) * (Math.PI / 180.0);
-
-                // Get the center of the PictureBox
-                Point center = new Point(imageWidth / 2, imageHeight / 2);
-
-                // Calculate the start position on the invisible circle
-                Point startPoint = new Point(
-                    center.X + (int)(circleRadius * Math.Cos(angleInRadians)),
-                    center.Y + (int)(circleRadius * Math.Sin(angleInRadians))
-                );
-
-                // Calculate the end position by extending inwards by arrowLength
-                Point endPoint = new Point(
-                    startPoint.X - (int)(arrowLength * Math.Cos(angleInRadians)),
-                    startPoint.Y - (int)(arrowLength * Math.Sin(angleInRadians))
-                );
-
-                // Create the arrow
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                using (Pen pen = new Pen(UITheme.GetGroupBoxTextColor(0), 20))
-                {
-                    pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
-                    g.DrawLine(pen, startPoint, endPoint);
-                }
-
-                // Draw the distance text
-                string distanceText = distance.ToString("F1");
-                using (Font font = new Font("Arial", 30, FontStyle.Bold | FontStyle.Italic))
-                using (Brush brush = new SolidBrush(UITheme.GetGroupBoxTextColor(0)))
-                {
-                    PointF textStart = new PointF(20, 20);
-                    g.DrawString("Offset: " + distanceText, font, brush, textStart);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Draws defocus circles on the specified layer of the PictureBox.
-        /// </summary>
-        /// <param name="innerCentre">The center point of the inner defocus circle.</param>
-        /// <param name="innerRadius">The radius of the inner defocus circle.</param>
-        /// <param name="outerCentre">The center point of the outer defocus circle.</param>
-        /// <param name="outerRadius">The radius of the outer defocus circle.</param>
         private void DrawDefocusCircles(PointD innerCentre, double innerRadius, PointD outerCentre, double outerRadius)
         {
             using (var g = Graphics.FromImage(layers[1]))
             {
-                Pen dashedPen = new Pen(UITheme.GetGroupBoxTextColor(0), 3)
+                // Make alpha blending predictable and nice-looking.
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.CompositingMode = CompositingMode.SourceOver;
+                g.CompositingQuality = CompositingQuality.HighQuality;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                float layerCentreX = UITheme.DisplayWindow.X / 2f;
+                float layerCentreY = UITheme.DisplayWindow.Y / 2f;
+
+                // Convert circle centres into layer pixel coordinates once.
+                var innerPx = new PointF(layerCentreX + (float)innerCentre.X, layerCentreY + (float)innerCentre.Y);
+                var outerPx = new PointF(layerCentreX + (float)outerCentre.X, layerCentreY + (float)outerCentre.Y);
+
+                const float penWidth = 3f;
+                const float crossSize = 20f;  // overall width/height of cross
+                const int crossAlpha = 255;   // 0..255. Lower = more blending.
+
+                using (var innerPen = new Pen(Color.FromArgb(crossAlpha, Color.Lime), penWidth))
+                using (var outerPen = new Pen(Color.FromArgb(crossAlpha, Color.Red), penWidth))
                 {
-                    DashStyle = DashStyle.Dash
-                };
+                    // Circles (same pens for consistent look)
+                    DrawCircle(g, innerPen, innerPx, (float)innerRadius);
+                    DrawCircle(g, outerPen, outerPx, (float)outerRadius);
 
-                dashedPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-
-                double layerCentreX = UITheme.DisplayWindow.X / 2.0f;
-                double layerCentreY = UITheme.DisplayWindow.Y / 2.0f;
-
-                // Draw the circle at the average inner radius (centered on the PictureBox1
-                g.DrawEllipse(dashedPen, (float)(layerCentreX + innerCentre.X - innerRadius), (float)(layerCentreY + innerCentre.Y - innerRadius), (float)innerRadius * 2, (float)innerRadius * 2);
-                g.DrawEllipse(dashedPen, (float)(layerCentreX + outerCentre.X - outerRadius), (float)(layerCentreY + outerCentre.Y - outerRadius), (float)(outerRadius * 2), (float)(outerRadius * 2));
+                    // Crosses (semi-transparent so overlaps blend instead of replace)
+                    DrawCross(g, outerPen, outerPx, crossSize);
+                    DrawCross(g, innerPen, innerPx, crossSize);
+                }
             }
+        }
+
+        private static void DrawCircle(Graphics g, Pen pen, PointF centre, float radius)
+        {
+            float d = radius * 2f;
+            g.DrawEllipse(pen, centre.X - radius, centre.Y - radius, d, d);
+        }
+
+        private static void DrawCross(Graphics g, Pen pen, PointF centre, float size)
+        {
+            float half = size / 1.5f;
+
+            // Horizontal
+            g.DrawLine(pen, centre.X - half, centre.Y, centre.X + half, centre.Y);
+            // Vertical
+            g.DrawLine(pen, centre.X, centre.Y - half, centre.X, centre.Y + half);
         }
 
         /// <summary>
