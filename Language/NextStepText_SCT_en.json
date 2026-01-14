@@ -32,7 +32,7 @@
   "FocusFooterHint": "Tip: IN is primary mirror towards secondary or camera towards telescope, \nOUT is primary away from secondary or camera away from telescope",
 
   "CollimationHeader": "Collimation Adjustments for SCT",
-  "CollimationSummary": "Values straddle 0. Proceed with balanced collimation using 2 or more screws at the same time.\n",
+  "CollimationSummary": "Proceed with balanced collimation using 2 or more screws at the same time.\n",
 
   "DoneHeader": "Looks Good",
   "DoneSummary": "All values are close to zero.\n",
