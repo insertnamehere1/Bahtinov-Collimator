@@ -4,7 +4,6 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Speech.Synthesis.TtsEngine;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
@@ -12,6 +11,7 @@ namespace Bahtinov_Collimator
     internal class ImageCapture
     {
         #region External Methods
+
         /// <summary>
         /// Retrieves the dimensions of the window specified by the given handle.
         /// </summary>
@@ -23,13 +23,13 @@ namespace Bahtinov_Collimator
         private static extern bool GetWindowRect(IntPtr hWnd, out Utilities.RECT lpRect);
 
         /// <summary>
-        /// Captures a bitmap image of the specified window's client area and sends it to the device context.
+        /// Captures a bitmap image of the specified window and renders it into the provided device context.
         /// </summary>
         /// <param name="hwnd">Handle to the window to capture.</param>
         /// <param name="hdcBlt">Handle to the device context to which the image is copied.</param>
         /// <param name="nFlags">Flags specifying how to capture the window.</param>
         /// <returns>True if the function succeeds; otherwise, false.</returns>
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         private static extern bool PrintWindow(IntPtr hwnd, IntPtr hdcBlt, int nFlags);
 
         /// <summary>
@@ -39,9 +39,32 @@ namespace Bahtinov_Collimator
         /// <returns>Handle to the window that contains the point.</returns>
         [DllImport("user32.dll", SetLastError = true)]
         private static extern IntPtr WindowFromPoint(Point p);
+
+        /// <summary>
+        /// Retrieves an ancestor of the specified window.
+        /// Used to resolve child/overlay windows to a stable top-level window handle.
+        /// </summary>
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern IntPtr GetAncestor(IntPtr hwnd, uint gaFlags);
+
+        /// <summary>
+        /// Determines whether the specified window is minimized (iconic).
+        /// </summary>
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool IsIconic(IntPtr hWnd);
+
+        /// <summary>
+        /// Determines whether the specified window handle identifies an existing window.
+        /// </summary>
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool IsWindow(IntPtr hWnd);
+
         #endregion
 
         #region Events and Delegates
+
         /// <summary>
         /// Represents the method that will handle the ImageReceived event.
         /// </summary>
@@ -53,31 +76,41 @@ namespace Bahtinov_Collimator
         /// Occurs when a new image has been captured.
         /// </summary>
         public static event ImageReceivedEventHandler ImageReceivedEvent;
+
         #endregion
 
         #region Constants
+
         // Constants for PrintWindow function flags
         private const int PW_RENDERFULLCONTENT = 0x2;
 
         // Threshold for detecting significant movement
         private const int MovementThreshold = 1;
+
+        // GetAncestor flags
+        private const uint GA_ROOT = 2;
+
         #endregion
 
         #region Private Fields
-        // Private fields for managing image capture
+
         private static Timer captureTimer;
         private static IntPtr targetWindowHandle;
         private static Rectangle selectedStarBox;
         private static string firstHash = "";
         private static bool notEqualLastTick = true;
         private static bool newImageSend = false;
+
         #endregion
 
         #region Public Fields
-        public static int TrackingType {  get; set; } = 0; //0-off, 1-bahtinov, 2-defocus
+
+        public static int TrackingType { get; set; } = 0; //0-off, 1-bahtinov, 2-defocus
+
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Starts the image capture process by initializing and starting a timer.
         /// The timer triggers the CaptureTimer_Tick method at regular intervals.
@@ -105,17 +138,39 @@ namespace Bahtinov_Collimator
             captureTimer = null;
         }
 
+        /// <summary>
+        /// Forces an updated image to be sent on the next timer tick.
+        /// </summary>
         public static void ForceImageUpdate()
         {
-            // forces updated image on next tick
+            // Forces updated image on next tick
             firstHash = "";
         }
 
-        ///// <summary>
-        ///// Handles the Timer.Tick event to capture an image and invoke the ImageReceivedEvent.
-        ///// </summary>
-        ///// <param name="sender">The source of the event.</param>
-        ///// <param name="e">Event arguments for the tick event.</param>
+        /// <summary>
+        /// Resolves an arbitrary window handle (often a child/overlay) to its top-level root window.
+        /// This reduces cases where WindowFromPoint returns a transient child window that is not suitable for capture.
+        /// </summary>
+        /// <param name="hwnd">A window handle returned from WindowFromPoint.</param>
+        /// <returns>The top-level root window handle, or IntPtr.Zero if invalid.</returns>
+        private static IntPtr GetRootWindow(IntPtr hwnd)
+        {
+            if (hwnd == IntPtr.Zero)
+                return IntPtr.Zero;
+
+            if (!IsWindow(hwnd))
+                return IntPtr.Zero;
+
+            IntPtr root = GetAncestor(hwnd, GA_ROOT);
+            if (root != IntPtr.Zero && IsWindow(root))
+                return root;
+
+            return hwnd;
+        }
+
+        /// <summary>
+        /// Handles the Timer.Tick event to capture an image and invoke the ImageReceivedEvent.
+        /// </summary>
         private static void CaptureTimer_Tick(object sender, EventArgs e)
         {
             Bitmap image = GetImage();
@@ -135,6 +190,7 @@ namespace Bahtinov_Collimator
                 }
                 else
                 {
+                    image.Dispose();
                     return;
                 }
             }
@@ -151,6 +207,9 @@ namespace Bahtinov_Collimator
             try
             {
                 latestImage = CreateCircularImage(image);
+                if (latestImage == null)
+                    return;
+
                 updatedImage = new Bitmap(UITheme.DisplayWindow.X, UITheme.DisplayWindow.Y);
 
                 g = Graphics.FromImage(updatedImage);
@@ -205,6 +264,10 @@ namespace Bahtinov_Collimator
                     newImageSend = false;
                     captureTimer.Interval = 200;
                 }
+                else
+                {
+                    updatedImage.Dispose();
+                }
             }
             catch
             {
@@ -212,21 +275,20 @@ namespace Bahtinov_Collimator
                 {
                     DarkMessageBox.Show("Invalid image selection", "Capture Timer", MessageBoxIcon.Information, MessageBoxButtons.OK);
                 }
+                updatedImage?.Dispose();
                 return;
             }
             finally
             {
                 g?.Dispose();
                 latestImage?.Dispose();
-                image?.Dispose();
+                image.Dispose();
             }
         }
 
         /// <summary>
         /// Finds the offset of the inner circle in a donut-shaped image by analyzing brightness transitions along circular paths.
         /// </summary>
-        /// <param name="image">The bitmap image to analyze. It is expected to contain a donut-shaped feature with a bright outer ring and a dark inner circle.</param>
-        /// <returns>A <see cref="Point"/> representing the estimated center of the inner circle within the image.</returns>
         private static Point FindInnerCircleOffset(Bitmap image)
         {
             int width = image.Width;
@@ -257,9 +319,9 @@ namespace Bahtinov_Collimator
             IntPtr scan0 = bitmapData.Scan0;
             byte[] pixels = new byte[stride * height];
 
-            System.Runtime.InteropServices.Marshal.Copy(scan0, pixels, 0, pixels.Length);
+            Marshal.Copy(scan0, pixels, 0, pixels.Length);
 
-            for (int angle = 0; angle < 360; angle+=4)
+            for (int angle = 0; angle < 360; angle += 4)
             {
                 double lineSumBrightness = 0;
                 int numPoints = 0;
@@ -276,7 +338,7 @@ namespace Bahtinov_Collimator
                     if (x >= 0 && x < width && y >= 0 && y < height)
                     {
                         int pixelIndex = (int)(y) * stride + (int)(x) * bytesPerPixel;
-                        double brightness = GetBrightness(pixels[pixelIndex + 2], pixels[pixelIndex + 1], pixels[pixelIndex]); // assuming RGB format
+                        double brightness = GetBrightness(pixels[pixelIndex + 2], pixels[pixelIndex + 1], pixels[pixelIndex]); // RGB
 
                         if (brightness != 0)
                         {
@@ -324,10 +386,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Calculates the brightness of a pixel based on its RGB color values.
         /// </summary>
-        /// <param name="r">The red component of the pixel's color.</param>
-        /// <param name="g">The green component of the pixel's color.</param>
-        /// <param name="b">The blue component of the pixel's color.</param>
-        /// <returns>A <see cref="double"/> representing the brightness of the pixel, normalized to the range [0.0, 1.0].</returns>
         private static double GetBrightness(byte r, byte g, byte b)
         {
             return (r * 0.299 + g * 0.587 + b * 0.114) / 255.0;
@@ -336,8 +394,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Creates a circular bitmap from the given original image, using the smaller dimension of the selection area as the diameter.
         /// </summary>
-        /// <param name="originalImage">The original bitmap image to be cropped into a circular shape.</param>
-        /// <returns>A <see cref="Bitmap"/> representing the original image cropped into a circular shape. Returns null if the selection area is too small.</returns>
         private static Bitmap CreateCircularImage(Bitmap originalImage)
         {
             int diameter = Math.Min(selectedStarBox.Width, selectedStarBox.Height);
@@ -378,10 +434,13 @@ namespace Bahtinov_Collimator
                 {
                     selectedStarBox = overlay.SelectedArea;
 
-                    targetWindowHandle = WindowFromPoint(new Point(
+                    // WindowFromPoint can return a child/overlay window, so resolve to a stable root window.
+                    IntPtr hit = WindowFromPoint(new Point(
                         selectedStarBox.Left + selectedStarBox.Width / 2,
                         selectedStarBox.Top + selectedStarBox.Height / 2
                     ));
+
+                    targetWindowHandle = GetRootWindow(hit);
 
                     if (targetWindowHandle == IntPtr.Zero)
                     {
@@ -403,11 +462,25 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Captures a portion of the target window's image based on the specified selection area and returns it as a <see cref="Bitmap"/>.
-        /// Adjusts the selection area to ensure it fits within the window and adheres to UI constraints. If any issues occur during image capture, returns null and shows a warning message.
+        /// Adjusts the selection area to ensure it fits within the window and adheres to UI constraints.
         /// </summary>
-        /// <returns>A <see cref="Bitmap"/> representing the selected area of the target window. Returns null if there are issues with image capture or if the selection area is invalid.</returns>
         private static Bitmap GetImage()
         {
+            // Validate target window handle early
+            if (targetWindowHandle == IntPtr.Zero || !IsWindow(targetWindowHandle))
+            {
+                ImageLostEventProvider.OnImageLost("Image has been lost", "GetImage", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                return null;
+            }
+
+            // If the window is minimized, PrintWindow is often unreliable and may return a stale/blank image.
+            // Treat this as "image lost" so the UI can instruct the user.
+            if (IsIconic(targetWindowHandle))
+            {
+                ImageLostEventProvider.OnImageLost("Target window is minimized", "GetImage", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                return null;
+            }
+
             // Get the window rectangle
             if (!GetWindowRect(targetWindowHandle, out Utilities.RECT rect))
             {
@@ -415,24 +488,21 @@ namespace Bahtinov_Collimator
                 return null;
             }
 
-            // Convert window dimensions to logical pixels
-            int windowWidth = (int)((rect.Right - rect.Left));
-            int windowHeight = (int)((rect.Bottom - rect.Top));
+            int windowWidth = (int)(rect.Right - rect.Left);
+            int windowHeight = (int)(rect.Bottom - rect.Top);
 
             // Adjust selectedStarBox to be within the bounds of the window
             selectedStarBox.X = Math.Max(selectedStarBox.X, 0);
-            selectedStarBox.Y = Math.Max(selectedStarBox.Y , 0);
+            selectedStarBox.Y = Math.Max(selectedStarBox.Y, 0);
             selectedStarBox.Width = Math.Min(selectedStarBox.Width, windowWidth - selectedStarBox.X);
             selectedStarBox.Height = Math.Min(selectedStarBox.Height, windowHeight - selectedStarBox.Y);
 
-            // Check if selectedStarBox exceeds UITheme.DisplayWindow.X and Y, and adjust if necessary
+            // Enforce UITheme display constraints
             if (selectedStarBox.Width > UITheme.DisplayWindow.X || selectedStarBox.Height > UITheme.DisplayWindow.Y)
             {
-                // Calculate the excess width and height
                 int excessWidth = selectedStarBox.Width - UITheme.DisplayWindow.X;
                 int excessHeight = selectedStarBox.Height - UITheme.DisplayWindow.Y;
 
-                // Adjust equally on all sides
                 selectedStarBox.X += excessWidth / 2;
                 selectedStarBox.Y += excessHeight / 2;
                 selectedStarBox.Width -= excessWidth;
@@ -468,46 +538,72 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Captures an image of the entire window specified by the window handle.
+        /// Uses PrintWindow and validates the return value to avoid returning an empty bitmap when capture fails.
         /// </summary>
         /// <param name="hwnd">Handle to the window to capture.</param>
         /// <returns>A Bitmap object of the captured window image or null if capturing failed.</returns>
         private static Bitmap CaptureImage(IntPtr hwnd)
         {
-            if (GetWindowRect(hwnd, out Utilities.RECT rc))
+            if (hwnd == IntPtr.Zero || !IsWindow(hwnd))
+                return null;
+
+            if (!GetWindowRect(hwnd, out Utilities.RECT rc))
+                return null;
+
+            int width = rc.Right - rc.Left;
+            int height = rc.Bottom - rc.Top;
+
+            if (width <= 0 || height <= 0)
+                return null;
+
+            Bitmap bmp = null;
+            Graphics gfxBmp = null;
+
+            try
             {
-                int width = rc.Right - rc.Left;
-                int height = rc.Bottom - rc.Top;
+                bmp = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+                gfxBmp = Graphics.FromImage(bmp);
 
-                using (var bmp = new Bitmap(width, height, PixelFormat.Format24bppRgb))
-                using (var gfxBmp = Graphics.FromImage(bmp))
+                IntPtr hdcBitmap = gfxBmp.GetHdc();
+                bool ok;
+                try
                 {
-                    IntPtr hdcBitmap = gfxBmp.GetHdc();
-                    try
+                    ok = PrintWindow(hwnd, hdcBitmap, PW_RENDERFULLCONTENT);
+                    if (!ok)
                     {
-                        // Capture the window's content
-                        PrintWindow(hwnd, hdcBitmap, PW_RENDERFULLCONTENT);
+                        // Some windows respond better without PW_RENDERFULLCONTENT.
+                        ok = PrintWindow(hwnd, hdcBitmap, 0);
                     }
-                    finally
-                    {
-                        gfxBmp.ReleaseHdc(hdcBitmap);
-                    }
-
-                    return (Bitmap)bmp.Clone();
                 }
-            }
+                finally
+                {
+                    gfxBmp.ReleaseHdc(hdcBitmap);
+                }
 
-            DarkMessageBox.Show("Unable to capture window image", "Capture Image", MessageBoxIcon.Exclamation, MessageBoxButtons.OK);
-            return null;
+                if (!ok)
+                {
+                    bmp.Dispose();
+                    return null;
+                }
+
+                // Return a detached copy so the caller can dispose safely
+                return (Bitmap)bmp.Clone();
+            }
+            catch
+            {
+                bmp?.Dispose();
+                return null;
+            }
+            finally
+            {
+                gfxBmp?.Dispose();
+                bmp?.Dispose();
+            }
         }
 
         /// <summary>
         /// Finds the centroid of the brightest compact region in a bitmap, robust to
-        /// secondary fainter stars. It:
-        ///  1) Converts the image to 8-bit luminance (no thresholding).
-        ///  2) Builds an integral image (summed-area table).
-        ///  3) Slides a fixed-size square window to locate the maximum summed luminance.
-        ///  4) Refines the position with an intensity-weighted centroid in a small radius.
-        /// Returns image coordinates suitable for centering the Bahtinov pattern.
+        /// secondary fainter stars.
         /// </summary>
         /// <param name="bitmap">The source bitmap (any common 24/32bpp format).</param>
         /// <returns>Centroid of the brightest region. Falls back to image center if it cannot compute.</returns>
@@ -572,74 +668,84 @@ namespace Bahtinov_Collimator
             for (int y = 1; y < H1; y++)
             {
                 int rowSum = 0;
-                int offLum = (y - 1) * width;
-                int offII = y * W1;
+                int srcRow = (y - 1) * width;
+                int iiRow = y * W1;
+                int iiPrevRow = (y - 1) * W1;
+
                 for (int x = 1; x < W1; x++)
                 {
-                    rowSum += lum[offLum + (x - 1)];
-                    ii[offII + x] = ii[(y - 1) * W1 + x] + rowSum;
+                    rowSum += lum[srcRow + (x - 1)];
+                    ii[iiRow + x] = ii[iiPrevRow + x] + rowSum;
                 }
             }
 
-            int win = Math.Max(9, Math.Min(width, height) / 16);
-            if ((win & 1) == 0) win++;
-            int r = win / 2;
+            // Sliding window search
+            int window = Math.Max(12, Math.Min(width, height) / 8);
+            int bestX = width / 2;
+            int bestY = height / 2;
+            int bestSum = int.MinValue;
 
-            int bestX = 0, bestY = 0;
-            int bestSum = -1;
+            int maxX = width - window;
+            int maxY = height - window;
 
-            for (int y = r; y < height - r; y++)
+            for (int y = 0; y <= maxY; y++)
             {
-                int y0 = y - r;
-                int y1 = y + r + 1;
-                int rowTop = y0 * W1;
-                int rowBot = y1 * W1;
+                int y1 = y;
+                int y2 = y + window;
 
-                for (int x = r; x < width - r; x++)
+                int iiY1 = y1 * W1;
+                int iiY2 = y2 * W1;
+
+                for (int x = 0; x <= maxX; x++)
                 {
-                    int x0 = x - r;
-                    int x1 = x + r + 1;
+                    int x1 = x;
+                    int x2 = x + window;
 
-                    int sum = ii[rowBot + x1] - ii[rowBot + x0] - ii[rowTop + x1] + ii[rowTop + x0];
+                    int sum = ii[iiY2 + x2] - ii[iiY2 + x1] - ii[iiY1 + x2] + ii[iiY1 + x1];
                     if (sum > bestSum)
                     {
                         bestSum = sum;
-                        bestX = x;
-                        bestY = y;
+                        bestX = x + window / 2;
+                        bestY = y + window / 2;
                     }
                 }
             }
 
-            if (bestSum < 10000)  // nothing bright enough, adjust threshold as needed
-                return new Point(0, 0);
+            // Refine with intensity-weighted centroid around best
+            int radius = Math.Max(6, window / 2);
+            int xMin = Math.Max(0, bestX - radius);
+            int xMax2 = Math.Min(width - 1, bestX + radius);
+            int yMin = Math.Max(0, bestY - radius);
+            int yMax2 = Math.Min(height - 1, bestY + radius);
 
-            // Refine with intensity-weighted centroid
-            int refineRadius = Math.Max(3, win / 3);
-            long wSum = 0, wX = 0, wY = 0;
-
-            int xStart = Math.Max(0, bestX - refineRadius);
-            int xEnd = Math.Min(width - 1, bestX + refineRadius);
-            int yStart = Math.Max(0, bestY - refineRadius);
-            int yEnd = Math.Min(height - 1, bestY + refineRadius);
-
-            for (int y = yStart; y <= yEnd; y++)
+            double sumW = 0, sumX = 0, sumY = 0;
+            for (int y = yMin; y <= yMax2; y++)
             {
-                int baseIdx = y * width;
-                for (int x = xStart; x <= xEnd; x++)
+                int row = y * width;
+                for (int x = xMin; x <= xMax2; x++)
                 {
-                    int w = lum[baseIdx + x];
-                    if (w > 0) { wSum += w; wX += (long)w * x; wY += (long)w * y; }
+                    byte v = lum[row + x];
+                    if (v == 0) continue;
+                    double w = v;
+                    sumW += w;
+                    sumX += w * x;
+                    sumY += w * y;
                 }
             }
 
-            if (wSum == 0)
-                return new Point(0, 0);
+            if (sumW <= 0.0001)
+                return new Point(width / 2, height / 2);
 
-            double cx = (double)wX / wSum;
-            double cy = (double)wY / wSum;
+            int cx = (int)Math.Round(sumX / sumW);
+            int cy = (int)Math.Round(sumY / sumW);
 
-            return new Point((int)Math.Round(cx), (int)Math.Round(cy));
+            // Clamp
+            if (cx < 0) cx = 0; else if (cx >= width) cx = width - 1;
+            if (cy < 0) cy = 0; else if (cy >= height) cy = height - 1;
+
+            return new Point(cx, cy);
         }
+
         #endregion
     }
 }
