@@ -1065,7 +1065,7 @@ namespace Bahtinov_Collimator
                 switch (group)
                 {
                     case 0:
-                        if (bahtinovLines.LineAngles.Length == 9)
+                        if (lines.LineAngles.Length == 9)
                             // 0 < angle < π
                             errorSign = (errorDir > 0.0 && errorDir < Math.PI) ? 1f : -1f;
                         else
