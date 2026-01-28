@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -97,9 +96,14 @@ namespace Bahtinov_Collimator
         private static Timer captureTimer;
         private static IntPtr targetWindowHandle;
         private static Rectangle selectedStarBox;
-        private static string firstHash = "";
+        private static ulong lastFrameHash;
+        private static bool hasLastHash = false;
         private static bool notEqualLastTick = true;
         private static bool newImageSend = false;
+        private static readonly double[] CosValues = BuildCosValues();
+        private static readonly double[] SinValues = BuildSinValues();
+        private const int HashSampleSize = 32;
+        private const int HashRegionSize = 256;
 
         #endregion
 
@@ -132,7 +136,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         public static void StopImageCapture()
         {
-            firstHash = "";
+            hasLastHash = false;
             captureTimer?.Stop();
             captureTimer?.Dispose();
             captureTimer = null;
@@ -144,7 +148,7 @@ namespace Bahtinov_Collimator
         public static void ForceImageUpdate()
         {
             // Forces updated image on next tick
-            firstHash = "";
+            hasLastHash = false;
         }
 
         /// <summary>
@@ -178,8 +182,8 @@ namespace Bahtinov_Collimator
                 return;
 
             // Hash check for duplicate frames
-            string secondHash = Utilities.ComputeHash(image);
-            bool isSameImage = firstHash.Equals(secondHash);
+            ulong secondHash = ComputeFrameHash(image);
+            bool isSameImage = hasLastHash && lastFrameHash == secondHash;
 
             if (isSameImage)
             {
@@ -196,7 +200,8 @@ namespace Bahtinov_Collimator
             }
             else
             {
-                firstHash = secondHash;
+                lastFrameHash = secondHash;
+                hasLastHash = true;
                 notEqualLastTick = true;
             }
 
@@ -302,16 +307,6 @@ namespace Bahtinov_Collimator
             double transitionXSum = 0;
             double transitionYSum = 0;
 
-            // Precompute trigonometric values
-            double[] cosValues = new double[360];
-            double[] sinValues = new double[360];
-
-            for (int i = 0; i < 360; i++)
-            {
-                cosValues[i] = Math.Cos(i * Math.PI / 180);
-                sinValues[i] = Math.Sin(i * Math.PI / 180);
-            }
-
             // Lock the bitmap for faster pixel access
             BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, image.PixelFormat);
             int bytesPerPixel = Image.GetPixelFormatSize(image.PixelFormat) / 8;
@@ -332,8 +327,8 @@ namespace Bahtinov_Collimator
 
                 for (int r = startRadius; r < endRadius; r += step)
                 {
-                    double x = centerX + (r * cosValues[angle]);
-                    double y = centerY + (r * sinValues[angle]);
+                    double x = centerX + (r * CosValues[angle]);
+                    double y = centerY + (r * SinValues[angle]);
 
                     if (x >= 0 && x < width && y >= 0 && y < height)
                     {
@@ -352,8 +347,8 @@ namespace Bahtinov_Collimator
 
                 for (int r = startRadius + 10; r < endRadius; r += step)
                 {
-                    double x = centerX + (r * cosValues[angle]);
-                    double y = centerY + (r * sinValues[angle]);
+                    double x = centerX + (r * CosValues[angle]);
+                    double y = centerY + (r * SinValues[angle]);
 
                     if (x >= 0 && x < width && y >= 0 && y < height)
                     {
@@ -389,6 +384,94 @@ namespace Bahtinov_Collimator
         private static double GetBrightness(byte r, byte g, byte b)
         {
             return (r * 0.299 + g * 0.587 + b * 0.114) / 255.0;
+        }
+
+        private static double[] BuildCosValues()
+        {
+            double[] values = new double[360];
+            double radiansPerDegree = Math.PI / 180.0;
+            for (int i = 0; i < values.Length; i++)
+            {
+                values[i] = Math.Cos(i * radiansPerDegree);
+            }
+
+            return values;
+        }
+
+        private static double[] BuildSinValues()
+        {
+            double[] values = new double[360];
+            double radiansPerDegree = Math.PI / 180.0;
+            for (int i = 0; i < values.Length; i++)
+            {
+                values[i] = Math.Sin(i * radiansPerDegree);
+            }
+
+            return values;
+        }
+
+        private static ulong ComputeFrameHash(Bitmap bitmap)
+        {
+            if (bitmap == null)
+                return 0;
+
+            int width = bitmap.Width;
+            int height = bitmap.Height;
+            if (width <= 0 || height <= 0)
+                return 0;
+
+            PixelFormat pf = bitmap.PixelFormat;
+            bool supported = pf == PixelFormat.Format24bppRgb || pf == PixelFormat.Format32bppArgb ||
+                             pf == PixelFormat.Format32bppRgb || pf == PixelFormat.Format32bppPArgb;
+
+            Bitmap src = supported ? bitmap : bitmap.Clone(
+                new Rectangle(0, 0, width, height), PixelFormat.Format24bppRgb);
+
+            int regionWidth = Math.Min(HashRegionSize, width);
+            int regionHeight = Math.Min(HashRegionSize, height);
+            int startX = (width - regionWidth) / 2;
+            int startY = (height - regionHeight) / 2;
+            Rectangle region = new Rectangle(startX, startY, regionWidth, regionHeight);
+
+            BitmapData bd = null;
+            try
+            {
+                bd = src.LockBits(region, ImageLockMode.ReadOnly, src.PixelFormat);
+                int stride = bd.Stride;
+                int bpp = Image.GetPixelFormatSize(src.PixelFormat) / 8;
+                int stepX = Math.Max(1, regionWidth / HashSampleSize);
+                int stepY = Math.Max(1, regionHeight / HashSampleSize);
+
+                const ulong offsetBasis = 14695981039346656037;
+                const ulong prime = 1099511628211;
+                ulong hash = offsetBasis;
+
+                unsafe
+                {
+                    byte* basePtr = (byte*)bd.Scan0;
+                    for (int y = 0; y < regionHeight; y += stepY)
+                    {
+                        byte* row = basePtr + y * stride;
+                        for (int x = 0; x < regionWidth; x += stepX)
+                        {
+                            int idx = x * bpp;
+                            byte b = row[idx];
+                            byte g = row[idx + 1];
+                            byte r = row[idx + 2];
+                            byte luminance = (byte)((r * 30 + g * 59 + b * 11) / 100);
+                            hash ^= luminance;
+                            hash *= prime;
+                        }
+                    }
+                }
+
+                return hash;
+            }
+            finally
+            {
+                if (bd != null) src.UnlockBits(bd);
+                if (!ReferenceEquals(src, bitmap)) src.Dispose();
+            }
         }
 
         /// <summary>
@@ -586,8 +669,7 @@ namespace Bahtinov_Collimator
                     return null;
                 }
 
-                // Return a detached copy so the caller can dispose safely
-                return (Bitmap)bmp.Clone();
+                return bmp;
             }
             catch
             {
@@ -597,7 +679,6 @@ namespace Bahtinov_Collimator
             finally
             {
                 gfxBmp?.Dispose();
-                bmp?.Dispose();
             }
         }
 
@@ -656,7 +737,13 @@ namespace Bahtinov_Collimator
             }
 
             // Quick test: if average brightness is low, no meaningful centroid
-            double avg = lum.Average(b => (double)b);
+            double lumSum = 0;
+            for (int i = 0; i < lum.Length; i++)
+            {
+                lumSum += lum[i];
+            }
+
+            double avg = lumSum / lum.Length;
             if (avg < 5.0)  // all dark
                 return new Point(0, 0);
 
