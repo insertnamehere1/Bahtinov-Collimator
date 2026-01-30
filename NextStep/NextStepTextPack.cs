@@ -79,6 +79,23 @@ namespace Bahtinov_Collimator
         [DataMember] public string ChannelGreen { get; set; }
         [DataMember] public string ChannelBlue { get; set; }
 
+        // Calibration component
+        [DataMember] public string CalibrationTitle { get; set; }
+        [DataMember] public string CalibrationQuitButtonText { get; set; }
+        [DataMember] public string CalibrationCloseButtonText { get; set; }
+        [DataMember] public string CalibrationObjectiveHeader { get; set; }
+        [DataMember] public string CalibrationStep1Title { get; set; }
+        [DataMember] public string CalibrationStep1Bullet1 { get; set; }
+        [DataMember] public string CalibrationStep1Bullet2 { get; set; }
+        [DataMember] public string CalibrationWaitingForImage { get; set; }
+        [DataMember] public string CalibrationAimHeader { get; set; }
+        [DataMember] public string CalibrationStep2Title { get; set; }
+        [DataMember] public string CalibrationStep2Bullet1 { get; set; }
+        [DataMember] public string CalibrationStep2Bullet2 { get; set; }
+        [DataMember] public string CalibrationAutoCompleteLine { get; set; }
+        [DataMember] public string CalibrationMovePrompt { get; set; }
+        [DataMember] public string CalibrationCompleteHeader { get; set; }
+        [DataMember] public string CalibrationCompleteSummary { get; set; }
     }
 
     /// <summary>
@@ -124,4 +141,3 @@ namespace Bahtinov_Collimator
         }
     }
 }
-

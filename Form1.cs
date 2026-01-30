@@ -197,6 +197,9 @@ namespace Bahtinov_Collimator
             // Set the initial state of the defocus switch based on user settings.
             slideSwitch2.IsOn = Properties.Settings.Default.DefocusSwitch;
             RoundedPanel1.FillColor = Color.FromArgb(50, UITheme.DarkBackground);
+
+            // Initialize language
+            NextStepText.LoadFromJson(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Language\\NextStepText_SCT_en.json"));
         }
         #endregion
 
@@ -900,8 +903,6 @@ namespace Bahtinov_Collimator
 
             try
             {
-                NextStepText.LoadFromJson(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Language\\NextStepText_SCT_en.json"));
-
                 NextStepGuidance guidance = NextStep.GetNextStepGuidance(
                     capturing: imageType == 1,
                     triBahtinovVisible: (bahtinovLineData?.LineAngles.Length == 9),

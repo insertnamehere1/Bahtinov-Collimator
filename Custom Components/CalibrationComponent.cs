@@ -90,6 +90,8 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         private void SetupUI()
         {
+            var textPack = NextStepText.Current;
+
             roundedPanel1.Font = labelFont;
             quitButton.Font = labelFont;
             titledRoundedRichTextBox1.Font = labelFont;
@@ -118,6 +120,7 @@ namespace Bahtinov_Collimator.Custom_Components
             quitButton.TextOffsetX = 0;
             quitButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
             quitButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
+            quitButton.Text = textPack.CalibrationQuitButtonText;
 
             // RichText box container
             titledRoundedRichTextBox1.Size = new Size(384, 506);
@@ -126,7 +129,7 @@ namespace Bahtinov_Collimator.Custom_Components
             titledRoundedRichTextBox1.ForeColor = Color.White;
             titledRoundedRichTextBox1.TitleForeColor = Color.White;
             titledRoundedRichTextBox1.TitleBackColor = UITheme.ButtonDarkBackground;
-            titledRoundedRichTextBox1.TitleText = "Tri-Bahtinov Calibration";
+            titledRoundedRichTextBox1.TitleText = textPack.CalibrationTitle;
             titledRoundedRichTextBox1.TitlePaddingLeft = 80;
         }
 
@@ -351,15 +354,15 @@ namespace Bahtinov_Collimator.Custom_Components
 
                 signSwitch = (delta > 0f);
             }
-  
-            if(signSwitch)
+
+            if (signSwitch)
                 Properties.Settings.Default.SignChange = !Properties.Settings.Default.SignChange;
-            
+
             Properties.Settings.Default.CalibrationCompleted = true;
             Properties.Settings.Default.ShowStartupCalibrationPrompt = false;
             Properties.Settings.Default.Save();
 
-            quitButton.Text = "Close";
+            quitButton.Text = NextStepText.Current.CalibrationCloseButtonText;
 
             // Capture new image to display changed sign.
             ImageCapture.ForceImageUpdate();
@@ -406,26 +409,27 @@ namespace Bahtinov_Collimator.Custom_Components
         private void UpdateInstructionText()
         {
             var rtb = titledRoundedRichTextBox1.InnerRichTextBox;
+            var textPack = NextStepText.Current;
 
-            string header1 = "\nObjective - Calibration allows SkyCal to advise on collimation screw adjustments, and enable the ‘What Should I Do Next ?’ guidance.";
+            string header1 = textPack.CalibrationObjectiveHeader;
 
             if (_state == CalibrationState.WaitingForFirstValidRead)
             {
                 rtb.Clear();
-            
-                rtb.AppendText(header1 + "\r\n\r\nStep 1 - Setup\r\n\n");
+
+                rtb.AppendText(header1 + "\r\n\r\n" + textPack.CalibrationStep1Title + "\r\n\n");
                 BoldLastLine(rtb);
 
                 rtb.SelectionBullet = true;
                 rtb.SelectionIndent = 20;
                 rtb.SelectionHangingIndent = 10;
 
-                rtb.AppendText("Attach a Tri-Bahtinov collimation mask to your telescope.\n"); 
-                rtb.AppendText("Capture a star image.\r\n");
+                rtb.AppendText(textPack.CalibrationStep1Bullet1 + "\n");
+                rtb.AppendText(textPack.CalibrationStep1Bullet2 + "\r\n");
 
                 rtb.SelectionBullet = false;
 
-                rtb.AppendText("\nWaiting for a valid Bahtinov image...\r\n");
+                rtb.AppendText("\n" + textPack.CalibrationWaitingForImage + "\r\n");
                 BoldLastLine(rtb);
 
                 return;
@@ -443,18 +447,18 @@ namespace Bahtinov_Collimator.Custom_Components
 
             if (_state == CalibrationState.MeasuringDirection)
             {
-                string header2 = "\nAim - Adjust focus inward so SkyCal learns how collimation errors change with focus position.";
+                string header2 = textPack.CalibrationAimHeader;
 
                 rtb.Clear();
 
-                rtb.AppendText(header2 + "\r\n\r\n\nStep 2 - Moving the focuser.\r\n\n");
+                rtb.AppendText(header2 + "\r\n\r\n\n" + textPack.CalibrationStep2Title + "\r\n\n");
                 BoldLastLine(rtb);
 
                 rtb.SelectionBullet = true;
                 rtb.SelectionIndent = 20;
                 rtb.SelectionHangingIndent = 10;
 
-                rtb.AppendText("If the focuser moves the primary mirror, move it INWARD, toward the secondary.\n");
+                rtb.AppendText(textPack.CalibrationStep2Bullet1 + "\n");
 
                 rtb.SelectionBullet = false;
                 rtb.SelectionIndent = 0;
@@ -464,15 +468,15 @@ namespace Bahtinov_Collimator.Custom_Components
                 rtb.SelectionIndent = 20;
                 rtb.SelectionHangingIndent = 10;
 
-                rtb.AppendText("If the focuser moves the camera, move it INWARD, toward the telescope body.\n");
+                rtb.AppendText(textPack.CalibrationStep2Bullet2 + "\n");
 
                 rtb.SelectionBullet = false;
                 rtb.SelectionIndent = 0;
                 rtb.SelectionHangingIndent = 0;
 
-                rtb.AppendText("\nCalibration completes automatically once enough focus movement is detected.\r\n\r\n");
+                rtb.AppendText("\n" + textPack.CalibrationAutoCompleteLine + "\r\n\r\n");
 
-                rtb.AppendText("\nPlease move the focuser inward now....\r\n");
+                rtb.AppendText("\n" + textPack.CalibrationMovePrompt + "\r\n");
                 BoldLastLine(rtb);
 
                 return;
@@ -480,9 +484,9 @@ namespace Bahtinov_Collimator.Custom_Components
 
             rtb.Clear();
 
-            rtb.AppendText("\r\nCalibration has completed successfully\r\n\n");
+            rtb.AppendText("\r\n" + textPack.CalibrationCompleteHeader + "\r\n\n");
             BoldLastLine(rtb);
-            rtb.AppendText("\r\n      SkyCal has updated its settings.");
+            rtb.AppendText("\r\n" + textPack.CalibrationCompleteSummary);
             BoldLastLine(rtb);
         }
 

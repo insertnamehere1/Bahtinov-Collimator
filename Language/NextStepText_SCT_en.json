@@ -51,5 +51,24 @@
 
   "ChannelRed": "Red",
   "ChannelGreen": "Green",
-  "ChannelBlue": "Blue"
+  "ChannelBlue": "Blue",
+
+  "CalibrationTitle": "Tri-Bahtinov Calibration",
+  "CalibrationQuitButtonText": "Quit",
+  "CalibrationCloseButtonText": "Close",
+  "CalibrationObjectiveHeader": "\nObjective - Calibration allows SkyCal to advise on collimation screw adjustments, and enable the ‘What Should I Do Next ?’ guidance.",
+  "CalibrationStep1Title": "Step 1 - Setup",
+  "CalibrationStep1Bullet1": "Attach a Tri-Bahtinov collimation mask to your telescope.",
+  "CalibrationStep1Bullet2": "Capture a star image.",
+  "CalibrationWaitingForImage": "Waiting for a valid Bahtinov image...",
+  "CalibrationAimHeader": "\nAim - Adjust focus inward so SkyCal learns how collimation errors change with focus position.",
+  "CalibrationStep2Title": "Step 2 - Moving the focuser.",
+  "CalibrationStep2Bullet1": "If the focuser moves the primary mirror, move it INWARD, toward the secondary.",
+  "CalibrationStep2Bullet2": "If the focuser moves the camera, move it INWARD, toward the telescope body.",
+  "CalibrationAutoCompleteLine": "Calibration completes automatically once enough focus movement is detected.",
+  "CalibrationMovePrompt": "Please move the focuser inward now....",
+  "CalibrationCompleteHeader": "Calibration has completed successfully",
+  "CalibrationCompleteSummary": "      SkyCal has updated its settings."
 }
+
+
