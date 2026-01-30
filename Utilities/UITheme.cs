@@ -223,7 +223,22 @@ namespace Bahtinov_Collimator
         /// Gets the Error Marker Outline Pen color for the Error Bar.
         /// </summary>
         public static Color ErrorBarMarkerPen { get; } = Color.Black;
+
+        /// <summary>
+        /// Gets the Defocus Inner Circle color.     
+        ///</summary>
+        public static Color DefocusInnerCircleColor { get; } = Color.Red;
+
+        /// <summary>
+        ///     
+        /// Gets the Defocus Outer Circle color.
+        /// </summary>
+        public static Color DefocusOuterCircleColor { get; } = Color.LightGreen;    
+
+
         #endregion
+
+
 
         #region Calibration
 

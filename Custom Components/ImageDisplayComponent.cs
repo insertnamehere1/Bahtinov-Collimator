@@ -227,13 +227,13 @@ namespace Bahtinov_Collimator
                 const float crossSize = 20f;  // overall width/height of cross
                 const int crossAlpha = 200;   // 0..255. Lower = more blending.
 
-                using (var innerPen = new Pen(Color.FromArgb(crossAlpha, Color.Red), penWidth))
-                using (var outerPen = new Pen(Color.FromArgb(crossAlpha, Color.LightGreen), penWidth))
-                using (var outerDashPen = new Pen(Color.LightGreen, penWidth)
+                using (var innerPen = new Pen(Color.FromArgb(crossAlpha, UITheme.DefocusInnerCircleColor), penWidth))
+                using (var outerPen = new Pen(Color.FromArgb(crossAlpha, UITheme.DefocusOuterCircleColor), penWidth))
+                using (var outerDashPen = new Pen(UITheme.DefocusOuterCircleColor, penWidth)
                 {
                     DashStyle = System.Drawing.Drawing2D.DashStyle.Dash
                 })
-                using (var innerDashPen = new Pen(Color.Red, penWidth)
+                using (var innerDashPen = new Pen(UITheme.DefocusInnerCircleColor, penWidth)
                 {
                     DashStyle = System.Drawing.Drawing2D.DashStyle.Dash
                 })
