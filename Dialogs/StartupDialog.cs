@@ -95,9 +95,9 @@ namespace SkyCal
             _bodyLabel = new Label
             {
                 AutoSize = false,
-                Text = "Calibration enables full SkyCal functionality. Some features are unavailable until calibration is completed." + 
-                " (Calibration is also available from the Setup menu.)\r\n\r\n" +
-                "Would you like to run it now?",
+                Text = "Tri-Bahtinov calibration enables full SkyCal functionality. Some features are unavailable until calibration is completed." +
+                " (Calibration is also available in the Setup menu.)\r\n\r\n" +
+                "Would you like to calibrate SkyCal now?",
                 Location = new Point(14, _titleLabel.Bottom + 10),
                 Size = new Size(ClientSize.Width - 28, 150)
             };

@@ -126,7 +126,8 @@ namespace Bahtinov_Collimator.Custom_Components
             titledRoundedRichTextBox1.ForeColor = Color.White;
             titledRoundedRichTextBox1.TitleForeColor = Color.White;
             titledRoundedRichTextBox1.TitleBackColor = UITheme.ButtonDarkBackground;
-            titledRoundedRichTextBox1.TitleText = "Calibration";
+            titledRoundedRichTextBox1.TitleText = "Tri-Bahtinov Calibration";
+            titledRoundedRichTextBox1.TitlePaddingLeft = 80;
         }
 
         /// <summary>
@@ -406,20 +407,20 @@ namespace Bahtinov_Collimator.Custom_Components
         {
             var rtb = titledRoundedRichTextBox1.InnerRichTextBox;
 
-            string header1 = "\nPurpose - Calibration allows SkyCal to assist with focusing, advise on collimation screw adjustments, and enable the ‘What Should I Do Next ?’ guidance.";
+            string header1 = "\nObjective - Calibration allows SkyCal to advise on collimation screw adjustments, and enable the ‘What Should I Do Next ?’ guidance.";
 
             if (_state == CalibrationState.WaitingForFirstValidRead)
             {
                 rtb.Clear();
             
-                rtb.AppendText(header1 + "\r\n\r\n Step 1 - Setup\r\n\n");
+                rtb.AppendText(header1 + "\r\n\r\nStep 1 - Setup\r\n\n");
                 BoldLastLine(rtb);
 
                 rtb.SelectionBullet = true;
                 rtb.SelectionIndent = 20;
                 rtb.SelectionHangingIndent = 10;
 
-                rtb.AppendText("Install a Bahtinov focus mask or Tri-Bahtinov collimation mask.\n"); 
+                rtb.AppendText("Attach a Tri-Bahtinov collimation mask to your telescope.\n"); 
                 rtb.AppendText("Capture a star image.\r\n");
 
                 rtb.SelectionBullet = false;
@@ -442,7 +443,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
             if (_state == CalibrationState.MeasuringDirection)
             {
-                string header2 = "\nPurpose - This step shows SkyCal how focus adjustments relate to focuser direction and collimation screw guidance.";
+                string header2 = "\nAim - Adjust focus inward so SkyCal learns how collimation errors change with focus position.";
 
                 rtb.Clear();
 
@@ -479,9 +480,10 @@ namespace Bahtinov_Collimator.Custom_Components
 
             rtb.Clear();
 
-            rtb.AppendText("\r\nCalibration complete\r\n\n");
+            rtb.AppendText("\r\nCalibration has completed successfully\r\n\n");
             BoldLastLine(rtb);
-            rtb.AppendText("SkyCal has finished calibration and updated its settings.\r\n\nAll changes have been saved.\r\n\n");
+            rtb.AppendText("\r\n      SkyCal has updated its settings.");
+            BoldLastLine(rtb);
         }
 
         /// <summary>
