@@ -240,7 +240,7 @@ namespace Bahtinov_Collimator
                 {
                     try
                     {
-                        offset = FindInnerCircleOffset(latestImage);
+                        offset = FindOuterCircleOffset(latestImage);
                     }
                     catch (InvalidOperationException)
                     {
@@ -250,9 +250,12 @@ namespace Bahtinov_Collimator
 
                     if (Math.Abs(offset.X) > MovementThreshold || Math.Abs(offset.Y) > MovementThreshold)
                         captureTimer.Interval = 10;
+ 
+                    int dx = (latestImage.Width / 2) - offset.X;
+                    int dy = (latestImage.Height / 2) - offset.Y;
 
-                    selectedStarBox.Offset(offset.X, offset.Y);
-                    g.TranslateTransform(-offset.X, -offset.Y);
+                    selectedStarBox.Offset(-dx, -dy);
+                    g.TranslateTransform(dx, dy);
                 }
 
                 // Draw centered image
@@ -292,9 +295,9 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Finds the offset of the inner circle in a donut-shaped image by analyzing brightness transitions along circular paths.
+        /// Finds the offset of the outer circle in a donut-shaped image by analyzing brightness transitions along circular paths.
         /// </summary>
-        private static Point FindInnerCircleOffset(Bitmap image)
+        private static Point FindOuterCircleOffset(Bitmap image)
         {
             int width = image.Width;
             int height = image.Height;
@@ -303,6 +306,7 @@ namespace Bahtinov_Collimator
             double centerY = height / 2;
 
             int maxRadius = Math.Min(width, height) / 2;
+            int radiusSum = 0;
             int transitionCount = 0;
             double transitionXSum = 0;
             double transitionYSum = 0;
@@ -321,11 +325,11 @@ namespace Bahtinov_Collimator
                 double lineSumBrightness = 0;
                 int numPoints = 0;
 
-                int startRadius = 0;
-                int endRadius = maxRadius;
-                int step = 1;
+                int startRadius = maxRadius;
+                int endRadius = 0;
+                int step = -1;
 
-                for (int r = startRadius; r < endRadius; r += step)
+                for (int r = startRadius; r > endRadius; r += step)
                 {
                     double x = centerX + (r * CosValues[angle]);
                     double y = centerY + (r * SinValues[angle]);
@@ -345,7 +349,7 @@ namespace Bahtinov_Collimator
 
                 double averageLineBrightness = numPoints > 0 ? lineSumBrightness / numPoints : 0.0;
 
-                for (int r = startRadius + 10; r < endRadius; r += step)
+                for (int r = startRadius + 10; r > endRadius; r += step)
                 {
                     double x = centerX + (r * CosValues[angle]);
                     double y = centerY + (r * SinValues[angle]);
@@ -357,6 +361,7 @@ namespace Bahtinov_Collimator
 
                         if (brightness > averageLineBrightness)
                         {
+                            radiusSum += r;
                             transitionCount++;
                             transitionXSum += x - centerX;
                             transitionYSum += y - centerY;
@@ -372,8 +377,9 @@ namespace Bahtinov_Collimator
             if (transitionXSum == 0 || transitionYSum == 0)
                 throw new InvalidOperationException("No valid transitions detected in the image.");
 
-            double circleX = transitionXSum / (transitionCount / 2);
-            double circleY = transitionYSum / (transitionCount / 2);
+            double radius = transitionCount > 0 ? Math.Round((double)radiusSum / transitionCount) : maxRadius;
+            double circleX = transitionXSum / (transitionCount / 2) + centerX;
+            double circleY = transitionYSum / (transitionCount / 2) + centerY;
 
             return new Point((int)Math.Round(circleX), (int)Math.Round(circleY));
         }
