@@ -161,6 +161,7 @@ namespace Bahtinov_Collimator
 
             // Initialize the red focus channel component.
             InitializeRedFocusBox();
+            groupBoxRed.SetLabelsVisible(false);
 
             // Set up the user interface of the form.
             SetFormUI();
@@ -397,6 +398,7 @@ namespace Bahtinov_Collimator
                 imageDisplayComponent1.ClearDisplay();
                 bahtinovProcessing.StopImageProcessing();
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
+                groupBoxRed?.SetLabelsVisible(false);
 
                 // Start image capture if star selection is successful
                 if (ImageCapture.SelectStar())
@@ -417,6 +419,7 @@ namespace Bahtinov_Collimator
                 imageDisplayComponent1.ClearDisplay();
                 bahtinovProcessing.StopImageProcessing();
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
+                groupBoxRed?.SetLabelsVisible(false);
                 screenCaptureRunningFlag = false;
                 RoundedStartButton.Text = "Select Star";
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
@@ -469,7 +472,8 @@ namespace Bahtinov_Collimator
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue, groupBoxRed);
                 whatDoIDoNextToolStripMenuItem.Enabled = false;
                 focusCalibrationToolStripMenuItem.Enabled = false;
-                StopCalibration();
+                
+               StopCalibration();
             }
             else
             {
@@ -478,6 +482,7 @@ namespace Bahtinov_Collimator
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                 InitializeRedFocusBox();
+                groupBoxRed.SetLabelsVisible(false);
                 whatDoIDoNextToolStripMenuItem.Enabled = Properties.Settings.Default.CalibrationCompleted;
                 focusCalibrationToolStripMenuItem.Enabled = true;
             }
@@ -502,6 +507,7 @@ namespace Bahtinov_Collimator
                 Invoke(new Action(() =>
                 {
                     RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
+                    groupBoxRed?.SetLabelsVisible(false);
                     RoundedStartButton.Text = "Select Star";
                     RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                     DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
@@ -510,6 +516,7 @@ namespace Bahtinov_Collimator
             else
             {
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
+                groupBoxRed?.SetLabelsVisible(false);
                 RoundedStartButton.Text = "Select Star";
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
@@ -749,6 +756,9 @@ namespace Bahtinov_Collimator
                     InitializeRedFocusBox();
                     InitializeGreenFocusBox();
                     InitializeBlueFocusBox();
+                    groupBoxRed.SetLabelsVisible(true);
+                    groupBoxGreen.SetLabelsVisible(true);
+                    groupBoxBlue.SetLabelsVisible(true);
                 }
 
                 firstPassCompleted = true;

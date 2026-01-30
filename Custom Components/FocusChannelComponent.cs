@@ -20,6 +20,7 @@ namespace Bahtinov_Collimator
         private bool disposed = false; // To detect redundant calls
         private readonly int groupID;
         private readonly Font labelFont;
+        private bool labelsVisible = false;
 
         #endregion
 
@@ -149,12 +150,17 @@ namespace Bahtinov_Collimator
             label6.BringToFront();
 
             RefreshLabelVisibility();
+        }
 
+        public void SetLabelsVisible(bool visible)
+        {
+            labelsVisible = visible;
+            RefreshLabelVisibility();
         }
 
         private void RefreshLabelVisibility()
         {
-            bool visible = Properties.Settings.Default.CalibrationCompleted;
+            bool visible = Properties.Settings.Default.CalibrationCompleted && labelsVisible;
 
             label2.Visible = visible;
             label3.Visible = visible;
