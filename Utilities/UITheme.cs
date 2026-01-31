@@ -135,7 +135,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the transparency level for the selection background.
         /// </summary>
-        public static float SelectionBackgroundTransparency { get; } = 0.6f;
+        public static float SelectionBackgroundTransparency { get; } = 0.7f;
 
         /// <summary>
         /// Gets the fill color for selection circles.
