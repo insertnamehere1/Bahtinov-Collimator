@@ -27,15 +27,7 @@ namespace Bahtinov_Collimator
 
         // Focus only (TB not visible)
         [DataMember] public string FocusOnlyHeader { get; set; }
-        [DataMember] public string FocusOnlySummaryFormat { get; set; }
-        [DataMember] public string FocusOnlyBullet1Format { get; set; }
-        [DataMember] public string FocusOnlyBullet2Format { get; set; }
-        [DataMember] public string FocusOnlyBullet3 { get; set; }
-        [DataMember] public string FocusOnlyDoneHeader { get; set; }
-        [DataMember] public string FocusOnlyDoneSummaryFormat { get; set; }
-        [DataMember] public string FocusOnlyDoneBullet1 { get; set; }
-        [DataMember] public string FocusOnlyDoneBullet2 { get; set; }
-        [DataMember] public string FocusOnlyFooterHint { get; set; }
+        [DataMember] public string FocusOnlyNeedsAdjustingSummary { get; set; }
 
         // Focus to balanced (TB visible but not balanced)
         [DataMember] public string FocusBalancedHeader { get; set; }

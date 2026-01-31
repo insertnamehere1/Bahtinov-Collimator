@@ -57,7 +57,7 @@ namespace Bahtinov_Collimator
 
             // If TB mask is not visible, this is focus-only behaviour
             if (!triBahtinovVisible)
-                return FocusOnlyGuidance(g, red, tolerance, inv);
+                return FocusOnlyGuidance(g);
 
             // STEP 1: Focus until values are BALANCED around 0
             if (!IsBalancedAroundZero(channels))
@@ -200,49 +200,16 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Focus-only guidance used when Tri-Bahtinov is not visible.
-        /// Uses the Red channel value as the single focus error signal.
+        /// Focus-only guidance used when TB is not visible; uses Red channel as the decision input.
         /// </summary>
-        private static NextStepGuidance FocusOnlyGuidance(
-            NextStepGuidance g,
-            double red,
-            double tolerance,
-            CultureInfo inv)
+        private static NextStepGuidance FocusOnlyGuidance(NextStepGuidance g)
         {
             var T = NextStepText.Current;
 
-            // Done if within tolerance
-            if (Math.Abs(red) <= tolerance)
-            {
-                g.Kind = NextStepKind.Done;
-                g.Icon = NextStepIcon.Success;
-                g.Header = T.FocusOnlyDoneHeader;
-                g.Summary = string.Format(inv, T.FocusOnlyDoneSummaryFormat, Format(red, inv));
-       
-                var sDone = new GuidanceSection { Title = T.SectionWhatToDoTitle, EmphasizeTitle = true };
-                sDone.Lines.Add(new StringBoolPair(T.FocusOnlyDoneBullet1, true));
-                sDone.Lines.Add(new StringBoolPair(T.FocusOnlyDoneBullet2, false));
-                g.Sections.Add(sDone);
-
-                g.FooterHint = T.FocusOnlyFooterHint;
-                return g;
-            }
-
-            // Needs focus adjustment
             g.Kind = NextStepKind.Focus;
             g.Icon = NextStepIcon.Focus;
             g.Header = T.FocusOnlyHeader;
-
-            string dir = (red > 0.0) ? T.DirectionIn : T.DirectionOut;
-            g.Summary = string.Format(inv, T.FocusOnlySummaryFormat, Format(red, inv), dir);
-
-            var s = new GuidanceSection { Title = T.SectionWhatToDoTitle, EmphasizeTitle = true };
-            s.Lines.Add(new StringBoolPair(string.Format(inv, T.FocusOnlyBullet1Format, dir), true));
-            s.Lines.Add(new StringBoolPair(string.Format(inv, T.FocusOnlyBullet2Format, tolerance.ToString("0.0", inv)), true));
-            s.Lines.Add(new StringBoolPair(T.FocusOnlyBullet3, false));
-            g.Sections.Add(s);
-
-            g.FooterHint = T.FocusOnlyFooterHint;
+            g.Summary = T.FocusOnlyNeedsAdjustingSummary;
             return g;
         }
 
