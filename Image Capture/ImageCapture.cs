@@ -84,7 +84,7 @@ namespace Bahtinov_Collimator
         private const int PW_RENDERFULLCONTENT = 0x2;
 
         // Threshold for detecting significant movement
-        private const int MovementThreshold = 1;
+        private const int MovementThreshold = 2;
 
         // GetAncestor flags
         private const uint GA_ROOT = 2;
@@ -227,14 +227,16 @@ namespace Bahtinov_Collimator
                 {
                     offset = FindBrightestAreaCentroid(latestImage);
 
-                    if (Math.Abs(offset.X) > MovementThreshold || Math.Abs(offset.Y) > MovementThreshold)
-                        captureTimer.Interval = 10;
-
                     int dx = (latestImage.Width / 2) - offset.X;
                     int dy = (latestImage.Height / 2) - offset.Y;
 
-                    selectedStarBox.Offset(-dx, -dy);
-                    g.TranslateTransform(dx, dy);
+                    if (Math.Abs(dx) > MovementThreshold || Math.Abs(dy) > MovementThreshold)
+                    {
+                        captureTimer.Interval = 10;
+
+                        selectedStarBox.Offset(-dx, -dy);
+                        g.TranslateTransform(dx, dy);
+                    }
                 }
                 else if (TrackingType == 2)   // defocus
                 {
@@ -248,14 +250,16 @@ namespace Bahtinov_Collimator
                         return;
                     }
 
-                    if (Math.Abs(offset.X) > MovementThreshold || Math.Abs(offset.Y) > MovementThreshold)
-                        captureTimer.Interval = 10;
- 
                     int dx = (latestImage.Width / 2) - offset.X;
                     int dy = (latestImage.Height / 2) - offset.Y;
 
-                    selectedStarBox.Offset(-dx, -dy);
-                    g.TranslateTransform(dx, dy);
+                    if (Math.Abs(dx) > MovementThreshold || Math.Abs(dy) > MovementThreshold)
+                    {
+                        captureTimer.Interval = 10;
+
+                        selectedStarBox.Offset(-dx, -dy);
+                        g.TranslateTransform(dx, dy);
+                    }
                 }
 
                 // Draw centered image
