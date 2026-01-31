@@ -716,6 +716,9 @@ namespace Bahtinov_Collimator
                 // Perform a second pass to find fine details of Bahtinov lines
                 bahtinovLineData = bahtinovProcessing.FindSubpixelLines(image, bahtinovLineData.LineValue.Length, bahtinovLineData);
 
+                if (bahtinovLineData == null)
+                    return;
+
                 // Update the UI based on the number of detected lines
                 int numberOfLines = bahtinovLineData.LineAngles.Length;
 

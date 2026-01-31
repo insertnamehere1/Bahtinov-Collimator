@@ -245,6 +245,7 @@
     <Compile Include="Custom Components\ImageDisplayComponent.Designer.cs">
       <DependentUpon>ImageDisplayComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Image Processing\BahtinovIntersectionValidator.cs" />
     <Compile Include="Image Processing\DefocusStarProcessing.cs" />
     <Compile Include="Dialogs\DarkMessageBox.cs">
       <SubType>Form</SubType>

@@ -716,6 +716,7 @@ namespace Bahtinov_Collimator
 
             BitmapData bd = null;
             byte[] lum = new byte[width * height];
+            int[] lumHist = new int[256];
             try
             {
                 bd = src.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, src.PixelFormat);
@@ -735,7 +736,9 @@ namespace Bahtinov_Collimator
                             byte r1 = row[x * bpp + 2];
                             int y8 = (int)(0.299 * r1 + 0.587 * g + 0.114 * b + 0.5);
                             if (y8 > 255) y8 = 255;
-                            lum[idx++] = (byte)y8;
+                            byte y8b = (byte)y8;
+                            lum[idx++] = y8b;
+                            lumHist[y8b]++;
                         }
                     }
                 }
@@ -746,15 +749,25 @@ namespace Bahtinov_Collimator
                 if (!ReferenceEquals(src, bitmap)) src.Dispose();
             }
 
-            // Quick test: if average brightness is low, no meaningful centroid
-            double lumSum = 0;
-            for (int i = 0; i < lum.Length; i++)
+            // Quick test: use brightest pixels instead of average to avoid dark backgrounds dominating
+            int brightTarget = Math.Max(1, lum.Length / 200); // top 0.5%
+            int brightCount = 0;
+            int brightSum = 0;
+            for (int v = 255; v >= 0 && brightCount < brightTarget; v--)
             {
-                lumSum += lum[i];
+                int count = lumHist[v];
+                if (count <= 0) continue;
+                int remaining = brightTarget - brightCount;
+                int used = Math.Min(remaining, count);
+                brightCount += used;
+                brightSum += used * v;
             }
 
-            double avg = lumSum / lum.Length;
-            if (avg < 5.0)  // all dark
+            if (brightCount == 0)
+                return new Point(0, 0);
+
+            double brightAvg = (double)brightSum / brightCount;
+            if (brightAvg < 5.0)  // all dark
                 return new Point(0, 0);
 
             // Build integral image

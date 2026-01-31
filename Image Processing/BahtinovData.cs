@@ -65,6 +65,14 @@ namespace Bahtinov_Collimator
             set { lineValue = value; }
         }
 
+        /// <summary>
+        /// Gets the rectangle representing the image frame associated with the data.
+        /// </summary>
+        public Rectangle ImageFrame
+        {
+            get { return imageFrame; }
+        }
+
         #endregion
 
         #region Methods
