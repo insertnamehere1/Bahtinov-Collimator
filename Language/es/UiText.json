@@ -54,6 +54,7 @@
 
   "AboutDialogTitleFormat": "Acerca de {0}",
   "AboutVersionFormat": "Versión {0}",
+  "AboutDescription": "La aplicación está diseñada para ayudar a los astrónomos a colimar y enfocar sus telescopios con facilidad y precisión. Incorpora el algoritmo y el código desarrollados por el fallecido Niels Noordhoek para lograr ajustes precisos de enfoque y colimación.",
 
   "StartupDialogTitle": "SkyCal",
   "StartupDialogHeading": "Se recomienda la calibración:",

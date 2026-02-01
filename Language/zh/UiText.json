@@ -54,6 +54,7 @@
 
   "AboutDialogTitleFormat": "关于 {0}",
   "AboutVersionFormat": "版本 {0}",
+  "AboutDescription": "该应用旨在帮助天文学家轻松且精准地校准和对焦他们的望远镜。它整合了已故 Niels Noordhoek 开发的算法和代码，以实现对焦与校准的精确调整。",
 
   "StartupDialogTitle": "SkyCal",
   "StartupDialogHeading": "建议进行校准：",

@@ -54,6 +54,7 @@
 
   "AboutDialogTitleFormat": "À propos de {0}",
   "AboutVersionFormat": "Version {0}",
+  "AboutDescription": "Cette application est conçue pour aider les astronomes à collimater et à mettre au point leurs télescopes avec facilité et précision. Elle intègre l'algorithme et le code développés par le regretté Niels Noordhoek pour obtenir des réglages précis de mise au point et de collimation.",
 
   "StartupDialogTitle": "SkyCal",
   "StartupDialogHeading": "La calibration est recommandée :",
