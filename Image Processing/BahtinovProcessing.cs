@@ -777,7 +777,7 @@ namespace Bahtinov_Collimator
             }
             else
             {
-                ImageLostEventProvider.OnImageLost("Unable to detect intersection for the Bahtinov lines", "FindSubpixelLines", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                ImageLostEventProvider.OnImageLost(UiText.Current.BahtinovIntersectionNotDetectedMessage, UiText.Current.BahtinovIntersectionNotDetectedTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return null;
             }
         }
@@ -939,7 +939,7 @@ namespace Bahtinov_Collimator
         {
             if (lines.LineAngles.Length != 3 && lines.LineAngles.Length != 9)
             {
-                ImageLostEventProvider.OnImageLost("Unable to detect Bahtinov image lines", "DisplayLines", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                ImageLostEventProvider.OnImageLost(UiText.Current.BahtinovLinesNotDetectedMessage, UiText.Current.BahtinovLinesNotDetectedTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return false;
             }
 
@@ -1031,7 +1031,7 @@ namespace Bahtinov_Collimator
 
                 if (firstLine == null || secondLine == null || thirdLine == null)
                 {
-                    ImageLostEventProvider.OnImageLost("Image Lost", "Bahtinov Processing: missing lines", MessageBoxIcon.Error, MessageBoxButtons.OK);
+                    ImageLostEventProvider.OnImageLost(UiText.Current.BahtinovImageLostMessage, UiText.Current.BahtinovImageLostTitle, MessageBoxIcon.Error, MessageBoxButtons.OK);
                     lastFocusErrorValue = 0.0f;
                     return false;
                 }
@@ -1041,7 +1041,7 @@ namespace Bahtinov_Collimator
                 if (!inter.HasValue)
                 {
                     // If these are nearly parallel, you could fall back to midpoints or skip
-                    ImageLostEventProvider.OnImageLost("Unable to compute intersection for Bahtinov lines", "DisplayLines", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                    ImageLostEventProvider.OnImageLost(UiText.Current.BahtinovIntersectionComputeFailedMessage, UiText.Current.BahtinovIntersectionComputeFailedTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                     lastFocusErrorValue = 0.0f;
                     return false;
                 }

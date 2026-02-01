@@ -158,6 +158,7 @@ namespace Bahtinov_Collimator
 
             // Initialize the form's components.
             InitializeComponent();
+            ApplyLocalization();
 
             // Initialize the red focus channel component.
             InitializeRedFocusBox();
@@ -320,6 +321,27 @@ namespace Bahtinov_Collimator
             SetWindowTitleWithVersion();
         }
 
+        private void ApplyLocalization()
+        {
+            var textPack = UiText.Current;
+
+            Text = textPack.AppTitle;
+            fileToolStripMenuItem.Text = textPack.MenuFile;
+            quitToolStripMenuItem2.Text = textPack.MenuQuit;
+            settingsToolStripMenuItem1.Text = textPack.MenuSetup;
+            generalSettingsToolStripMenuItem.Text = textPack.MenuSettings;
+            focusCalibrationToolStripMenuItem.Text = textPack.MenuCalibration;
+            aboutToolStripMenuItem.Text = textPack.MenuHelp;
+            helpToolStripMenuItem.Text = textPack.MenuUserManual;
+            checkForUpdatesToolStripMenuItem.Text = textPack.MenuCheckUpdates;
+            aboutToolStripMenuItem2.Text = textPack.MenuAbout;
+            pleaseDonateToolStripMenuItem.Text = textPack.MenuSupportSkyCal;
+            whatDoIDoNextToolStripMenuItem.Text = textPack.MenuWhatDoIDoNext;
+            RoundedStartButton.Text = textPack.StartButtonSelectStar;
+            label1.Text = textPack.LabelBahtinov;
+            Label2.Text = textPack.LabelDefocus;
+        }
+
         /// <summary>
         /// Applies the color scheme to various elements of the form, including the background, foreground, and other visual properties.
         /// </summary>
@@ -409,7 +431,7 @@ namespace Bahtinov_Collimator
                 }
 
                 screenCaptureRunningFlag = true;
-                RoundedStartButton.Text = "Stop";
+                RoundedStartButton.Text = UiText.Current.StartButtonStop;
                 RoundedStartButton.Image = Properties.Resources.Stop;
             }
             else
@@ -421,7 +443,7 @@ namespace Bahtinov_Collimator
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                 groupBoxRed?.SetLabelsVisible(false);
                 screenCaptureRunningFlag = false;
-                RoundedStartButton.Text = "Select Star";
+                RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 firstPassCompleted = false;
             }
@@ -467,7 +489,7 @@ namespace Bahtinov_Collimator
             if (toggle)
             {
                 screenCaptureRunningFlag = false;
-                RoundedStartButton.Text = "Select Star";
+                RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue, groupBoxRed);
                 whatDoIDoNextToolStripMenuItem.Enabled = false;
@@ -478,7 +500,7 @@ namespace Bahtinov_Collimator
             else
             {
                 screenCaptureRunningFlag = false;
-                RoundedStartButton.Text = "Select Star";
+                RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                 InitializeRedFocusBox();
@@ -508,7 +530,7 @@ namespace Bahtinov_Collimator
                 {
                     RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                     groupBoxRed?.SetLabelsVisible(false);
-                    RoundedStartButton.Text = "Select Star";
+                    RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                     RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                     DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
                 }));
@@ -517,7 +539,7 @@ namespace Bahtinov_Collimator
             {
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                 groupBoxRed?.SetLabelsVisible(false);
-                RoundedStartButton.Text = "Select Star";
+                RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
             }
@@ -600,7 +622,7 @@ namespace Bahtinov_Collimator
             catch (Exception ex)
             {
                 // Handle exceptions if the file cannot be opened
-                MessageBox.Show("Unable to open the help file: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format(UiText.Current.HelpOpenErrorMessageFormat, ex.Message), UiText.Current.HelpOpenErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -734,7 +756,7 @@ namespace Bahtinov_Collimator
             catch (Exception)
             {
                 screenCaptureRunningFlag = false;
-                ImageLostEventProvider.OnImageLost("Failed Bahtinov line detection", "RunBahtinovDisplay", MessageBoxIcon.Error, MessageBoxButtons.OK);
+                ImageLostEventProvider.OnImageLost(UiText.Current.BahtinovLineDetectionFailedMessage, UiText.Current.BahtinovLineDetectionFailedTitle, MessageBoxIcon.Error, MessageBoxButtons.OK);
             }
         }
 
@@ -785,7 +807,7 @@ namespace Bahtinov_Collimator
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
 
             // Create the version string
-            string versionString = $"V {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+            string versionString = string.Format(UiText.Current.AppVersionFormat, version.Major, version.Minor, version.Build, version.Revision);
 
             // Use compound assignment to append the version string to the form title
             this.Text += $" - {versionString}";
@@ -878,7 +900,7 @@ namespace Bahtinov_Collimator
 
             protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
             {
-                e.TextColor = (e.Item.Text == "Support SkyCal")
+                e.TextColor = (e.Item.Text == UiText.Current.MenuSupportSkyCal)
                     ? UITheme.GetGroupBoxTextColor(0)
                     : UITheme.MenuDarkForeground;
 
@@ -903,11 +925,12 @@ namespace Bahtinov_Collimator
 
         private void WhatDoIDoNextToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var nextStepText = NextStepText.Current;
             var screwMap = new Dictionary<string, string>
             {
-                ["Red"] = "top screw",
-                ["Green"] = "lower-left screw",
-                ["Blue"] = "lower-right screw"
+                [nextStepText.ChannelRed] = UiText.Current.ScrewRedLabel,
+                [nextStepText.ChannelGreen] = UiText.Current.ScrewGreenLabel,
+                [nextStepText.ChannelBlue] = UiText.Current.ScrewBlueLabel
             };
 
             double redError = groupBoxRed?.ErrorOffset ?? 0.0;
@@ -933,7 +956,7 @@ namespace Bahtinov_Collimator
             }
             catch(FileNotFoundException err)
             {
-                DarkMessageBox.Show($"Could not find Language json file: {err.Message}", "File Not Found", MessageBoxIcon.Error, MessageBoxButtons.OK);
+                DarkMessageBox.Show(string.Format(UiText.Current.LanguageFileMissingMessageFormat, err.Message), UiText.Current.LanguageFileMissingTitle, MessageBoxIcon.Error, MessageBoxButtons.OK);
             }
         }
 

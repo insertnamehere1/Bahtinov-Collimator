@@ -49,6 +49,8 @@ namespace Bahtinov_Collimator
             InitializeComponent();
             this.Text = title;
             messageLabel.Text = message;
+            okButton.Text = UiText.Current.CommonOk;
+            cancelButton.Text = UiText.Current.CommonCancel;
             DrawIconInPictureBox(icon);
             SetTextSize();
             SetColor();
@@ -124,8 +126,8 @@ namespace Bahtinov_Collimator
             {
                 okButton.Visible = true;
                 cancelButton.Visible = true;
-                okButton.Text = "Yes";
-                cancelButton.Text = "No";
+                okButton.Text = UiText.Current.CommonYes;
+                cancelButton.Text = UiText.Current.CommonNo;
             }
         }
 

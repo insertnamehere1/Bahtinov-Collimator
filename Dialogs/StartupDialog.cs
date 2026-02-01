@@ -72,7 +72,7 @@ namespace SkyCal
         /// </summary>
         private void UISetup()
         {
-            Text = "SkyCal";
+            Text = UiText.Current.StartupDialogTitle;
             StartPosition = FormStartPosition.CenterParent;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
@@ -87,7 +87,7 @@ namespace SkyCal
             _titleLabel = new Label
             {
                 AutoSize = true,
-                Text = "Calibration is Recommended:",
+                Text = UiText.Current.StartupDialogHeading,
                 Font = new Font(Font, FontStyle.Bold),
                 Location = new Point(14, 14)
             };
@@ -95,9 +95,7 @@ namespace SkyCal
             _bodyLabel = new Label
             {
                 AutoSize = false,
-                Text = "Tri-Bahtinov calibration enables full SkyCal functionality. Some features are unavailable until calibration is completed." +
-                " (Calibration is also available in the Setup menu.)\r\n\r\n" +
-                "Would you like to calibrate SkyCal now?",
+                Text = UiText.Current.StartupDialogBody,
                 Location = new Point(14, _titleLabel.Bottom + 10),
                 Size = new Size(ClientSize.Width - 28, 150)
             };
@@ -106,13 +104,13 @@ namespace SkyCal
             _dontShowAgainCheckBox = new CheckBox
             {
                 AutoSize = true,
-                Text = "Do not show again",
+                Text = UiText.Current.StartupDialogDontShowAgain,
                 Location = new Point(20, _bodyLabel.Bottom + 10)
             };
 
             _runButton = new RoundedButton
             {
-                Text = "Yes",
+                Text = UiText.Current.StartupDialogYesButton,
                 DialogResult = DialogResult.OK,
                 Size = new Size(120, 35),
                 CornerRadius = 4,
@@ -126,7 +124,7 @@ namespace SkyCal
 
             _notNowButton = new RoundedButton
             {
-                Text = "Not now",
+                Text = UiText.Current.StartupDialogNotNowButton,
                 DialogResult = DialogResult.Cancel,
                 Size = new Size(120, 35),
                 CornerRadius = 4,
@@ -154,4 +152,3 @@ namespace SkyCal
         }
     }
 }
-

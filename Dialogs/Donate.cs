@@ -34,6 +34,7 @@ namespace Bahtinov_Collimator
         public Donate()
         {
             InitializeComponent();
+            ApplyLocalization();
             InitializeRichTextBox();
             SetColorScheme();
         }
@@ -118,14 +119,7 @@ namespace Bahtinov_Collimator
             richTextBox.BackColor = UITheme.DarkBackground;
             richTextBox.ForeColor = UITheme.DonateTextColor;
 
-            richTextBox.Text = "Thank you for using SkyCal!\n\n" +
-            "If SkyCal has helped you achieve sharper focus, easier collimation, or simply made\n" +
-            "your nights under the stars a little more rewarding, please consider showing your \n" +
-            "support. Every coffee keeps the project alive, keeps me awake while writing manuals,\n" +
-            "helps me keep improving the software, and reminds me that the effort was worthwhile.\n\n" +
-            "Clear Skies and Sharp Stars\n" +
-            "Chris Dowd,\n" +
-            "Developer of SkyCal";
+            richTextBox.Text = UiText.Current.DonateRichTextOnline;
         }
 
         /// <summary>
@@ -134,12 +128,13 @@ namespace Bahtinov_Collimator
         /// <returns>The URL as a string.</returns>
         private string GenerateDonationUrl()
         {
-            string business = Uri.EscapeDataString("chris@chrisandbev.com.au");
-            string description = Uri.EscapeDataString("Buy Chris a Coffee – SkyCal Project");
-            string country = "AU";
-            string currency = "USD";
-            string logoUrl = "https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/refs/heads/master/SkyCal.logo.png";
-            string thankYouUrl = "https://yourdomain.com/thankyou";
+            var textPack = UiText.Current;
+            string business = Uri.EscapeDataString(textPack.DonatePaypalBusiness);
+            string description = Uri.EscapeDataString(textPack.DonatePaypalDescription);
+            string country = textPack.DonatePaypalCountry;
+            string currency = textPack.DonatePaypalCurrency;
+            string logoUrl = textPack.DonatePaypalLogoUrl;
+            string thankYouUrl = textPack.DonatePaypalThankYouUrl;
 
             return "https://www.paypal.com/cgi-bin/webscr" +
                    "?cmd=_donations" +
@@ -149,7 +144,7 @@ namespace Bahtinov_Collimator
                    "&currency_code=" + currency +
                    "&no_shipping=1" +
                    "&no_note=0" +
-                   "&cn=Leave%20a%20message%20(optional)" +
+                   "&cn=" + Uri.EscapeDataString(textPack.DonatePaypalOptionalMessage) +
                    "&image_url=" + Uri.EscapeDataString(logoUrl) +
                    "&return=" + Uri.EscapeDataString(thankYouUrl) +
                    "&bn=PP-DonationsBF";
@@ -210,17 +205,15 @@ namespace Bahtinov_Collimator
             // You can include your PayPal URL so they can copy it for later.
             string githubLink = "https://insertnamehere1.github.io/Bahtinov-Collimator/";
 
-            richTextBox.Text =
-                "Thank you for using SkyCal!\n\n" +
-                "It looks like this computer does not currently have internet access, so the donation page\n" +
-                "can’t be opened automatically.\n\n" +
-                "To donate, please use any internet-connected device and visit:\n\n" +
-                githubLink + "\n\n" +
-                "Alternatively, you can email me and I can provide offline-friendly options:\n" +
-                "chris@chrisandbev.com.au\n\n" +
-                "Clear Skies and Sharp Stars\n" +
-                "Chris Dowd,\n" +
-                "Developer of SkyCal";
+            richTextBox.Text = string.Format(UiText.Current.DonateRichTextOfflineFormat, githubLink);
+        }
+
+        private void ApplyLocalization()
+        {
+            var textPack = UiText.Current;
+            Text = textPack.DonateTitle;
+            cancelButton.Text = textPack.DonateCloseButton;
+            label1.Text = textPack.DonateHeaderText;
         }
 
 

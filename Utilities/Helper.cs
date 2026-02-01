@@ -23,8 +23,8 @@ namespace Bahtinov_Collimator.Helper
                     {
                         // Ask the user for confirmation before updating
                         DialogResult result = DarkMessageBox.Show(
-                            "A new update is available. Do you want to download and install it now?",
-                            "Update Available",
+                            UiText.Current.UpdateAvailableMessage,
+                            UiText.Current.UpdateAvailableTitle,
                             MessageBoxIcon.Question,
                             MessageBoxButtons.YesNo
                         );
@@ -37,8 +37,8 @@ namespace Bahtinov_Collimator.Helper
                             if (success)
                             {
                                 DarkMessageBox.Show(
-                                    "New updates have been downloaded. Restart the application to install.",
-                                    "Update Completed",
+                                    UiText.Current.UpdateDownloadedMessage,
+                                    UiText.Current.UpdateDownloadedTitle,
                                     MessageBoxIcon.Information,
                                     MessageBoxButtons.OK
                                 );
@@ -46,8 +46,8 @@ namespace Bahtinov_Collimator.Helper
                             else
                             {
                                 DarkMessageBox.Show(
-                                    "The update download failed. Please try again.",
-                                    "Update Failed",
+                                    UiText.Current.UpdateFailedMessage,
+                                    UiText.Current.UpdateFailedTitle,
                                     MessageBoxIcon.Exclamation,
                                     MessageBoxButtons.OK
                                 );
@@ -56,8 +56,8 @@ namespace Bahtinov_Collimator.Helper
                         else
                         {
                             DarkMessageBox.Show(
-                                "Update canceled.",
-                                "Update Canceled",
+                                UiText.Current.UpdateCanceledMessage,
+                                UiText.Current.UpdateCanceledTitle,
                                 MessageBoxIcon.Information,
                                 MessageBoxButtons.OK
                             );
@@ -66,8 +66,8 @@ namespace Bahtinov_Collimator.Helper
                     else
                     {
                         DarkMessageBox.Show(
-                            "No new updates are available.",
-                            "No Updates",
+                            UiText.Current.UpdateNoneMessage,
+                            UiText.Current.UpdateNoneTitle,
                             MessageBoxIcon.Information,
                             MessageBoxButtons.OK
                         );
@@ -77,8 +77,8 @@ namespace Bahtinov_Collimator.Helper
             catch (Exception)
             {
                 DarkMessageBox.Show(
-                    "Unable to connect to the update server.",
-                    "Network Problem",
+                    UiText.Current.UpdateNetworkErrorMessage,
+                    UiText.Current.UpdateNetworkErrorTitle,
                     MessageBoxIcon.Exclamation,
                     MessageBoxButtons.OK
                 );

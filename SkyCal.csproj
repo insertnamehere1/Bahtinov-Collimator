@@ -258,6 +258,7 @@
     </Compile>
     <Compile Include="NextStep\NextStepGuidance.cs" />
     <Compile Include="NextStep\NextStepTextPack.cs" />
+    <Compile Include="Language\UiTextPack.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -323,6 +324,9 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Language\NextStepText_SCT_en.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\UiText_en.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\app.manifest" />

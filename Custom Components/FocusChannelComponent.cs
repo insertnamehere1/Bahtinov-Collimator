@@ -38,6 +38,7 @@ namespace Bahtinov_Collimator
             this.groupID = groupID;
             InitializeComponent();
             this.AutoScaleMode = AutoScaleMode.None;
+            ApplyLocalization();
 
             // Get the current DPI of the display
             using (Graphics g = this.CreateGraphics())
@@ -57,16 +58,16 @@ namespace Bahtinov_Collimator
             ApplyTheme();
             SubscribeToEvents();
 
-            switch(groupID)
+            switch (groupID)
             {
                 case 0:
-                    groupBox1.Text = "Red Group";
+                    groupBox1.Text = UiText.Current.FocusGroupRed;
                     break;
                 case 1:
-                    groupBox1.Text = "Green Group";
+                    groupBox1.Text = UiText.Current.FocusGroupGreen;
                     break;
                 case 2:
-                    groupBox1.Text = "Blue Group";
+                    groupBox1.Text = UiText.Current.FocusGroupBlue;
                     break;
                 default:
                     break;
@@ -113,6 +114,16 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Label Setup
+
+        private void ApplyLocalization()
+        {
+            var textPack = UiText.Current;
+            label6.Text = textPack.FocusLabelFarAway;
+            label2.Text = textPack.FocusLabelClose;
+            label5.Text = textPack.FocusLabelOk;
+            label4.Text = textPack.FocusLabelToo;
+            label3.Text = textPack.FocusLabelToo;
+        }
 
         /// <summary>
         /// Initializes the properties of the labels.

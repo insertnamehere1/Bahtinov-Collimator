@@ -246,7 +246,7 @@ namespace Bahtinov_Collimator
                     }
                     catch (InvalidOperationException)
                     {
-                        ImageLostEventProvider.OnImageLost("Unable to detect Defocus Image", "Circle Offset", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                        ImageLostEventProvider.OnImageLost(UiText.Current.ImageCaptureDefocusNotDetectedMessage, UiText.Current.ImageCaptureDefocusNotDetectedTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                         return;
                     }
 
@@ -285,7 +285,7 @@ namespace Bahtinov_Collimator
             {
                 if (captureTimer != null)
                 {
-                    DarkMessageBox.Show("Invalid image selection", "Capture Timer", MessageBoxIcon.Information, MessageBoxButtons.OK);
+                    DarkMessageBox.Show(UiText.Current.ImageCaptureInvalidSelectionMessage, UiText.Current.ImageCaptureInvalidSelectionTitle, MessageBoxIcon.Information, MessageBoxButtons.OK);
                 }
                 updatedImage?.Dispose();
                 return;
@@ -493,7 +493,7 @@ namespace Bahtinov_Collimator
 
             if (diameter == 0)
             {
-                DarkMessageBox.Show("The selection area is too small", "Information", MessageBoxIcon.Information, MessageBoxButtons.OK);
+                DarkMessageBox.Show(UiText.Current.ImageCaptureSelectionTooSmallMessage, UiText.Current.ImageCaptureSelectionTooSmallTitle, MessageBoxIcon.Information, MessageBoxButtons.OK);
                 return null;
             }
 
@@ -537,7 +537,7 @@ namespace Bahtinov_Collimator
 
                     if (targetWindowHandle == IntPtr.Zero)
                     {
-                        DarkMessageBox.Show("No application found under the selected area", "Image Capture", MessageBoxIcon.Error, MessageBoxButtons.OK);
+                        DarkMessageBox.Show(UiText.Current.ImageCaptureNoAppFoundMessage, UiText.Current.ImageCaptureNoAppFoundTitle, MessageBoxIcon.Error, MessageBoxButtons.OK);
                         return false;
                     }
 
@@ -562,7 +562,7 @@ namespace Bahtinov_Collimator
             // Validate target window handle early
             if (targetWindowHandle == IntPtr.Zero || !IsWindow(targetWindowHandle))
             {
-                ImageLostEventProvider.OnImageLost("Image has been lost", "GetImage", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                ImageLostEventProvider.OnImageLost(UiText.Current.ImageCaptureImageLostMessage, UiText.Current.ImageCaptureGetImageTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return null;
             }
 
@@ -570,14 +570,14 @@ namespace Bahtinov_Collimator
             // Treat this as "image lost" so the UI can instruct the user.
             if (IsIconic(targetWindowHandle))
             {
-                ImageLostEventProvider.OnImageLost("Target window is minimized", "GetImage", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                ImageLostEventProvider.OnImageLost(UiText.Current.ImageCaptureTargetMinimizedMessage, UiText.Current.ImageCaptureGetImageTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return null;
             }
 
             // Get the window rectangle
             if (!GetWindowRect(targetWindowHandle, out Utilities.RECT rect))
             {
-                ImageLostEventProvider.OnImageLost("Image has been lost", "GetImage", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                ImageLostEventProvider.OnImageLost(UiText.Current.ImageCaptureImageLostMessage, UiText.Current.ImageCaptureGetImageTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return null;
             }
 
@@ -605,7 +605,7 @@ namespace Bahtinov_Collimator
             // Ensure the selected rectangle is valid
             if (selectedStarBox.Width <= 0 || selectedStarBox.Height <= 0)
             {
-                ImageLostEventProvider.OnImageLost("The selection area is too small.", "GetImage", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                ImageLostEventProvider.OnImageLost(UiText.Current.ImageCaptureSelectionTooSmallForGetImageMessage, UiText.Current.ImageCaptureGetImageTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return null;
             }
 
@@ -615,7 +615,7 @@ namespace Bahtinov_Collimator
                 {
                     if (fullWindowBitmap == null)
                     {
-                        ImageLostEventProvider.OnImageLost("Unable to capture image", "GetImage", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                        ImageLostEventProvider.OnImageLost(UiText.Current.ImageCaptureUnableCaptureMessage, UiText.Current.ImageCaptureGetImageTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                         return null;
                     }
 
@@ -624,7 +624,7 @@ namespace Bahtinov_Collimator
             }
             catch
             {
-                ImageLostEventProvider.OnImageLost("Image capture failed", "GetImage", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                ImageLostEventProvider.OnImageLost(UiText.Current.ImageCaptureFailedMessage, UiText.Current.ImageCaptureGetImageTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return null;
             }
         }

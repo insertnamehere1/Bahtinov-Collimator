@@ -50,7 +50,7 @@ namespace Bahtinov_Collimator.Image_Processing
         {
             if (image == null)
             {
-                DarkMessageBox.Show("No defocus image found", "Defocus Processing", MessageBoxIcon.Error, MessageBoxButtons.OK);
+                DarkMessageBox.Show(UiText.Current.DefocusNoImageMessage, UiText.Current.DefocusNoImageTitle, MessageBoxIcon.Error, MessageBoxButtons.OK);
                 return;
             }
 

@@ -31,10 +31,10 @@ namespace Bahtinov_Collimator
             InitializeComponent();
             SetColorScheme();
 
-            this.Text = String.Format("About {0}", AssemblyTitle);
+            this.Text = string.Format(UiText.Current.AboutDialogTitleFormat, AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
             this.labelProductName.ForeColor = UITheme.AboutTextColor;
-            this.labelVersion.Text = String.Format("Version {0}", GetVersion());
+            this.labelVersion.Text = string.Format(UiText.Current.AboutVersionFormat, GetVersion());
             this.labelVersion.ForeColor = UITheme.AboutTextColor;
             this.labelCopyright.Text = AssemblyCopyright;
             this.labelCopyright.ForeColor = UITheme.AboutTextColor;
@@ -42,6 +42,7 @@ namespace Bahtinov_Collimator
             this.labelCompanyName.ForeColor = UITheme.AboutTextColor;
             this.textBoxDescription.Text = AssemblyDescription;
             this.textBoxDescription.ForeColor = UITheme.AboutTextColor;
+            okButton.Text = UiText.Current.CommonOk;
         }
 
         #endregion

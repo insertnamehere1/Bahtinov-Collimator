@@ -32,6 +32,7 @@ namespace Bahtinov_Collimator
         public Settings()
         {
             InitializeComponent();
+            ApplyLocalization();
             LoadSettings();
             SetColorScheme();
         }
@@ -152,6 +153,27 @@ namespace Bahtinov_Collimator
             SCTRadioButton.Checked = true;
         }
 
+        private void ApplyLocalization()
+        {
+            var textPack = UiText.Current;
+            Text = textPack.SettingsTitle;
+            groupBox1.Text = textPack.SettingsGroupVoiceTitle;
+            groupBox3.Text = textPack.SettingsGroupGuidanceTitle;
+            groupBox4.Text = textPack.SettingsGroupHistoryTitle;
+            ErrorSignGroupBox.Text = textPack.SettingsGroupCalibrationTitle;
+            VoiceCheckBox.Text = textPack.SettingsVoiceGuidanceLabel;
+            label5.Text = textPack.SettingsVoiceGuidanceDescription;
+            SCTRadioButton.Text = textPack.SettingsGuidanceSct;
+            MakCassRadioButton.Text = textPack.SettingsGuidanceMakCass;
+            radioButton1.Text = textPack.SettingsGuidanceNewtonian;
+            errorSignCheckBox.Text = textPack.SettingsCalibrationSignSwitch;
+            label2.Text = textPack.SettingsCalibrationDescription;
+            label1.Text = textPack.SettingsHistoryMarkersLabel;
+            label3.Text = textPack.SettingsHistoryMarkersDescription;
+            okButton.Text = textPack.SettingsSaveButton;
+            CancelSettingsButton.Text = textPack.SettingsCancelButton;
+        }
+
         /// <summary>
         /// Saves the settings when the OK button is clicked and closes the form.
         /// </summary>
@@ -178,7 +200,7 @@ namespace Bahtinov_Collimator
             catch
             {
                 // Show warning message if input parsing fails
-                DarkMessageBox.Show("Invalid input, try again", "Warning", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                DarkMessageBox.Show(UiText.Current.SettingsInvalidInputMessage, UiText.Current.SettingsInvalidInputTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return;
             }
 

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
@@ -16,6 +14,7 @@ namespace Bahtinov_Collimator
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            UiText.LoadFromJson(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Language\\UiText_en.json"));
             Application.Run(new Form1());
         }
     }
