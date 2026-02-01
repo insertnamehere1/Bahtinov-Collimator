@@ -1,0 +1,63 @@
+{
+  "DialogTitle": "¿Qué debo hacer ahora?",
+  "DebugLineFormat": "Valores:  Rojo {0}   Verde {1}   Azul {2}",
+
+  "SectionWhatToDoTitle": "Qué hacer",
+
+  "CaptureHeader": "Capturar una imagen Tri-Bahtinov",
+  "CaptureSummary": "Capture una imagen Bahtinov para iniciar los ajustes.",
+  "CaptureBullet1": "Asegúrese de que una estrella brillante esté centrada.",
+  "CaptureBullet2": "Coloque la máscara Tri-Bahtinov y haga clic en «Seleccionar estrella».",
+
+  "FocusOnlyHeader": "La guía de enfoque no está disponible",
+  "FocusOnlyNeedsAdjustingSummary": "La guía solo está disponible para imágenes Tri-Bahtinov.",
+
+  "FocusBalancedHeader": "Equilibrar los marcadores de error alrededor de 0",
+  "FocusBalancedSummary": "Ajuste el enfoque hasta que los tres valores de error estén equilibrados alrededor de 0.\n",
+  "FocusAllPositiveBullet": "Todos los valores son positivos. Mueva el enfocador HACIA ADENTRO en pequeños pasos.",
+  "FocusAllNegativeBullet": "Todos los valores son negativos. Mueva el enfocador HACIA AFUERA en pequeños pasos.",
+  "FocusStraddleNotBalancedBullet1": "Los valores rodean el 0, pero aún no están equilibrados.",
+  "FocusStraddleNotBalancedBullet2Format": "Mueva el enfocador {0} hasta que los 3 valores de error estén espaciados uniformemente alrededor de 0.",
+  "FocusTargetLineFormat": "Objetivo: un promedio cercano a 0, con magnitudes similares.",
+  "FocusOnlyBeginScrewsBullet": "Comience los ajustes de colimación solo después de lograr este equilibrio.",
+  "FocusFooterHint": "Consejo: ADENTRO = espejo primario hacia el secundario o cámara hacia el telescopio, \nAFUERA = primario alejándose del secundario o cámara alejándose del telescopio",
+
+  "CollimationHeader": "Ajustes de colimación para SCT",
+  "CollimationSummary": "Proceda con una colimación equilibrada usando 2 o más tornillos al mismo tiempo.\n",
+
+  "DoneHeader": "Se ve bien",
+  "DoneSummary": "Todos los valores están cerca de cero.\n",
+  "DoneBullet": "No se requiere ajuste.",
+  "CollimationPositiveInstructionFormat": "Ajuste {0} - AFLOJAR (sentido antihorario). {0} está demasiado lejos del primario.",
+  "CollimationNegativeInstructionFormat": "Ajuste {0} - APRETAR (sentido horario). {0} está demasiado cerca del primario.",
+  "CollimationAdjustTogetherBullet": "\r\nAjuste estos tornillos juntos para mantener la tensión equilibrada.",
+  "CollimationFooterHint": "Consejo: recentre la estrella y vuelva a enfocar hasta que los valores vuelvan a rodear 0 antes de repetir.",
+
+  "DirectionIn": "ADENTRO",
+  "DirectionOut": "AFUERA",
+
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "el tornillo {0}",
+
+  "ChannelRed": "Rojo",
+  "ChannelGreen": "Verde",
+  "ChannelBlue": "Azul",
+
+  "CalibrationTitle": "Calibración Tri-Bahtinov",
+  "CalibrationQuitButtonText": "Salir",
+  "CalibrationCloseButtonText": "Cerrar",
+  "CalibrationObjectiveHeader": "\nObjetivo: la calibración permite que SkyCal asesore sobre ajustes de tornillos de colimación y active la guía «¿Qué debo hacer ahora?».",
+  "CalibrationStep1Title": "Paso 1 - Configuración",
+  "CalibrationStep1Bullet1": "Coloque una máscara de colimación Tri-Bahtinov en su telescopio.",
+  "CalibrationStep1Bullet2": "Capture una imagen de estrella.",
+  "CalibrationWaitingForImage": "Esperando una imagen Bahtinov válida...",
+  "CalibrationAimHeader": "\nMeta: ajuste el enfoque hacia adentro para que SkyCal aprenda cómo cambian los errores de colimación con la posición de enfoque.",
+  "CalibrationStep2Title": "Paso 2 - Mover el enfocador.",
+  "CalibrationStep2Bullet1": "Si el enfocador mueve el espejo primario, muévalo HACIA ADENTRO, hacia el secundario.",
+  "CalibrationStep2Bullet2": "Si el enfocador mueve la cámara, muévala HACIA ADENTRO, hacia el cuerpo del telescopio.",
+  "CalibrationAutoCompleteLine": "La calibración se completa automáticamente cuando se detecta suficiente movimiento de enfoque.",
+  "CalibrationMovePrompt": "Mueva el enfocador hacia adentro ahora....",
+  "CalibrationCompleteHeader": "Calibración completada con éxito",
+  "CalibrationCompleteSummary": "      SkyCal ha actualizado su configuración."
+}

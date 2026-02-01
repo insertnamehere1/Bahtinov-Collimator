@@ -1,0 +1,63 @@
+{
+  "DialogTitle": "Cosa devo fare dopo?",
+  "DebugLineFormat": "Valori:  Rosso {0}   Verde {1}   Blu {2}",
+
+  "SectionWhatToDoTitle": "Cosa fare",
+
+  "CaptureHeader": "Acquisisci un'immagine Tri-Bahtinov",
+  "CaptureSummary": "Acquisisci un'immagine Bahtinov per iniziare le regolazioni.",
+  "CaptureBullet1": "Assicurati che una stella luminosa sia centrata.",
+  "CaptureBullet2": "Applica la maschera Tri-Bahtinov e fai clic su «Seleziona stella».",
+
+  "FocusOnlyHeader": "Guida alla messa a fuoco non disponibile",
+  "FocusOnlyNeedsAdjustingSummary": "La guida è disponibile solo per immagini Tri-Bahtinov.",
+
+  "FocusBalancedHeader": "Bilancia i marcatori di errore intorno a 0",
+  "FocusBalancedSummary": "Regola il fuoco finché i tre valori di errore sono bilanciati intorno a 0.\n",
+  "FocusAllPositiveBullet": "Tutti i valori sono positivi. Sposta il focheggiatore verso DENTRO a piccoli passi.",
+  "FocusAllNegativeBullet": "Tutti i valori sono negativi. Sposta il focheggiatore verso FUORI a piccoli passi.",
+  "FocusStraddleNotBalancedBullet1": "I valori attraversano 0, ma non sono ancora bilanciati.",
+  "FocusStraddleNotBalancedBullet2Format": "Sposta il focheggiatore {0} finché i 3 valori di errore sono equidistanti intorno a 0.",
+  "FocusTargetLineFormat": "Obiettivo: una media vicino a 0, con magnitudini simili.",
+  "FocusOnlyBeginScrewsBullet": "Inizia le regolazioni di collimazione solo dopo aver raggiunto questo equilibrio.",
+  "FocusFooterHint": "Suggerimento: DENTRO = specchio primario verso il secondario o camera verso il telescopio, \nFUORI = primario lontano dal secondario o camera lontana dal telescopio",
+
+  "CollimationHeader": "Regolazioni di collimazione per SCT",
+  "CollimationSummary": "Procedi con una collimazione bilanciata usando 2 o più viti contemporaneamente.\n",
+
+  "DoneHeader": "Va bene",
+  "DoneSummary": "Tutti i valori sono vicini a zero.\n",
+  "DoneBullet": "Nessuna regolazione necessaria.",
+  "CollimationPositiveInstructionFormat": "Regolazione {0} - ALLENTARE (antiorario). {0} è troppo lontano dal primario.",
+  "CollimationNegativeInstructionFormat": "Regolazione {0} - SERRARE (orario). {0} è troppo vicino al primario.",
+  "CollimationAdjustTogetherBullet": "\r\nRegola queste viti insieme per mantenere la tensione bilanciata.",
+  "CollimationFooterHint": "Suggerimento: ricentra la stella, quindi rifocalizza finché i valori tornano a cavallo di 0 prima di ripetere.",
+
+  "DirectionIn": "DENTRO",
+  "DirectionOut": "FUORI",
+
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "la vite {0}",
+
+  "ChannelRed": "Rosso",
+  "ChannelGreen": "Verde",
+  "ChannelBlue": "Blu",
+
+  "CalibrationTitle": "Calibrazione Tri-Bahtinov",
+  "CalibrationQuitButtonText": "Esci",
+  "CalibrationCloseButtonText": "Chiudi",
+  "CalibrationObjectiveHeader": "\nObiettivo - La calibrazione consente a SkyCal di consigliare regolazioni delle viti di collimazione e di attivare la guida «Cosa devo fare dopo?». ",
+  "CalibrationStep1Title": "Fase 1 - Configurazione",
+  "CalibrationStep1Bullet1": "Applica una maschera di collimazione Tri-Bahtinov al telescopio.",
+  "CalibrationStep1Bullet2": "Acquisisci un'immagine stellare.",
+  "CalibrationWaitingForImage": "In attesa di un'immagine Bahtinov valida...",
+  "CalibrationAimHeader": "\nScopo - Regola il fuoco verso l'interno per permettere a SkyCal di imparare come cambiano gli errori di collimazione con la posizione di messa a fuoco.",
+  "CalibrationStep2Title": "Fase 2 - Muovere il focheggiatore.",
+  "CalibrationStep2Bullet1": "Se il focheggiatore muove lo specchio primario, spostalo verso l'INTERNO, verso il secondario.",
+  "CalibrationStep2Bullet2": "Se il focheggiatore muove la camera, spostala verso l'INTERNO, verso il corpo del telescopio.",
+  "CalibrationAutoCompleteLine": "La calibrazione si completa automaticamente quando viene rilevato sufficiente movimento di messa a fuoco.",
+  "CalibrationMovePrompt": "Muovi ora il focheggiatore verso l'interno....",
+  "CalibrationCompleteHeader": "Calibrazione completata con successo",
+  "CalibrationCompleteSummary": "      SkyCal ha aggiornato le sue impostazioni."
+}

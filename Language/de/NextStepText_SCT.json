@@ -1,0 +1,63 @@
+{
+  "DialogTitle": "Was soll ich als Nächstes tun?",
+  "DebugLineFormat": "Werte:  Rot {0}   Grün {1}   Blau {2}",
+
+  "SectionWhatToDoTitle": "Was zu tun ist",
+
+  "CaptureHeader": "Ein Tri-Bahtinov-Bild aufnehmen",
+  "CaptureSummary": "Bitte nehmen Sie ein Bahtinov-Bild auf, um Anpassungen zu beginnen.",
+  "CaptureBullet1": "Stellen Sie sicher, dass ein heller Stern zentriert ist.",
+  "CaptureBullet2": "Tri-Bahtinov-Maske anbringen und „Stern auswählen“ klicken.",
+
+  "FocusOnlyHeader": "Fokusführung nicht verfügbar",
+  "FocusOnlyNeedsAdjustingSummary": "Die Führung ist nur für Tri-Bahtinov-Bilder verfügbar.",
+
+  "FocusBalancedHeader": "Fehlermarkierungen um 0 ausbalancieren",
+  "FocusBalancedSummary": "Stellen Sie den Fokus ein, bis die drei Fehlerwerte um 0 ausgeglichen sind.\n",
+  "FocusAllPositiveBullet": "Alle Werte sind positiv. Fokussierer in kleinen Schritten NACH INNEN bewegen.",
+  "FocusAllNegativeBullet": "Alle Werte sind negativ. Fokussierer in kleinen Schritten NACH AUSSEN bewegen.",
+  "FocusStraddleNotBalancedBullet1": "Werte liegen beidseitig von 0, sind aber noch nicht ausgeglichen.",
+  "FocusStraddleNotBalancedBullet2Format": "Bewegen Sie den Fokussierer {0}, bis die 3 Fehlerwerte gleichmäßig um 0 verteilt sind.",
+  "FocusTargetLineFormat": "Ziel: Ein Mittelwert nahe 0, mit ähnlichen Beträgen.",
+  "FocusOnlyBeginScrewsBullet": "Beginnen Sie mit Kollimationsanpassungen erst nach diesem Ausgleich.",
+  "FocusFooterHint": "Tipp: INNEN = Hauptspiegel zur Sekundärspiegel oder Kamera zum Teleskop, \nAUSSEN = Hauptspiegel weg vom Sekundärspiegel oder Kamera vom Teleskop",
+
+  "CollimationHeader": "Kollimationsanpassungen für SCT",
+  "CollimationSummary": "Fahren Sie mit einer ausgewogenen Kollimation fort und verwenden Sie 2 oder mehr Schrauben gleichzeitig.\n",
+
+  "DoneHeader": "Sieht gut aus",
+  "DoneSummary": "Alle Werte liegen nahe bei Null.\n",
+  "DoneBullet": "Keine Anpassung erforderlich.",
+  "CollimationPositiveInstructionFormat": "{0}-Anpassung – LÖSEN (gegen den Uhrzeigersinn). {0} ist zu weit vom Hauptspiegel entfernt.",
+  "CollimationNegativeInstructionFormat": "{0}-Anpassung – ANZIEHEN (im Uhrzeigersinn). {0} ist zu nahe am Hauptspiegel.",
+  "CollimationAdjustTogetherBullet": "\r\nDiese Schrauben gemeinsam einstellen, um die Spannung auszugleichen.",
+  "CollimationFooterHint": "Tipp: Stern neu zentrieren, dann erneut fokussieren, bis die Werte wieder um 0 liegen, bevor Sie wiederholen.",
+
+  "DirectionIn": "NACH INNEN",
+  "DirectionOut": "NACH AUSSEN",
+
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "die {0}-Schraube",
+
+  "ChannelRed": "Rot",
+  "ChannelGreen": "Grün",
+  "ChannelBlue": "Blau",
+
+  "CalibrationTitle": "Tri-Bahtinov-Kalibrierung",
+  "CalibrationQuitButtonText": "Beenden",
+  "CalibrationCloseButtonText": "Schließen",
+  "CalibrationObjectiveHeader": "\nZiel – Die Kalibrierung ermöglicht SkyCal, bei Kollimationsschrauben-Anpassungen zu beraten und die Anleitung „Was soll ich als Nächstes tun?“ zu aktivieren.",
+  "CalibrationStep1Title": "Schritt 1 – Einrichtung",
+  "CalibrationStep1Bullet1": "Tri-Bahtinov-Kollimationsmaske am Teleskop anbringen.",
+  "CalibrationStep1Bullet2": "Ein Sternbild aufnehmen.",
+  "CalibrationWaitingForImage": "Warten auf ein gültiges Bahtinov-Bild...",
+  "CalibrationAimHeader": "\nZiel – Fokus nach innen verstellen, damit SkyCal lernt, wie sich Kollimationsfehler mit der Fokusposition ändern.",
+  "CalibrationStep2Title": "Schritt 2 – Fokussierer bewegen.",
+  "CalibrationStep2Bullet1": "Wenn der Fokussierer den Hauptspiegel bewegt, nach INNEN bewegen, Richtung Sekundärspiegel.",
+  "CalibrationStep2Bullet2": "Wenn der Fokussierer die Kamera bewegt, nach INNEN bewegen, Richtung Teleskopkörper.",
+  "CalibrationAutoCompleteLine": "Die Kalibrierung wird automatisch abgeschlossen, sobald genug Fokusbewegung erkannt wird.",
+  "CalibrationMovePrompt": "Bitte den Fokussierer jetzt nach innen bewegen....",
+  "CalibrationCompleteHeader": "Kalibrierung erfolgreich abgeschlossen",
+  "CalibrationCompleteSummary": "      SkyCal hat seine Einstellungen aktualisiert."
+}
