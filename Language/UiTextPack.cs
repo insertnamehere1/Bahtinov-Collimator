@@ -80,12 +80,7 @@ namespace Bahtinov_Collimator
         [DataMember] public string DonateHeaderText { get; set; }
         [DataMember] public string DonateRichTextOnline { get; set; }
         [DataMember] public string DonateRichTextOfflineFormat { get; set; }
-        [DataMember] public string DonatePaypalBusiness { get; set; }
         [DataMember] public string DonatePaypalDescription { get; set; }
-        [DataMember] public string DonatePaypalCountry { get; set; }
-        [DataMember] public string DonatePaypalCurrency { get; set; }
-        [DataMember] public string DonatePaypalLogoUrl { get; set; }
-        [DataMember] public string DonatePaypalThankYouUrl { get; set; }
         [DataMember] public string DonatePaypalOptionalMessage { get; set; }
 
         [DataMember] public string HelpOpenErrorMessageFormat { get; set; }

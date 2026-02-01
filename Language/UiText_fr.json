@@ -67,12 +67,7 @@
   "DonateHeaderText": "Ce logiciel est gratuit et open source.",
   "DonateRichTextOnline": "Merci d'utiliser SkyCal !\n\nSi SkyCal vous a aidé à obtenir une mise au point plus précise, une collimation plus simple, ou simplement à rendre vos nuits sous les étoiles un peu plus agréables, pensez à montrer votre soutien. Chaque café permet de maintenir le projet en vie, de me garder éveillé pendant la rédaction des manuels, d'améliorer le logiciel, et me rappelle que l'effort en vaut la peine.\n\nCiels clairs et étoiles nettes\nChris Dowd,\nDéveloppeur de SkyCal",
   "DonateRichTextOfflineFormat": "Merci d'utiliser SkyCal !\n\nIl semble que cet ordinateur n'ait pas accès à Internet, la page de don ne peut donc pas être ouverte automatiquement.\n\nPour faire un don, utilisez un appareil connecté à Internet et visitez :\n\n{0}\n\nVous pouvez également m'envoyer un email pour obtenir des options hors ligne :\nchris@chrisandbev.com.au\n\nCiels clairs et étoiles nettes\nChris Dowd,\nDéveloppeur de SkyCal",
-  "DonatePaypalBusiness": "chris@chrisandbev.com.au",
   "DonatePaypalDescription": "Offrez un café à Chris – Projet SkyCal",
-  "DonatePaypalCountry": "AU",
-  "DonatePaypalCurrency": "USD",
-  "DonatePaypalLogoUrl": "https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/refs/heads/master/SkyCal.logo.png",
-  "DonatePaypalThankYouUrl": "https://yourdomain.com/thankyou",
   "DonatePaypalOptionalMessage": "Laisser un message (facultatif)",
 
   "HelpOpenErrorMessageFormat": "Impossible d'ouvrir le fichier d'aide : {0}",

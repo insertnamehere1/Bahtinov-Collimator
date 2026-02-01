@@ -129,12 +129,12 @@ namespace Bahtinov_Collimator
         private string GenerateDonationUrl()
         {
             var textPack = UiText.Current;
-            string business = Uri.EscapeDataString(textPack.DonatePaypalBusiness);
             string description = Uri.EscapeDataString(textPack.DonatePaypalDescription);
-            string country = textPack.DonatePaypalCountry;
-            string currency = textPack.DonatePaypalCurrency;
-            string logoUrl = textPack.DonatePaypalLogoUrl;
-            string thankYouUrl = textPack.DonatePaypalThankYouUrl;
+            string business = Uri.EscapeDataString("chris@chrisandbev.com.au");
+            string country = "AU";
+            string currency = "USD";
+            string logoUrl = "https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/refs/heads/master/SkyCal.logo.png";
+            string thankYouUrl = "https://yourdomain.com/thankyou";
 
             return "https://www.paypal.com/cgi-bin/webscr" +
                    "?cmd=_donations" +
