@@ -200,8 +200,6 @@ namespace Bahtinov_Collimator
             slideSwitch2.IsOn = Properties.Settings.Default.DefocusSwitch;
             RoundedPanel1.FillColor = Color.FromArgb(50, UITheme.DarkBackground);
 
-            // Initialize language
-            NextStepText.LoadFromJson(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Language\\NextStepText_SCT_en.json"));
         }
         #endregion
 

@@ -14,7 +14,7 @@ namespace Bahtinov_Collimator
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            UiText.LoadFromJson(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Language\\UiText_en.json"));
+            LanguageLoader.LoadFromSystemCulture(AppDomain.CurrentDomain.BaseDirectory);
             Application.Run(new Form1());
         }
     }

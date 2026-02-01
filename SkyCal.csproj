@@ -258,6 +258,7 @@
     </Compile>
     <Compile Include="NextStep\NextStepGuidance.cs" />
     <Compile Include="NextStep\NextStepTextPack.cs" />
+    <Compile Include="Language\LanguageLoader.cs" />
     <Compile Include="Language\UiTextPack.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
