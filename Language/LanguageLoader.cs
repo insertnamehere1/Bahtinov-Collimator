@@ -8,6 +8,7 @@ namespace Bahtinov_Collimator
     public static class LanguageLoader
     {
         public const string DefaultLanguageCode = "en";
+        public const string OverrideLanguageEnvironmentVariable = "SKYCAL_LANG";
 
         public static string CurrentLanguageCode { get; private set; } = DefaultLanguageCode;
 
@@ -15,6 +16,14 @@ namespace Bahtinov_Collimator
         {
             if (string.IsNullOrWhiteSpace(baseDirectory))
                 throw new ArgumentException("baseDirectory is null/empty.", nameof(baseDirectory));
+
+            string overrideLanguage = GetOverrideLanguageCode();
+            if (!string.IsNullOrWhiteSpace(overrideLanguage)
+                && TryLoadLanguagePack(baseDirectory, telescopeModel, overrideLanguage))
+            {
+                CurrentLanguageCode = overrideLanguage;
+                return;
+            }
 
             var culture = CultureInfo.CurrentUICulture;
             foreach (var languageCode in BuildLanguageCandidates(culture))
@@ -27,6 +36,11 @@ namespace Bahtinov_Collimator
             }
 
             throw new FileNotFoundException("No compatible language pack files were found.");
+        }
+
+        private static string GetOverrideLanguageCode()
+        {
+            return Environment.GetEnvironmentVariable(OverrideLanguageEnvironmentVariable)?.Trim();
         }
 
         private static IEnumerable<string> BuildLanguageCandidates(CultureInfo culture)

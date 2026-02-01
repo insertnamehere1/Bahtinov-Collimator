@@ -1,0 +1,63 @@
+{
+  "DialogTitle": "我下一步该做什么？",
+  "DebugLineFormat": "数值：  红 {0}   绿 {1}   蓝 {2}",
+
+  "SectionWhatToDoTitle": "操作建议",
+
+  "CaptureHeader": "捕获 Tri-Bahtinov 图像",
+  "CaptureSummary": "请先捕获一张 Bahtinov 图像以开始调整。",
+  "CaptureBullet1": "确保明亮的恒星居中。",
+  "CaptureBullet2": "安装 Tri-Bahtinov 面罩并点击“选择恒星”。",
+
+  "FocusOnlyHeader": "对焦引导不可用",
+  "FocusOnlyNeedsAdjustingSummary": "引导仅适用于 Tri-Bahtinov 图像。",
+
+  "FocusBalancedHeader": "将误差标记平衡在 0 附近",
+  "FocusBalancedSummary": "调整对焦，直到三个误差值在 0 附近平衡。\n",
+  "FocusAllPositiveBullet": "所有数值为正。请小步将对焦器向内移动。",
+  "FocusAllNegativeBullet": "所有数值为负。请小步将对焦器向外移动。",
+  "FocusStraddleNotBalancedBullet1": "数值跨过 0，但尚未平衡。",
+  "FocusStraddleNotBalancedBullet2Format": "将对焦器 {0} 移动，直到 3 个误差值均匀分布在 0 附近。",
+  "FocusTargetLineFormat": "目标：平均值接近 0，且幅度相近。",
+  "FocusOnlyBeginScrewsBullet": "达到平衡后再开始校准螺丝调整。",
+  "FocusFooterHint": "提示：向内 = 主镜朝向副镜或相机朝向望远镜，\n向外 = 主镜远离副镜或相机远离望远镜",
+
+  "CollimationHeader": "SCT 校准调整",
+  "CollimationSummary": "使用 2 个或更多螺丝同时进行平衡式校准。\n",
+
+  "DoneHeader": "看起来不错",
+  "DoneSummary": "所有数值都接近零。\n",
+  "DoneBullet": "无需调整。",
+  "CollimationPositiveInstructionFormat": "{0} 调整 - 松开（逆时针）。{0} 离主镜太远。",
+  "CollimationNegativeInstructionFormat": "{0} 调整 - 拧紧（顺时针）。{0} 离主镜太近。",
+  "CollimationAdjustTogetherBullet": "\r\n请一起调整这些螺丝以保持张力平衡。",
+  "CollimationFooterHint": "提示：重新居中恒星，然后再次对焦，直到数值再次跨过 0 后再重复。",
+
+  "DirectionIn": "向内",
+  "DirectionOut": "向外",
+
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "{0} 螺丝",
+
+  "ChannelRed": "红",
+  "ChannelGreen": "绿",
+  "ChannelBlue": "蓝",
+
+  "CalibrationTitle": "Tri-Bahtinov 校准",
+  "CalibrationQuitButtonText": "退出",
+  "CalibrationCloseButtonText": "关闭",
+  "CalibrationObjectiveHeader": "\n目标 - 校准使 SkyCal 能够建议校准螺丝调整，并启用“我下一步该做什么？”引导。",
+  "CalibrationStep1Title": "步骤 1 - 设置",
+  "CalibrationStep1Bullet1": "在望远镜上安装 Tri-Bahtinov 校准面罩。",
+  "CalibrationStep1Bullet2": "捕获一张恒星图像。",
+  "CalibrationWaitingForImage": "等待有效的 Bahtinov 图像...",
+  "CalibrationAimHeader": "\n目标 - 向内调焦以便 SkyCal 学习校准误差随焦点位置的变化。",
+  "CalibrationStep2Title": "步骤 2 - 移动对焦器。",
+  "CalibrationStep2Bullet1": "如果对焦器移动主镜，请向内移动，朝向副镜。",
+  "CalibrationStep2Bullet2": "如果对焦器移动相机，请向内移动，朝向望远镜机身。",
+  "CalibrationAutoCompleteLine": "检测到足够的对焦移动后将自动完成校准。",
+  "CalibrationMovePrompt": "请现在向内移动对焦器....",
+  "CalibrationCompleteHeader": "校准成功完成",
+  "CalibrationCompleteSummary": "      SkyCal 已更新其设置。"
+}
