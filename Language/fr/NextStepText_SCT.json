@@ -1,0 +1,63 @@
+{
+  "DialogTitle": "Que dois-je faire ensuite ?",
+  "DebugLineFormat": "Valeurs :  Rouge {0}   Vert {1}   Bleu {2}",
+
+  "SectionWhatToDoTitle": "Que faire",
+
+  "CaptureHeader": "Capturer une image Tri-Bahtinov",
+  "CaptureSummary": "Veuillez capturer une image Bahtinov pour commencer les ajustements.",
+  "CaptureBullet1": "Assurez-vous qu'une étoile brillante est centrée.",
+  "CaptureBullet2": "Fixez le masque Tri-Bahtinov et cliquez sur « Sélectionner l'étoile ».",
+
+  "FocusOnlyHeader": "Le guidage de mise au point n'est pas disponible",
+  "FocusOnlyNeedsAdjustingSummary": "Le guidage n'est disponible que pour les images Tri-Bahtinov.",
+
+  "FocusBalancedHeader": "Équilibrer les marqueurs d'erreur autour de 0",
+  "FocusBalancedSummary": "Ajustez la mise au point jusqu'à ce que les trois valeurs d'erreur soient équilibrées autour de 0.\n",
+  "FocusAllPositiveBullet": "Toutes les valeurs sont positives. Déplacez le focuser ENTRANT par petits pas.",
+  "FocusAllNegativeBullet": "Toutes les valeurs sont négatives. Déplacez le focuser SORTANT par petits pas.",
+  "FocusStraddleNotBalancedBullet1": "Les valeurs entourent 0, mais elles ne sont pas encore équilibrées.",
+  "FocusStraddleNotBalancedBullet2Format": "Déplacez le focuser {0} jusqu'à ce que les 3 valeurs d'erreur soient régulièrement espacées autour de 0.",
+  "FocusTargetLineFormat": "Cible : une moyenne proche de 0, avec des magnitudes similaires.",
+  "FocusOnlyBeginScrewsBullet": "Commencez les ajustements de collimation uniquement après cet équilibre.",
+  "FocusFooterHint": "Astuce : ENTRANT = miroir primaire vers le secondaire ou caméra vers le télescope, \nSORTANT = primaire éloigné du secondaire ou caméra éloignée du télescope",
+
+  "CollimationHeader": "Ajustements de collimation pour SCT",
+  "CollimationSummary": "Procédez à une collimation équilibrée en utilisant 2 vis ou plus en même temps.\n",
+
+  "DoneHeader": "C'est bon",
+  "DoneSummary": "Toutes les valeurs sont proches de zéro.\n",
+  "DoneBullet": "Aucun ajustement requis.",
+  "CollimationPositiveInstructionFormat": "Ajustement {0} - DESSERRER (sens antihoraire). {0} est trop éloigné du primaire.",
+  "CollimationNegativeInstructionFormat": "Ajustement {0} - SERRER (sens horaire). {0} est trop proche du primaire.",
+  "CollimationAdjustTogetherBullet": "\r\nAjustez ces vis ensemble pour garder une tension équilibrée.",
+  "CollimationFooterHint": "Astuce : recentrez l'étoile, puis refaites la mise au point jusqu'à ce que les valeurs entourent 0 avant de recommencer.",
+
+  "DirectionIn": "ENTRANT",
+  "DirectionOut": "SORTANT",
+
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "la vis {0}",
+
+  "ChannelRed": "Rouge",
+  "ChannelGreen": "Vert",
+  "ChannelBlue": "Bleu",
+
+  "CalibrationTitle": "Calibration Tri-Bahtinov",
+  "CalibrationQuitButtonText": "Quitter",
+  "CalibrationCloseButtonText": "Fermer",
+  "CalibrationObjectiveHeader": "\nObjectif - La calibration permet à SkyCal de conseiller sur les ajustements des vis de collimation et d'activer le guidage « Que dois-je faire ensuite ? ». ",
+  "CalibrationStep1Title": "Étape 1 - Configuration",
+  "CalibrationStep1Bullet1": "Fixez un masque de collimation Tri-Bahtinov sur votre télescope.",
+  "CalibrationStep1Bullet2": "Capturez une image d'étoile.",
+  "CalibrationWaitingForImage": "En attente d'une image Bahtinov valide...",
+  "CalibrationAimHeader": "\nBut - Ajustez la mise au point vers l'intérieur afin que SkyCal apprenne comment les erreurs de collimation changent avec la position de mise au point.",
+  "CalibrationStep2Title": "Étape 2 - Déplacer le focuser.",
+  "CalibrationStep2Bullet1": "Si le focuser déplace le miroir primaire, déplacez-le vers l'INTÉRIEUR, vers le secondaire.",
+  "CalibrationStep2Bullet2": "Si le focuser déplace la caméra, déplacez-la vers l'INTÉRIEUR, vers le corps du télescope.",
+  "CalibrationAutoCompleteLine": "La calibration se termine automatiquement lorsque suffisamment de mouvement de mise au point est détecté.",
+  "CalibrationMovePrompt": "Veuillez déplacer le focuser vers l'intérieur maintenant....",
+  "CalibrationCompleteHeader": "Calibration terminée avec succès",
+  "CalibrationCompleteSummary": "      SkyCal a mis à jour ses paramètres."
+}

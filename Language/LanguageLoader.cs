@@ -42,8 +42,8 @@ namespace Bahtinov_Collimator
 
         private static bool TryLoadLanguagePack(string baseDirectory, string telescopeModel, string languageCode)
         {
-            string uiPath = Path.Combine(baseDirectory, "Language", $"UiText_{languageCode}.json");
-            string nextStepPath = Path.Combine(baseDirectory, "Language", $"NextStepText_{telescopeModel}_{languageCode}.json");
+            string uiPath = Path.Combine(baseDirectory, "Language", languageCode, "UiText.json");
+            string nextStepPath = Path.Combine(baseDirectory, "Language", languageCode, $"NextStepText_{telescopeModel}.json");
 
             if (!File.Exists(uiPath) || !File.Exists(nextStepPath))
                 return false;

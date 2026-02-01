@@ -324,10 +324,16 @@
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="Language\NextStepText_SCT_en.json">
+    <None Include="Language\en\NextStepText_SCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Language\UiText_en.json">
+    <None Include="Language\en\UiText.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\fr\NextStepText_SCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\fr\UiText.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\app.manifest" />
