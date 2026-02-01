@@ -54,6 +54,7 @@
 
   "AboutDialogTitleFormat": "About {0}",
   "AboutVersionFormat": "Version {0}",
+  "AboutDescription": "The application is designed to assist astronomers collimating and focusing their telescopes with ease and precision. It incorporates the algorithm and code developed by the late Niels Noordhoek, to achieve accurate adjustments for both focus and collimation.",
 
   "StartupDialogTitle": "SkyCal",
   "StartupDialogHeading": "Calibration is Recommended:",

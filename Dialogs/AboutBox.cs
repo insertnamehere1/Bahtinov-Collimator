@@ -40,7 +40,7 @@ namespace Bahtinov_Collimator
             this.labelCopyright.ForeColor = UITheme.AboutTextColor;
             this.labelCompanyName.Text = AssemblyCompany;
             this.labelCompanyName.ForeColor = UITheme.AboutTextColor;
-            this.textBoxDescription.Text = AssemblyDescription;
+            this.textBoxDescription.Text = UiText.Current.AboutDescription;
             this.textBoxDescription.ForeColor = UITheme.AboutTextColor;
             okButton.Text = UiText.Current.CommonOk;
         }

@@ -54,6 +54,7 @@
 
   "AboutDialogTitleFormat": "Über {0}",
   "AboutVersionFormat": "Version {0}",
+  "AboutDescription": "Diese Anwendung unterstützt Astronomen beim Kollimieren und Fokussieren ihrer Teleskope mit Leichtigkeit und Präzision. Sie integriert den Algorithmus und Code des verstorbenen Niels Noordhoek, um genaue Anpassungen für Fokus und Kollimation zu erzielen.",
 
   "StartupDialogTitle": "SkyCal",
   "StartupDialogHeading": "Kalibrierung wird empfohlen:",

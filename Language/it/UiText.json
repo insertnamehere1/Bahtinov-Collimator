@@ -54,6 +54,7 @@
 
   "AboutDialogTitleFormat": "Informazioni su {0}",
   "AboutVersionFormat": "Versione {0}",
+  "AboutDescription": "L'applicazione è progettata per aiutare gli astronomi a collimare e mettere a fuoco i loro telescopi con facilità e precisione. Integra l'algoritmo e il codice sviluppati dal compianto Niels Noordhoek per ottenere regolazioni accurate di messa a fuoco e collimazione.",
 
   "StartupDialogTitle": "SkyCal",
   "StartupDialogHeading": "La calibrazione è consigliata:",

@@ -67,6 +67,7 @@ namespace Bahtinov_Collimator
 
         [DataMember] public string AboutDialogTitleFormat { get; set; }
         [DataMember] public string AboutVersionFormat { get; set; }
+        [DataMember] public string AboutDescription { get; set; }
 
         [DataMember] public string StartupDialogTitle { get; set; }
         [DataMember] public string StartupDialogHeading { get; set; }
