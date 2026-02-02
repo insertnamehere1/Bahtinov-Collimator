@@ -30,6 +30,7 @@
   "SettingsVoiceGuidanceLabel": "Sprachführung",
   "SettingsVoiceGuidanceDescription": "Sprachführung aktivieren und den Mauszeiger\nüber das Fokusgruppen-Textfeld bewegen,\num Sprachhinweise für diesen Kanal zu\naktivieren",
   "SettingsGroupGuidanceTitle": "Leitfaden-Konfiguration",
+  "AnalysisModeGroupBox": "Analysemodus",
   "SettingsGuidanceNewtonian": "Newton",
   "SettingsGuidanceMakCass": "Maksutov-Cassegrain (MCT)",
   "SettingsGuidanceSct": "Schmidt–Cassegrain (SCT)",

@@ -30,6 +30,7 @@
   "SettingsVoiceGuidanceLabel": "Guida vocale",
   "SettingsVoiceGuidanceDescription": "Abilita la guida vocale e passa il\ncursore sulla casella di testo del\ngruppo di messa a fuoco per attivare\nle indicazioni per quel canale",
   "SettingsGroupGuidanceTitle": "Configurazione guida",
+  "AnalysisModeGroupBox": "Modalità di analisi",
   "SettingsGuidanceNewtonian": "Newtoniano",
   "SettingsGuidanceMakCass": "Maksutov-Cassegrain (MCT)",
   "SettingsGuidanceSct": "Schmidt–Cassegrain (SCT)",

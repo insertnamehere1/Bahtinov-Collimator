@@ -30,6 +30,7 @@
   "SettingsVoiceGuidanceLabel": "Guía por voz",
   "SettingsVoiceGuidanceDescription": "Habilite la guía por voz y pase el cursor\nsobre el cuadro de texto del grupo de\nenfoque para activar las indicaciones\npara ese canal",
   "SettingsGroupGuidanceTitle": "Configuración de guía",
+  "AnalysisModeGroupBox": "Modo de análisis",
   "SettingsGuidanceNewtonian": "Newtoniano",
   "SettingsGuidanceMakCass": "Maksutov-Cassegrain (MCT)",
   "SettingsGuidanceSct": "Schmidt–Cassegrain (SCT)",

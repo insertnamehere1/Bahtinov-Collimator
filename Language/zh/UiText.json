@@ -30,6 +30,7 @@
   "SettingsVoiceGuidanceLabel": "语音引导",
   "SettingsVoiceGuidanceDescription": "启用语音引导，并将鼠标悬停在\n对焦组文本框上以启用该通道的\n语音提示",
   "SettingsGroupGuidanceTitle": "引导配置",
+  "AnalysisModeGroupBox": "分析模式",
   "SettingsGuidanceNewtonian": "牛顿式",
   "SettingsGuidanceMakCass": "马卡塞格林 (MCT)",
   "SettingsGuidanceSct": "施密特-卡塞格林 (SCT)",

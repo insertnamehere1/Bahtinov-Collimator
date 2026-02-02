@@ -30,6 +30,7 @@
   "SettingsVoiceGuidanceLabel": "Guidage vocal",
   "SettingsVoiceGuidanceDescription": "Activez le guidage vocal et placez\nvotre souris sur la zone de\ntexte du groupe de focalisation\npour activer les annonces\npour ce canal",
   "SettingsGroupGuidanceTitle": "Configuration du guidage",
+  "AnalysisModeGroupBox": "Mode d'analyse",
   "SettingsGuidanceNewtonian": "Newtonien",
   "SettingsGuidanceMakCass": "Maksutov-Cassegrain (MCT)",
   "SettingsGuidanceSct": "Schmidt–Cassegrain (SCT)",
