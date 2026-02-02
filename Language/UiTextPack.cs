@@ -16,7 +16,6 @@ namespace Bahtinov_Collimator
         [DataMember] public string CommonCancel { get; set; }
         [DataMember] public string CommonYes { get; set; }
         [DataMember] public string CommonNo { get; set; }
-
         [DataMember] public string AppTitle { get; set; }
         [DataMember] public string AppVersionFormat { get; set; }
         [DataMember] public string MenuFile { get; set; }
@@ -130,6 +129,7 @@ namespace Bahtinov_Collimator
         [DataMember] public string UpdateNoneTitle { get; set; }
         [DataMember] public string UpdateNetworkErrorMessage { get; set; }
         [DataMember] public string UpdateNetworkErrorTitle { get; set; }
+        [DataMember] public string AnalysisModeGroupBox { get; set; }
     }
 
     /// <summary>

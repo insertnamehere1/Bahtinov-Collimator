@@ -197,9 +197,7 @@ namespace Bahtinov_Collimator
             voiceControl = new VoiceControl();
 
             // Set the initial state of the defocus switch based on user settings.
-            slideSwitch2.IsOn = Properties.Settings.Default.DefocusSwitch;
-            RoundedPanel1.FillColor = Color.FromArgb(50, UITheme.DarkBackground);
-
+            toggleSwitch1.IsOn = Properties.Settings.Default.DefocusSwitch;
         }
         #endregion
 
@@ -249,9 +247,10 @@ namespace Bahtinov_Collimator
             menuStrip1.Font = newFont;
 
             // Apply the larger font to any labels
-            label1.Font = newFont;
-            Label2.Font = newFont;
+            bahtinovLabel.Font = newFont;
+            defocusLabel.Font = newFont;
             RoundedStartButton.Font = newFont;
+            analysisGroupBox.Font = newFont;
         }
 
         /// <summary>
@@ -287,7 +286,7 @@ namespace Bahtinov_Collimator
             groupBoxGreen = new FocusChannelComponent(1)
             {
                 Size = new Size(255, 144),
-                Location = new Point(8, 190)
+                Location = new Point(8, 175)
             };
             this.Controls.Add(groupBoxGreen);
         }
@@ -306,7 +305,7 @@ namespace Bahtinov_Collimator
             groupBoxBlue = new FocusChannelComponent(2)
             {
                 Size = new Size(255, 144),
-                Location = new Point(8, 346)
+                Location = new Point(8, 316)
             };
             this.Controls.Add(groupBoxBlue);
         }
@@ -336,8 +335,9 @@ namespace Bahtinov_Collimator
             pleaseDonateToolStripMenuItem.Text = textPack.MenuSupportSkyCal;
             whatDoIDoNextToolStripMenuItem.Text = textPack.MenuWhatDoIDoNext;
             RoundedStartButton.Text = textPack.StartButtonSelectStar;
-            label1.Text = textPack.LabelBahtinov;
-            Label2.Text = textPack.LabelDefocus;
+            bahtinovLabel.Text = textPack.LabelBahtinov;
+            defocusLabel.Text = textPack.LabelDefocus;
+            analysisGroupBox.Text = textPack.AnalysisModeGroupBox;
         }
 
         /// <summary>
@@ -367,8 +367,17 @@ namespace Bahtinov_Collimator
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
 
             // Apply color scheme to labels
-            label1.ForeColor = UITheme.MenuStripForeground;
-            Label2.ForeColor = UITheme.MenuStripForeground;
+            bahtinovLabel.ForeColor = UITheme.MenuStripForeground;
+            defocusLabel.ForeColor = UITheme.MenuStripForeground;
+
+            // Apply color scheme to Analysis Group Box
+            analysisGroupBox.ForeColor = UITheme.AnalysisGroupBoxColor;
+            bahtinovLabel.ForeColor = UITheme.AnalysisGroupBoxColor;
+            defocusLabel.ForeColor = UITheme.AnalysisGroupBoxColor;
+
+            //Apply color scheme to Toggle Switch
+            toggleSwitch1.BackColor = UITheme.DarkBackground;
+            toggleSwitch1.ForeColor = UITheme.DarkForeground;
         }
 
         /// <summary>
@@ -397,7 +406,7 @@ namespace Bahtinov_Collimator
         {
             ImageCapture.ImageReceivedEvent += OnImageReceived;
             ImageLostEventProvider.ImageLostEvent += HandleImageLost;
-            slideSwitch2.ToggleChanged += SlideSwitchChanged;
+            toggleSwitch1.CheckedChanged += SlideSwitchChanged;
         }
 
         #endregion
@@ -472,8 +481,8 @@ namespace Bahtinov_Collimator
                 return;
             }
 
-            SlideSwitch switchControl = sender as SlideSwitch;
-            bool toggle = switchControl.IsOn;
+            ToggleSwitch toggleControl = sender as ToggleSwitch;
+            bool toggle = toggleControl.IsOn;
 
             // Update settings based on slide switch state
             Properties.Settings.Default.DefocusSwitch = toggle;

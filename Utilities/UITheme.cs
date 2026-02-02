@@ -235,10 +235,12 @@ namespace Bahtinov_Collimator
         /// </summary>
         public static Color DefocusOuterCircleColor { get; } = Color.LightGreen;    
 
+        /// <summary>
+        ///Gets the ToggleSwitch GroupBox Foreground Color
+        /// </summary>
+        public static Color AnalysisGroupBoxColor {  get; } = Color.LightGray; 
 
         #endregion
-
-
 
         #region Calibration
 

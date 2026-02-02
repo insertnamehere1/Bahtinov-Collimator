@@ -116,5 +116,7 @@
   "UpdateNoneMessage": "No new updates are available.",
   "UpdateNoneTitle": "No Updates",
   "UpdateNetworkErrorMessage": "Unable to connect to the update server.",
-  "UpdateNetworkErrorTitle": "Network Problem"
+  "UpdateNetworkErrorTitle": "Network Problem",
+
+  "AnalysisModeGroupBox":  "Analysis Mode",
 }

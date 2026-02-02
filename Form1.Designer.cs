@@ -44,13 +44,13 @@
             this.pleaseDonateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.whatDoIDoNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.RoundedPanel1 = new Bahtinov_Collimator.Custom_Components.RoundedPanel();
+            this.analysisGroupBox = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
+            this.toggleSwitch1 = new ToggleSwitch();
+            this.bahtinovLabel = new System.Windows.Forms.Label();
+            this.defocusLabel = new System.Windows.Forms.Label();
             this.RoundedStartButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
-            this.slideSwitch2 = new Bahtinov_Collimator.Custom_Components.SlideSwitch();
-            this.label1 = new System.Windows.Forms.Label();
-            this.Label2 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
-            this.RoundedPanel1.SuspendLayout();
+            this.analysisGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -152,22 +152,51 @@
             this.whatDoIDoNextToolStripMenuItem.Text = "What Should I Do Next?";
             this.whatDoIDoNextToolStripMenuItem.Click += new System.EventHandler(this.WhatDoIDoNextToolStripMenuItem_Click);
             // 
-            // RoundedPanel1
+            // analysisGroupBox
             // 
-            this.RoundedPanel1.BackColor = System.Drawing.Color.Transparent;
-            this.RoundedPanel1.BorderColor = System.Drawing.Color.Gray;
-            this.RoundedPanel1.BorderThickness = 4;
-            this.RoundedPanel1.Controls.Add(this.RoundedStartButton);
-            this.RoundedPanel1.Controls.Add(this.slideSwitch2);
-            this.RoundedPanel1.Controls.Add(this.label1);
-            this.RoundedPanel1.Controls.Add(this.Label2);
-            this.RoundedPanel1.CornerRadius = 12;
-            this.RoundedPanel1.FillColor = System.Drawing.Color.DimGray;
-            this.RoundedPanel1.ForeColor = System.Drawing.Color.White;
-            this.RoundedPanel1.Location = new System.Drawing.Point(11, 512);
-            this.RoundedPanel1.Name = "RoundedPanel1";
-            this.RoundedPanel1.Size = new System.Drawing.Size(254, 134);
-            this.RoundedPanel1.TabIndex = 27;
+            this.analysisGroupBox.BorderColor = System.Drawing.Color.Gray;
+            this.analysisGroupBox.BorderThickness = 2;
+            this.analysisGroupBox.Controls.Add(this.toggleSwitch1);
+            this.analysisGroupBox.Controls.Add(this.bahtinovLabel);
+            this.analysisGroupBox.Controls.Add(this.defocusLabel);
+            this.analysisGroupBox.CornerRadius = 12;
+            this.analysisGroupBox.Location = new System.Drawing.Point(12, 458);
+            this.analysisGroupBox.Name = "analysisGroupBox";
+            this.analysisGroupBox.Size = new System.Drawing.Size(250, 100);
+            this.analysisGroupBox.TabIndex = 28;
+            this.analysisGroupBox.TabStop = false;
+            this.analysisGroupBox.Text = "roundedGroupBox1";
+            // 
+            // toggleSwitch1
+            // 
+            this.toggleSwitch1.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.toggleSwitch1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.toggleSwitch1.Location = new System.Drawing.Point(29, 29);
+            this.toggleSwitch1.Name = "toggleSwitch1";
+            this.toggleSwitch1.RotationDegrees = 90;
+            this.toggleSwitch1.Size = new System.Drawing.Size(25, 55);
+            this.toggleSwitch1.TabIndex = 26;
+            this.toggleSwitch1.Text = "toggleSwitch1";
+            // 
+            // bahtinovLabel
+            // 
+            this.bahtinovLabel.AutoSize = true;
+            this.bahtinovLabel.Location = new System.Drawing.Point(62, 31);
+            this.bahtinovLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.bahtinovLabel.Name = "bahtinovLabel";
+            this.bahtinovLabel.Size = new System.Drawing.Size(59, 16);
+            this.bahtinovLabel.TabIndex = 22;
+            this.bahtinovLabel.Text = "Bahtinov";
+            // 
+            // defocusLabel
+            // 
+            this.defocusLabel.AutoSize = true;
+            this.defocusLabel.Location = new System.Drawing.Point(62, 61);
+            this.defocusLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.defocusLabel.Name = "defocusLabel";
+            this.defocusLabel.Size = new System.Drawing.Size(57, 16);
+            this.defocusLabel.TabIndex = 23;
+            this.defocusLabel.Text = "Defocus";
             // 
             // RoundedStartButton
             // 
@@ -183,51 +212,19 @@
             this.RoundedStartButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.RoundedStartButton.Image = global::Bahtinov_Collimator.Properties.Resources.SelectionCircle;
             this.RoundedStartButton.ImageHeight = 32;
-            this.RoundedStartButton.ImageOffsetX = 80;
+            this.RoundedStartButton.ImageOffsetX = -90;
             this.RoundedStartButton.ImageOffsetY = 0;
             this.RoundedStartButton.ImageWidth = 32;
-            this.RoundedStartButton.Location = new System.Drawing.Point(16, 67);
+            this.RoundedStartButton.Location = new System.Drawing.Point(12, 576);
             this.RoundedStartButton.Name = "RoundedStartButton";
             this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.RoundedStartButton.Size = new System.Drawing.Size(220, 44);
+            this.RoundedStartButton.Size = new System.Drawing.Size(250, 63);
             this.RoundedStartButton.TabIndex = 25;
             this.RoundedStartButton.Text = "Select Star";
             this.RoundedStartButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.RoundedStartButton.TextOffsetX = 10;
+            this.RoundedStartButton.TextOffsetX = 50;
             this.RoundedStartButton.UseVisualStyleBackColor = false;
             this.RoundedStartButton.Click += new System.EventHandler(this.StartButton_Click);
-            // 
-            // slideSwitch2
-            // 
-            this.slideSwitch2.IsOn = false;
-            this.slideSwitch2.Location = new System.Drawing.Point(104, 22);
-            this.slideSwitch2.Margin = new System.Windows.Forms.Padding(2);
-            this.slideSwitch2.Name = "slideSwitch2";
-            this.slideSwitch2.OffColor = System.Drawing.Color.Gray;
-            this.slideSwitch2.OnColor = System.Drawing.Color.FromArgb(((int)(((byte)(247)))), ((int)(((byte)(69)))), ((int)(((byte)(96)))));
-            this.slideSwitch2.Size = new System.Drawing.Size(50, 25);
-            this.slideSwitch2.TabIndex = 24;
-            this.slideSwitch2.ToggleColor = System.Drawing.Color.White;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(27, 25);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 16);
-            this.label1.TabIndex = 22;
-            this.label1.Text = "Bahtinov";
-            // 
-            // Label2
-            // 
-            this.Label2.AutoSize = true;
-            this.Label2.Location = new System.Drawing.Point(158, 26);
-            this.Label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.Label2.Name = "Label2";
-            this.Label2.Size = new System.Drawing.Size(57, 16);
-            this.Label2.TabIndex = 23;
-            this.Label2.Text = "Defocus";
             // 
             // Form1
             // 
@@ -235,7 +232,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(927, 652);
-            this.Controls.Add(this.RoundedPanel1);
+            this.Controls.Add(this.analysisGroupBox);
+            this.Controls.Add(this.RoundedStartButton);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -249,8 +247,8 @@
             this.MouseEnter += new System.EventHandler(this.Form1_MouseEnter);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.RoundedPanel1.ResumeLayout(false);
-            this.RoundedPanel1.PerformLayout();
+            this.analysisGroupBox.ResumeLayout(false);
+            this.analysisGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -267,15 +265,15 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label Label2;
-        private Custom_Components.SlideSwitch slideSwitch2;
+        private System.Windows.Forms.Label bahtinovLabel;
+        private System.Windows.Forms.Label defocusLabel;
         private System.Windows.Forms.ToolStripMenuItem pleaseDonateToolStripMenuItem;
         private Custom_Components.RoundedButton RoundedStartButton;
-        private Custom_Components.RoundedPanel RoundedPanel1;
         private System.Windows.Forms.ToolStripMenuItem whatDoIDoNextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generalSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem focusCalibrationToolStripMenuItem;
+        private ToggleSwitch toggleSwitch1;
+        private Custom_Components.RoundedGroupBox analysisGroupBox;
     }
 }
 
