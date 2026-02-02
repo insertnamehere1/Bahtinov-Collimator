@@ -1066,5 +1066,15 @@ namespace Bahtinov_Collimator
                 }
             }
         }
+
+        private void bahtinovLabel_Click(object sender, EventArgs e)
+        {
+            toggleSwitch1.IsOn = false;
+        }
+
+        private void defocusLabel_Click(object sender, EventArgs e)
+        {
+            toggleSwitch1.IsOn = true;
+        }
     }
 }
