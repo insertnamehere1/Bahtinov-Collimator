@@ -30,6 +30,7 @@
   "SettingsVoiceGuidanceLabel": "Voice Guidance",
   "SettingsVoiceGuidanceDescription": "Enable voice guidance and hover\r\nyour mouse over the Focus Group \r\ntext box to activate voice callouts \r\nfor that channel",
   "SettingsGroupGuidanceTitle": "Guidance Configuration",
+  "AnalysisModeGroupBox": "Analysis Mode",
   "SettingsGuidanceNewtonian": "Newtonian",
   "SettingsGuidanceMakCass": "Maksutov-Cassegrain (MCT)",
   "SettingsGuidanceSct": "Schmidt–Cassegrain (SCT)",
@@ -116,7 +117,5 @@
   "UpdateNoneMessage": "No new updates are available.",
   "UpdateNoneTitle": "No Updates",
   "UpdateNetworkErrorMessage": "Unable to connect to the update server.",
-  "UpdateNetworkErrorTitle": "Network Problem",
-
-  "AnalysisModeGroupBox":  "Analysis Mode",
+  "UpdateNetworkErrorTitle": "Network Problem"
 }
