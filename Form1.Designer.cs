@@ -64,7 +64,7 @@
             this.whatDoIDoNextToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(917, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(917, 30);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.MouseEnter += new System.EventHandler(this.MenuStrip1_MouseEnter);
@@ -74,7 +74,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.quitToolStripMenuItem2});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // quitToolStripMenuItem2
@@ -90,7 +90,7 @@
             this.generalSettingsToolStripMenuItem,
             this.focusCalibrationToolStripMenuItem});
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(61, 24);
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(61, 26);
             this.settingsToolStripMenuItem1.Text = "Setup";
             // 
             // generalSettingsToolStripMenuItem
@@ -114,7 +114,7 @@
             this.checkForUpdatesToolStripMenuItem,
             this.aboutToolStripMenuItem2});
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
             this.aboutToolStripMenuItem.Text = "Help";
             // 
             // helpToolStripMenuItem
@@ -141,14 +141,14 @@
             // pleaseDonateToolStripMenuItem
             // 
             this.pleaseDonateToolStripMenuItem.Name = "pleaseDonateToolStripMenuItem";
-            this.pleaseDonateToolStripMenuItem.Size = new System.Drawing.Size(123, 24);
+            this.pleaseDonateToolStripMenuItem.Size = new System.Drawing.Size(123, 26);
             this.pleaseDonateToolStripMenuItem.Text = "Support SkyCal";
             this.pleaseDonateToolStripMenuItem.Click += new System.EventHandler(this.PleaseDonateToolStripMenuItem_Click);
             // 
             // whatDoIDoNextToolStripMenuItem
             // 
             this.whatDoIDoNextToolStripMenuItem.Name = "whatDoIDoNextToolStripMenuItem";
-            this.whatDoIDoNextToolStripMenuItem.Size = new System.Drawing.Size(182, 24);
+            this.whatDoIDoNextToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
             this.whatDoIDoNextToolStripMenuItem.Text = "What Should I Do Next?";
             this.whatDoIDoNextToolStripMenuItem.Click += new System.EventHandler(this.WhatDoIDoNextToolStripMenuItem_Click);
             // 
@@ -156,13 +156,14 @@
             // 
             this.analysisGroupBox.BorderColor = System.Drawing.Color.Gray;
             this.analysisGroupBox.BorderThickness = 2;
+            this.analysisGroupBox.Controls.Add(this.RoundedStartButton);
             this.analysisGroupBox.Controls.Add(this.toggleSwitch1);
             this.analysisGroupBox.Controls.Add(this.bahtinovLabel);
             this.analysisGroupBox.Controls.Add(this.defocusLabel);
             this.analysisGroupBox.CornerRadius = 12;
-            this.analysisGroupBox.Location = new System.Drawing.Point(12, 458);
+            this.analysisGroupBox.Location = new System.Drawing.Point(12, 470);
             this.analysisGroupBox.Name = "analysisGroupBox";
-            this.analysisGroupBox.Size = new System.Drawing.Size(250, 100);
+            this.analysisGroupBox.Size = new System.Drawing.Size(251, 174);
             this.analysisGroupBox.TabIndex = 28;
             this.analysisGroupBox.TabStop = false;
             this.analysisGroupBox.Text = "roundedGroupBox1";
@@ -171,7 +172,7 @@
             // 
             this.toggleSwitch1.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.toggleSwitch1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.toggleSwitch1.Location = new System.Drawing.Point(29, 29);
+            this.toggleSwitch1.Location = new System.Drawing.Point(29, 34);
             this.toggleSwitch1.Name = "toggleSwitch1";
             this.toggleSwitch1.RotationDegrees = 90;
             this.toggleSwitch1.Size = new System.Drawing.Size(25, 55);
@@ -181,7 +182,7 @@
             // bahtinovLabel
             // 
             this.bahtinovLabel.AutoSize = true;
-            this.bahtinovLabel.Location = new System.Drawing.Point(62, 31);
+            this.bahtinovLabel.Location = new System.Drawing.Point(62, 36);
             this.bahtinovLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.bahtinovLabel.Name = "bahtinovLabel";
             this.bahtinovLabel.Size = new System.Drawing.Size(59, 16);
@@ -192,7 +193,7 @@
             // defocusLabel
             // 
             this.defocusLabel.AutoSize = true;
-            this.defocusLabel.Location = new System.Drawing.Point(62, 61);
+            this.defocusLabel.Location = new System.Drawing.Point(62, 66);
             this.defocusLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.defocusLabel.Name = "defocusLabel";
             this.defocusLabel.Size = new System.Drawing.Size(57, 16);
@@ -206,7 +207,7 @@
             this.RoundedStartButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.RoundedStartButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
             this.RoundedStartButton.BevelThickness = 4;
-            this.RoundedStartButton.CornerRadius = 8;
+            this.RoundedStartButton.CornerRadius = 12;
             this.RoundedStartButton.FlatAppearance.BorderSize = 0;
             this.RoundedStartButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RoundedStartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
@@ -214,17 +215,17 @@
             this.RoundedStartButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.RoundedStartButton.Image = global::Bahtinov_Collimator.Properties.Resources.SelectionCircle;
             this.RoundedStartButton.ImageHeight = 32;
-            this.RoundedStartButton.ImageOffsetX = -90;
+            this.RoundedStartButton.ImageOffsetX = -70;
             this.RoundedStartButton.ImageOffsetY = 0;
             this.RoundedStartButton.ImageWidth = 32;
-            this.RoundedStartButton.Location = new System.Drawing.Point(12, 576);
+            this.RoundedStartButton.Location = new System.Drawing.Point(29, 107);
             this.RoundedStartButton.Name = "RoundedStartButton";
             this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.RoundedStartButton.Size = new System.Drawing.Size(250, 63);
+            this.RoundedStartButton.Size = new System.Drawing.Size(193, 50);
             this.RoundedStartButton.TabIndex = 25;
             this.RoundedStartButton.Text = "Select Star";
             this.RoundedStartButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.RoundedStartButton.TextOffsetX = 50;
+            this.RoundedStartButton.TextOffsetX = 42;
             this.RoundedStartButton.UseVisualStyleBackColor = false;
             this.RoundedStartButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
@@ -235,7 +236,6 @@
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(927, 652);
             this.Controls.Add(this.analysisGroupBox);
-            this.Controls.Add(this.RoundedStartButton);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
