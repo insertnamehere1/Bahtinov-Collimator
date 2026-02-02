@@ -257,8 +257,8 @@ namespace Bahtinov_Collimator
                     {
                         captureTimer.Interval = 10;
 
-                        selectedStarBox.Offset(-dx, -dy);
-                        g.TranslateTransform(dx, dy);
+                        selectedStarBox.Offset(-dx/2, -dy/2);
+                        g.TranslateTransform(dx/2, dy/2);
                     }
                 }
 
