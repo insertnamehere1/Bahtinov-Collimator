@@ -235,6 +235,7 @@ namespace Bahtinov_Collimator
             };
 
             this.Controls.Add(this.imageDisplayComponent1);
+            imageDisplayComponent1.ClearDisplay();
         }
 
         /// <summary>
