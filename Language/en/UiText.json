@@ -30,7 +30,7 @@
   "SettingsVoiceGuidanceLabel": "Voice Guidance",
   "SettingsVoiceGuidanceDescription": "Enable voice guidance and hover\r\nyour mouse over the Focus Group \r\ntext box to activate voice callouts \r\nfor that channel",
   "SettingsGroupGuidanceTitle": "Guidance Configuration",
-  "AnalysisModeGroupBox": "Imaging Controls",
+  "AnalysisModeGroupBox": "Imaging Capture",
   "SettingsGuidanceNewtonian": "Newtonian",
   "SettingsGuidanceMakCass": "Maksutov-Cassegrain (MCT)",
   "SettingsGuidanceSct": "Schmidt–Cassegrain (SCT)",

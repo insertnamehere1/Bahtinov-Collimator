@@ -197,6 +197,8 @@ namespace Bahtinov_Collimator
             voiceControl = new VoiceControl();
 
             // Set the initial state of the defocus switch based on user settings.
+            defocusLabel.ForeColor = UITheme.ImageCaptureGroupBoxDisabledColor;
+            bahtinovLabel.ForeColor = UITheme.ImageCaptureGroupBoxColor;
             toggleSwitch1.IsOn = Properties.Settings.Default.DefocusSwitch;
         }
         #endregion
@@ -372,9 +374,9 @@ namespace Bahtinov_Collimator
             defocusLabel.ForeColor = UITheme.MenuStripForeground;
 
             // Apply color scheme to Analysis Group Box
-            analysisGroupBox.ForeColor = UITheme.AnalysisGroupBoxColor;
-            bahtinovLabel.ForeColor = UITheme.AnalysisGroupBoxColor;
-            defocusLabel.ForeColor = UITheme.AnalysisGroupBoxColor;
+            analysisGroupBox.ForeColor = UITheme.ImageCaptureGroupBoxColor;
+            bahtinovLabel.ForeColor = UITheme.ImageCaptureGroupBoxColor;
+            defocusLabel.ForeColor = UITheme.ImageCaptureGroupBoxColor;
 
             //Apply color scheme to Toggle Switch
             toggleSwitch1.BackColor = UITheme.DarkBackground;
@@ -484,6 +486,17 @@ namespace Bahtinov_Collimator
 
             ToggleSwitch toggleControl = sender as ToggleSwitch;
             bool toggle = toggleControl.IsOn;
+
+            if(toggle)
+            {
+                defocusLabel.ForeColor = UITheme.ImageCaptureGroupBoxColor;
+                bahtinovLabel.ForeColor = UITheme.ImageCaptureGroupBoxDisabledColor;
+            }
+            else
+            {
+                defocusLabel.ForeColor = UITheme.ImageCaptureGroupBoxDisabledColor;
+                bahtinovLabel.ForeColor = UITheme.ImageCaptureGroupBoxColor;
+            }
 
             // Update settings based on slide switch state
             Properties.Settings.Default.DefocusSwitch = toggle;

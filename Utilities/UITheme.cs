@@ -238,7 +238,8 @@ namespace Bahtinov_Collimator
         /// <summary>
         ///Gets the ToggleSwitch GroupBox Foreground Color
         /// </summary>
-        public static Color AnalysisGroupBoxColor {  get; } = Color.LightGray; 
+        public static Color ImageCaptureGroupBoxColor {  get; } = Color.LightGray; 
+        public static Color ImageCaptureGroupBoxDisabledColor { get; } = Color.Gray;
 
         #endregion
 
