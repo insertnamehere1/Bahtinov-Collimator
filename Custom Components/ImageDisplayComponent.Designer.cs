@@ -9,6 +9,11 @@ namespace Bahtinov_Collimator
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
+        /// <summary>
+        /// Represents the picture box control used to display images with rounded corners.
+        /// </summary>
+        private RoundedPictureBox pictureBox1;
+
         /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
@@ -62,8 +67,5 @@ namespace Bahtinov_Collimator
         }
 
         #endregion
-
-        private RoundedPictureBox pictureBox1;
-        //        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

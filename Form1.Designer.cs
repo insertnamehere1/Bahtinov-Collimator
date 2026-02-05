@@ -45,10 +45,10 @@
             this.whatDoIDoNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.analysisGroupBox = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
+            this.RoundedStartButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
             this.toggleSwitch1 = new ToggleSwitch();
             this.bahtinovLabel = new System.Windows.Forms.Label();
             this.defocusLabel = new System.Windows.Forms.Label();
-            this.RoundedStartButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
             this.menuStrip1.SuspendLayout();
             this.analysisGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -64,7 +64,7 @@
             this.whatDoIDoNextToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(917, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(917, 28);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.MouseEnter += new System.EventHandler(this.MenuStrip1_MouseEnter);
@@ -74,7 +74,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.quitToolStripMenuItem2});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 26);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // quitToolStripMenuItem2
@@ -90,7 +90,7 @@
             this.generalSettingsToolStripMenuItem,
             this.focusCalibrationToolStripMenuItem});
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(61, 26);
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(61, 24);
             this.settingsToolStripMenuItem1.Text = "Setup";
             // 
             // generalSettingsToolStripMenuItem
@@ -114,7 +114,7 @@
             this.checkForUpdatesToolStripMenuItem,
             this.aboutToolStripMenuItem2});
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(55, 26);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
             this.aboutToolStripMenuItem.Text = "Help";
             // 
             // helpToolStripMenuItem
@@ -141,14 +141,14 @@
             // pleaseDonateToolStripMenuItem
             // 
             this.pleaseDonateToolStripMenuItem.Name = "pleaseDonateToolStripMenuItem";
-            this.pleaseDonateToolStripMenuItem.Size = new System.Drawing.Size(123, 26);
+            this.pleaseDonateToolStripMenuItem.Size = new System.Drawing.Size(123, 24);
             this.pleaseDonateToolStripMenuItem.Text = "Support SkyCal";
             this.pleaseDonateToolStripMenuItem.Click += new System.EventHandler(this.PleaseDonateToolStripMenuItem_Click);
             // 
             // whatDoIDoNextToolStripMenuItem
             // 
             this.whatDoIDoNextToolStripMenuItem.Name = "whatDoIDoNextToolStripMenuItem";
-            this.whatDoIDoNextToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
+            this.whatDoIDoNextToolStripMenuItem.Size = new System.Drawing.Size(182, 24);
             this.whatDoIDoNextToolStripMenuItem.Text = "What Should I Do Next?";
             this.whatDoIDoNextToolStripMenuItem.Click += new System.EventHandler(this.WhatDoIDoNextToolStripMenuItem_Click);
             // 
@@ -167,6 +167,34 @@
             this.analysisGroupBox.TabIndex = 28;
             this.analysisGroupBox.TabStop = false;
             this.analysisGroupBox.Text = "roundedGroupBox1";
+            // 
+            // RoundedStartButton
+            // 
+            this.RoundedStartButton.BackColor = System.Drawing.Color.Gray;
+            this.RoundedStartButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.RoundedStartButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.RoundedStartButton.BevelThickness = 4;
+            this.RoundedStartButton.CornerRadius = 12;
+            this.RoundedStartButton.FlatAppearance.BorderSize = 0;
+            this.RoundedStartButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.RoundedStartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.RoundedStartButton.ForeColor = System.Drawing.Color.White;
+            this.RoundedStartButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.RoundedStartButton.Image = global::Bahtinov_Collimator.Properties.Resources.SelectionCircle;
+            this.RoundedStartButton.ImageHeight = 32;
+            this.RoundedStartButton.ImageOffsetX = -70;
+            this.RoundedStartButton.ImageOffsetY = 0;
+            this.RoundedStartButton.ImageWidth = 32;
+            this.RoundedStartButton.Location = new System.Drawing.Point(29, 107);
+            this.RoundedStartButton.Name = "RoundedStartButton";
+            this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.RoundedStartButton.Size = new System.Drawing.Size(193, 50);
+            this.RoundedStartButton.TabIndex = 25;
+            this.RoundedStartButton.Text = "Select Star";
+            this.RoundedStartButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.RoundedStartButton.TextOffsetX = 42;
+            this.RoundedStartButton.UseVisualStyleBackColor = false;
+            this.RoundedStartButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
             // toggleSwitch1
             // 
@@ -200,34 +228,6 @@
             this.defocusLabel.TabIndex = 23;
             this.defocusLabel.Text = "Defocus";
             this.defocusLabel.Click += new System.EventHandler(this.defocusLabel_Click);
-            // 
-            // RoundedStartButton
-            // 
-            this.RoundedStartButton.BackColor = System.Drawing.Color.Gray;
-            this.RoundedStartButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
-            this.RoundedStartButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
-            this.RoundedStartButton.BevelThickness = 4;
-            this.RoundedStartButton.CornerRadius = 12;
-            this.RoundedStartButton.FlatAppearance.BorderSize = 0;
-            this.RoundedStartButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RoundedStartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
-            this.RoundedStartButton.ForeColor = System.Drawing.Color.White;
-            this.RoundedStartButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.RoundedStartButton.Image = global::Bahtinov_Collimator.Properties.Resources.SelectionCircle;
-            this.RoundedStartButton.ImageHeight = 32;
-            this.RoundedStartButton.ImageOffsetX = -70;
-            this.RoundedStartButton.ImageOffsetY = 0;
-            this.RoundedStartButton.ImageWidth = 32;
-            this.RoundedStartButton.Location = new System.Drawing.Point(29, 107);
-            this.RoundedStartButton.Name = "RoundedStartButton";
-            this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.RoundedStartButton.Size = new System.Drawing.Size(193, 50);
-            this.RoundedStartButton.TabIndex = 25;
-            this.RoundedStartButton.Text = "Select Star";
-            this.RoundedStartButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.RoundedStartButton.TextOffsetX = 42;
-            this.RoundedStartButton.UseVisualStyleBackColor = false;
-            this.RoundedStartButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
             // Form1
             // 

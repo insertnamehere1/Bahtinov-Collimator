@@ -162,7 +162,6 @@ namespace Bahtinov_Collimator
 
             // Initialize the red focus channel component.
             InitializeRedFocusBox();
-            groupBoxRed.SetLabelsVisible(false);
 
             // Set up the user interface of the form.
             SetFormUI();
@@ -229,7 +228,7 @@ namespace Bahtinov_Collimator
         {
             this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent
             {
-                Location = new System.Drawing.Point(276, 45),
+                Location = new System.Drawing.Point(376, 45),
                 Margin = new System.Windows.Forms.Padding(2),
                 Name = "imageDisplayComponent1",
                 Size = new System.Drawing.Size(600, 600),
@@ -269,7 +268,7 @@ namespace Bahtinov_Collimator
 
             groupBoxRed = new FocusChannelComponent(0)
             {
-                Size = new Size(255, 144),
+                Size = new Size(355, 144),
                 Location = new Point(8, 34)
             };
             this.Controls.Add(groupBoxRed);
@@ -288,7 +287,7 @@ namespace Bahtinov_Collimator
 
             groupBoxGreen = new FocusChannelComponent(1)
             {
-                Size = new Size(255, 144),
+                Size = new Size(355, 144),
                 Location = new Point(8, 172)
             };
             this.Controls.Add(groupBoxGreen);
@@ -307,7 +306,7 @@ namespace Bahtinov_Collimator
 
             groupBoxBlue = new FocusChannelComponent(2)
             {
-                Size = new Size(255, 144),
+                Size = new Size(355, 144),
                 Location = new Point(8, 310)
             };
             this.Controls.Add(groupBoxBlue);
@@ -430,7 +429,6 @@ namespace Bahtinov_Collimator
                 imageDisplayComponent1.ClearDisplay();
                 bahtinovProcessing.StopImageProcessing();
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
-                groupBoxRed?.SetLabelsVisible(false);
 
                 // Start image capture if star selection is successful
                 if (ImageCapture.SelectStar())
@@ -451,7 +449,6 @@ namespace Bahtinov_Collimator
                 imageDisplayComponent1.ClearDisplay();
                 bahtinovProcessing.StopImageProcessing();
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
-                groupBoxRed?.SetLabelsVisible(false);
                 screenCaptureRunningFlag = false;
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
@@ -525,7 +522,6 @@ namespace Bahtinov_Collimator
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
                 InitializeRedFocusBox();
-                groupBoxRed.SetLabelsVisible(false);
                 whatDoIDoNextToolStripMenuItem.Enabled = Properties.Settings.Default.CalibrationCompleted;
                 focusCalibrationToolStripMenuItem.Enabled = true;
             }
@@ -550,7 +546,6 @@ namespace Bahtinov_Collimator
                 Invoke(new Action(() =>
                 {
                     RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
-                    groupBoxRed?.SetLabelsVisible(false);
                     RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                     RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                     DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
@@ -559,7 +554,6 @@ namespace Bahtinov_Collimator
             else
             {
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
-                groupBoxRed?.SetLabelsVisible(false);
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
@@ -802,9 +796,6 @@ namespace Bahtinov_Collimator
                     InitializeRedFocusBox();
                     InitializeGreenFocusBox();
                     InitializeBlueFocusBox();
-                    groupBoxRed.SetLabelsVisible(true);
-                    groupBoxGreen.SetLabelsVisible(true);
-                    groupBoxBlue.SetLabelsVisible(true);
                 }
 
                 firstPassCompleted = true;
