@@ -59,5 +59,5 @@
   "CalibrationAutoCompleteLine": "La calibración se completa automáticamente cuando se detecta suficiente movimiento de enfoque.",
   "CalibrationMovePrompt": "Mueva el enfocador hacia adentro ahora....",
   "CalibrationCompleteHeader": "Calibración completada con éxito",
-  "CalibrationCompleteSummary": "      SkyCal ha actualizado su configuración."
+  "CalibrationCompleteSummary": "SkyCal ha actualizado su configuración."
 }

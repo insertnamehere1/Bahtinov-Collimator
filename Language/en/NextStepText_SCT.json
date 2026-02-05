@@ -59,7 +59,7 @@
   "CalibrationAutoCompleteLine": "Calibration completes automatically once enough focus movement is detected.",
   "CalibrationMovePrompt": "Please move the focuser inward now....",
   "CalibrationCompleteHeader": "Calibration has completed successfully",
-  "CalibrationCompleteSummary": "      SkyCal has updated its settings."
+  "CalibrationCompleteSummary": "SkyCal has updated its settings."
 }
 
 
