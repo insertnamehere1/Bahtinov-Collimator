@@ -287,11 +287,20 @@ namespace Bahtinov_Collimator
                 RemoveAndDisposeControls(groupBoxRed);
             }
 
-            bool test = Properties.Settings.Default.CalibrationCompleted;
-            bool test2 = (bahtinovLineData?.LineValue.Length == 9);
-            bool res = test && test2;
+            bool isCalibrated = Properties.Settings.Default.CalibrationCompleted;
+            bool isTriBahtinov = (bahtinovLineData?.LineValue.Length == 9);
+            bool isWidened = isCalibrated && isTriBahtinov;
 
-            groupBoxRed = new FocusChannelComponent(0, res)
+            if (isWidened)
+            {
+                int temp = calibrationComponent.Width + 100;
+                int temp2 = calibrationComponent.Height;
+
+                calibrationComponent.Location = new Point(calibrationComponent.Location.X + 100, calibrationComponent.Location.Y);
+                calibrationComponent.Size = new Size(temp, temp2);
+            }
+
+            groupBoxRed = new FocusChannelComponent(0, isWidened)
             {
                 Size = new Size(255, 144),
                 Location = new Point(8, 34)
