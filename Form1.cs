@@ -61,6 +61,27 @@ namespace Bahtinov_Collimator
         /// </summary>
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
 
+        /// <summary>
+        /// Represents the maximum allowed size for a focus channel.
+        /// </summary>
+        ///
+        private const int MAX_FOCUS_CHAN_SIZE = 355;
+
+        /// <summary>
+        /// Represents the minimum allowed size for a focus channel.
+        /// </summary>
+        private const int MIN_FOCUS_CHAN_SIZE = 255;
+
+        /// <summary>
+        /// Represents the minimum X offset for the image display component on the form.
+        /// </summary>
+        private const int MIN_IMAGE_DISPLAY_X_OFFSET = 276;
+
+        /// <summary>
+        /// Represents the maximum X offset for the image display component on the form.
+        /// </summary>
+        private const int MAX_IMAGE_DISPLAY_X_OFFSET = 376;
+
         #endregion
 
         #region Private Fields
@@ -228,7 +249,7 @@ namespace Bahtinov_Collimator
         {
             this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent
             {
-                Location = new System.Drawing.Point(376, 45),
+                Location = new System.Drawing.Point(276, 45),
                 Margin = new System.Windows.Forms.Padding(2),
                 Name = "imageDisplayComponent1",
                 Size = new System.Drawing.Size(600, 600),
@@ -268,7 +289,7 @@ namespace Bahtinov_Collimator
 
             groupBoxRed = new FocusChannelComponent(0)
             {
-                Size = new Size(355, 144),
+                Size = new Size(255, 144),
                 Location = new Point(8, 34)
             };
             this.Controls.Add(groupBoxRed);
@@ -287,7 +308,7 @@ namespace Bahtinov_Collimator
 
             groupBoxGreen = new FocusChannelComponent(1)
             {
-                Size = new Size(355, 144),
+                Size = new Size(255, 144),
                 Location = new Point(8, 172)
             };
             this.Controls.Add(groupBoxGreen);
@@ -306,7 +327,7 @@ namespace Bahtinov_Collimator
 
             groupBoxBlue = new FocusChannelComponent(2)
             {
-                Size = new Size(355, 144),
+                Size = new Size(255, 144),
                 Location = new Point(8, 310)
             };
             this.Controls.Add(groupBoxBlue);
@@ -452,6 +473,7 @@ namespace Bahtinov_Collimator
                 screenCaptureRunningFlag = false;
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
+                DecreaseFocusChannelSize();
                 firstPassCompleted = false;
             }
         }
@@ -796,9 +818,72 @@ namespace Bahtinov_Collimator
                     InitializeRedFocusBox();
                     InitializeGreenFocusBox();
                     InitializeBlueFocusBox();
+                    IncreaseFocusChannelSize();
                 }
 
                 firstPassCompleted = true;
+            }
+        }
+
+
+        private void IncreaseFocusChannelSize()
+        {
+            if (InvokeRequired)
+            {
+                // Marshal the call to the UI thread
+                Invoke(new Action(IncreaseFocusChannelSize));
+            }
+            else
+            {
+                if (groupBoxRed != null && groupBoxRed.Size.Width < MAX_FOCUS_CHAN_SIZE)
+                {
+                    groupBoxRed.Size = new Size(MAX_FOCUS_CHAN_SIZE, groupBoxRed.Size.Height);
+                }
+                if (groupBoxGreen != null && groupBoxGreen.Size.Width < MAX_FOCUS_CHAN_SIZE)
+                {
+                    groupBoxGreen.Size = new Size(MAX_FOCUS_CHAN_SIZE, groupBoxGreen.Size.Height);
+                }
+                if (groupBoxBlue != null && groupBoxBlue.Size.Width < MAX_FOCUS_CHAN_SIZE)
+                {
+                    groupBoxBlue.Size = new Size(MAX_FOCUS_CHAN_SIZE, groupBoxBlue.Size.Height);
+                }
+                if(analysisGroupBox.Size.Width < MAX_FOCUS_CHAN_SIZE)
+                {
+                    analysisGroupBox.Size = new Size(MAX_FOCUS_CHAN_SIZE, analysisGroupBox.Height);
+                }
+
+                imageDisplayComponent1.Location = new Point(MAX_IMAGE_DISPLAY_X_OFFSET, imageDisplayComponent1.Location.Y);
+
+            }
+        }
+
+        private void DecreaseFocusChannelSize()
+        {
+            if (InvokeRequired)
+            {
+                // Marshal the call to the UI thread
+                Invoke(new Action(IncreaseFocusChannelSize));
+            }
+            else
+            {
+                if (groupBoxRed != null && groupBoxRed.Size.Width > MIN_FOCUS_CHAN_SIZE)
+                {
+                    groupBoxRed.Size = new Size(MIN_FOCUS_CHAN_SIZE, groupBoxRed.Size.Height);
+                }
+                if (groupBoxGreen != null && groupBoxGreen.Size.Width > MIN_FOCUS_CHAN_SIZE)
+                {
+                    groupBoxGreen.Size = new Size(MIN_FOCUS_CHAN_SIZE, groupBoxGreen.Size.Height);
+                }
+                if (groupBoxBlue != null && groupBoxBlue.Size.Width > MIN_FOCUS_CHAN_SIZE)
+                {
+                    groupBoxBlue.Size = new Size(MIN_FOCUS_CHAN_SIZE, groupBoxBlue.Size.Height);
+                }
+                if (analysisGroupBox.Size.Width > MIN_FOCUS_CHAN_SIZE)
+                {
+                    analysisGroupBox.Size = new Size(MIN_FOCUS_CHAN_SIZE, analysisGroupBox.Height);
+                }
+
+                imageDisplayComponent1.Location = new Point(MIN_IMAGE_DISPLAY_X_OFFSET, imageDisplayComponent1.Location.Y);
             }
         }
 
