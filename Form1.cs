@@ -578,7 +578,9 @@ namespace Bahtinov_Collimator
             {
                 Invoke(new Action(() =>
                 {
-                    RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
+                    bahtinovLineData = null;
+                    RemoveAndDisposeControls(groupBoxRed, groupBoxGreen, groupBoxBlue);
+                    InitializeRedFocusBox();
                     RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                     RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                     DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
@@ -586,7 +588,9 @@ namespace Bahtinov_Collimator
             }
             else
             {
-                RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
+                bahtinovLineData = null;
+                RemoveAndDisposeControls(groupBoxRed, groupBoxGreen, groupBoxBlue);
+                InitializeRedFocusBox();
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
