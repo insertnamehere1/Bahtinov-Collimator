@@ -294,6 +294,9 @@
     <EmbeddedResource Include="Custom Components\HistoryBar.resx">
       <DependentUpon>HistoryBar.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Custom Components\MirrorDrawComponent.resx">
+      <DependentUpon>MirrorDrawComponent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>

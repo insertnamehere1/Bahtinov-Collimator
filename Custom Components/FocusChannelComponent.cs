@@ -73,8 +73,6 @@ namespace Bahtinov_Collimator
             else             
                 mirrorDrawingComponent1.Visible = false;
 
-
-
             switch (groupID)
                 {
                     case 0:
@@ -107,6 +105,9 @@ namespace Bahtinov_Collimator
             groupBox1.MouseEnter += FocusChannelGroupBox_MouseEnter;
             groupBox1.MouseLeave += FocusChannelGroupBox_MouseLeave;
             groupBox1.Resize += GroupBox1_Resize;
+
+            mirrorDrawingComponent1.MouseEnter += ChildMouseEnter;
+            mirrorDrawingComponent1.MouseLeave += ChildMouseLeave;
         }
 
         /// <summary>
@@ -232,10 +233,10 @@ namespace Bahtinov_Collimator
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void FocusChannelGroupBox_MouseEnter(object sender, EventArgs e)
+        protected void FocusChannelGroupBox_MouseEnter(object sender, EventArgs e)
         {
             groupBox1.BackColor = UITheme.GetGroupBoxBackgroundColor(groupID);
-            mirrorDrawingComponent1.BackColor = groupBox1.BackColor;
+            mirrorDrawingComponent1.BackColor = UITheme.GetGroupBoxBackgroundColor(groupID);
             mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
             mirrorDrawingComponent1.Invalidate();
             mouseOver[groupID] = true;
@@ -250,11 +251,24 @@ namespace Bahtinov_Collimator
         private void FocusChannelGroupBox_MouseLeave(object sender, EventArgs e)
         {
             groupBox1.BackColor = UITheme.DarkBackground;
-            mirrorDrawingComponent1.BackColor = groupBox1.BackColor;
+            mirrorDrawingComponent1.BackColor = UITheme.DarkBackground;
             mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
             mirrorDrawingComponent1.Invalidate();
             mouseOver[groupID] = false;
             ChannelSelectDataEvent?.Invoke(null, new ChannelSelectEventArgs(mouseOver, focusChannelCount));
+        }
+
+
+        private void ChildMouseEnter(object sender, EventArgs e)
+        {
+            FocusChannelGroupBox_MouseEnter(sender, e);
+        }
+
+        private void ChildMouseLeave(object sender, EventArgs e)
+        {
+            // Optional: track whether the mouse actually left the parent bounds
+            if (!ClientRectangle.Contains(PointToClient(Cursor.Position)))
+                FocusChannelGroupBox_MouseLeave(sender, e);
         }
 
         #endregion

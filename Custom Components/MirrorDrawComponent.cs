@@ -170,7 +170,14 @@ namespace Bahtinov_Collimator.Custom_Components
                 axisPen.DashStyle = DashStyle.Dot;
                 graphics.DrawLine(axisPen, axisStartX, axisY, axisEndX, axisY);
             }
-            this.BackColor = UITheme.DarkBackground;
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            this.ResumeLayout(false);
+
         }
     }
 }
+
