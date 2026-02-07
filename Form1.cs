@@ -291,15 +291,6 @@ namespace Bahtinov_Collimator
             bool isTriBahtinov = (bahtinovLineData?.LineValue.Length == 9);
             bool isWidened = isCalibrated && isTriBahtinov;
 
-            if (isWidened)
-            {
-                int temp = calibrationComponent.Width + 100;
-                int temp2 = calibrationComponent.Height;
-
-                calibrationComponent.Location = new Point(calibrationComponent.Location.X + 100, calibrationComponent.Location.Y);
-                calibrationComponent.Size = new Size(temp, temp2);
-            }
-
             groupBoxRed = new FocusChannelComponent(0, isWidened)
             {
                 Size = new Size(255, 144),
@@ -492,6 +483,12 @@ namespace Bahtinov_Collimator
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 DecreaseFocusChannelSize();
+
+                if (Properties.Settings.Default.CalibrationCompleted && calibrationComponent != null)
+                {
+                    StopCalibration();
+                }
+
                 firstPassCompleted = false;
             }
         }
