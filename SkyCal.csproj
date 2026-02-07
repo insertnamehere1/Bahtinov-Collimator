@@ -12,11 +12,14 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
     <UpdateMode>Background</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
@@ -164,6 +167,12 @@
     </Compile>
     <Compile Include="Custom Components\HistoryBar.Designer.cs">
       <DependentUpon>HistoryBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\MirrorDrawComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\MirrorDrawComponent.Designer.cs">
+      <DependentUpon>MirrorDrawComponent.cs</DependentUpon>
     </Compile>
     <Compile Include="Custom Components\RichTextBoxExtensions.cs" />
     <Compile Include="Custom Components\RoundedButton.cs">

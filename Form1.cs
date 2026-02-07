@@ -287,7 +287,11 @@ namespace Bahtinov_Collimator
                 RemoveAndDisposeControls(groupBoxRed);
             }
 
-            groupBoxRed = new FocusChannelComponent(0)
+            bool test = Properties.Settings.Default.CalibrationCompleted;
+            bool test2 = (bahtinovLineData?.LineValue.Length == 9);
+            bool res = test && test2;
+
+            groupBoxRed = new FocusChannelComponent(0, res)
             {
                 Size = new Size(255, 144),
                 Location = new Point(8, 34)
@@ -306,7 +310,7 @@ namespace Bahtinov_Collimator
                 RemoveAndDisposeControls(groupBoxGreen);
             }
 
-            groupBoxGreen = new FocusChannelComponent(1)
+            groupBoxGreen = new FocusChannelComponent(1, Properties.Settings.Default.CalibrationCompleted)
             {
                 Size = new Size(255, 144),
                 Location = new Point(8, 172)
@@ -325,7 +329,7 @@ namespace Bahtinov_Collimator
                 RemoveAndDisposeControls(groupBoxBlue);
             }
 
-            groupBoxBlue = new FocusChannelComponent(2)
+            groupBoxBlue = new FocusChannelComponent(2, Properties.Settings.Default.CalibrationCompleted)
             {
                 Size = new Size(255, 144),
                 Location = new Point(8, 310)
@@ -469,7 +473,12 @@ namespace Bahtinov_Collimator
                 ImageCapture.StopImageCapture();
                 imageDisplayComponent1.ClearDisplay();
                 bahtinovProcessing.StopImageProcessing();
-                RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
+                bahtinovLineData = null;
+                RemoveAndDisposeControls(groupBoxRed, groupBoxGreen, groupBoxBlue);
+                
+                if(Properties.Settings.Default.DefocusSwitch == false)
+                    InitializeRedFocusBox();
+                
                 screenCaptureRunningFlag = false;
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
@@ -542,8 +551,10 @@ namespace Bahtinov_Collimator
                 screenCaptureRunningFlag = false;
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
-                RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
+                bahtinovLineData = null;
+                RemoveAndDisposeControls(groupBoxRed, groupBoxGreen, groupBoxBlue);
                 InitializeRedFocusBox();
+                screenCaptureRunningFlag = false;
                 whatDoIDoNextToolStripMenuItem.Enabled = Properties.Settings.Default.CalibrationCompleted;
                 focusCalibrationToolStripMenuItem.Enabled = true;
             }
@@ -818,7 +829,9 @@ namespace Bahtinov_Collimator
                     InitializeRedFocusBox();
                     InitializeGreenFocusBox();
                     InitializeBlueFocusBox();
-                    IncreaseFocusChannelSize();
+
+                    if(Properties.Settings.Default.CalibrationCompleted)
+                        IncreaseFocusChannelSize();
                 }
 
                 firstPassCompleted = true;

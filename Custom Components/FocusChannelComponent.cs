@@ -16,6 +16,19 @@ namespace Bahtinov_Collimator
 
         public double ErrorOffset { private set; get; } = 0.0f;
 
+        public int MirrorCornerRadius
+        {
+            get => mirrorDrawingComponent1.CornerRadius;
+            set => mirrorDrawingComponent1.CornerRadius = value;
+        }
+
+        public Custom_Components.MirrorType MirrorType
+        {
+            get => mirrorDrawingComponent1.MirrorType;
+            set => mirrorDrawingComponent1.MirrorType = value;
+        }
+
+
         private bool disposed = false; // To detect redundant calls
         private readonly int groupID;
         private readonly Font labelFont;
@@ -28,7 +41,7 @@ namespace Bahtinov_Collimator
         /// Initializes a new instance of the <see cref="FocusChannelComponent"/> class.
         /// </summary>
         /// <param name="groupID">The group ID for the component.</param>
-        public FocusChannelComponent(int groupID)
+        public FocusChannelComponent(int groupID, bool isTribahtinov)
         {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
@@ -53,21 +66,29 @@ namespace Bahtinov_Collimator
 
             ApplyTheme();
             SubscribeToEvents();
+            UpdateMirrorPanelLayout();
+
+            if(isTribahtinov)
+                mirrorDrawingComponent1.Visible = true;
+            else             
+                mirrorDrawingComponent1.Visible = false;
+
+
 
             switch (groupID)
-            {
-                case 0:
-                    groupBox1.Text = UiText.Current.FocusGroupRed;
-                    break;
-                case 1:
-                    groupBox1.Text = UiText.Current.FocusGroupGreen;
-                    break;
-                case 2:
-                    groupBox1.Text = UiText.Current.FocusGroupBlue;
-                    break;
-                default:
-                    break;
-            }
+                {
+                    case 0:
+                        groupBox1.Text = UiText.Current.FocusGroupRed;
+                        break;
+                    case 1:
+                        groupBox1.Text = UiText.Current.FocusGroupGreen;
+                        break;
+                    case 2:
+                        groupBox1.Text = UiText.Current.FocusGroupBlue;
+                        break;
+                    default:
+                        break;
+                }
 
             groupBox1.Tag = groupID;
             focusChannelCount++;
@@ -85,6 +106,7 @@ namespace Bahtinov_Collimator
             BahtinovProcessing.FocusDataEvent += FocusDataEvent;
             groupBox1.MouseEnter += FocusChannelGroupBox_MouseEnter;
             groupBox1.MouseLeave += FocusChannelGroupBox_MouseLeave;
+            groupBox1.Resize += GroupBox1_Resize;
         }
 
         /// <summary>
@@ -95,6 +117,7 @@ namespace Bahtinov_Collimator
             BahtinovProcessing.FocusDataEvent -= FocusDataEvent;
             groupBox1.MouseEnter -= FocusChannelGroupBox_MouseEnter;
             groupBox1.MouseLeave -= FocusChannelGroupBox_MouseLeave;
+            groupBox1.Resize -= GroupBox1_Resize;
         }
 
         #endregion
@@ -107,6 +130,8 @@ namespace Bahtinov_Collimator
         private void ApplyTheme()
         {
             groupBox1.ForeColor = UITheme.GetGroupBoxTextColor(groupID);
+            mirrorDrawingComponent1.BackColor = groupBox1.BackColor;
+            mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
         }
 
         #endregion
@@ -172,6 +197,34 @@ namespace Bahtinov_Collimator
 
         #endregion
 
+        #region Telescope Cross-section Drawing
+
+        /// <summary>
+        /// Repositions the mirror drawing surface as the group box resizes.
+        /// </summary>
+        private void GroupBox1_Resize(object sender, EventArgs e)
+        {
+            UpdateMirrorPanelLayout();
+        }
+
+        /// <summary>
+        /// Keeps the mirror drawing panel just left of the history bar with a max size of 50x100.
+        /// </summary>
+        private void UpdateMirrorPanelLayout()
+        {
+            int panelWidth = 100;
+            int panelHeight = Math.Min(100, Math.Max(40, groupBox1.ClientSize.Height - 42));
+            int panelX = Math.Max(8, offsetBarControl1.Left - panelWidth - 8);
+            int panelY = Math.Max(25, (groupBox1.ClientSize.Height - panelHeight) / 2);
+
+            mirrorDrawingComponent1.Bounds = new Rectangle(panelX, panelY, panelWidth, panelHeight);
+            mirrorDrawingComponent1.BackColor = groupBox1.BackColor;
+            mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
+            mirrorDrawingComponent1.Invalidate();
+        }
+
+        #endregion
+
         #region GroupBox Mouse Events
 
         /// <summary>
@@ -182,6 +235,9 @@ namespace Bahtinov_Collimator
         private void FocusChannelGroupBox_MouseEnter(object sender, EventArgs e)
         {
             groupBox1.BackColor = UITheme.GetGroupBoxBackgroundColor(groupID);
+            mirrorDrawingComponent1.BackColor = groupBox1.BackColor;
+            mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
+            mirrorDrawingComponent1.Invalidate();
             mouseOver[groupID] = true;
             ChannelSelectDataEvent?.Invoke(null, new ChannelSelectEventArgs(mouseOver, focusChannelCount));
         }
@@ -194,6 +250,9 @@ namespace Bahtinov_Collimator
         private void FocusChannelGroupBox_MouseLeave(object sender, EventArgs e)
         {
             groupBox1.BackColor = UITheme.DarkBackground;
+            mirrorDrawingComponent1.BackColor = groupBox1.BackColor;
+            mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
+            mirrorDrawingComponent1.Invalidate();
             mouseOver[groupID] = false;
             ChannelSelectDataEvent?.Invoke(null, new ChannelSelectEventArgs(mouseOver, focusChannelCount));
         }

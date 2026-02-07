@@ -19,6 +19,7 @@ namespace Bahtinov_Collimator
         {
             this.groupBox1 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
             this.offsetBarControl1 = new Bahtinov_Collimator.Custom_Components.HistoryBar();
+            this.mirrorDrawingComponent1 = new Bahtinov_Collimator.Custom_Components.MirrorDrawingComponent();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -30,6 +31,7 @@ namespace Bahtinov_Collimator
             this.groupBox1.BorderColor = System.Drawing.Color.Gray;
             this.groupBox1.BorderThickness = 2;
             this.groupBox1.Controls.Add(this.offsetBarControl1);
+            this.groupBox1.Controls.Add(this.mirrorDrawingComponent1);
             this.groupBox1.CornerRadius = 12;
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(3, 2);
@@ -40,6 +42,18 @@ namespace Bahtinov_Collimator
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "FocusChannel";
+            // 
+            // mirrorDrawingComponent1
+            // 
+            this.mirrorDrawingComponent1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.mirrorDrawingComponent1.CornerRadius = 3;
+            this.mirrorDrawingComponent1.Location = new System.Drawing.Point(12, 24);
+            this.mirrorDrawingComponent1.MirrorOutlineColor = System.Drawing.Color.DimGray;
+            this.mirrorDrawingComponent1.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
+            this.mirrorDrawingComponent1.Name = "mirrorDrawingComponent1";
+            this.mirrorDrawingComponent1.OpticalAxisLength = 100;
+            this.mirrorDrawingComponent1.Size = new System.Drawing.Size(100, 100);
+            this.mirrorDrawingComponent1.TabIndex = 9;
             // 
             // offsetBarControl1
             // 
@@ -76,5 +90,6 @@ namespace Bahtinov_Collimator
 
         private Bahtinov_Collimator.Custom_Components.RoundedGroupBox groupBox1;
         private HistoryBar offsetBarControl1;
+        private MirrorDrawingComponent mirrorDrawingComponent1;
     }
 }
