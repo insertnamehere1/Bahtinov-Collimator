@@ -52,12 +52,12 @@ namespace Bahtinov_Collimator
             double eps = Math.Max(frame.Width, frame.Height) * 1e-12;
             List<(double x, double y)> intersections = CollectIntersections(lines, eps);
 
-            foreach (var intersection in intersections)
+            foreach (var (x, y) in intersections)
             {
                 int count = 0;
                 foreach (var line in lines)
                 {
-                    if (DistanceToLine(line, intersection.x, intersection.y) <= tolerancePixels)
+                    if (DistanceToLine(line, x, y) <= tolerancePixels)
                     {
                         count++;
                     }

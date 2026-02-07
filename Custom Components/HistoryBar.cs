@@ -188,8 +188,8 @@ namespace Bahtinov_Collimator.Custom_Components
             float scale = DpiScale;
 
             // Base design values at 96 DPI
-            float designLeftPad = 40f;     // space for minimum label
-            float designRightPad = 35f;    // space for maximum label
+            float designLeftPad = 10f;     // space for minimum label
+            float designRightPad = 10f;    // space for maximum label
             float designZeroTickUp = 12f;
             float designZeroTickDown = 12f;
             float designHistoryRadius = 8f;
@@ -217,27 +217,6 @@ namespace Bahtinov_Collimator.Custom_Components
             float alertOutlineThickness = designAlertOutlineThickness * scale;
             float valueGap = designValueGap * scale;
 
-            // Draw minimum label
-            using (var textBrush = new SolidBrush(TextColor))
-            {
-                g.DrawString(minimum.ToString("0.0"), Font, textBrush,
-                    margin, centerY - Font.Height / 2);
-            }
-
-            // Draw maximum label
-            string maxText = maximum.ToString("0.0");
-            SizeF maxSize = g.MeasureString(maxText, Font);
-
-            using (var textBrush = new SolidBrush(TextColor))
-            {
-                g.DrawString(
-                    maxText,
-                    Font,
-                    textBrush,
-                    Width - margin - maxSize.Width,
-                    centerY - Font.Height / 2);
-            }
-
             // Draw main bar line
             using (var barPen = new Pen(BarColor, barThickness))
             {
@@ -258,6 +237,13 @@ namespace Bahtinov_Collimator.Custom_Components
             using (var zeroPen = new Pen(ZeroTickColor, zeroThickness))
             {
                 g.DrawLine(zeroPen, zeroX, centerY - zeroTickUp, zeroX, centerY + zeroTickDown);
+            }
+
+            // Draw end ticks
+            using (var tickPen = new Pen(ZeroTickColor, zeroThickness))
+            {
+                g.DrawLine(tickPen, left, centerY - zeroTickUp / 2, left, centerY + zeroTickDown / 2);
+                g.DrawLine(tickPen, right, centerY - zeroTickUp / 2, right, centerY + zeroTickDown / 2);
             }
 
             // Draw history markers (semi opaque, smaller, behind current marker)

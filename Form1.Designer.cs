@@ -216,7 +216,7 @@
             this.bahtinovLabel.Size = new System.Drawing.Size(59, 16);
             this.bahtinovLabel.TabIndex = 22;
             this.bahtinovLabel.Text = "Bahtinov";
-            this.bahtinovLabel.Click += new System.EventHandler(this.bahtinovLabel_Click);
+            this.bahtinovLabel.Click += new System.EventHandler(this.BahtinovLabel_Click);
             // 
             // defocusLabel
             // 
@@ -227,7 +227,7 @@
             this.defocusLabel.Size = new System.Drawing.Size(57, 16);
             this.defocusLabel.TabIndex = 23;
             this.defocusLabel.Text = "Defocus";
-            this.defocusLabel.Click += new System.EventHandler(this.defocusLabel_Click);
+            this.defocusLabel.Click += new System.EventHandler(this.DefocusLabel_Click);
             // 
             // Form1
             // 

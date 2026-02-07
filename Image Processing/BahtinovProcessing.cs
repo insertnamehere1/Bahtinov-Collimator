@@ -54,7 +54,7 @@ namespace Bahtinov_Collimator
         private float lastFocusErrorValue = 0.0f;
 
         // line validator
-        private BahtinovIntersectionValidator lineValidator = new BahtinovIntersectionValidator(6, 2);
+        private readonly BahtinovIntersectionValidator lineValidator = new BahtinovIntersectionValidator(6, 2);
 
         #endregion
 

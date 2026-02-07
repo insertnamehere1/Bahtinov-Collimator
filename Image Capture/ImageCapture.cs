@@ -381,7 +381,6 @@ namespace Bahtinov_Collimator
             if (transitionXSum == 0 || transitionYSum == 0)
                 throw new InvalidOperationException("No valid transitions detected in the image.");
 
-            double radius = transitionCount > 0 ? Math.Round((double)radiusSum / transitionCount) : maxRadius;
             double circleX = transitionXSum / (transitionCount / 2) + centerX;
             double circleY = transitionYSum / (transitionCount / 2) + centerY;
 

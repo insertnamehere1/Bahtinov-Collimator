@@ -36,7 +36,7 @@ namespace Bahtinov_Collimator
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(234, 144);
+            this.groupBox1.Size = new System.Drawing.Size(252, 140);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "FocusChannel";
@@ -47,12 +47,12 @@ namespace Bahtinov_Collimator
             | System.Windows.Forms.AnchorStyles.Right)));
             this.offsetBarControl1.BarColor = System.Drawing.Color.Gray;
             this.offsetBarControl1.Enabled = false;
-            this.offsetBarControl1.Location = new System.Drawing.Point(6, 35);
+            this.offsetBarControl1.Location = new System.Drawing.Point(6, 32);
             this.offsetBarControl1.MarkerColor = System.Drawing.Color.Green;
             this.offsetBarControl1.Maximum = 2F;
             this.offsetBarControl1.Minimum = -2F;
             this.offsetBarControl1.Name = "offsetBarControl1";
-            this.offsetBarControl1.Size = new System.Drawing.Size(222, 68);
+            this.offsetBarControl1.Size = new System.Drawing.Size(240, 64);
             this.offsetBarControl1.TabIndex = 8;
             this.offsetBarControl1.Text = "offsetBarControl1";
             this.offsetBarControl1.TextColor = System.Drawing.Color.White;
@@ -66,7 +66,7 @@ namespace Bahtinov_Collimator
             this.Controls.Add(this.groupBox1);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "FocusChannelComponent";
-            this.Size = new System.Drawing.Size(237, 159);
+            this.Size = new System.Drawing.Size(255, 155);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 

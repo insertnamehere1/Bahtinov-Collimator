@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
@@ -20,7 +19,6 @@ namespace Bahtinov_Collimator
         private bool disposed = false; // To detect redundant calls
         private readonly int groupID;
         private readonly Font labelFont;
-        private bool labelsVisible = false;
 
         #endregion
 
@@ -97,7 +95,6 @@ namespace Bahtinov_Collimator
             BahtinovProcessing.FocusDataEvent -= FocusDataEvent;
             groupBox1.MouseEnter -= FocusChannelGroupBox_MouseEnter;
             groupBox1.MouseLeave -= FocusChannelGroupBox_MouseLeave;
-
         }
 
         #endregion
