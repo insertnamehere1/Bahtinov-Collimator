@@ -242,8 +242,8 @@ namespace Bahtinov_Collimator.Custom_Components
             // Draw end ticks
             using (var tickPen = new Pen(ZeroTickColor, zeroThickness))
             {
-                g.DrawLine(tickPen, left, centerY - zeroTickUp / 2, left, centerY + zeroTickDown / 2);
-                g.DrawLine(tickPen, right, centerY - zeroTickUp / 2, right, centerY + zeroTickDown / 2);
+                g.DrawLine(tickPen, left, centerY - zeroTickUp / 3, left, centerY + zeroTickDown / 3);
+                g.DrawLine(tickPen, right, centerY - zeroTickUp / 3, right, centerY + zeroTickDown / 3);
             }
 
             // Draw history markers (semi opaque, smaller, behind current marker)

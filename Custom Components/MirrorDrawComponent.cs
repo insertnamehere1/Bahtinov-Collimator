@@ -101,7 +101,7 @@ namespace Bahtinov_Collimator.Custom_Components
             int topY = mirrorBounds.Top + 4;
             int bottomY = mirrorBounds.Bottom - 4;
             int backX = mirrorBounds.Left + 2;
-            int concaveDepthX = mirrorBounds.Right - 20;
+            int concaveDepthX = mirrorBounds.Right - 25;
             int frontEdgeX = backX + 10;
             int maxRadius = Math.Max(0, Math.Min((concaveDepthX - backX) / 2, (bottomY - topY) / 2));
             int radius = Math.Min(CornerRadius, maxRadius);

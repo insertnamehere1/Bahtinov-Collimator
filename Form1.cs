@@ -1135,6 +1135,9 @@ namespace Bahtinov_Collimator
             this.Width -= UITheme.CalibrateFrameWidth;
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
+            if(screenCaptureRunningFlag == true)
+                StartButton_Click(this, EventArgs.Empty);
+
             // enable "what should i do next" menu item if we have been calibrated
             menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted;
         }
