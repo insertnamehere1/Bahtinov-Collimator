@@ -18,7 +18,7 @@ namespace Bahtinov_Collimator.Custom_Components
     {
         private float minimum = -1.0f;
         private float maximum = 1.0f;
-        private float value = 0.0f;
+        private float value = float.NaN;
 
         // Stores the last N values for drawing semi transparent history markers.
         private readonly Queue<float> valueHistory = new Queue<float>();
@@ -89,8 +89,12 @@ namespace Bahtinov_Collimator.Custom_Components
             set
             {
                 HistoryCapacity = Properties.Settings.Default.historyCount;
-                // Store the previous value in the history
-                AddToHistory(this.value);
+
+                // Only record history if the existing value is valid
+                if (!float.IsNaN(this.value))
+                {
+                    AddToHistory(this.value);
+                }
 
                 this.value = value;
                 Invalidate();
@@ -190,8 +194,8 @@ namespace Bahtinov_Collimator.Custom_Components
             // Base design values at 96 DPI
             float designLeftPad = 10f;     // space for minimum label
             float designRightPad = 10f;    // space for maximum label
-            float designZeroTickUp = 12f;
-            float designZeroTickDown = 12f;
+            float designZeroTickUp = 20f;
+            float designZeroTickDown = 20f;
             float designHistoryRadius = 8f;
             float designMarkerRadius = 7f;
             float designBarThickness = 2f;
@@ -242,8 +246,8 @@ namespace Bahtinov_Collimator.Custom_Components
             // Draw end ticks
             using (var tickPen = new Pen(ZeroTickColor, zeroThickness))
             {
-                g.DrawLine(tickPen, left, centerY - zeroTickUp / 3, left, centerY + zeroTickDown / 3);
-                g.DrawLine(tickPen, right, centerY - zeroTickUp / 3, right, centerY + zeroTickDown / 3);
+                g.DrawLine(tickPen, left, centerY - zeroTickUp / 4, left, centerY + zeroTickDown / 4);
+                g.DrawLine(tickPen, right, centerY - zeroTickUp / 4, right, centerY + zeroTickDown / 4);
             }
 
             // Draw history markers (semi opaque, smaller, behind current marker)
@@ -253,22 +257,25 @@ namespace Bahtinov_Collimator.Custom_Components
             {
                 foreach (float histValue in valueHistory)
                 {
-                    float clampedHist = Math.Max(minimum, Math.Min(maximum, histValue));
-                    float ht = (clampedHist - minimum) / range;
-                    float hx = left + ht * (right - left);
+                    if (histValue != float.NaN)
+                    {
+                        float clampedHist = Math.Max(minimum, Math.Min(maximum, histValue));
+                        float ht = (clampedHist - minimum) / range;
+                        float hx = left + ht * (right - left);
 
-                    var histRect = new RectangleF(
-                        hx - historyRadius,
-                        centerY - historyRadius,
-                        historyRadius * 2,
-                        historyRadius * 2);
+                        var histRect = new RectangleF(
+                            hx - historyRadius,
+                            centerY - historyRadius,
+                            historyRadius * 2,
+                            historyRadius * 2);
 
-                    g.FillEllipse(historyBrush, histRect);
+                        g.FillEllipse(historyBrush, histRect);
+                    }
                 }
             }
 
             // Clamp the current marker position to the bar range
-            float clampedValue = Math.Max(minimum, Math.Min(maximum, value));
+            float clampedValue = Math.Max(minimum, Math.Min(maximum, (float.IsNaN(value))?0.0f:value));
             float t = (clampedValue - minimum) / range;
             float markerX = left + t * (right - left);
 
@@ -286,7 +293,7 @@ namespace Bahtinov_Collimator.Custom_Components
             }
 
             // Draw numeric value above marker
-            string valueStr = value.ToString("0.0");
+            string valueStr = (float.IsNaN(value) ? 0.0f : value).ToString("0.0");
             SizeF valSize = g.MeasureString(valueStr, Font);
 
             Color valueTextColor = TextColor;
@@ -319,7 +326,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         public void ResetHistory()
         {
-            value = 0.0f;
             valueHistory.Clear();
             Invalidate();         // force redraw without old markers
         }

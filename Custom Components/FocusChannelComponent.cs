@@ -191,7 +191,6 @@ namespace Bahtinov_Collimator
                 {
                     offsetBarControl1.ResetHistory();
                     offsetBarControl1.MarkerColor = Color.Green;
-                    offsetBarControl1.Value = 0.0f;
                 }
             }
         }

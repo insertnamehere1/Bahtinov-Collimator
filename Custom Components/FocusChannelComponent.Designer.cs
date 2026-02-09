@@ -70,8 +70,8 @@ namespace Bahtinov_Collimator
             this.offsetBarControl1.TabIndex = 8;
             this.offsetBarControl1.Text = "offsetBarControl1";
             this.offsetBarControl1.TextColor = System.Drawing.Color.White;
-            this.offsetBarControl1.Value = 0F;
-            this.offsetBarControl1.ZeroTickColor = System.Drawing.Color.DarkGray;
+//            this.offsetBarControl1.Value = 0F;
+            this.offsetBarControl1.ZeroTickColor = System.Drawing.Color.LightGray;
             // 
             // FocusChannelComponent
             // 
