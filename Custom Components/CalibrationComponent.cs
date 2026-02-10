@@ -503,5 +503,12 @@ namespace Bahtinov_Collimator.Custom_Components
                 _parent.StopCalibration();
             }
         }
+
+        public new void Dispose()
+        {
+            base.Dispose();
+            _aggregationTimer.Stop();
+            UnsubscribeToEvents();
+        }
     }
 }

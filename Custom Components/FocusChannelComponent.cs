@@ -16,12 +16,6 @@ namespace Bahtinov_Collimator
 
         public double ErrorOffset { private set; get; } = 0.0f;
 
-        public int MirrorCornerRadius
-        {
-            get => mirrorDrawingComponent1.CornerRadius;
-            set => mirrorDrawingComponent1.CornerRadius = value;
-        }
-
         public Custom_Components.MirrorType MirrorType
         {
             get => mirrorDrawingComponent1.MirrorType;
@@ -68,9 +62,17 @@ namespace Bahtinov_Collimator
             SubscribeToEvents();
             UpdateMirrorPanelLayout();
 
-            if(isTribahtinov)
+            if (isTribahtinov)
+            {
+                if (Properties.Settings.Default.SCTSelected == true)
+                    mirrorDrawingComponent1.MirrorType = Custom_Components.MirrorType.SctPrimary;
+
+                if (Properties.Settings.Default.MCTSelected == true)
+                    mirrorDrawingComponent1.MirrorType = Custom_Components.MirrorType.MctSecondary;
+
                 mirrorDrawingComponent1.Visible = true;
-            else             
+            }
+            else
                 mirrorDrawingComponent1.Visible = false;
 
             switch (groupID)

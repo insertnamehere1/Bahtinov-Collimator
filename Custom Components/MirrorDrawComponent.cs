@@ -24,6 +24,8 @@ namespace Bahtinov_Collimator.Custom_Components
 
         public MirrorDrawingComponent()
         {
+            InitializeComponent();
+
             SetStyle(ControlStyles.AllPaintingInWmPaint |
                      ControlStyles.OptimizedDoubleBuffer |
                      ControlStyles.UserPaint |
@@ -82,7 +84,7 @@ namespace Bahtinov_Collimator.Custom_Components
             switch (MirrorType)
             {
                 case MirrorType.MctSecondary:
-   //                 DrawMctSecondaryMirror(e.Graphics, ClientRectangle);
+                    DrawMctSecondaryMirror(e.Graphics, ClientRectangle);
                     break;
 
                 case MirrorType.SctPrimary:
@@ -92,7 +94,161 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
-        private void DrawSctPrimaryMirror(Graphics graphics, Rectangle bounds)
+private void DrawMctSecondaryMirror(Graphics graphics, Rectangle bounds)
+    {
+        if (bounds.Width <= 0 || bounds.Height <= 0)
+            return;
+
+        // Same sizing conventions as your SCT drawing.
+        Rectangle mirrorBounds = new Rectangle(
+            bounds.X,
+            bounds.Y,
+            Math.Min(50, bounds.Width),
+            Math.Min(100, bounds.Height));
+
+        int topY = mirrorBounds.Top + 4;
+        int bottomY = mirrorBounds.Bottom - 4;
+
+        int leftX = mirrorBounds.Left + 2;
+        int rightX = mirrorBounds.Right - 2;
+
+        int axisY = mirrorBounds.Top + (mirrorBounds.Height / 2);
+
+        // Corrector plate geometry
+        int plateHeight = Math.Max(10, bottomY - topY);
+        int plateWidth = Math.Max(10, Math.Min(14, mirrorBounds.Width / 2));
+
+        // Place the corrector near the left edge of this little schematic block.
+        int plateLeft = leftX;
+        int plateRight = Math.Min(rightX, plateLeft + plateWidth);
+
+        // Both faces convex to the right.
+        int bulge = Math.Max(3, Math.Min(9, plateWidth / 2));
+        int frontX = plateLeft;              // left-most edge
+        int backX = plateRight;              // right-most edge (still left side of the block)
+        int frontBulgeX = frontX + bulge;    // convex bulge to the right
+        int backBulgeX = backX + bulge;      // convex bulge to the right
+
+        // Secondary mirror (silvered centre on the corrector)
+        int secDiameter = Math.Max(8, Math.Min(plateHeight / 3, 22));
+        int secRadius = secDiameter / 2;
+        int secCenterX = (frontX + backX) / 2 + (bulge / 2); // sit roughly in the middle of the glass thickness
+        int secCenterY = axisY;
+
+        Rectangle secondaryRect = new Rectangle(
+            secCenterX - secRadius,
+            secCenterY - secRadius,
+            secDiameter,
+            secDiameter);
+
+        // Clamp secondary into the plate vertical span
+        if (secondaryRect.Top < topY) secondaryRect.Y = topY;
+        if (secondaryRect.Bottom > bottomY) secondaryRect.Y = bottomY - secondaryRect.Height;
+
+        GraphicsState state = graphics.Save();
+        try
+        {
+            graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            graphics.CompositingMode = CompositingMode.SourceOver;
+
+            // Build the corrector plate outline as a closed "lens" shape:
+            // left edge -> top front arc -> top back arc -> right edge -> bottom back arc -> bottom front arc -> close.
+            using (GraphicsPath platePath = new GraphicsPath())
+            {
+                platePath.StartFigure();
+
+                // Start at top-left edge
+                platePath.AddLine(frontX, topY, frontX, topY);
+
+                // Front face (convex to the right): (frontX, topY) -> (frontX, bottomY)
+                // Implemented as two quadratics via Bezier control points bulging to the right.
+                platePath.AddBezier(
+                    frontX, topY,
+                    frontBulgeX, topY + plateHeight * 0.25f,
+                    frontBulgeX, topY + plateHeight * 0.75f,
+                    frontX, bottomY);
+
+                // Bottom edge from front to back
+                platePath.AddLine(frontX, bottomY, backX, bottomY);
+
+                // Back face (also convex to the right): (backX, bottomY) -> (backX, topY)
+                platePath.AddBezier(
+                    backX, bottomY,
+                    backBulgeX, topY + plateHeight * 0.75f,
+                    backBulgeX, topY + plateHeight * 0.25f,
+                    backX, topY);
+
+                // Top edge from back to front
+                platePath.AddLine(backX, topY, frontX, topY);
+
+                platePath.CloseFigure();
+
+                // Glass fill: subtle translucent tint, still "clear".
+                Color glassA = Color.FromArgb(40, 210, 230, 255);
+                Color glassB = Color.FromArgb(18, 210, 230, 255);
+
+                using (LinearGradientBrush glassBrush = new LinearGradientBrush(
+                    new Point(frontX, topY),
+                    new Point(backX + bulge, topY),
+                    glassA,
+                    glassB))
+                {
+                    graphics.FillPath(glassBrush, platePath);
+                }
+
+                // Outline for the glass
+                using (Pen glassOutline = new Pen(MirrorOutlineColor, 1.5f))
+                {
+                    graphics.DrawPath(glassOutline, platePath);
+                }
+            }
+
+            // Secondary mirror: silvered spot on the corrector centre.
+            using (GraphicsPath secondaryPath = new GraphicsPath())
+            {
+                secondaryPath.AddEllipse(secondaryRect);
+
+                // Slightly metallic gradient, lightly tinted toward MirrorOutlineColor so it matches your theme.
+                Color darkBase = Color.FromArgb(140, 140, 140);
+                Color lightBase = Color.FromArgb(210, 210, 210);
+
+                const float tintStrength = 0.10f;
+                Color darkTinted = TintColor(darkBase, MirrorOutlineColor, tintStrength);
+                Color lightTinted = TintColor(lightBase, MirrorOutlineColor, tintStrength);
+
+                using (LinearGradientBrush secBrush = new LinearGradientBrush(
+                    new Point(secondaryRect.Left, secondaryRect.Top),
+                    new Point(secondaryRect.Right, secondaryRect.Bottom),
+                    lightTinted,
+                    darkTinted))
+                {
+                    graphics.FillPath(secBrush, secondaryPath);
+                }
+
+                using (Pen secOutline = new Pen(Color.FromArgb(200, 200, 200), 1.2f))
+                {
+                    graphics.DrawPath(secOutline, secondaryPath);
+                }
+            }
+
+            // Optical axis (same style as your SCT function)
+            int axisStartX = mirrorBounds.Left + 2;
+            int axisEndX = Math.Min(bounds.Right, axisStartX + OpticalAxisLength);
+
+            using (Pen axisPen = new Pen(MirrorOutlineColor, 1.5f))
+            {
+                axisPen.DashStyle = DashStyle.Dot;
+                graphics.DrawLine(axisPen, axisStartX, axisY, axisEndX, axisY);
+            }
+        }
+        finally
+        {
+            graphics.Restore(state);
+        }
+    }
+
+    private void DrawSctPrimaryMirror(Graphics graphics, Rectangle bounds)
         {
             if (bounds.Width <= 0 || bounds.Height <= 0)
                 return;
@@ -175,7 +331,7 @@ namespace Bahtinov_Collimator.Custom_Components
                     Color darkBase = Color.FromArgb(120, 120, 120);
                     Color lightBase = Color.FromArgb(186, 186, 186);
 
-                    const float tintStrength = 0.35f;
+                    const float tintStrength = 0.15f;
 
                     Color darkTinted = TintColor(darkBase, MirrorOutlineColor, tintStrength);
                     Color lightTinted = TintColor(lightBase, MirrorOutlineColor, tintStrength);
@@ -194,13 +350,13 @@ namespace Bahtinov_Collimator.Custom_Components
             int baffleStartX = backX;
             int baffleEndX = Math.Min(bounds.Right, baffleStartX + baffleWallLength);
 
-            using (Pen bafflePen = new Pen(Color.LightGray, 2f))
+            using (Pen bafflePen = new Pen(Color.DarkGray, 2f))
             {
                 graphics.DrawLine(bafflePen, baffleStartX, baffleCutout.Top, baffleEndX, baffleCutout.Top);
                 graphics.DrawLine(bafflePen, baffleStartX, baffleCutout.Bottom, baffleEndX, baffleCutout.Bottom);
             }
 
-            int axisStartX = mirrorBounds.Right - 30;
+            int axisStartX = mirrorBounds.Left + 2;
             int axisEndX = Math.Min(bounds.Right, axisStartX + OpticalAxisLength);
 
             using (Pen axisPen = new Pen(MirrorOutlineColor, 1.5f))
