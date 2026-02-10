@@ -94,161 +94,203 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
-private void DrawMctSecondaryMirror(Graphics graphics, Rectangle bounds)
-    {
-        if (bounds.Width <= 0 || bounds.Height <= 0)
-            return;
-
-        // Same sizing conventions as your SCT drawing.
-        Rectangle mirrorBounds = new Rectangle(
-            bounds.X,
-            bounds.Y,
-            Math.Min(50, bounds.Width),
-            Math.Min(100, bounds.Height));
-
-        int topY = mirrorBounds.Top + 4;
-        int bottomY = mirrorBounds.Bottom - 4;
-
-        int leftX = mirrorBounds.Left + 2;
-        int rightX = mirrorBounds.Right - 2;
-
-        int axisY = mirrorBounds.Top + (mirrorBounds.Height / 2);
-
-        // Corrector plate geometry
-        int plateHeight = Math.Max(10, bottomY - topY);
-        int plateWidth = Math.Max(10, Math.Min(14, mirrorBounds.Width / 2));
-
-        // Place the corrector near the left edge of this little schematic block.
-        int plateLeft = leftX;
-        int plateRight = Math.Min(rightX, plateLeft + plateWidth);
-
-        // Both faces convex to the right.
-        int bulge = Math.Max(3, Math.Min(9, plateWidth / 2));
-        int frontX = plateLeft;              // left-most edge
-        int backX = plateRight;              // right-most edge (still left side of the block)
-        int frontBulgeX = frontX + bulge;    // convex bulge to the right
-        int backBulgeX = backX + bulge;      // convex bulge to the right
-
-        // Secondary mirror (silvered centre on the corrector)
-        int secDiameter = Math.Max(8, Math.Min(plateHeight / 3, 22));
-        int secRadius = secDiameter / 2;
-        int secCenterX = (frontX + backX) / 2 + (bulge / 2); // sit roughly in the middle of the glass thickness
-        int secCenterY = axisY;
-
-        Rectangle secondaryRect = new Rectangle(
-            secCenterX - secRadius,
-            secCenterY - secRadius,
-            secDiameter,
-            secDiameter);
-
-        // Clamp secondary into the plate vertical span
-        if (secondaryRect.Top < topY) secondaryRect.Y = topY;
-        if (secondaryRect.Bottom > bottomY) secondaryRect.Y = bottomY - secondaryRect.Height;
-
-        GraphicsState state = graphics.Save();
-        try
+        private void DrawMctSecondaryMirror(Graphics graphics, Rectangle bounds)
         {
-            graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            graphics.CompositingMode = CompositingMode.SourceOver;
+            if (bounds.Width <= 0 || bounds.Height <= 0)
+                return;
 
-            // Build the corrector plate outline as a closed "lens" shape:
-            // left edge -> top front arc -> top back arc -> right edge -> bottom back arc -> bottom front arc -> close.
-            using (GraphicsPath platePath = new GraphicsPath())
+            Rectangle mirrorBounds = new Rectangle(
+                bounds.X,
+                bounds.Y,
+                Math.Min(50, bounds.Width),
+                Math.Min(100, bounds.Height));
+
+            int topY = mirrorBounds.Top + 4;
+            int bottomY = mirrorBounds.Bottom - 4;
+
+            int leftX = mirrorBounds.Left + 2;
+            int rightX = mirrorBounds.Right - 2;
+
+            int axisY = mirrorBounds.Top + (mirrorBounds.Height / 2);
+
+            int plateHeight = Math.Max(10, bottomY - topY);
+
+            int basePlateWidth = Math.Max(10, Math.Min(14, mirrorBounds.Width / 2));
+            int plateWidth = Math.Max(6, (int)Math.Round(basePlateWidth * 0.7f));
+
+            int plateLeft = leftX;
+            int plateRight = Math.Min(rightX, plateLeft + plateWidth);
+
+            int bulge = Math.Max(2, Math.Min(6, plateWidth / 2));
+            int frontX = plateLeft;
+            int backX = plateRight;
+            int frontBulgeX = frontX + bulge;
+            int backBulgeX = backX + bulge;
+
+            int secDiameter = Math.Max(8, Math.Min(plateHeight / 3, 22));
+            int secRadius = secDiameter / 2;
+
+            int secCenterY = axisY;
+
+            int silverInsetX = Math.Max(2, plateWidth / 4);
+
+            // 🔧 NEW: thickness of the secondary (horizontal)
+            const int secondaryThickness = -4;   // was ~2 px before
+
+            int silverX = backX - silverInsetX;
+
+            Rectangle secondaryStripe = new Rectangle(
+                silverX - secondaryThickness,
+                secCenterY - secRadius,
+                secondaryThickness,
+                secDiameter);
+
+            if (secondaryStripe.Top < topY) secondaryStripe.Y = topY;
+            if (secondaryStripe.Bottom > bottomY) secondaryStripe.Y = bottomY - secondaryStripe.Height;
+
+            GraphicsState state = graphics.Save();
+            try
             {
-                platePath.StartFigure();
+                graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                graphics.CompositingMode = CompositingMode.SourceOver;
 
-                // Start at top-left edge
-                platePath.AddLine(frontX, topY, frontX, topY);
-
-                // Front face (convex to the right): (frontX, topY) -> (frontX, bottomY)
-                // Implemented as two quadratics via Bezier control points bulging to the right.
-                platePath.AddBezier(
-                    frontX, topY,
-                    frontBulgeX, topY + plateHeight * 0.25f,
-                    frontBulgeX, topY + plateHeight * 0.75f,
-                    frontX, bottomY);
-
-                // Bottom edge from front to back
-                platePath.AddLine(frontX, bottomY, backX, bottomY);
-
-                // Back face (also convex to the right): (backX, bottomY) -> (backX, topY)
-                platePath.AddBezier(
-                    backX, bottomY,
-                    backBulgeX, topY + plateHeight * 0.75f,
-                    backBulgeX, topY + plateHeight * 0.25f,
-                    backX, topY);
-
-                // Top edge from back to front
-                platePath.AddLine(backX, topY, frontX, topY);
-
-                platePath.CloseFigure();
-
-                // Glass fill: subtle translucent tint, still "clear".
-                Color glassA = Color.FromArgb(40, 210, 230, 255);
-                Color glassB = Color.FromArgb(18, 210, 230, 255);
-
-                using (LinearGradientBrush glassBrush = new LinearGradientBrush(
-                    new Point(frontX, topY),
-                    new Point(backX + bulge, topY),
-                    glassA,
-                    glassB))
+                // Corrector plate
+                using (GraphicsPath platePath = new GraphicsPath())
                 {
-                    graphics.FillPath(glassBrush, platePath);
+                    platePath.StartFigure();
+
+                    platePath.AddBezier(
+                        frontX, topY,
+                        frontBulgeX, topY + plateHeight * 0.25f,
+                        frontBulgeX, topY + plateHeight * 0.75f,
+                        frontX, bottomY);
+
+                    platePath.AddLine(frontX, bottomY, backX, bottomY);
+
+                    platePath.AddBezier(
+                        backX, bottomY,
+                        backBulgeX, topY + plateHeight * 0.75f,
+                        backBulgeX, topY + plateHeight * 0.25f,
+                        backX, topY);
+
+                    platePath.AddLine(backX, topY, frontX, topY);
+                    platePath.CloseFigure();
+
+                    Color glassDarkBase = Color.FromArgb(85, 190, 190, 190);
+                    Color glassLightBase = Color.FromArgb(55, 235, 235, 235);
+
+                    const float tintStrength = 0.45f;
+
+                    Color glassDarkTinted = TintColor(glassDarkBase, MirrorOutlineColor, tintStrength);
+                    Color glassLightTinted = TintColor(glassLightBase, MirrorOutlineColor, tintStrength);
+
+                    using (LinearGradientBrush glassBrush = new LinearGradientBrush(
+                        new Point(frontX, topY),
+                        new Point(backX + bulge, topY),
+                        glassDarkTinted,
+                        glassLightTinted))
+                    {
+                        graphics.FillPath(glassBrush, platePath);
+                    }
                 }
 
-                // Outline for the glass
-                using (Pen glassOutline = new Pen(MirrorOutlineColor, 1.5f))
+                // ---- Secondary mirror: thicker, straight left edge + curved right edge ----
+                using (GraphicsPath secPath = new GraphicsPath())
                 {
-                    graphics.DrawPath(glassOutline, platePath);
+                    PointF p0 = new PointF(backX, bottomY);
+                    PointF p1 = new PointF(backBulgeX, topY + plateHeight * 0.75f);
+                    PointF p2 = new PointF(backBulgeX, topY + plateHeight * 0.25f);
+                    PointF p3 = new PointF(backX, topY);
+
+                    float yTop = secondaryStripe.Top;
+                    float yBottom = secondaryStripe.Bottom;
+
+                    float SolveTForY(float yTarget)
+                    {
+                        float lo = 0f, hi = 1f;
+                        for (int i = 0; i < 28; i++)
+                        {
+                            float t = (lo + hi) * 0.5f;
+                            float y =
+                                (float)Math.Pow(1 - t, 3) * p0.Y +
+                                3 * (float)Math.Pow(1 - t, 2) * t * p1.Y +
+                                3 * (1 - t) * t * t * p2.Y +
+                                t * t * t * p3.Y;
+
+                            if (y > yTarget) lo = t;
+                            else hi = t;
+                        }
+                        return (lo + hi) * 0.5f;
+                    }
+
+                    float tTop = SolveTForY(yTop);
+                    float tBottom = SolveTForY(yBottom);
+
+                    if (tBottom > tTop)
+                    {
+                        float tmp = tBottom;
+                        tBottom = tTop;
+                        tTop = tmp;
+                    }
+
+                    PointF CurvePoint(float t)
+                    {
+                        float u = 1 - t;
+                        return new PointF(
+                            u * u * u * p0.X + 3 * u * u * t * p1.X + 3 * u * t * t * p2.X + t * t * t * p3.X,
+                            u * u * u * p0.Y + 3 * u * u * t * p1.Y + 3 * u * t * t * p2.Y + t * t * t * p3.Y
+                        );
+                    }
+
+                    PointF cTop = CurvePoint(tTop);
+                    PointF cBottom = CurvePoint(tBottom);
+
+                    float leftEdgeX = secondaryStripe.Left;
+
+                    secPath.StartFigure();
+                    secPath.AddLine(leftEdgeX, yTop, leftEdgeX, yBottom);
+                    secPath.AddLine(leftEdgeX, yBottom, cBottom.X, yBottom);
+                    secPath.AddBezier(cBottom, p1, p2, cTop);
+                    secPath.AddLine(cTop.X, yTop, leftEdgeX, yTop);
+                    secPath.CloseFigure();
+
+                    Color secDarkBase = Color.FromArgb(160, 160, 160);
+                    Color secLightBase = Color.FromArgb(220, 220, 220);
+
+                    const float secTintStrength = 0.10f;
+
+                    Color secDarkTinted = TintColor(secDarkBase, MirrorOutlineColor, secTintStrength);
+                    Color secLightTinted = TintColor(secLightBase, MirrorOutlineColor, secTintStrength);
+
+                    RectangleF secBounds = secPath.GetBounds();
+
+                    using (LinearGradientBrush secBrush = new LinearGradientBrush(
+                        new PointF(secBounds.Left, secBounds.Top),
+                        new PointF(secBounds.Right + 10f, secBounds.Top),
+                        secLightTinted,
+                        secDarkTinted))
+                    {
+                        graphics.FillPath(secBrush, secPath);
+                    }
+                }
+
+                int axisStartX = mirrorBounds.Left + 2;
+                int axisEndX = Math.Min(bounds.Right, axisStartX + OpticalAxisLength);
+
+                using (Pen axisPen = new Pen(MirrorOutlineColor, 1.5f))
+                {
+                    axisPen.DashStyle = DashStyle.Dot;
+                    graphics.DrawLine(axisPen, axisStartX, axisY, axisEndX, axisY);
                 }
             }
-
-            // Secondary mirror: silvered spot on the corrector centre.
-            using (GraphicsPath secondaryPath = new GraphicsPath())
+            finally
             {
-                secondaryPath.AddEllipse(secondaryRect);
-
-                // Slightly metallic gradient, lightly tinted toward MirrorOutlineColor so it matches your theme.
-                Color darkBase = Color.FromArgb(140, 140, 140);
-                Color lightBase = Color.FromArgb(210, 210, 210);
-
-                const float tintStrength = 0.10f;
-                Color darkTinted = TintColor(darkBase, MirrorOutlineColor, tintStrength);
-                Color lightTinted = TintColor(lightBase, MirrorOutlineColor, tintStrength);
-
-                using (LinearGradientBrush secBrush = new LinearGradientBrush(
-                    new Point(secondaryRect.Left, secondaryRect.Top),
-                    new Point(secondaryRect.Right, secondaryRect.Bottom),
-                    lightTinted,
-                    darkTinted))
-                {
-                    graphics.FillPath(secBrush, secondaryPath);
-                }
-
-                using (Pen secOutline = new Pen(Color.FromArgb(200, 200, 200), 1.2f))
-                {
-                    graphics.DrawPath(secOutline, secondaryPath);
-                }
-            }
-
-            // Optical axis (same style as your SCT function)
-            int axisStartX = mirrorBounds.Left + 2;
-            int axisEndX = Math.Min(bounds.Right, axisStartX + OpticalAxisLength);
-
-            using (Pen axisPen = new Pen(MirrorOutlineColor, 1.5f))
-            {
-                axisPen.DashStyle = DashStyle.Dot;
-                graphics.DrawLine(axisPen, axisStartX, axisY, axisEndX, axisY);
+                graphics.Restore(state);
             }
         }
-        finally
-        {
-            graphics.Restore(state);
-        }
-    }
 
-    private void DrawSctPrimaryMirror(Graphics graphics, Rectangle bounds)
+        private void DrawSctPrimaryMirror(Graphics graphics, Rectangle bounds)
         {
             if (bounds.Width <= 0 || bounds.Height <= 0)
                 return;
