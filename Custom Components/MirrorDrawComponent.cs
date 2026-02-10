@@ -17,7 +17,7 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public class MirrorDrawingComponent : Control
     {
-        private int cornerRadius = 3;
+        private int cornerRadius = 1;
         private int opticalAxisLength = 50;
         private Color mirrorOutlineColor = Color.DimGray;
         private MirrorType mirrorType = MirrorType.SctPrimary;
@@ -121,7 +121,7 @@ namespace Bahtinov_Collimator.Custom_Components
             int plateLeft = leftX;
             int plateRight = Math.Min(rightX, plateLeft + plateWidth);
 
-            int bulge = Math.Max(2, Math.Min(6, plateWidth / 2));
+            int bulge = Math.Max(2, Math.Min(8, plateWidth * 2));
             int frontX = plateLeft;
             int backX = plateRight;
             int frontBulgeX = frontX + bulge;
@@ -246,7 +246,7 @@ namespace Bahtinov_Collimator.Custom_Components
                     PointF cTop = CurvePoint(tTop);
                     PointF cBottom = CurvePoint(tBottom);
 
-                    float leftEdgeX = secondaryStripe.Left;
+                    float leftEdgeX = secondaryStripe.Left + 3;
 
                     secPath.StartFigure();
                     secPath.AddLine(leftEdgeX, yTop, leftEdgeX, yBottom);
@@ -317,6 +317,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
             int baffleSquareSize = Math.Max(6, Math.Min(16, mirrorBounds.Height / 6));
 
+            // Original square opening at the back (used for wall placement)
             Rectangle baffleCutout = new Rectangle(
                 backX,
                 axisY - (baffleSquareSize / 2),
@@ -325,6 +326,13 @@ namespace Bahtinov_Collimator.Custom_Components
 
             if (baffleCutout.Top < topY) baffleCutout.Y = topY;
             if (baffleCutout.Bottom > bottomY) baffleCutout.Y = bottomY - baffleCutout.Height;
+
+            // Through-cut to the reflective surface
+            Rectangle baffleCutoutThrough = new Rectangle(
+                backX,
+                baffleCutout.Top,
+                Math.Max(1, concaveDepthX - backX - 9),
+                baffleCutout.Height);
 
             using (GraphicsPath outlinePath = new GraphicsPath())
             {
@@ -365,30 +373,98 @@ namespace Bahtinov_Collimator.Custom_Components
 
                 outlinePath.CloseFigure();
 
+                // 1) Body = glass
                 using (GraphicsPath fillPath = (GraphicsPath)outlinePath.Clone())
                 {
                     fillPath.FillMode = FillMode.Alternate;
-                    fillPath.AddRectangle(baffleCutout);
+                    fillPath.AddRectangle(baffleCutoutThrough);
 
-                    Color darkBase = Color.FromArgb(120, 120, 120);
-                    Color lightBase = Color.FromArgb(186, 186, 186);
+                    Color glassDarkBase = Color.FromArgb(85, 190, 190, 190);
+                    Color glassLightBase = Color.FromArgb(55, 235, 235, 235);
 
-                    const float tintStrength = 0.15f;
+                    const float tintStrength = 0.45f;
 
-                    Color darkTinted = TintColor(darkBase, MirrorOutlineColor, tintStrength);
-                    Color lightTinted = TintColor(lightBase, MirrorOutlineColor, tintStrength);
+                    Color glassDarkTinted = TintColor(glassDarkBase, MirrorOutlineColor, tintStrength);
+                    Color glassLightTinted = TintColor(glassLightBase, MirrorOutlineColor, tintStrength);
 
-                    using (LinearGradientBrush mirrorBrush = new LinearGradientBrush(
+                    using (LinearGradientBrush glassBrush = new LinearGradientBrush(
                         new Point(backX, topY),
                         new Point(concaveDepthX, topY),
-                        darkTinted,
-                        lightTinted))
+                        glassDarkTinted,
+                        glassLightTinted))
                     {
-                        graphics.FillPath(mirrorBrush, fillPath);
+                        graphics.FillPath(glassBrush, fillPath);
+                    }
+                }
+
+                // 2) Right surface = silver coating
+                using (GraphicsPath concaveFacePath = new GraphicsPath())
+                {
+                    if (radius > 0)
+                    {
+                        int d = radius * 2;
+
+                        concaveFacePath.AddBezier(
+                            concaveDepthX,
+                            topY + radius,
+                            frontEdgeX,
+                            topY + radius + 18,
+                            frontEdgeX,
+                            bottomY - radius - 18,
+                            concaveDepthX,
+                            bottomY - radius);
+                    }
+                    else
+                    {
+                        concaveFacePath.AddBezier(
+                            concaveDepthX, topY,
+                            frontEdgeX, topY + 18,
+                            frontEdgeX, bottomY - 18,
+                            concaveDepthX, bottomY);
+                    }
+
+                    float coatingThickness = 2f;
+
+                    Color metalDarkBase = Color.FromArgb(150, 150, 150);
+                    Color metalLightBase = Color.FromArgb(230, 230, 230);
+                    const float metalTintStrength = 0.10f;
+
+                    Color metalDarkTinted = TintColor(metalDarkBase, MirrorOutlineColor, metalTintStrength);
+                    Color metalLightTinted = TintColor(metalLightBase, MirrorOutlineColor, metalTintStrength);
+
+                    using (LinearGradientBrush metalBrush = new LinearGradientBrush(
+                        new Point(concaveDepthX - 10, topY),
+                        new Point(concaveDepthX + 10, topY),
+                        metalDarkTinted,
+                        metalLightTinted))
+                    using (Pen coatingPen = new Pen(metalBrush, coatingThickness))
+                    {
+                        coatingPen.LineJoin = LineJoin.Round;
+                        coatingPen.StartCap = LineCap.Round;
+                        coatingPen.EndCap = LineCap.Round;
+                        coatingPen.Alignment = PenAlignment.Inset;
+
+                        GraphicsState clipState = graphics.Save();
+                        try
+                        {
+                            using (Region r = new Region(bounds))
+                            {
+                                baffleCutoutThrough.Inflate(2, 2);
+                                r.Exclude(baffleCutoutThrough);
+                                graphics.SetClip(r, CombineMode.Replace);
+                            }
+
+                            graphics.DrawPath(coatingPen, concaveFacePath);
+                        }
+                        finally
+                        {
+                            graphics.Restore(clipState);
+                        }
                     }
                 }
             }
 
+            // Baffle tube walls
             int baffleStartX = backX;
             int baffleEndX = Math.Min(bounds.Right, baffleStartX + baffleWallLength);
 
@@ -398,6 +474,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 graphics.DrawLine(bafflePen, baffleStartX, baffleCutout.Bottom, baffleEndX, baffleCutout.Bottom);
             }
 
+            // Optical axis
             int axisStartX = mirrorBounds.Left + 2;
             int axisEndX = Math.Min(bounds.Right, axisStartX + OpticalAxisLength);
 

@@ -46,7 +46,7 @@ namespace Bahtinov_Collimator
             // mirrorDrawingComponent1
             // 
             this.mirrorDrawingComponent1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.mirrorDrawingComponent1.CornerRadius = 3;
+            this.mirrorDrawingComponent1.CornerRadius = 1;
             this.mirrorDrawingComponent1.Location = new System.Drawing.Point(12, 24);
             this.mirrorDrawingComponent1.MirrorOutlineColor = System.Drawing.Color.DimGray;
             this.mirrorDrawingComponent1.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
