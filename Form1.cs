@@ -1097,6 +1097,10 @@ namespace Bahtinov_Collimator
             {
                 bahtinovProcessing.LoadSettings();
                 voiceControl.LoadSettings();
+
+                // stop any running capture so that new settings will take effect, then restart if we were previously capturing
+                if (screenCaptureRunningFlag == true)
+                    StartButton_Click(this, EventArgs.Empty);
             }
         }
 
