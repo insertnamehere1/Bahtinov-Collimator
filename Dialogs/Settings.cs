@@ -149,8 +149,8 @@ namespace Bahtinov_Collimator
             VoiceCheckBox.Checked = Properties.Settings.Default.VoiceEnabled;
             errorSignCheckBox.Checked = Properties.Settings.Default.SignChange;
             historyMakersTextBox.Text = Properties.Settings.Default.historyCount.ToString();
-
-            SCTRadioButton.Checked = true;
+            SCTRadioButton.Checked = Properties.Settings.Default.SCTSelected;
+            MakCassRadioButton.Checked = Properties.Settings.Default.MCTSelected;
         }
 
         private void ApplyLocalization()
@@ -187,6 +187,8 @@ namespace Bahtinov_Collimator
                 Properties.Settings.Default.VoiceEnabled = VoiceCheckBox.Checked;
                 Properties.Settings.Default.SignChange = errorSignCheckBox.Checked;
                 Properties.Settings.Default.historyCount = int.Parse(historyMakersTextBox.Text);
+                Properties.Settings.Default.SCTSelected = SCTRadioButton.Checked;
+                Properties.Settings.Default.MCTSelected = MakCassRadioButton.Checked;
 
                 // Save settings
                 Properties.Settings.Default.Save();

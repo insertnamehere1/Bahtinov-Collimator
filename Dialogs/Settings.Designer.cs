@@ -161,7 +161,6 @@ namespace Bahtinov_Collimator
             // MakCassRadioButton
             // 
             this.MakCassRadioButton.AutoSize = true;
-            this.MakCassRadioButton.Enabled = false;
             this.MakCassRadioButton.Location = new System.Drawing.Point(39, 65);
             this.MakCassRadioButton.Name = "MakCassRadioButton";
             this.MakCassRadioButton.Size = new System.Drawing.Size(199, 20);

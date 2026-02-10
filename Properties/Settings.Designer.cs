@@ -94,5 +94,41 @@ namespace Bahtinov_Collimator.Properties {
                 this["CalibrationCompleted"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SCTSelected {
+            get {
+                return ((bool)(this["SCTSelected"]));
+            }
+            set {
+                this["SCTSelected"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MCTSelected {
+            get {
+                return ((bool)(this["MCTSelected"]));
+            }
+            set {
+                this["MCTSelected"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool NewtSelected {
+            get {
+                return ((bool)(this["NewtSelected"]));
+            }
+            set {
+                this["NewtSelected"] = value;
+            }
+        }
     }
 }
