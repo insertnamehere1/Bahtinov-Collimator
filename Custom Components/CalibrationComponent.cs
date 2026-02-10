@@ -146,6 +146,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         private void UnsubscribeToEvents()
         {
+            _aggregationTimer.Tick -= AggregationTimer_Tick;
             BahtinovProcessing.FocusDataEvent -= FocusDataEvent;
         }
 
@@ -497,6 +498,7 @@ namespace Bahtinov_Collimator.Custom_Components
         {
             if (_parent != null)
             {
+                _aggregationTimer.Stop();
                 UnsubscribeToEvents();
                 _parent.StopCalibration();
             }
