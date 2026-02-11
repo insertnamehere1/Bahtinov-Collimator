@@ -119,7 +119,7 @@
   "UpdateNetworkErrorMessage": "Unable to connect to the update server.",
   "UpdateNetworkErrorTitle": "Network Problem",
 
-  "SettingsKeepOnTopLabel": "Make SkyCal is always on the top of other application",
+  "SettingsKeepOnTopLabel": "Make SkyCal appear always on top of any other applications",
   "SettingsKeepOnTopDescription": "Keep SkyCal on top",
   "SettingsGroupWindowTitle": "Keep On Top"
 }
