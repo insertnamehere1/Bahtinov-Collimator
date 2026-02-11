@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using System.Security.Permissions;
 
 namespace Bahtinov_Collimator
 {
@@ -130,6 +131,10 @@ namespace Bahtinov_Collimator
         [DataMember] public string UpdateNetworkErrorMessage { get; set; }
         [DataMember] public string UpdateNetworkErrorTitle { get; set; }
         [DataMember] public string AnalysisModeGroupBox { get; set; }
+
+        [DataMember] public string SettingsKeepOnTopLabel { get; set; }
+        [DataMember] public string SettingsKeepOnTopDescription { get; set; }
+        [DataMember] public string SettingsGroupWindowTitle { get; set; }
     }
 
     /// <summary>

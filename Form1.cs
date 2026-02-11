@@ -258,6 +258,11 @@ namespace Bahtinov_Collimator
 
             this.Controls.Add(this.imageDisplayComponent1);
             imageDisplayComponent1.ClearDisplay();
+
+            if (Properties.Settings.Default.KeepOnTop == true)
+                this.TopMost = true;
+            else
+                this.TopMost = false;
         }
 
         /// <summary>
@@ -588,7 +593,9 @@ namespace Bahtinov_Collimator
                     RemoveAndDisposeControls(groupBoxRed, groupBoxGreen, groupBoxBlue);
                     InitializeRedFocusBox();
                     RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
-                    RoundedStartButton.Image = Properties.Resources.SelectionCircle;
+                    RoundedStartButton.Image = Properties.Resources.SelectionCircle;                
+                    imageDisplayComponent1.Location = new Point(MIN_IMAGE_DISPLAY_X_OFFSET, imageDisplayComponent1.Location.Y);
+
                     DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
                 }));
             }
@@ -599,6 +606,8 @@ namespace Bahtinov_Collimator
                 InitializeRedFocusBox();
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
+                imageDisplayComponent1.Location = new Point(MIN_IMAGE_DISPLAY_X_OFFSET, imageDisplayComponent1.Location.Y);
+
                 DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
             }
         }
@@ -632,19 +641,8 @@ namespace Bahtinov_Collimator
         {
             AboutBox aboutBox = new AboutBox();
             PositionDialogInsideMainWindow(aboutBox);
-            aboutBox.ShowDialog();
-        }
-
-        /// <summary>
-        /// Handles the click event for the Donate menu item, showing the Donate dialog.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
-        private void DonateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Donate donate = new Donate();
-            PositionDialogInsideMainWindow(donate);
-            donate.ShowDialog();
+            aboutBox.TopMost = this.TopMost;
+            aboutBox.ShowDialog(this);
         }
 
         /// <summary>
@@ -656,7 +654,8 @@ namespace Bahtinov_Collimator
         {
             Donate donate = new Donate();
             PositionDialogInsideMainWindow(donate);
-            donate.ShowDialog();
+            donate.TopMost = this.TopMost;
+            donate.ShowDialog(this);
         }
 
         /// <summary>
@@ -870,10 +869,6 @@ namespace Bahtinov_Collimator
                 {
                     groupBoxBlue.Size = new Size(MAX_FOCUS_CHAN_SIZE, groupBoxBlue.Size.Height);
                 }
-                if(analysisGroupBox.Size.Width < MAX_FOCUS_CHAN_SIZE)
-                {
-                    analysisGroupBox.Size = new Size(MAX_FOCUS_CHAN_SIZE, analysisGroupBox.Height);
-                }
 
                 imageDisplayComponent1.Location = new Point(MAX_IMAGE_DISPLAY_X_OFFSET, imageDisplayComponent1.Location.Y);
 
@@ -900,10 +895,6 @@ namespace Bahtinov_Collimator
                 if (groupBoxBlue != null && groupBoxBlue.Size.Width > MIN_FOCUS_CHAN_SIZE)
                 {
                     groupBoxBlue.Size = new Size(MIN_FOCUS_CHAN_SIZE, groupBoxBlue.Size.Height);
-                }
-                if (analysisGroupBox.Size.Width > MIN_FOCUS_CHAN_SIZE)
-                {
-                    analysisGroupBox.Size = new Size(MIN_FOCUS_CHAN_SIZE, analysisGroupBox.Height);
                 }
 
                 imageDisplayComponent1.Location = new Point(MIN_IMAGE_DISPLAY_X_OFFSET, imageDisplayComponent1.Location.Y);
@@ -1069,8 +1060,10 @@ namespace Bahtinov_Collimator
                     groupToScrewLabel: screwMap);
 
                 using (var dlg = new NextStepDialog(guidance, this.Icon))
+                {
+                    dlg.TopMost = this.TopMost;
                     dlg.ShowDialog(this);
-
+                }
                 // enable "what should i do next" menu item if we have been calibrated
                 menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted;
             }
@@ -1090,17 +1083,24 @@ namespace Bahtinov_Collimator
             // Settings Dialog
             Settings settingsDialog = new Settings();
             PositionDialogInsideMainWindow(settingsDialog);
-
-            DialogResult result = settingsDialog.ShowDialog();
+            settingsDialog.TopMost = this.TopMost;
+            DialogResult result = settingsDialog.ShowDialog(this);
 
             if (result == DialogResult.OK)
             {
                 bahtinovProcessing.LoadSettings();
                 voiceControl.LoadSettings();
 
+                if(Properties.Settings.Default.KeepOnTop == true)
+                    this.TopMost = true;
+                else
+                    this.TopMost = false;   
+
                 // stop any running capture so that new settings will take effect, then restart if we were previously capturing
                 if (screenCaptureRunningFlag == true)
                     StartButton_Click(this, EventArgs.Empty);
+
+                
             }
         }
 
@@ -1163,15 +1163,16 @@ namespace Bahtinov_Collimator
         private void ShowStartupCalibrationPromptIfNeeded(IWin32Window owner)
         {
 
-            Properties.Settings.Default.ShowStartupCalibrationPrompt = true;
-            Properties.Settings.Default.CalibrationCompleted = false;
-            Properties.Settings.Default.Save();
+//            Properties.Settings.Default.ShowStartupCalibrationPrompt = true;
+//            Properties.Settings.Default.CalibrationCompleted = false;
+//            Properties.Settings.Default.Save();
 
             if (!Properties.Settings.Default.ShowStartupCalibrationPrompt)
                 return;
 
             using (var dlg = new SkyCal.StartupDialog())
             {
+                dlg.TopMost = this.TopMost;
                 DialogResult result = dlg.ShowDialog(owner);
 
                 if (dlg.DontShowAgain)

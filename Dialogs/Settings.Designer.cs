@@ -31,6 +31,11 @@ namespace Bahtinov_Collimator
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
+            this.CancelSettingsButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
+            this.okButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
+            this.keepOnTopGroupBox = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
+            this.onTopLabel = new System.Windows.Forms.Label();
+            this.onTopCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox4 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.historyMakersTextBox = new System.Windows.Forms.TextBox();
@@ -45,13 +50,93 @@ namespace Bahtinov_Collimator
             this.groupBox1 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.VoiceCheckBox = new System.Windows.Forms.CheckBox();
-            this.CancelSettingsButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
-            this.okButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
+            this.keepOnTopGroupBox.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.ErrorSignGroupBox.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // CancelSettingsButton
+            // 
+            this.CancelSettingsButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.CancelSettingsButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.CancelSettingsButton.BevelThickness = 2;
+            this.CancelSettingsButton.CornerRadius = 12;
+            this.CancelSettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.CancelSettingsButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.CancelSettingsButton.ImageHeight = 32;
+            this.CancelSettingsButton.ImageOffsetX = 60;
+            this.CancelSettingsButton.ImageOffsetY = 0;
+            this.CancelSettingsButton.ImageWidth = 32;
+            this.CancelSettingsButton.Location = new System.Drawing.Point(488, 399);
+            this.CancelSettingsButton.Margin = new System.Windows.Forms.Padding(4);
+            this.CancelSettingsButton.Name = "CancelSettingsButton";
+            this.CancelSettingsButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.CancelSettingsButton.Size = new System.Drawing.Size(100, 28);
+            this.CancelSettingsButton.TabIndex = 14;
+            this.CancelSettingsButton.Text = "Cancel";
+            this.CancelSettingsButton.TextOffsetX = 10;
+            this.CancelSettingsButton.UseVisualStyleBackColor = true;
+            this.CancelSettingsButton.Click += new System.EventHandler(this.CancelButton_Click);
+            // 
+            // okButton
+            // 
+            this.okButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.okButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.okButton.BevelThickness = 2;
+            this.okButton.CornerRadius = 12;
+            this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.okButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.okButton.ImageHeight = 32;
+            this.okButton.ImageOffsetX = 60;
+            this.okButton.ImageOffsetY = 0;
+            this.okButton.ImageWidth = 32;
+            this.okButton.Location = new System.Drawing.Point(380, 399);
+            this.okButton.Margin = new System.Windows.Forms.Padding(4);
+            this.okButton.Name = "okButton";
+            this.okButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.okButton.Size = new System.Drawing.Size(100, 28);
+            this.okButton.TabIndex = 13;
+            this.okButton.Text = "Save";
+            this.okButton.TextOffsetX = 10;
+            this.okButton.UseVisualStyleBackColor = true;
+            this.okButton.Click += new System.EventHandler(this.OkButton_Click);
+            // 
+            // keepOnTopGroupBox
+            // 
+            this.keepOnTopGroupBox.BorderColor = System.Drawing.Color.Gray;
+            this.keepOnTopGroupBox.BorderThickness = 2;
+            this.keepOnTopGroupBox.Controls.Add(this.onTopLabel);
+            this.keepOnTopGroupBox.Controls.Add(this.onTopCheckBox);
+            this.keepOnTopGroupBox.CornerRadius = 12;
+            this.keepOnTopGroupBox.Location = new System.Drawing.Point(13, 304);
+            this.keepOnTopGroupBox.Margin = new System.Windows.Forms.Padding(4);
+            this.keepOnTopGroupBox.Name = "keepOnTopGroupBox";
+            this.keepOnTopGroupBox.Padding = new System.Windows.Forms.Padding(4);
+            this.keepOnTopGroupBox.Size = new System.Drawing.Size(300, 126);
+            this.keepOnTopGroupBox.TabIndex = 39;
+            this.keepOnTopGroupBox.TabStop = false;
+            this.keepOnTopGroupBox.Text = "Keep On Top";
+            // 
+            // onTopLabel
+            // 
+            this.onTopLabel.Location = new System.Drawing.Point(22, 55);
+            this.onTopLabel.Name = "onTopLabel";
+            this.onTopLabel.Size = new System.Drawing.Size(248, 39);
+            this.onTopLabel.TabIndex = 34;
+            this.onTopLabel.Text = "Make sure SkyCal is always on the top of other application";
+            // 
+            // onTopCheckBox
+            // 
+            this.onTopCheckBox.AutoSize = true;
+            this.onTopCheckBox.Location = new System.Drawing.Point(32, 27);
+            this.onTopCheckBox.Margin = new System.Windows.Forms.Padding(4);
+            this.onTopCheckBox.Name = "onTopCheckBox";
+            this.onTopCheckBox.Size = new System.Drawing.Size(155, 20);
+            this.onTopCheckBox.TabIndex = 33;
+            this.onTopCheckBox.Text = "Keep SkyCal On Top";
+            this.onTopCheckBox.UseVisualStyleBackColor = true;
             // 
             // groupBox4
             // 
@@ -216,57 +301,12 @@ namespace Bahtinov_Collimator
             this.VoiceCheckBox.Text = "Voice Guidance";
             this.VoiceCheckBox.UseVisualStyleBackColor = true;
             // 
-            // CancelSettingsButton
-            // 
-            this.CancelSettingsButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.CancelSettingsButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.CancelSettingsButton.BevelThickness = 2;
-            this.CancelSettingsButton.CornerRadius = 12;
-            this.CancelSettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.CancelSettingsButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.CancelSettingsButton.ImageHeight = 32;
-            this.CancelSettingsButton.ImageOffsetX = 60;
-            this.CancelSettingsButton.ImageOffsetY = 0;
-            this.CancelSettingsButton.ImageWidth = 32;
-            this.CancelSettingsButton.Location = new System.Drawing.Point(517, 314);
-            this.CancelSettingsButton.Margin = new System.Windows.Forms.Padding(4);
-            this.CancelSettingsButton.Name = "CancelSettingsButton";
-            this.CancelSettingsButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.CancelSettingsButton.Size = new System.Drawing.Size(100, 28);
-            this.CancelSettingsButton.TabIndex = 14;
-            this.CancelSettingsButton.Text = "Cancel";
-            this.CancelSettingsButton.TextOffsetX = 10;
-            this.CancelSettingsButton.UseVisualStyleBackColor = true;
-            this.CancelSettingsButton.Click += new System.EventHandler(this.CancelButton_Click);
-            // 
-            // okButton
-            // 
-            this.okButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.okButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.okButton.BevelThickness = 2;
-            this.okButton.CornerRadius = 12;
-            this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.okButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.okButton.ImageHeight = 32;
-            this.okButton.ImageOffsetX = 60;
-            this.okButton.ImageOffsetY = 0;
-            this.okButton.ImageWidth = 32;
-            this.okButton.Location = new System.Drawing.Point(409, 314);
-            this.okButton.Margin = new System.Windows.Forms.Padding(4);
-            this.okButton.Name = "okButton";
-            this.okButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.okButton.Size = new System.Drawing.Size(100, 28);
-            this.okButton.TabIndex = 13;
-            this.okButton.Text = "Save";
-            this.okButton.TextOffsetX = 10;
-            this.okButton.UseVisualStyleBackColor = true;
-            this.okButton.Click += new System.EventHandler(this.OkButton_Click);
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(644, 357);
+            this.ClientSize = new System.Drawing.Size(644, 442);
+            this.Controls.Add(this.keepOnTopGroupBox);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.ErrorSignGroupBox);
             this.Controls.Add(this.groupBox3);
@@ -281,6 +321,8 @@ namespace Bahtinov_Collimator
             this.Name = "Settings";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Settings";
+            this.keepOnTopGroupBox.ResumeLayout(false);
+            this.keepOnTopGroupBox.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.ErrorSignGroupBox.ResumeLayout(false);
@@ -310,5 +352,8 @@ namespace Bahtinov_Collimator
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private RoundedGroupBox keepOnTopGroupBox;
+        private System.Windows.Forms.Label onTopLabel;
+        private System.Windows.Forms.CheckBox onTopCheckBox;
     }
 }

@@ -130,5 +130,17 @@ namespace Bahtinov_Collimator.Properties {
                 this["NewtSelected"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool KeepOnTop {
+            get {
+                return ((bool)(this["KeepOnTop"]));
+            }
+            set {
+                this["KeepOnTop"] = value;
+            }
+        }
     }
 }

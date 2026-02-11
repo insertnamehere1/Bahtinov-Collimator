@@ -61,6 +61,7 @@ namespace Bahtinov_Collimator
             SCTRadioButton.Font = newFont;
             MakCassRadioButton.Font = newFont;
             errorSignCheckBox.Font = newFont;
+            onTopCheckBox.Font = newFont;    
         }
 
         /// <summary>
@@ -103,6 +104,7 @@ namespace Bahtinov_Collimator
             groupBox3.ForeColor = UITheme.MenuDarkForeground;
             groupBox4.ForeColor = UITheme.MenuDarkForeground;
             ErrorSignGroupBox.ForeColor = UITheme.MenuDarkForeground;
+            keepOnTopGroupBox.ForeColor = UITheme.MenuDarkForeground;
 
             // text boxes
             ChangeTextBoxColors(groupBox4);
@@ -151,6 +153,7 @@ namespace Bahtinov_Collimator
             historyMakersTextBox.Text = Properties.Settings.Default.historyCount.ToString();
             SCTRadioButton.Checked = Properties.Settings.Default.SCTSelected;
             MakCassRadioButton.Checked = Properties.Settings.Default.MCTSelected;
+            onTopCheckBox.Checked = Properties.Settings.Default.KeepOnTop;
         }
 
         private void ApplyLocalization()
@@ -172,6 +175,9 @@ namespace Bahtinov_Collimator
             label3.Text = textPack.SettingsHistoryMarkersDescription;
             okButton.Text = textPack.SettingsSaveButton;
             CancelSettingsButton.Text = textPack.SettingsCancelButton;
+            onTopLabel.Text = textPack.SettingsKeepOnTopLabel;
+            onTopCheckBox.Text = textPack.SettingsKeepOnTopDescription;
+            keepOnTopGroupBox.Text = textPack.SettingsGroupWindowTitle;
         }
 
         /// <summary>
@@ -189,6 +195,7 @@ namespace Bahtinov_Collimator
                 Properties.Settings.Default.historyCount = int.Parse(historyMakersTextBox.Text);
                 Properties.Settings.Default.SCTSelected = SCTRadioButton.Checked;
                 Properties.Settings.Default.MCTSelected = MakCassRadioButton.Checked;
+                Properties.Settings.Default.KeepOnTop = onTopCheckBox.Checked;
 
                 // Save settings
                 Properties.Settings.Default.Save();

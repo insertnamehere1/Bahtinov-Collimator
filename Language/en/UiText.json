@@ -117,5 +117,9 @@
   "UpdateNoneMessage": "No new updates are available.",
   "UpdateNoneTitle": "No Updates",
   "UpdateNetworkErrorMessage": "Unable to connect to the update server.",
-  "UpdateNetworkErrorTitle": "Network Problem"
+  "UpdateNetworkErrorTitle": "Network Problem",
+
+  "SettingsKeepOnTopLabel": "Make SkyCal is always on the top of other application",
+  "SettingsKeepOnTopDescription": "Keep SkyCal on top",
+  "SettingsGroupWindowTitle": "Keep On Top"
 }
