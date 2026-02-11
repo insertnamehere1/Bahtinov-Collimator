@@ -194,8 +194,8 @@ namespace Bahtinov_Collimator.Custom_Components
             // Base design values at 96 DPI
             float designLeftPad = 10f;     // space for minimum label
             float designRightPad = 10f;    // space for maximum label
-            float designZeroTickUp = 20f;
-            float designZeroTickDown = 20f;
+            float designZeroTickUp = 15f;
+            float designZeroTickDown = 15f;
             float designHistoryRadius = 8f;
             float designMarkerRadius = 7f;
             float designBarThickness = 2f;
