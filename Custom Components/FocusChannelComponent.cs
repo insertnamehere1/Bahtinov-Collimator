@@ -135,6 +135,8 @@ namespace Bahtinov_Collimator
             groupBox1.ForeColor = UITheme.GetGroupBoxTextColor(groupID);
             mirrorDrawingComponent1.BackColor = groupBox1.BackColor;
             mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
+            offsetBarControl1.Size = new Size(240, 64);
+            offsetBarControl1.Location = new Point(groupBox1.ClientSize.Width - offsetBarControl1.Width - 8, (groupBox1.ClientSize.Height - offsetBarControl1.Height) / 2 - 6);
         }
 
         #endregion
