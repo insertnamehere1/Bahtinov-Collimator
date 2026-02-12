@@ -872,6 +872,11 @@ namespace Bahtinov_Collimator
 
                 imageDisplayComponent1.Location = new Point(MAX_IMAGE_DISPLAY_X_OFFSET, imageDisplayComponent1.Location.Y);
 
+                if (calibrationComponent != null)
+                {
+                    this.AutoSizeMode = AutoSizeMode.GrowOnly;
+                    this.Width += MAX_FOCUS_CHAN_SIZE - MIN_FOCUS_CHAN_SIZE;
+                }
             }
         }
 
@@ -1099,8 +1104,6 @@ namespace Bahtinov_Collimator
                 // stop any running capture so that new settings will take effect, then restart if we were previously capturing
                 if (screenCaptureRunningFlag == true)
                     StartButton_Click(this, EventArgs.Empty);
-
-                
             }
         }
 
