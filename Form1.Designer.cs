@@ -182,13 +182,13 @@
             this.RoundedStartButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.RoundedStartButton.Image = global::Bahtinov_Collimator.Properties.Resources.SelectionCircle;
             this.RoundedStartButton.ImageHeight = 32;
-            this.RoundedStartButton.ImageOffsetX = -70;
+            this.RoundedStartButton.ImageOffsetX = -85;
             this.RoundedStartButton.ImageOffsetY = 0;
             this.RoundedStartButton.ImageWidth = 32;
-            this.RoundedStartButton.Location = new System.Drawing.Point(29, 107);
+            this.RoundedStartButton.Location = new System.Drawing.Point(12, 107);
             this.RoundedStartButton.Name = "RoundedStartButton";
             this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.RoundedStartButton.Size = new System.Drawing.Size(193, 50);
+            this.RoundedStartButton.Size = new System.Drawing.Size(226, 50);
             this.RoundedStartButton.TabIndex = 25;
             this.RoundedStartButton.Text = "Select Star";
             this.RoundedStartButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
