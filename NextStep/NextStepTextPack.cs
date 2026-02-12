@@ -53,7 +53,6 @@ namespace Bahtinov_Collimator
         [DataMember] public string CollimationPositiveInstructionFormat { get; set; } // {0}=channel name, {1}=value, {2}=screw label
         [DataMember] public string CollimationNegativeInstructionFormat { get; set; } // {0}=channel name, {1}=value, {2}=screw label
         [DataMember] public string CollimationAdjustTogetherBullet { get; set; }
-        [DataMember] public string CollimationRepeatCycle { get; set; }
         [DataMember] public string CollimationFooterHint { get; set; }
 
         // Focus direction words
