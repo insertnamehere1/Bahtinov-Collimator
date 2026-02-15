@@ -78,6 +78,7 @@ namespace Bahtinov_Collimator
         [DataMember] public string CalibrationStep1Title { get; set; }
         [DataMember] public string CalibrationStep1Bullet1 { get; set; }
         [DataMember] public string CalibrationStep1Bullet2 { get; set; }
+        [DataMember] public string CalibrationStep1Warning { get; set; }
         [DataMember] public string CalibrationWaitingForImage { get; set; }
         [DataMember] public string CalibrationAimHeader { get; set; }
         [DataMember] public string CalibrationStep2Title { get; set; }

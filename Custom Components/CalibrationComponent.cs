@@ -429,7 +429,11 @@ namespace Bahtinov_Collimator.Custom_Components
                 rtb.AppendText(textPack.CalibrationStep1Bullet2 + "\r\n");
 
                 rtb.SelectionBullet = false;
+                rtb.SelectionIndent = 0;
 
+                rtb.AppendText("\n" + textPack.CalibrationStep1Warning + "\r\n");
+
+                rtb.SelectionIndent = 20;
                 rtb.AppendText("\n" + textPack.CalibrationWaitingForImage + "\r\n");
                 BoldLastLine(rtb);
 
