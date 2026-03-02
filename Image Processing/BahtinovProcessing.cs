@@ -53,9 +53,7 @@ namespace Bahtinov_Collimator
         // retain last error value
         private float lastFocusErrorValue = 0.0f;
 
-        // line validator
-        private readonly BahtinovIntersectionValidator lineValidator = new BahtinovIntersectionValidator(6, 2);
-
+       
         #endregion
 
         #region Public Fields
@@ -770,16 +768,7 @@ namespace Bahtinov_Collimator
             {
                 bahtinovLines.LineIndex[index] = subpixelLineNumbers[index];
             }
-
-            if (lineValidator.HasMinimumIntersectingLines(bahtinovLines) || bahtinovLines.LineValue.Length == 3)
-            {
-                return bahtinovLines;
-            }
-            else
-            {
-                ImageLostEventProvider.OnImageLost(UiText.Current.BahtinovIntersectionNotDetectedMessage, UiText.Current.BahtinovIntersectionNotDetectedTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
-                return null;
-            }
+            return bahtinovLines;
         }
 
         /// <summary>
