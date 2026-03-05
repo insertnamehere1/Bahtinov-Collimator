@@ -40,7 +40,8 @@ namespace Bahtinov_Collimator
 
         private static string GetOverrideLanguageCode()
         {
-            return Environment.GetEnvironmentVariable(OverrideLanguageEnvironmentVariable)?.Trim();
+            return "en";
+            //return Environment.GetEnvironmentVariable(OverrideLanguageEnvironmentVariable)?.Trim();
         }
 
         private static IEnumerable<string> BuildLanguageCandidates(CultureInfo culture)
