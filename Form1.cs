@@ -459,6 +459,7 @@ namespace Bahtinov_Collimator
                 imageDisplayComponent1.ClearDisplay();
                 bahtinovProcessing.StopImageProcessing();
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
+                MinimizeWindow();
 
                 // Start image capture if star selection is successful
                 if (ImageCapture.SelectStar())
@@ -468,6 +469,7 @@ namespace Bahtinov_Collimator
                     ImageCapture.StartImageCapture();
                 }
 
+                RestoreWindow();
                 screenCaptureRunningFlag = true;
                 RoundedStartButton.Text = UiText.Current.StartButtonStop;
                 RoundedStartButton.Image = Properties.Resources.Stop;
@@ -1199,6 +1201,24 @@ namespace Bahtinov_Collimator
         private void DefocusLabel_Click(object sender, EventArgs e)
         {
             toggleSwitch1.IsOn = true;
+        }
+
+        // Minimize the window
+        public void MinimizeWindow()
+        {
+            if(Properties.Settings.Default.Minimize == true)
+                this.WindowState = FormWindowState.Minimized;
+        }
+
+        // Restore from minimized
+        public void RestoreWindow()
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.WindowState = FormWindowState.Normal;
+                this.BringToFront(); // Optional: bring to front
+                this.Activate();     // Optional: give it focus
+            }
         }
     }
 }

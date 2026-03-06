@@ -62,6 +62,8 @@ namespace Bahtinov_Collimator
             MakCassRadioButton.Font = newFont;
             errorSignCheckBox.Font = newFont;
             onTopCheckBox.Font = newFont;    
+            minimizeCheckBox.Font = newFont;
+            minimizeLabel.Font = newFont;
         }
 
         /// <summary>
@@ -105,6 +107,7 @@ namespace Bahtinov_Collimator
             groupBox4.ForeColor = UITheme.MenuDarkForeground;
             ErrorSignGroupBox.ForeColor = UITheme.MenuDarkForeground;
             keepOnTopGroupBox.ForeColor = UITheme.MenuDarkForeground;
+            minimizeGroupBox.ForeColor = UITheme.MenuDarkForeground;
 
             // text boxes
             ChangeTextBoxColors(groupBox4);
@@ -154,6 +157,7 @@ namespace Bahtinov_Collimator
             SCTRadioButton.Checked = Properties.Settings.Default.SCTSelected;
             MakCassRadioButton.Checked = Properties.Settings.Default.MCTSelected;
             onTopCheckBox.Checked = Properties.Settings.Default.KeepOnTop;
+            minimizeCheckBox.Checked = Properties.Settings.Default.Minimize;
         }
 
         private void ApplyLocalization()
@@ -178,6 +182,10 @@ namespace Bahtinov_Collimator
             onTopLabel.Text = textPack.SettingsKeepOnTopLabel;
             onTopCheckBox.Text = textPack.SettingsKeepOnTopDescription;
             keepOnTopGroupBox.Text = textPack.SettingsGroupWindowTitle;
+
+            minimizeGroupBox.Text = textPack.SettingsGroupMinimizeTitle;
+            minimizeCheckBox.Text = textPack.SettingsMinimizeDescription;
+            minimizeLabel.Text = textPack.SettingsMinimizeLabel;
         }
 
         /// <summary>
@@ -196,6 +204,7 @@ namespace Bahtinov_Collimator
                 Properties.Settings.Default.SCTSelected = SCTRadioButton.Checked;
                 Properties.Settings.Default.MCTSelected = MakCassRadioButton.Checked;
                 Properties.Settings.Default.KeepOnTop = onTopCheckBox.Checked;
+                Properties.Settings.Default.Minimize = minimizeCheckBox.Checked;
 
                 // Save settings
                 Properties.Settings.Default.Save();

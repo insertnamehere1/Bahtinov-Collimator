@@ -135,6 +135,9 @@ namespace Bahtinov_Collimator
         [DataMember] public string SettingsKeepOnTopLabel { get; set; }
         [DataMember] public string SettingsKeepOnTopDescription { get; set; }
         [DataMember] public string SettingsGroupWindowTitle { get; set; }
+        [DataMember] public string SettingsGroupMinimizeTitle { get; set; }
+        [DataMember] public string SettingsMinimizeDescription { get; set; }
+        [DataMember] public string SettingsMinimizeLabel { get; set; }
     }
 
     /// <summary>

@@ -44,6 +44,9 @@
   "SettingsCancelButton": "Cancel",
   "SettingsInvalidInputMessage": "Invalid input, try again",
   "SettingsInvalidInputTitle": "Warning",
+  "SettingsGroupMinimizeTitle": "Minimize",
+  "SettingsMinimizeDescription": "Minimize When Selecting Star",
+  "SettingsMinimizeLabel": "Minimize SkyCal when you are selecting a star image",
 
   "FocusGroupRed": "Red Group",
   "FocusGroupGreen": "Green Group",
