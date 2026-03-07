@@ -82,6 +82,9 @@ namespace Bahtinov_Collimator
         /// </summary>
         private const int MAX_IMAGE_DISPLAY_X_OFFSET = 376;
 
+        /// Sets testing mode for Calibration 
+        private const bool TEST_MODE = false;
+
         #endregion
 
         #region Private Fields
@@ -849,7 +852,6 @@ namespace Bahtinov_Collimator
             }
         }
 
-
         private void IncreaseFocusChannelSize()
         {
             if (InvokeRequired)
@@ -1167,10 +1169,12 @@ namespace Bahtinov_Collimator
         /// </param>
         private void ShowStartupCalibrationPromptIfNeeded(IWin32Window owner)
         {
-
-//            Properties.Settings.Default.ShowStartupCalibrationPrompt = true;
-//            Properties.Settings.Default.CalibrationCompleted = false;
-//            Properties.Settings.Default.Save();
+            if (TEST_MODE)
+            {
+                Properties.Settings.Default.ShowStartupCalibrationPrompt = true;
+                Properties.Settings.Default.CalibrationCompleted = false;
+                Properties.Settings.Default.Save();
+            }
 
             if (!Properties.Settings.Default.ShowStartupCalibrationPrompt)
                 return;

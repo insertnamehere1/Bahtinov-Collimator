@@ -20,10 +20,6 @@ namespace Bahtinov_Collimator
 
         #endregion
 
-        #region Variables
-
-        #endregion
-
         #region Constructor
 
         /// <summary>

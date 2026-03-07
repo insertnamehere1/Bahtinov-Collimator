@@ -132,6 +132,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Occurs when an image is lost and needs to notify subscribers.
         /// </summary>
+        
         public static event ImageLostEventHandler ImageLostEvent;
 
         /// <summary>

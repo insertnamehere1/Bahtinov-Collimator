@@ -40,36 +40,6 @@ namespace Bahtinov_Collimator
         public string FooterHint { get; set; }
         public string DebugLine { get; set; }
 
-        public string ToPlainText()
-        {
-            var sb = new StringBuilder();
-
-            if (!string.IsNullOrWhiteSpace(Header))
-                sb.AppendLine(Header).AppendLine();
-
-            if (!string.IsNullOrWhiteSpace(Summary))
-                sb.AppendLine(Summary).AppendLine();
-
-            foreach (var s in Sections)
-            {
-                if (!string.IsNullOrWhiteSpace(s.Title))
-                    sb.AppendLine(s.Title);
-
-                foreach (var b in s.Lines )
-                    if (b.Bullet == true)
-                        sb.AppendLine("• " + b);
-
-                sb.AppendLine();
-            }
-
-            if (!string.IsNullOrWhiteSpace(FooterHint))
-                sb.AppendLine(FooterHint);
-
-            if (!string.IsNullOrWhiteSpace(DebugLine))
-                sb.AppendLine().AppendLine(DebugLine);
-
-            return sb.ToString();
-        }
     }
 
     public sealed class GuidanceSection

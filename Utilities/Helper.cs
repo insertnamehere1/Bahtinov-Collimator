@@ -127,41 +127,6 @@ namespace Bahtinov_Collimator.Helper
             /// Gets a value indicating whether the line is first or third in some context.
             /// </summary>
             public bool IsFirstOrThird { get; }
-
-            /// <summary>
-            /// Gets or sets the calculated Y coordinate of the start point.
-            /// </summary>
-            public float CalculatedYStart { get; set; }
-
-            /// <summary>
-            /// Initializes a new instance of the Line class with the specified start and end points.
-            /// </summary>
-            /// <param name="startX">The X coordinate of the start point.</param>
-            /// <param name="startY">The Y coordinate of the start point.</param>
-            /// <param name="endX">The X coordinate of the end point.</param>
-            /// <param name="endY">The Y coordinate of the end point.</param>
-            /// <param name="isFirstOrThird">A flag indicating whether the line is first or third.</param>
-            public Line(float startX, float startY, float endX, float endY, bool isFirstOrThird = false)
-            {
-                StartX = startX;
-                StartY = startY;
-                EndX = endX;
-                EndY = endY;
-                IsFirstOrThird = isFirstOrThird;
-
-                // Calculate Slope and Intercept
-                if (EndX != StartX) // Avoid division by zero
-                {
-                    Slope = (EndY - StartY) / (EndX - StartX);
-                    Intercept = StartY - (Slope * StartX);
-                }
-                else
-                {
-                    // Handle vertical lines if needed
-                    Slope = float.PositiveInfinity;
-                    Intercept = float.NaN; // Vertical line does not have a y-intercept
-                }
-            }
         }
 
         #endregion
