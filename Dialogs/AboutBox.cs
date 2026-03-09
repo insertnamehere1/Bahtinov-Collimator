@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
-    partial class AboutBox : Form
+    partial class AboutBox : DpiAwareForm
     {
         #region P/Invoke Declarations
 

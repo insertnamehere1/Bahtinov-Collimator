@@ -37,7 +37,7 @@ using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
-    public partial class Form1 : Form
+    public partial class Form1 : DpiAwareForm
     {
         #region External Function
 
@@ -170,11 +170,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         public Form1()
         {
-            // Get the current DPI of the display
-            using (Graphics g = this.CreateGraphics())
-            {
-                UITheme.DpiValue = g.DpiX; // Horizontal DPI (DpiY can also be used)
-            }
+            this.CornerRadius = 15;
 
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
@@ -254,7 +250,7 @@ namespace Bahtinov_Collimator
         {
             this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent
             {
-                Location = new System.Drawing.Point(276, 45),
+                Location = new System.Drawing.Point(276, 85),
                 Margin = new System.Windows.Forms.Padding(2),
                 Name = "imageDisplayComponent1",
                 Size = new System.Drawing.Size(600, 600),
@@ -284,6 +280,7 @@ namespace Bahtinov_Collimator
             defocusLabel.Font = new Font(this.Font.FontFamily, UITheme.LabelFontSize, this.Font.Style);
             RoundedStartButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
             analysisGroupBox.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
+    //        this.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
         }
 
         /// <summary>
@@ -304,7 +301,7 @@ namespace Bahtinov_Collimator
             groupBoxRed = new FocusChannelComponent(0, isWidened)
             {
                 Size = new Size(255, 144),
-                Location = new Point(8, 34)
+                Location = new Point(8, 74)
             };
             this.Controls.Add(groupBoxRed);
         }
