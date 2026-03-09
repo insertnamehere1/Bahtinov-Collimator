@@ -170,6 +170,12 @@ namespace Bahtinov_Collimator
         /// </summary>
         public Form1()
         {
+            // Get the current DPI of the display
+            using (Graphics g = this.CreateGraphics())
+            {
+                UITheme.DpiValue = g.DpiX; // Horizontal DPI (DpiY can also be used)
+            }
+
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
 
@@ -199,12 +205,8 @@ namespace Bahtinov_Collimator
             // Initialize the image display component.
             InitializeDisplayComponent();
 
-            // Increase the font size slightly for better readability.
-            float increasedSize = this.Font.Size + 2.0f;
-            Font largerFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
-
             // Apply the new font size to the form's controls.
-            SetFontSize(largerFont);
+            SetFontSize();
 
             // disable and gray the "what should i do next" menu item if we havent been calibrated
             menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted;
@@ -272,16 +274,16 @@ namespace Bahtinov_Collimator
         /// Sets the font size for various controls on the form.
         /// </summary>
         /// <param name="newFont">The new font to be applied to the controls.</param>
-        private void SetFontSize(Font newFont)
+        private void SetFontSize()
         {
             // Apply the larger font to the MenuStrip
-            menuStrip1.Font = newFont;
+            menuStrip1.Font = new Font(this.Font.FontFamily, UITheme.MenuStripFontSize, this.Font.Style);
 
             // Apply the larger font to any labels
-            bahtinovLabel.Font = newFont;
-            defocusLabel.Font = newFont;
-            RoundedStartButton.Font = newFont;
-            analysisGroupBox.Font = newFont;
+            bahtinovLabel.Font = new Font(this.Font.FontFamily, UITheme.LabelFontSize, this.Font.Style);
+            defocusLabel.Font = new Font(this.Font.FontFamily, UITheme.LabelFontSize, this.Font.Style);
+            RoundedStartButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
+            analysisGroupBox.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
         }
 
         /// <summary>

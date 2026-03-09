@@ -21,6 +21,23 @@ namespace Bahtinov_Collimator
         /// </summary>
         public static Color DarkForeground { get; } = Color.FromArgb(70, 80, 90);
 
+        /// <summary>
+        /// Gets or sets the dots per inch (DPI) value used for rendering or scaling operations.
+        /// </summary>
+        public static float DpiValue { get;  set; }
+
+        #endregion
+
+        #region FontSizes
+
+        public static float GroupBoxFontSize        => 15f * 96.0f / DpiValue;
+        public static float MenuStripFontSize       => 15f * 96.0f / DpiValue;
+        public static float ButtonFontSize          => 14f * 96.0f / DpiValue;
+        public static float TextBoxFontSize         => 10f * 96.0f / DpiValue;
+        public static float MessageBoxFontSize      => 10f * 96.0f / DpiValue;
+        public static float MainFormDefaultFontSize => 14f * 96.0f / DpiValue;
+        public static float LabelFontSize           => 14f * 96.0f / DpiValue;
+
         #endregion
 
         #region Menu Strip Theme

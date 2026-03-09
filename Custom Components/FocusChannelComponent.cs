@@ -44,19 +44,7 @@ namespace Bahtinov_Collimator
             InitializeComponent();
             this.AutoScaleMode = AutoScaleMode.None;
 
-            // Get the current DPI of the display
-            using (Graphics g = this.CreateGraphics())
-            {
-                float dpi = g.DpiX; // Horizontal DPI (DpiY can also be used)
-
-                // Set the base font size in points (e.g., 12 points)
-                float baseFontSize = 10.0f;
-
-                // Apply the scaled font to the form or controls
-                this.labelFont = new Font(this.Font.FontFamily, baseFontSize);
-            }
-
-            this.groupBox1.Font = labelFont;
+            this.groupBox1.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
 
             ApplyTheme();
             SubscribeToEvents();
