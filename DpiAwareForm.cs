@@ -16,8 +16,8 @@ public class DpiAwareForm : Form
     private Point _dragStart;
     private Point _formStart;
 
-    private const int TitleBarHeight = 40;
-    private const int CaptionButtonWidth = 46;
+    private const int TitleBarHeight = 45;
+    private const int CaptionButtonWidth = 70;
 
     public int CornerRadius { get; set; } = 10;
 
@@ -51,8 +51,8 @@ public class DpiAwareForm : Form
             Font = new Font("Segoe UI", UITheme.LabelFontSize, FontStyle.Regular)
         };
 
-        _minimizeButton = MakeCaptionButton("─");
-        _maximizeButton = MakeCaptionButton("□");
+        _minimizeButton = MakeCaptionButton("—");
+        _maximizeButton = MakeCaptionButton("\u2610");
         _closeButton = MakeCaptionButton("✕");
 
         _closeButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(196, 43, 28);
@@ -93,8 +93,8 @@ public class DpiAwareForm : Form
             TabStop = false
         };
         btn.FlatAppearance.BorderSize = 0;
-        btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(62, 109, 181);
-        btn.FlatAppearance.MouseDownBackColor = Color.FromArgb(25, 60, 130);
+        btn.FlatAppearance.MouseOverBackColor = UITheme.TitleButtonsMouseOver; //Color.DarkGray; // FromArgb(62, 109, 181);
+        btn.FlatAppearance.MouseDownBackColor = UITheme.TitleButtonsMouseOver;
         return btn;
     }
 
@@ -168,12 +168,22 @@ public class DpiAwareForm : Form
     {
         base.OnActivated(e);
         _titleBar.BackColor = UITheme.TitleDarkBackground;
+        _titleLabel.ForeColor = Color.White;
+
+        _minimizeButton.ForeColor = Color.White;
+        _maximizeButton.ForeColor = Color.White;
+        _closeButton.ForeColor = Color.White;
     }
 
     protected override void OnDeactivate(EventArgs e)
     {
         base.OnDeactivate(e);
-        _titleBar.BackColor = UITheme.DarkBackground;   
+        _titleBar.BackColor = UITheme.TitleDarkBackground;
+        _titleLabel.ForeColor = Color.Gray;
+
+        _minimizeButton.ForeColor = Color.Gray;
+        _maximizeButton.ForeColor = Color.Gray;
+        _closeButton.ForeColor = Color.Gray;
     }
 
     protected override void OnPaint(PaintEventArgs e)
@@ -235,5 +245,4 @@ public class DpiAwareForm : Form
         if (_titleBar != null)
             _titleBar.SetBounds(0, 0, ClientSize.Width, TitleBarHeight);
     }
-
 }

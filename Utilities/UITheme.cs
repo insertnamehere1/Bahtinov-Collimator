@@ -22,6 +22,11 @@ namespace Bahtinov_Collimator
         public static Color TitleDarkBackground { get; } = Color.FromArgb(17, 19, 24);
 
         /// <summary>
+        /// Gets the color used to indicate a mouse-over state for title bar buttons.
+        /// </summary>
+        public static Color TitleButtonsMouseOver { get; } = Color.FromArgb(37, 39, 44);
+
+        /// <summary>
         /// Gets the foreground color for dark-themed forms.
         /// </summary>
         public static Color DarkForeground { get; } = Color.FromArgb(70, 80, 90);
