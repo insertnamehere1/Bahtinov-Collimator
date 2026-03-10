@@ -36,6 +36,11 @@ namespace Bahtinov_Collimator
         /// </summary>
         public static float DpiValue { get;  set; }
 
+        public static int Scale(int value)
+        {
+            return (int)(value * UITheme.DpiValue / 96.0f);
+        }
+
         #endregion
 
         #region FontSizes
@@ -44,9 +49,10 @@ namespace Bahtinov_Collimator
         public static float MenuStripFontSize       => 15f * 96.0f / DpiValue;
         public static float ButtonFontSize          => 14f * 96.0f / DpiValue;
         public static float TextBoxFontSize         => 10f * 96.0f / DpiValue;
-        public static float MessageBoxFontSize      => 10f * 96.0f / DpiValue;
+        public static float MessageBoxFontSize      => 15f * 96.0f / DpiValue;
         public static float MainFormDefaultFontSize => 14f * 96.0f / DpiValue;
         public static float LabelFontSize           => 14f * 96.0f / DpiValue;
+        public static float AboutHeadingFontSize    => 17f * 96.0f / DpiValue;
 
         #endregion
 

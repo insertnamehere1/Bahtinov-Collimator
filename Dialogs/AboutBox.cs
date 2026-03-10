@@ -28,6 +28,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         public AboutBox()
         {
+            this.ShowMinimizeMaximize = false;
             InitializeComponent();
             SetColorScheme();
 
@@ -165,12 +166,11 @@ namespace Bahtinov_Collimator
         {
             base.OnLoad(e);
 
-            float increasedSize = this.Font.Size + 2.0f;
-            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
+            Font newFont = new Font(this.Font.FontFamily, UITheme.LabelFontSize, this.Font.Style);
 
             // Adjust fonts
             this.Font = newFont;
-            this.labelProductName.Font = new Font(this.Font.FontFamily, this.Font.Size + 3.0f, this.Font.Style);
+            this.labelProductName.Font = new Font(this.Font.FontFamily, UITheme.AboutHeadingFontSize, this.Font.Style);
             this.labelVersion.Font = newFont;
             this.labelCopyright.Font = newFont;
             this.labelCompanyName.Font = newFont;

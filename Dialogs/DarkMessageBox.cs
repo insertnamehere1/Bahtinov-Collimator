@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
-    public partial class DarkMessageBox : Form
+    public partial class DarkMessageBox : DpiAwareForm
     {
         #region DLL Imports
 
@@ -46,6 +46,8 @@ namespace Bahtinov_Collimator
         /// <param name="icon">The icon to display in the message box.</param>
         public DarkMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
+            this.ShowMinimizeMaximize = false;
+
             InitializeComponent();
             this.Text = title;
             messageLabel.Text = message;
@@ -98,14 +100,13 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void SetTextSize()
         {
-            float increasedSize = this.Font.Size + 2.0f;
-            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
+            Font newFont = new Font(this.Font.FontFamily, UITheme.MessageBoxFontSize, this.Font.Style);
 
             // Adjust fonts
             this.Font = newFont;
             this.messageLabel.Font = newFont;
-            this.cancelButton.Font = newFont;
-            this.okButton.Font = newFont;
+            this.cancelButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
+            this.okButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
         }
 
         /// <summary>
@@ -140,6 +141,8 @@ namespace Bahtinov_Collimator
             int width = Math.Max(this.messageLabel.Width + 150, this.okButton.Width + 255);
             int height = this.messageLabel.Height + this.okButton.Height + 105; // Padding and spacing
             this.ClientSize = new Size(width, height);
+            panel1.Location = new Point(0, this.ClientSize.Height - panel1.Height);
+            panel1.Width = this.ClientSize.Width;
         }
 
         /// <summary>

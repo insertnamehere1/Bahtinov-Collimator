@@ -33,8 +33,8 @@ namespace Bahtinov_Collimator
             this.messageLabel = new System.Windows.Forms.Label();
             this.iconBox = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.cancelButton = new RoundedButton();
-            this.okButton = new RoundedButton();
+            this.cancelButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
+            this.okButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
             ((System.ComponentModel.ISupportInitialize)(this.iconBox)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -43,16 +43,16 @@ namespace Bahtinov_Collimator
             // 
             this.messageLabel.AutoSize = true;
             this.messageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.messageLabel.Location = new System.Drawing.Point(78, 38);
+            this.messageLabel.Location = new System.Drawing.Point(78, 65);
             this.messageLabel.Name = "messageLabel";
-            this.messageLabel.Size = new System.Drawing.Size(44, 16);
+            this.messageLabel.Size = new System.Drawing.Size(51, 20);
             this.messageLabel.TabIndex = 0;
             this.messageLabel.Text = "label1";
             this.messageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // iconBox
             // 
-            this.iconBox.Location = new System.Drawing.Point(26, 26);
+            this.iconBox.Location = new System.Drawing.Point(26, 53);
             this.iconBox.Name = "iconBox";
             this.iconBox.Size = new System.Drawing.Size(40, 40);
             this.iconBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -65,41 +65,65 @@ namespace Bahtinov_Collimator
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.cancelButton);
             this.panel1.Controls.Add(this.okButton);
-            this.panel1.Location = new System.Drawing.Point(0, 98);
+            this.panel1.Location = new System.Drawing.Point(5, 190);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(333, 46);
+            this.panel1.Size = new System.Drawing.Size(493, 53);
             this.panel1.TabIndex = 4;
             // 
-            // closeButton
+            // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(138, 8);
-            this.cancelButton.Name = "closeButton";
+            this.cancelButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.cancelButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.cancelButton.BevelThickness = 2;
+            this.cancelButton.CornerRadius = 12;
+            this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cancelButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.cancelButton.ImageHeight = 32;
+            this.cancelButton.ImageOffsetX = 60;
+            this.cancelButton.ImageOffsetY = 0;
+            this.cancelButton.ImageWidth = 32;
+            this.cancelButton.Location = new System.Drawing.Point(271, 8);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.cancelButton.Size = new System.Drawing.Size(82, 30);
             this.cancelButton.TabIndex = 2;
             this.cancelButton.Text = "Cancel";
+            this.cancelButton.TextOffsetX = 10;
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(235, 8);
+            this.okButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.okButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.okButton.BevelThickness = 2;
+            this.okButton.CornerRadius = 12;
+            this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.okButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.okButton.ImageHeight = 32;
+            this.okButton.ImageOffsetX = 60;
+            this.okButton.ImageOffsetY = 0;
+            this.okButton.ImageWidth = 32;
+            this.okButton.Location = new System.Drawing.Point(388, 12);
             this.okButton.Name = "okButton";
+            this.okButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.okButton.Size = new System.Drawing.Size(82, 30);
             this.okButton.TabIndex = 1;
             this.okButton.Text = "OK";
+            this.okButton.TextOffsetX = 10;
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
             // DarkMessageBox
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(333, 143);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.ClientSize = new System.Drawing.Size(466, 267);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.iconBox);
             this.Controls.Add(this.messageLabel);
+            this.Location = new System.Drawing.Point(0, 0);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DarkMessageBox";
@@ -108,6 +132,9 @@ namespace Bahtinov_Collimator
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Error Message";
             this.TopMost = true;
+            this.Controls.SetChildIndex(this.messageLabel, 0);
+            this.Controls.SetChildIndex(this.iconBox, 0);
+            this.Controls.SetChildIndex(this.panel1, 0);
             ((System.ComponentModel.ISupportInitialize)(this.iconBox)).EndInit();
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
