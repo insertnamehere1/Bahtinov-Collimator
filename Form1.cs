@@ -171,6 +171,7 @@ namespace Bahtinov_Collimator
         public Form1()
         {
             this.CornerRadius = 12;
+            this.CanMaximize = false;
 
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();

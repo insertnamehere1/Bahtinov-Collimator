@@ -21,12 +21,63 @@ public class DpiAwareForm : Form
 
     public int CornerRadius { get; set; } = 10;
 
+    private bool _canMaximize = true;
+    public bool CanMaximize
+    {
+        get { return _canMaximize; }
+        set
+        {
+            _canMaximize = value;
+            if (_maximizeButton != null)
+            {
+                _maximizeButton.ForeColor = value ? Color.White : Color.DimGray;
+                _maximizeButton.FlatAppearance.MouseOverBackColor = value
+                    ? UITheme.TitleButtonsMouseOver
+                    : Color.Transparent;
+                _maximizeButton.FlatAppearance.MouseDownBackColor = value
+                    ? UITheme.TitleButtonsMouseOver
+                    : Color.Transparent;
+            }
+        }
+    }
+
+    private bool _canMinimize = true;
+    public bool CanMinimize
+    {
+        get { return _canMinimize; }
+        set
+        {
+            _canMinimize = value;
+            if (_minimizeButton != null)
+            {
+                _minimizeButton.ForeColor = value ? Color.White : Color.DimGray;
+                _minimizeButton.FlatAppearance.MouseOverBackColor = value
+                    ? UITheme.TitleButtonsMouseOver
+                    : Color.Transparent;
+                _minimizeButton.FlatAppearance.MouseDownBackColor = value
+                    ? UITheme.TitleButtonsMouseOver
+                    : Color.Transparent;
+            }
+        }
+    }
+
+    private bool _showMinimizeMaximize = true;
+    public bool ShowMinimizeMaximize
+    {
+        get { return _showMinimizeMaximize; }
+        set
+        {
+            _showMinimizeMaximize = value;
+            if (_minimizeButton != null) _minimizeButton.Visible = value;
+            if (_maximizeButton != null) _maximizeButton.Visible = value;
+        }
+    }
+
     public DpiAwareForm()
     {
-        // Get the current DPI of the display
         using (Graphics g = this.CreateGraphics())
         {
-            UITheme.DpiValue = g.DpiX; // Horizontal DPI (DpiY can also be used)
+            UITheme.DpiValue = g.DpiX;
         }
 
         InitializeTitleBar();
@@ -59,8 +110,8 @@ public class DpiAwareForm : Form
         _closeButton.FlatAppearance.MouseDownBackColor = Color.FromArgb(140, 30, 20);
 
         _closeButton.Click += (s, e) => Close();
-        _minimizeButton.Click += (s, e) => WindowState = FormWindowState.Minimized;
-        _maximizeButton.Click += (s, e) => ToggleMaximize();
+        _minimizeButton.Click += (s, e) => { if (_canMinimize) WindowState = FormWindowState.Minimized; };
+        _maximizeButton.Click += (s, e) => { if (_canMaximize) ToggleMaximize(); };
 
         // Fill must be added first; Right-docked controls added last appear rightmost
         _titleBar.Controls.Add(_titleLabel);
@@ -73,7 +124,7 @@ public class DpiAwareForm : Form
             c.MouseDown += TitleBar_MouseDown;
             c.MouseMove += TitleBar_MouseMove;
             c.MouseUp += (s, e) => _dragging = false;
-            c.DoubleClick += (s, e) => ToggleMaximize();
+            c.DoubleClick += (s, e) => { if (_canMaximize) ToggleMaximize(); };
         }
 
         Controls.Add(_titleBar);
@@ -93,7 +144,7 @@ public class DpiAwareForm : Form
             TabStop = false
         };
         btn.FlatAppearance.BorderSize = 0;
-        btn.FlatAppearance.MouseOverBackColor = UITheme.TitleButtonsMouseOver; //Color.DarkGray; // FromArgb(62, 109, 181);
+        btn.FlatAppearance.MouseOverBackColor = UITheme.TitleButtonsMouseOver;
         btn.FlatAppearance.MouseDownBackColor = UITheme.TitleButtonsMouseOver;
         return btn;
     }
@@ -169,9 +220,8 @@ public class DpiAwareForm : Form
         base.OnActivated(e);
         _titleBar.BackColor = UITheme.TitleDarkBackground;
         _titleLabel.ForeColor = Color.White;
-
-        _minimizeButton.ForeColor = Color.White;
-        _maximizeButton.ForeColor = Color.White;
+        _minimizeButton.ForeColor = _canMinimize ? Color.White : Color.DimGray;
+        _maximizeButton.ForeColor = _canMaximize ? Color.White : Color.DimGray;
         _closeButton.ForeColor = Color.White;
     }
 
@@ -180,7 +230,6 @@ public class DpiAwareForm : Form
         base.OnDeactivate(e);
         _titleBar.BackColor = UITheme.TitleDarkBackground;
         _titleLabel.ForeColor = Color.Gray;
-
         _minimizeButton.ForeColor = Color.Gray;
         _maximizeButton.ForeColor = Color.Gray;
         _closeButton.ForeColor = Color.Gray;
@@ -200,7 +249,6 @@ public class DpiAwareForm : Form
         }
 
         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
         using (GraphicsPath path = GetRoundedPath(new Rectangle(0, 0, Width - 1, Height - 1), CornerRadius))
         using (Pen pen = new Pen(UITheme.TitleDarkBackground))
         {
@@ -213,8 +261,8 @@ public class DpiAwareForm : Form
         get
         {
             CreateParams cp = base.CreateParams;
-            cp.Style &= ~0x00C00000; // WS_CAPTION  - removes title bar
-            cp.Style &= ~0x00040000; // WS_THICKFRAME - removes sizing border
+            cp.Style &= ~0x00C00000;
+            cp.Style &= ~0x00040000;
             return cp;
         }
     }
