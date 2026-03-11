@@ -7,7 +7,7 @@ using static System.Collections.Specialized.BitVector32;
 
 namespace Bahtinov_Collimator
 {
-    public sealed class NextStepDialog : Form
+    public sealed class NextStepDialog : DpiAwareForm
     {
         #region DLL Imports
 
@@ -46,6 +46,8 @@ namespace Bahtinov_Collimator
         /// <param name="icon">Optional window icon.</param>
         public NextStepDialog(NextStepGuidance guidance, Icon icon = null)
         {
+            this.ShowMinimizeMaximize = false;
+
             Text = guidance?.DialogTitle ?? "What should I do next?";
             Icon = icon;
 
@@ -68,7 +70,7 @@ namespace Bahtinov_Collimator
             // Scroll container
             _scroll = new Panel
             {
-                Location = new Point(20, 20),
+                Location = new Point(20, 50),
                 Size = new Size(ClientSize.Width - 40, ClientSize.Height - 90),
                 AutoScroll = true,
                 BackColor = UITheme.DarkBackground
@@ -91,6 +93,7 @@ namespace Bahtinov_Collimator
 
             _ok = new RoundedButton
             {
+                Font = new Font("Segoe UI", UITheme.ButtonFontSize, FontStyle.Bold),
                 Text = "OK",
                 DialogResult = DialogResult.OK,
                 Size = new Size(110, 34),
@@ -121,7 +124,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void RelayoutForNewSize()
         {
-            _scroll.Size = new Size(ClientSize.Width - 40, ClientSize.Height - 90);
+            _scroll.Size = new Size(ClientSize.Width - 40, ClientSize.Height - 120);
             _ok.Location = new Point(ClientSize.Width - 130, ClientSize.Height - 50);
 
             int w = ContentWidth();
@@ -177,7 +180,7 @@ namespace Bahtinov_Collimator
 
             if (g == null)
             {
-                _stack.Controls.Add(MakeLabel("No guidance available.", 11f, FontStyle.Italic));
+                _stack.Controls.Add(MakeLabel("No guidance available.", UITheme.NextStepFontSize, FontStyle.Italic));
                 _stack.ResumeLayout(true);
                 return;
             }
@@ -188,7 +191,7 @@ namespace Bahtinov_Collimator
 
             // Summary
             if (!string.IsNullOrWhiteSpace(g.Summary))
-                _stack.Controls.Add(MakeLabel(g.Summary, 11f, FontStyle.Regular));
+                _stack.Controls.Add(MakeLabel(g.Summary, UITheme.NextStepFontSize, FontStyle.Regular));
 
             // Sections
             if (g.Sections != null)
@@ -209,7 +212,7 @@ namespace Bahtinov_Collimator
 
             // Footer
             if (!string.IsNullOrWhiteSpace(g.FooterHint))
-                _stack.Controls.Add(MakeLabel(g.FooterHint, 10.5f, FontStyle.Italic));
+                _stack.Controls.Add(MakeLabel(g.FooterHint, UITheme.NextStepFontSize, FontStyle.Italic));
 
             _stack.ResumeLayout(true);
         }
@@ -295,7 +298,7 @@ namespace Bahtinov_Collimator
                 CornerRadius = 8,
                 ForeColor = Color.White,
                 BackColor = UITheme.DarkBackground,
-                Font = new Font("Segoe UI", 14f, FontStyle.Bold)
+                Font = new Font("Segoe UI", UITheme.NextStepTitleFontSize, FontStyle.Bold)
             };
             tb.Height = tb.GetPreferredSize(Size.Empty).Height;
             return tb;
@@ -327,21 +330,21 @@ namespace Bahtinov_Collimator
             // Style tweaks by section type
             if (section.IsSafetyNote)
             {
-                tb.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold | FontStyle.Italic);
+                tb.Font = new Font("Segoe UI", UITheme.NextStepFontSize, FontStyle.Bold | FontStyle.Italic);
                 tb.FillColor = Color.FromArgb(45, 255, 200, 0);
             }
             else if (section.EmphasizeTitle)
             {
-                tb.Font = new Font("Segoe UI", 12f, FontStyle.Bold);
+                tb.Font = new Font("Segoe UI", UITheme.NextStepTitleFontSize, FontStyle.Bold);
                 tb.FillColor = Color.FromArgb(40, 255, 255, 255);
             }
             else if (section.IsSubSection)
             {
-                tb.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+                tb.Font = new Font("Segoe UI", UITheme.NextStepFontSize, FontStyle.Bold);
             }
             else
             {
-                tb.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+                tb.Font = new Font("Segoe UI", UITheme.NextStepFontSize, FontStyle.Bold);
             }
 
             return tb;
@@ -368,7 +371,7 @@ namespace Bahtinov_Collimator
                 ScrollBars = RichTextBoxScrollBars.None,
                 BackColor = UITheme.DarkBackground,
                 ForeColor = Color.White,
-                Font = new Font("Segoe UI", 10.5f),
+                Font = new Font("Segoe UI", UITheme.NextStepFontSize),
                 Width = ContentWidth(),
                 Margin = new Padding(0, 0, 0, 0),
                 DetectUrls = false,

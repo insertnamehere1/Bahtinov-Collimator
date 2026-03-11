@@ -83,7 +83,7 @@ namespace Bahtinov_Collimator
         private const int MAX_IMAGE_DISPLAY_X_OFFSET = 376;
 
         /// Sets testing mode for Calibration 
-        private const bool TEST_MODE = true;
+        private const bool TEST_MODE = false;
 
         #endregion
 
