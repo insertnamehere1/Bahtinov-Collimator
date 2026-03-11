@@ -1127,7 +1127,7 @@ namespace Bahtinov_Collimator
             calibrationComponent = new CalibrationComponent(this)
             { 
                 Width = UITheme.CalibrateFrameWidth,
-                Location = new Point(this.Width - calWidth - 19, 22),
+                Location = new Point(this.Width - calWidth - 3, 70),
                 Anchor = AnchorStyles.Top | AnchorStyles.Right
             };
 

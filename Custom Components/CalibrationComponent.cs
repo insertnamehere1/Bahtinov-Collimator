@@ -67,17 +67,8 @@ namespace Bahtinov_Collimator.Custom_Components
 
             this.AutoScaleMode = AutoScaleMode.None;
 
-            // Get the current DPI of the display
-            using (Graphics g = this.CreateGraphics())
-            {
-                float dpi = g.DpiX; // Horizontal DPI (DpiY can also be used)
-
-                // Set the base font size in points (e.g., 12 points)
-                float baseFontSize = 10.0f;
-
-                // Apply the scaled font to the form or controls
-                this.labelFont = new Font(this.Font.FontFamily, baseFontSize);
-            }
+            // Apply the scaled font to the form or controls
+            this.labelFont = new Font(this.Font.FontFamily, UITheme.CollimationTextFontSize);
 
             SetupUI();
             SubscribeToEvents();
@@ -96,7 +87,7 @@ namespace Bahtinov_Collimator.Custom_Components
             quitButton.Font = labelFont;
             titledRoundedRichTextBox1.Font = labelFont;
 
-            var titleFont = new Font(this.Font.FontFamily, 12.0f);
+            var titleFont = new Font(this.Font.FontFamily, UITheme.CollimationTitleFontSize);
 
             titledRoundedRichTextBox1.TitleFont = titleFont;
             titledRoundedRichTextBox1.TitlePaddingLeft = 140;
@@ -111,6 +102,8 @@ namespace Bahtinov_Collimator.Custom_Components
             roundedPanel1.ForeColor = UITheme.MenuHighlightBackground;
 
             // Quit button
+            quitButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize);
+
             quitButton.Size = new Size(160, 44);
             quitButton.Location = new Point(116, 20);
             quitButton.BackColor = UITheme.ButtonDarkBackground;

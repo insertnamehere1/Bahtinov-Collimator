@@ -57,6 +57,8 @@ namespace Bahtinov_Collimator
         public static float NextStepFontSize        => 16f * 96.0f / DpiValue;
         public static float NextStepTitleFontSize => 18f * 96.0f / DpiValue;
         public static float CheckBoxFontSize        => 14f * 96.0f / DpiValue;
+        public static float CollimationTextFontSize => 12f * 96.0f / DpiValue;
+        public static float CollimationTitleFontSize => 15f * 96.0f / DpiValue;
 
         #endregion
 
