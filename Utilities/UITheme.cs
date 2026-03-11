@@ -53,6 +53,7 @@ namespace Bahtinov_Collimator
         public static float MainFormDefaultFontSize => 14f * 96.0f / DpiValue;
         public static float LabelFontSize           => 14f * 96.0f / DpiValue;
         public static float AboutHeadingFontSize    => 17f * 96.0f / DpiValue;
+        public static float DialogDefaultFontSize   => 14f * 96.0f / DpiValue;
 
         #endregion
 

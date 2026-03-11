@@ -25,7 +25,6 @@ namespace Bahtinov_Collimator
 
         private bool disposed = false; // To detect redundant calls
         private readonly int groupID;
-        private readonly Font labelFont;
 
         #endregion
 
