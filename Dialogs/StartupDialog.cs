@@ -154,7 +154,7 @@ namespace SkyCal
             Controls.Add(_notNowButton);
         }
 
-        protected override async void OnLoad(EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
@@ -176,15 +176,12 @@ namespace SkyCal
             AnchorStyles savedAnchor = _bodyLabel.Anchor;
             _bodyLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
-            int savedHeight = _bodyLabel.Height;
-
             Size contentSize = TextRenderer.MeasureText(
                 _bodyLabel.Text,
                 _bodyLabel.Font,
                 new Size(_bodyLabel.Width, int.MaxValue),
                 TextFormatFlags.WordBreak);
 
-            int diff = contentSize.Height - savedHeight;
             _bodyLabel.Height = contentSize.Height;
             _dontShowAgainCheckBox.Location = new Point(20, _bodyLabel.Bottom + 20);
             

@@ -228,11 +228,7 @@ namespace Bahtinov_Collimator.Custom_Components
                     float tBottom = SolveTForY(yBottom);
 
                     if (tBottom > tTop)
-                    {
-                        float tmp = tBottom;
-                        tBottom = tTop;
-                        tTop = tmp;
-                    }
+                        (tBottom, tTop) = (tTop, tBottom);
 
                     PointF CurvePoint(float t)
                     {

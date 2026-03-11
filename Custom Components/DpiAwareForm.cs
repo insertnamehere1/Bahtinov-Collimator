@@ -338,7 +338,6 @@ public class DpiAwareForm : Form
     protected override void OnLayout(LayoutEventArgs e)
     {
         base.OnLayout(e);
-        if (_titleBar != null)
-            _titleBar.SetBounds(0, 0, ClientSize.Width, TitleBarHeight);
+        _titleBar?.SetBounds(0, 0, ClientSize.Width, TitleBarHeight);
     }
 }
