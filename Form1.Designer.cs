@@ -63,7 +63,7 @@
             this.aboutToolStripMenuItem,
             this.pleaseDonateToolStripMenuItem,
             this.whatDoIDoNextToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 40);
+            this.menuStrip1.Location = new System.Drawing.Point(0, 45);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
             this.menuStrip1.Size = new System.Drawing.Size(1100, 33);
@@ -163,11 +163,11 @@
             this.analysisGroupBox.Controls.Add(this.bahtinovLabel);
             this.analysisGroupBox.Controls.Add(this.defocusLabel);
             this.analysisGroupBox.CornerRadius = 12;
-            this.analysisGroupBox.Location = new System.Drawing.Point(12, 476);
+            this.analysisGroupBox.Location = new System.Drawing.Point(12, 493);
             this.analysisGroupBox.Margin = new System.Windows.Forms.Padding(4);
             this.analysisGroupBox.Name = "analysisGroupBox";
             this.analysisGroupBox.Padding = new System.Windows.Forms.Padding(4);
-            this.analysisGroupBox.Size = new System.Drawing.Size(253, 209);
+            this.analysisGroupBox.Size = new System.Drawing.Size(253, 198);
             this.analysisGroupBox.TabIndex = 28;
             this.analysisGroupBox.TabStop = false;
             this.analysisGroupBox.Text = "roundedGroupBox1";
@@ -189,7 +189,7 @@
             this.RoundedStartButton.ImageOffsetX = -85;
             this.RoundedStartButton.ImageOffsetY = 0;
             this.RoundedStartButton.ImageWidth = 32;
-            this.RoundedStartButton.Location = new System.Drawing.Point(14, 128);
+            this.RoundedStartButton.Location = new System.Drawing.Point(14, 123);
             this.RoundedStartButton.Margin = new System.Windows.Forms.Padding(4);
             this.RoundedStartButton.Name = "RoundedStartButton";
             this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
@@ -205,7 +205,7 @@
             // 
             this.toggleSwitch1.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.toggleSwitch1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.toggleSwitch1.Location = new System.Drawing.Point(35, 41);
+            this.toggleSwitch1.Location = new System.Drawing.Point(24, 41);
             this.toggleSwitch1.Margin = new System.Windows.Forms.Padding(4);
             this.toggleSwitch1.Name = "toggleSwitch1";
             this.toggleSwitch1.RotationDegrees = 90;
@@ -216,7 +216,7 @@
             // bahtinovLabel
             // 
             this.bahtinovLabel.AutoSize = true;
-            this.bahtinovLabel.Location = new System.Drawing.Point(74, 43);
+            this.bahtinovLabel.Location = new System.Drawing.Point(63, 43);
             this.bahtinovLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.bahtinovLabel.Name = "bahtinovLabel";
             this.bahtinovLabel.Size = new System.Drawing.Size(71, 20);
@@ -227,7 +227,7 @@
             // defocusLabel
             // 
             this.defocusLabel.AutoSize = true;
-            this.defocusLabel.Location = new System.Drawing.Point(74, 79);
+            this.defocusLabel.Location = new System.Drawing.Point(63, 79);
             this.defocusLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.defocusLabel.Name = "defocusLabel";
             this.defocusLabel.Size = new System.Drawing.Size(69, 20);

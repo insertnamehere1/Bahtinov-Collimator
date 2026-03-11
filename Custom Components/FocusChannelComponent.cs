@@ -123,7 +123,7 @@ namespace Bahtinov_Collimator
             mirrorDrawingComponent1.BackColor = groupBox1.BackColor;
             mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
             offsetBarControl1.Size = new Size(240, 64);
-            offsetBarControl1.Location = new Point(groupBox1.ClientSize.Width - offsetBarControl1.Width - 8, (groupBox1.ClientSize.Height - offsetBarControl1.Height) / 2 - 6);
+            offsetBarControl1.Location = new Point(groupBox1.ClientSize.Width - offsetBarControl1.Width - 8, (groupBox1.ClientSize.Height - offsetBarControl1.Height) / 2 );
         }
 
         #endregion
@@ -206,7 +206,7 @@ namespace Bahtinov_Collimator
             int panelWidth = 100;
             int panelHeight = Math.Min(100, Math.Max(40, groupBox1.ClientSize.Height - 42));
             int panelX = Math.Max(8, offsetBarControl1.Left - panelWidth - 8);
-            int panelY = Math.Max(25, (groupBox1.ClientSize.Height - panelHeight) / 2);
+            int panelY = Math.Max(31, (groupBox1.ClientSize.Height - panelHeight) / 2);
 
             mirrorDrawingComponent1.Bounds = new Rectangle(panelX, panelY, panelWidth, panelHeight);
             mirrorDrawingComponent1.BackColor = groupBox1.BackColor;

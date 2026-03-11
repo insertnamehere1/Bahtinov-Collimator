@@ -251,7 +251,7 @@ namespace Bahtinov_Collimator
         {
             this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent
             {
-                Location = new System.Drawing.Point(276, 85),
+                Location = new System.Drawing.Point(276, 92),
                 Margin = new System.Windows.Forms.Padding(2),
                 Name = "imageDisplayComponent1",
                 Size = new System.Drawing.Size(600, 600),
@@ -301,8 +301,8 @@ namespace Bahtinov_Collimator
 
             groupBoxRed = new FocusChannelComponent(0, isWidened)
             {
-                Size = new Size(255, 144),
-                Location = new Point(8, 74)
+                Size = new Size(255, 140),
+                Location = new Point(10, 79)
             };
             this.Controls.Add(groupBoxRed);
         }
@@ -320,8 +320,8 @@ namespace Bahtinov_Collimator
 
             groupBoxGreen = new FocusChannelComponent(1, Properties.Settings.Default.CalibrationCompleted)
             {
-                Size = new Size(255, 144),
-                Location = new Point(8, 172)
+                Size = new Size(255, 140),
+                Location = new Point(10, 216)
             };
             this.Controls.Add(groupBoxGreen);
         }
@@ -339,8 +339,8 @@ namespace Bahtinov_Collimator
 
             groupBoxBlue = new FocusChannelComponent(2, Properties.Settings.Default.CalibrationCompleted)
             {
-                Size = new Size(255, 144),
-                Location = new Point(8, 310)
+                Size = new Size(255, 140),
+                Location = new Point(10, 353)
             };
             this.Controls.Add(groupBoxBlue);
         }

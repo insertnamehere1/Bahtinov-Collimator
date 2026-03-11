@@ -275,7 +275,7 @@ namespace Bahtinov_Collimator.Custom_Components
                     }
                 }
 
-                int axisStartX = mirrorBounds.Left + 2;
+                int axisStartX = mirrorBounds.Left + 20;
                 int axisEndX = Math.Min(bounds.Right, axisStartX + OpticalAxisLength);
 
                 using (Pen axisPen = new Pen(MirrorOutlineColor, 1.5f))
