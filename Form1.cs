@@ -273,15 +273,11 @@ namespace Bahtinov_Collimator
         /// <param name="newFont">The new font to be applied to the controls.</param>
         private void SetFontSize()
         {
-            // Apply the larger font to the MenuStrip
             menuStrip1.Font = new Font(this.Font.FontFamily, UITheme.MenuStripFontSize, this.Font.Style);
-
-            // Apply the larger font to any labels
             bahtinovLabel.Font = new Font(this.Font.FontFamily, UITheme.LabelFontSize, this.Font.Style);
             defocusLabel.Font = new Font(this.Font.FontFamily, UITheme.LabelFontSize, this.Font.Style);
             RoundedStartButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
             analysisGroupBox.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
-    //        this.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
         }
 
         /// <summary>

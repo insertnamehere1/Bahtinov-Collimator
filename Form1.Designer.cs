@@ -249,7 +249,7 @@
             this.Margin = new System.Windows.Forms.Padding(5);
             this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Padding = new System.Windows.Forms.Padding(0, 0, 12, 12);
+            this.Padding = new System.Windows.Forms.Padding(0, 0, 10, 10);
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "SkyCal - Focus and Collimation Tool";
             this.MouseEnter += new System.EventHandler(this.Form1_MouseEnter);
