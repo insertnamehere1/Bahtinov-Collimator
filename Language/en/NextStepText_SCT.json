@@ -20,7 +20,7 @@
   "FocusStraddleNotBalancedBullet2Format": "Move the focuser {0} until the 3 error values are evenly spaced around 0.",
   "FocusTargetLineFormat": "Target: An average near 0, with similar magnitudes.",
   "FocusOnlyBeginScrewsBullet": "Begin collimation adjustments only after this balance is achieved.",
-  "FocusFooterHint": "Tip: IN is primary mirror towards secondary or camera towards telescope, \nOUT is primary away from secondary or camera away from telescope",
+  "FocusFooterHint": "Tip: IN is primary mirror towards secondary or camera towards telescope,\nOUT is primary away from secondary or camera away from telescope",
 
   "CollimationHeader": "Collimation Adjustments for SCT",
   "CollimationSummary": "Proceed with balanced collimation using 2 or more screws at the same time.\n",

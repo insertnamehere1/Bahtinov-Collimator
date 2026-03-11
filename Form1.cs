@@ -34,6 +34,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Bahtinov_Collimator.BahtinovLineDataEventArgs;
 
 namespace Bahtinov_Collimator
 {
@@ -480,6 +481,7 @@ namespace Bahtinov_Collimator
                 imageDisplayComponent1.ClearDisplay();
                 bahtinovProcessing.StopImageProcessing();
                 bahtinovLineData = null;
+                imageType = 0;
                 RemoveAndDisposeControls(groupBoxRed, groupBoxGreen, groupBoxBlue);
                 
                 if(Properties.Settings.Default.DefocusSwitch == false)

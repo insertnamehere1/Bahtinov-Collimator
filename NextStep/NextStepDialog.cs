@@ -3,55 +3,39 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static System.Collections.Specialized.BitVector32;
 
 namespace Bahtinov_Collimator
 {
     public sealed class NextStepDialog : DpiAwareForm
     {
         #region DLL Imports
-
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
-
         #endregion
 
         #region Constants
-
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
+
+        private const int ContentPadding = 30;
+        private const int WidthPadding = 90;
 
         #endregion
 
         #region Fields
-
         private readonly Panel _scroll;
         private readonly FlowLayoutPanel _stack;
         private readonly RoundedButton _ok;
-
         #endregion
 
         /// <summary>
         /// Initializes and displays the "Next Step" guidance dialog.
-        ///
-        /// The dialog presents a structured, scrollable layout consisting of:
-        /// - An optional header
-        /// - A summary paragraph
-        /// - One or more guidance sections, each with a boxed title and body content
-        /// - An optional footer hint
-        ///
-        /// Section titles are rendered using a dedicated <see cref="TitleBox"/> control
-        /// to provide clear visual separation and improved readability.
         /// </summary>
-        /// <param name="guidance">The guidance model describing what the user should do next.</param>
-        /// <param name="icon">Optional window icon.</param>
         public NextStepDialog(NextStepGuidance guidance, Icon icon = null)
         {
             this.ShowMinimizeMaximize = false;
-
             Text = guidance?.DialogTitle ?? "What should I do next?";
             Icon = icon;
 
-            // Title bar (keep your existing behaviour)
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
@@ -61,13 +45,10 @@ namespace Bahtinov_Collimator
             MinimizeBox = false;
             MaximizeBox = false;
             AutoScaleMode = AutoScaleMode.Dpi;
-
             ClientSize = new Size(760, 550);
-
             BackColor = UITheme.DarkBackground;
             ForeColor = Color.White;
 
-            // Scroll container
             _scroll = new Panel
             {
                 Location = new Point(20, 50),
@@ -76,7 +57,6 @@ namespace Bahtinov_Collimator
                 BackColor = UITheme.DarkBackground
             };
 
-            // Vertical stack inside scroll
             _stack = new FlowLayoutPanel
             {
                 Dock = DockStyle.Top,
@@ -107,20 +87,57 @@ namespace Bahtinov_Collimator
 
             Controls.Add(_scroll);
             Controls.Add(_ok);
-
             AcceptButton = _ok;
 
             RenderGuidance(guidance);
 
-            // Re-flow widths for DPI / resizing
             ClientSizeChanged += (s, e) => RelayoutForNewSize();
+            Load += (s, e) => SizeFormToContent();
+        }
+
+        /// <summary>
+        /// Updates the dialog content and resizes the form to fit.
+        /// </summary>
+        public void UpdateGuidance(NextStepGuidance guidance)
+        {
+            Text = guidance?.DialogTitle ?? "What should I do next?";
+            RenderGuidance(guidance);
+            BeginInvoke(new Action(SizeFormToContent));
+        }
+
+        /// <summary>
+        /// Sizes the form to fit the current stack content, clamped to screen height.
+        /// </summary>
+        private void SizeFormToContent()
+        {
+            // Step 1: measure and apply required width
+            int maxScreenWidth = Screen.FromControl(this).WorkingArea.Width - 80;
+            int newClientWidth = Math.Max(400, Math.Min(MeasureRequiredWidth(), maxScreenWidth));
+
+            // Step 2: update control widths and remeasure heights with new width
+            int contentWidth = newClientWidth - 40 - SystemInformation.VerticalScrollBarWidth - 2;
+            foreach (Control c in _stack.Controls)
+            {
+                c.Width = contentWidth;
+                if (c is Label lbl) lbl.Height = MeasureLabelHeight(lbl);
+                else if (c is RichTextBox rtb) rtb.Height = GetRichTextHeight(rtb);
+            }
+
+            _stack.PerformLayout();
+
+            // Step 3: measure and apply required height
+            int contentHeight = _stack.Height;
+            int required = 50 + contentHeight + 40 + ContentPadding;
+            int maxHeight = Screen.FromControl(this).WorkingArea.Height - 80;
+            int newHeight = Math.Min(required, maxHeight);
+
+            ClientSize = new Size(newClientWidth, newHeight);
+            _scroll.Size = new Size(newClientWidth - 40, newHeight - 90);
+            _ok.Location = new Point(newClientWidth - 130, newHeight - 50);
         }
 
         /// <summary>
         /// Reflows and resizes all child controls when the dialog client size changes.
-        ///
-        /// This ensures that labels, title boxes, and section bodies remain aligned,
-        /// correctly sized, and readable during DPI changes or dynamic resizing.
         /// </summary>
         private void RelayoutForNewSize()
         {
@@ -128,7 +145,6 @@ namespace Bahtinov_Collimator
             _ok.Location = new Point(ClientSize.Width - 130, ClientSize.Height - 50);
 
             int w = ContentWidth();
-
             foreach (Control c in _stack.Controls)
             {
                 if (c is Label lbl)
@@ -149,12 +165,8 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Calculates the available width for content controls within the scroll panel.
-        ///
-        /// This accounts for the presence of a vertical scrollbar to prevent
-        /// horizontal clipping or unwanted wrapping.
+        /// Calculates the available content width within the scroll panel.
         /// </summary>
-        /// <returns>The usable content width in pixels.</returns>
         private int ContentWidth()
         {
             int scrollBar = SystemInformation.VerticalScrollBarWidth;
@@ -162,17 +174,8 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Clears the current dialog content and rebuilds it from the supplied guidance model.
-        ///
-        /// This method creates:
-        /// - Header and summary labels
-        /// - Boxed section titles
-        /// - Bullet lists and optional inline images
-        /// - Footer hint text
-        ///
-        /// The layout is rebuilt from scratch to ensure consistent spacing and styling.
+        /// Clears and rebuilds the dialog content from the supplied guidance model.
         /// </summary>
-        /// <param name="g">The guidance model to render.</param>
         private void RenderGuidance(NextStepGuidance g)
         {
             _stack.SuspendLayout();
@@ -185,32 +188,26 @@ namespace Bahtinov_Collimator
                 return;
             }
 
-            // Header
             if (!string.IsNullOrWhiteSpace(g.Header))
                 _stack.Controls.Add(MakeHeaderBox(g.Header));
 
-            // Summary
             if (!string.IsNullOrWhiteSpace(g.Summary))
                 _stack.Controls.Add(MakeLabel(g.Summary, UITheme.NextStepFontSize, FontStyle.Regular));
 
-            // Sections
             if (g.Sections != null)
             {
                 foreach (var section in g.Sections)
                 {
-                    if (section == null)
-                        continue;
+                    if (section == null) continue;
 
                     if (!string.IsNullOrWhiteSpace(section.Title))
                         _stack.Controls.Add(MakeTitleBox(section));
 
                     _stack.Controls.Add(MakeSectionBody(section));
-
                     _stack.Controls.Add(MakeSpacer(10));
                 }
             }
 
-            // Footer
             if (!string.IsNullOrWhiteSpace(g.FooterHint))
                 _stack.Controls.Add(MakeLabel(g.FooterHint, UITheme.NextStepFontSize, FontStyle.Italic));
 
@@ -218,10 +215,8 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Creates a fixed-height spacer used to visually separate dialog sections.
+        /// Creates a fixed-height spacer to visually separate dialog sections.
         /// </summary>
-        /// <param name="height">The height of the spacer in pixels.</param>
-        /// <returns>A panel acting as vertical spacing.</returns>
         private Control MakeSpacer(int height)
         {
             return new Panel
@@ -235,14 +230,7 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Creates a word-wrapped label sized to fully display its text.
-        ///
-        /// This is used for headers, summary text, and footer hints where
-        /// RichTextBox features are unnecessary.
         /// </summary>
-        /// <param name="text">The text to display.</param>
-        /// <param name="size">Font size in points.</param>
-        /// <param name="style">Font style.</param>
-        /// <returns>A fully sized label control.</returns>
         private Label MakeLabel(string text, float size, FontStyle style)
         {
             var lbl = new Label
@@ -255,36 +243,25 @@ namespace Bahtinov_Collimator
                 Width = ContentWidth(),
                 Margin = new Padding(4, 8, 0, 6)
             };
-
             lbl.Height = MeasureLabelHeight(lbl);
             return lbl;
         }
 
         /// <summary>
-        /// Measures the height required to fully render a label's text using word wrapping.
+        /// Measures the height required to fully render a label's text.
         /// </summary>
-        /// <param name="lbl">The label to measure.</param>
-        /// <returns>The required height in pixels.</returns>
         private int MeasureLabelHeight(Label lbl)
         {
-            if (lbl == null)
-                return 24;
-
+            if (lbl == null) return 24;
             var sz = TextRenderer.MeasureText(lbl.Text ?? "", lbl.Font,
                 new Size(Math.Max(10, lbl.Width), int.MaxValue),
                 TextFormatFlags.WordBreak);
-
             return Math.Max(24, sz.Height + 2);
         }
 
         /// <summary>
-        /// Creates a boxed section title using a <see cref="TitleBox"/> control.
-        ///
-        /// The control auto-sizes to the width of its text plus padding,
-        /// rather than stretching across the dialog.
+        /// Creates a boxed header using a TitleBox control.
         /// </summary>
-        /// <param name="section">The header section providing styling flags.</param>
-        /// <returns>A configured title box control.</returns>
         private Control MakeHeaderBox(string header)
         {
             var tb = new TitleBox
@@ -304,15 +281,9 @@ namespace Bahtinov_Collimator
             return tb;
         }
 
-
         /// <summary>
-        /// Creates a boxed section title using a <see cref="TitleBox"/> control.
-        ///
-        /// The control auto-sizes to the width of its text plus padding,
-        /// rather than stretching across the dialog.
+        /// Creates a boxed section title using a TitleBox control.
         /// </summary>
-        /// <param name="section">The guidance section providing title and styling flags.</param>
-        /// <returns>A configured title box control.</returns>
         private Control MakeTitleBox(GuidanceSection section)
         {
             var tb = new TitleBox
@@ -327,7 +298,6 @@ namespace Bahtinov_Collimator
                 BackColor = UITheme.DarkBackground
             };
 
-            // Style tweaks by section type
             if (section.IsSafetyNote)
             {
                 tb.Font = new Font("Segoe UI", UITheme.NextStepFontSize, FontStyle.Bold | FontStyle.Italic);
@@ -338,10 +308,6 @@ namespace Bahtinov_Collimator
                 tb.Font = new Font("Segoe UI", UITheme.NextStepTitleFontSize, FontStyle.Bold);
                 tb.FillColor = Color.FromArgb(40, 255, 255, 255);
             }
-            else if (section.IsSubSection)
-            {
-                tb.Font = new Font("Segoe UI", UITheme.NextStepFontSize, FontStyle.Bold);
-            }
             else
             {
                 tb.Font = new Font("Segoe UI", UITheme.NextStepFontSize, FontStyle.Bold);
@@ -350,18 +316,9 @@ namespace Bahtinov_Collimator
             return tb;
         }
 
-
         /// <summary>
         /// Creates the body content for a guidance section.
-        ///
-        /// This includes:
-        /// - Bullet-point instructions
-        /// - An optional inline image
-        ///
-        /// The control automatically sizes itself to fit the rendered content.
         /// </summary>
-        /// <param name="section">The guidance section to render.</param>
-        /// <returns>A read-only RichTextBox containing the section body.</returns>
         private RichTextBox MakeSectionBody(GuidanceSection section)
         {
             var rtb = new RichTextBox
@@ -373,7 +330,7 @@ namespace Bahtinov_Collimator
                 ForeColor = Color.White,
                 Font = new Font("Segoe UI", UITheme.NextStepFontSize),
                 Width = ContentWidth(),
-                Margin = new Padding(0, 0, 0, 0),
+                Margin = Padding.Empty,
                 DetectUrls = false,
                 TabStop = false,
                 HideSelection = true,
@@ -387,10 +344,7 @@ namespace Bahtinov_Collimator
                 foreach (var line in section.Lines)
                 {
                     if (!string.IsNullOrWhiteSpace(line.Text))
-                        if(!line.Bullet)
-                            rtb.AppendText(line.Text + Environment.NewLine);
-                        else
-                            rtb.AppendText("• " + line.Text + Environment.NewLine);
+                        rtb.AppendText((line.Bullet ? "• " : "") + line.Text + Environment.NewLine);
                 }
             }
 
@@ -398,7 +352,6 @@ namespace Bahtinov_Collimator
             {
                 if (rtb.TextLength > 0)
                     rtb.AppendText(Environment.NewLine);
-
                 rtb.AppendImageInline(section.InlineImage);
                 rtb.AppendText(Environment.NewLine);
             }
@@ -409,27 +362,50 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Calculates the rendered height of a RichTextBox based on its current contents.
-        ///
-        /// This method positions the caret at the end of the text and uses the resulting
-        /// layout position to determine the required height.
         /// </summary>
-        /// <param name="rtb">The RichTextBox to measure.</param>
-        /// <returns>The required height in pixels.</returns>
         private int GetRichTextHeight(RichTextBox rtb)
         {
-            if (rtb == null)
-                return 24;
-
-            if (!rtb.IsHandleCreated)
-                rtb.CreateControl();
+            if (rtb == null) return 24;
+            if (!rtb.IsHandleCreated) rtb.CreateControl();
 
             int len = rtb.TextLength;
             Point pt = rtb.GetPositionFromCharIndex(len);
-
             int lineHeight = (int)Math.Ceiling(rtb.Font.GetHeight());
-            int h = pt.Y + lineHeight + 6;
+            return Math.Max(24, pt.Y + lineHeight + 6);
+        }
 
-            return Math.Max(24, h);
+        private int MeasureRequiredWidth()
+        {
+            int maxWidth = 0;
+
+            using (Graphics g = CreateGraphics())
+            {
+                foreach (Control c in _stack.Controls)
+                {
+                    int w = 0;
+
+                    if (c is Label lbl)
+                    {
+                        w = (int)g.MeasureString(lbl.Text, lbl.Font).Width + lbl.Margin.Horizontal;
+                    }
+                    else if (c is RichTextBox rtb)
+                    {
+                        foreach (string line in rtb.Lines)
+                        {
+                            if (string.IsNullOrEmpty(line)) continue;
+                            w = Math.Max(w, (int)g.MeasureString(line, rtb.Font).Width);
+                        }
+                    }
+                    else if (c is TitleBox tb)
+                    {
+                        w = (int)g.MeasureString(tb.Text, tb.Font).Width + 40;
+                    }
+
+                    maxWidth = Math.Max(maxWidth, w);
+                }
+            }
+
+            return Math.Max(600, maxWidth + WidthPadding);
         }
     }
 }
