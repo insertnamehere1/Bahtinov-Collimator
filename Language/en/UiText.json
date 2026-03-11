@@ -28,7 +28,7 @@
   "SettingsTitle": "Settings",
   "SettingsGroupVoiceTitle": "Voice",
   "SettingsVoiceGuidanceLabel": "Voice Guidance",
-  "SettingsVoiceGuidanceDescription": "Enable voice guidance and hover your mouse over the Focus Group text box to activate voice callouts for that channel",
+  "SettingsVoiceGuidanceDescription": "Hover your mouse over the Focus Group text box for voice callouts of that channel",
   "SettingsGroupGuidanceTitle": "Guidance Configuration",
   "AnalysisModeGroupBox": "Imaging Capture",
   "SettingsGuidanceNewtonian": "Newtonian",
@@ -46,7 +46,7 @@
   "SettingsInvalidInputTitle": "Warning",
   "SettingsGroupMinimizeTitle": "Minimize",
   "SettingsMinimizeDescription": "Minimize while Selecting Star",
-  "SettingsMinimizeLabel": "Minimize SkyCal while you are selecting a star image",
+  "SettingsMinimizeLabel": "Minimize SkyCal while selecting a star image",
 
   "FocusGroupRed": "Red Group",
   "FocusGroupGreen": "Green Group",
