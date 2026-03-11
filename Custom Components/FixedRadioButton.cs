@@ -3,13 +3,13 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-public class FixedCheckBox : CheckBox
+public class FixedRadioButton : RadioButton
 {
     private bool _hovered = false;
 
     public int BoxSize { get; set; } = 20;
 
-    public FixedCheckBox()
+    public FixedRadioButton()
     {
         SetStyle(ControlStyles.UserPaint |
                  ControlStyles.AllPaintingInWmPaint |
@@ -21,42 +21,39 @@ public class FixedCheckBox : CheckBox
         e.Graphics.Clear(BackColor);
         e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-        // Box centered vertically
-        int boxTop = (Height - BoxSize) / 2;
-        Rectangle box = new Rectangle(0, boxTop, BoxSize, BoxSize);
+        // Circle centered vertically
+        int circleTop = (Height - BoxSize) / 2;
+        Rectangle circle = new Rectangle(0, circleTop, BoxSize, BoxSize);
 
-        // Box background
+        // Circle background
         Color boxBack = !Enabled
             ? SystemColors.Control
             : _hovered ? Color.FromArgb(230, 240, 255) : Color.White;
 
         using (SolidBrush brush = new SolidBrush(boxBack))
-            e.Graphics.FillRectangle(brush, box);
+            e.Graphics.FillEllipse(brush, circle);
 
-        // Box border
+        // Circle border
         Color borderColor = !Enabled
             ? Color.FromArgb(180, 180, 180)
             : _hovered ? Color.FromArgb(0, 120, 215) : Color.FromArgb(100, 100, 100);
 
         using (Pen pen = new Pen(borderColor))
-            e.Graphics.DrawRectangle(pen, box);
+            e.Graphics.DrawEllipse(pen, circle);
 
-        // Checkmark
+        // Inner filled circle when checked
         if (Checked)
         {
-            Color tickColor = Enabled ? Color.FromArgb(0, 120, 215) : Color.FromArgb(150, 150, 150);
-            using (Pen pen = new Pen(tickColor, 2f))
-            {
-                pen.StartCap = LineCap.Round;
-                pen.EndCap = LineCap.Round;
+            int innerPadding = 3;
+            Rectangle innerCircle = new Rectangle(
+                circle.X + innerPadding,
+                circle.Y + innerPadding,
+                circle.Width - innerPadding * 2,
+                circle.Height - innerPadding * 2);
 
-                Point p1 = new Point(box.Left + 2, box.Top + box.Height / 2);
-                Point p2 = new Point(box.Left + box.Width / 2 - 1, box.Bottom - 3);
-                Point p3 = new Point(box.Right - 2, box.Top + 2);
-
-                e.Graphics.DrawLine(pen, p1, p2);
-                e.Graphics.DrawLine(pen, p2, p3);
-            }
+            Color fillColor = Enabled ? Color.FromArgb(0, 120, 215) : Color.FromArgb(150, 150, 150);
+            using (SolidBrush brush = new SolidBrush(fillColor))
+                e.Graphics.FillEllipse(brush, innerCircle);
         }
 
         // Text

@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
-    public partial class Settings : Form
+    public partial class Settings : DpiAwareForm
     {
         #region DLL Imports
 
@@ -27,6 +27,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         public Settings()
         {
+            this.ShowMinimizeMaximize = false;
             InitializeComponent();
             ApplyLocalization();
             LoadSettings();
@@ -45,21 +46,29 @@ namespace Bahtinov_Collimator
         {
             base.OnLoad(e);
 
-            float increasedSize = this.Font.Size + 2.0f;
-            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
-
             // Adjust fonts
-            this.Font = newFont;
-            groupBox1.Font = newFont;
-            label5.Font = newFont;
-            CancelSettingsButton.Font = newFont;
-            okButton.Font = newFont;
-            SCTRadioButton.Font = newFont;
-            MakCassRadioButton.Font = newFont;
-            errorSignCheckBox.Font = newFont;
-            onTopCheckBox.Font = newFont;    
-            minimizeCheckBox.Font = newFont;
-            minimizeLabel.Font = newFont;
+            this.Font = new Font(this.Font.FontFamily, UITheme.DialogDefaultFontSize, this.Font.Style);
+            groupBox1.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
+            label5.Font = new Font(this.Font.FontFamily, UITheme.LabelFontSize, this.Font.Style);
+            CancelSettingsButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
+            okButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
+            SCTRadioButton.Font = new Font(this.Font.FontFamily, UITheme.CheckBoxFontSize, this.Font.Style);
+            MakCassRadioButton.Font = new Font(this.Font.FontFamily, UITheme.CheckBoxFontSize, this.Font.Style);
+            errorSignCheckBox.Font = new Font(this.Font.FontFamily, UITheme.CheckBoxFontSize, this.Font.Style);
+            onTopCheckBox.Font = new Font(this.Font.FontFamily, UITheme.CheckBoxFontSize, this.Font.Style);
+            minimizeCheckBox.Font = new Font(this.Font.FontFamily, UITheme.CheckBoxFontSize, this.Font.Style);
+            minimizeLabel.Font = new Font(this.Font.FontFamily, UITheme.LabelFontSize, this.Font.Style);
+            VoiceCheckBox.Font = new Font(this.Font.FontFamily, UITheme.CheckBoxFontSize, this.Font.Style);
+
+            SCTRadioButton.BoxSize = 20;
+            MakCassRadioButton.BoxSize = 20;
+            newtonianRadioButton.BoxSize = 20;
+            errorSignCheckBox.BoxSize = 20;
+            onTopCheckBox.BoxSize = 20;
+            VoiceCheckBox.BoxSize = 20;
+            minimizeCheckBox.BoxSize = 20;
+
+
         }
 
         /// <summary>
@@ -168,7 +177,7 @@ namespace Bahtinov_Collimator
             label5.Text = textPack.SettingsVoiceGuidanceDescription;
             SCTRadioButton.Text = textPack.SettingsGuidanceSct;
             MakCassRadioButton.Text = textPack.SettingsGuidanceMakCass;
-            radioButton1.Text = textPack.SettingsGuidanceNewtonian;
+            newtonianRadioButton.Text = textPack.SettingsGuidanceNewtonian;
             errorSignCheckBox.Text = textPack.SettingsCalibrationSignSwitch;
             label2.Text = textPack.SettingsCalibrationDescription;
             label1.Text = textPack.SettingsHistoryMarkersLabel;

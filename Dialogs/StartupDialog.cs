@@ -106,7 +106,6 @@ namespace SkyCal
 
             _dontShowAgainCheckBox = new FixedCheckBox
             {
-                BoxSize = 20,
                 AutoSize = true,
                 Text = UiText.Current.StartupDialogDontShowAgain,
                 Location = new Point(20, _bodyLabel.Bottom + 10)

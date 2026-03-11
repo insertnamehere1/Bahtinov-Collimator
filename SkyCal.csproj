@@ -165,6 +165,9 @@
     <Compile Include="Custom Components\FixedCheckbox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Custom Components\FixedRadioButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Custom Components\HistoryBar.cs">
       <SubType>Component</SubType>
     </Compile>
