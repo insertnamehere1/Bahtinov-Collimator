@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -15,6 +16,7 @@ namespace Bahtinov_Collimator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             LanguageLoader.LoadFromSystemCulture(AppDomain.CurrentDomain.BaseDirectory);
+            DpiAwareForm.AppIcon = Properties.Resources.SkyCal;
             Application.Run(new Form1());
         }
     }

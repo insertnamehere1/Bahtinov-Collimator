@@ -11,6 +11,7 @@ public class DpiAwareForm : Form
     private Button _closeButton;
     private Button _minimizeButton;
     private Button _maximizeButton;
+    private PictureBox _iconBox;
 
     private bool _dragging;
     private Point _dragStart;
@@ -18,6 +19,10 @@ public class DpiAwareForm : Form
 
     private const int TitleBarHeight = 45;
     private const int CaptionButtonWidth = 70;
+    private const int IconSize = 25;
+    private const int IconPadding = 8;
+
+    public static Icon AppIcon { get; set; }
 
     public int CornerRadius { get; set; } = 10;
 
@@ -92,13 +97,22 @@ public class DpiAwareForm : Form
             BackColor = Color.FromArgb(0, 120, 215)
         };
 
+        _iconBox = new PictureBox
+        {
+            Width = IconSize + IconPadding * 2,
+            Height = TitleBarHeight,
+            Dock = DockStyle.Left,
+            SizeMode = PictureBoxSizeMode.CenterImage,
+            BackColor = Color.Transparent
+        }; 
+
         _titleLabel = new Label
         {
             AutoSize = false,
             Dock = DockStyle.Fill,
             ForeColor = Color.White,
             TextAlign = ContentAlignment.MiddleLeft,
-            Padding = new Padding(8, 0, 0, 0),
+            Padding = new Padding(4, 0, 0, 0),
             Font = new Font("Segoe UI", UITheme.LabelFontSize, FontStyle.Regular)
         };
 
@@ -113,13 +127,13 @@ public class DpiAwareForm : Form
         _minimizeButton.Click += (s, e) => { if (_canMinimize) WindowState = FormWindowState.Minimized; };
         _maximizeButton.Click += (s, e) => { if (_canMaximize) ToggleMaximize(); };
 
-        // Fill must be added first; Right-docked controls added last appear rightmost
         _titleBar.Controls.Add(_titleLabel);
+        _titleBar.Controls.Add(_iconBox);
         _titleBar.Controls.Add(_minimizeButton);
         _titleBar.Controls.Add(_maximizeButton);
         _titleBar.Controls.Add(_closeButton);
 
-        foreach (Control c in new Control[] { _titleBar, _titleLabel })
+        foreach (Control c in new Control[] { _titleBar, _titleLabel, _iconBox })
         {
             c.MouseDown += TitleBar_MouseDown;
             c.MouseMove += TitleBar_MouseMove;
@@ -128,6 +142,47 @@ public class DpiAwareForm : Form
         }
 
         Controls.Add(_titleBar);
+    }
+
+    private void UpdateIcon()
+    {
+        if (_iconBox == null) return;
+
+        Icon icon = AppIcon ?? Icon;
+
+        if (icon != null)
+        {
+            using (Bitmap original = icon.ToBitmap())
+            {
+                _iconBox.Image = new Bitmap(original, new Size(IconSize, IconSize));
+            }
+            _iconBox.Visible = true;
+        }
+        else
+        {
+            _iconBox.Image = null;
+            _iconBox.Visible = false;
+        }
+    }
+
+
+
+    protected override void OnLoad(EventArgs e)
+    {
+        UpdateIcon();
+        ApplyRoundedCorners();
+        _titleBar.SendToBack();
+        base.OnLoad(e);
+    }
+
+    public new Icon Icon
+    {
+        get { return base.Icon; }
+        set
+        {
+            base.Icon = value;
+            UpdateIcon();
+        }
     }
 
     private Button MakeCaptionButton(string symbol)
@@ -193,13 +248,6 @@ public class DpiAwareForm : Form
         {
             Region = new Region(path);
         }
-    }
-
-    protected override void OnLoad(EventArgs e)
-    {
-        ApplyRoundedCorners();
-        _titleBar.SendToBack();
-        base.OnLoad(e);
     }
 
     protected override void OnSizeChanged(EventArgs e)
