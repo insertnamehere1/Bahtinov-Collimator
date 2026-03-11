@@ -162,6 +162,9 @@
     <Compile Include="Custom Components\CalibrationComponent.Designer.cs">
       <DependentUpon>CalibrationComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Custom Components\FixedCheckbox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Custom Components\HistoryBar.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -226,7 +229,7 @@
     <Compile Include="Dialogs\StartupDialog.Designer.cs">
       <DependentUpon>StartupDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="DpiAwareForm.cs">
+    <Compile Include="Custom Components\DpiAwareForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Image Capture\ImageCapture.cs" />

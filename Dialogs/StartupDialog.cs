@@ -1,8 +1,10 @@
 ﻿using Bahtinov_Collimator;
 using Bahtinov_Collimator.Custom_Components;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Design;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -13,7 +15,7 @@ namespace SkyCal
     /// Includes a "Do not show again" checkbox.
     /// The caller decides what to do with the checkbox state and persists it.
     /// </summary>
-    public partial class StartupDialog : Form
+    public partial class StartupDialog : DpiAwareForm
     {
 
         #region DLL Imports
@@ -29,9 +31,9 @@ namespace SkyCal
 
         #endregion
 
-        private Label _titleLabel;
-        private Label _bodyLabel;
-        private CheckBox _dontShowAgainCheckBox;
+        private System.Windows.Forms.Label _titleLabel;
+        private System.Windows.Forms.Label _bodyLabel;
+        private FixedCheckBox _dontShowAgainCheckBox;
         private RoundedButton _runButton;
         private RoundedButton _notNowButton;
 
@@ -48,6 +50,7 @@ namespace SkyCal
         /// </summary>
         public StartupDialog()
         {
+            this.ShowMinimizeMaximize = false;
             InitializeComponent();
             UISetup();
 
@@ -78,31 +81,32 @@ namespace SkyCal
             MaximizeBox = false;
             MinimizeBox = false;
             ShowInTaskbar = false;
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleMode = AutoScaleMode.None;
             Font = SystemFonts.MessageBoxFont;
 
             Padding = new Padding(14);
             ClientSize = new Size(520, 250);
 
-            _titleLabel = new Label
+            _titleLabel = new System.Windows.Forms.Label
             {
                 AutoSize = true,
                 Text = UiText.Current.StartupDialogHeading,
                 Font = new Font(Font, FontStyle.Bold),
-                Location = new Point(14, 14)
+                Location = new Point(14, 54)
             };
 
-            _bodyLabel = new Label
+            _bodyLabel = new System.Windows.Forms.Label
             {
                 AutoSize = false,
                 Text = UiText.Current.StartupDialogBody,
-                Location = new Point(14, _titleLabel.Bottom + 10),
+                Location = new Point(14, _titleLabel.Bottom + 20),
                 Size = new Size(ClientSize.Width - 28, 150)
             };
 
 
-            _dontShowAgainCheckBox = new CheckBox
+            _dontShowAgainCheckBox = new FixedCheckBox
             {
+                BoxSize = 20,
                 AutoSize = true,
                 Text = UiText.Current.StartupDialogDontShowAgain,
                 Location = new Point(20, _bodyLabel.Bottom + 10)
@@ -150,5 +154,47 @@ namespace SkyCal
             Controls.Add(_runButton);
             Controls.Add(_notNowButton);
         }
+
+        protected override async void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            this.Font = new Font(this.Font.FontFamily, UITheme.DialogDefaultFontSize, this.Font.Style);
+
+            _titleLabel.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
+            _bodyLabel.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
+            _dontShowAgainCheckBox.Font = new Font(this.Font.FontFamily, UITheme.CheckBoxFontSize, this.Font.Style);
+            _runButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
+            _notNowButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
+
+            BeginInvoke(new Action(ResizeFormToContent));
+        }
+
+        private void ResizeFormToContent()
+        {
+            if (!IsHandleCreated || string.IsNullOrEmpty(_bodyLabel.Text)) return;
+
+            AnchorStyles savedAnchor = _bodyLabel.Anchor;
+            _bodyLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+
+            int savedHeight = _bodyLabel.Height;
+
+            Size contentSize = TextRenderer.MeasureText(
+                _bodyLabel.Text,
+                _bodyLabel.Font,
+                new Size(_bodyLabel.Width, int.MaxValue),
+                TextFormatFlags.WordBreak);
+
+            int diff = contentSize.Height - savedHeight;
+            _bodyLabel.Height = contentSize.Height;
+            _dontShowAgainCheckBox.Location = new Point(20, _bodyLabel.Bottom + 20);
+            
+            _notNowButton.Location = new Point(ClientSize.Width - 20 - _notNowButton.Width, _dontShowAgainCheckBox.Bottom + 20);
+            _runButton.Location = new Point(_notNowButton.Left - 10 - _runButton.Width, _dontShowAgainCheckBox.Bottom + 20);
+            Height = _runButton.Bottom + 20;
+
+            _bodyLabel.Anchor = savedAnchor;
+        }
+
     }
 }

@@ -60,7 +60,7 @@
   "AboutVersionFormat": "Version {0}",
   "AboutDescription": "The application is designed to assist astronomers collimating and focusing their telescopes with ease and precision. It incorporates the algorithm and code developed by the late Niels Noordhoek, to achieve accurate adjustments for both focus and collimation.",
 
-  "StartupDialogTitle": "SkyCal",
+  "StartupDialogTitle": "SkyCal Calibration",
   "StartupDialogHeading": "Calibration is Recommended:",
   "StartupDialogBody": "Tri-Bahtinov calibration enables full SkyCal functionality. Some features are unavailable until calibration is completed. (Calibration is also available in the Setup menu.)\r\n\r\nWould you like to calibrate SkyCal now?",
   "StartupDialogDontShowAgain": "Do not show again",
