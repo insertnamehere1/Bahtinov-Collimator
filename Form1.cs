@@ -1167,12 +1167,15 @@ namespace Bahtinov_Collimator
         /// </param>
         private void ShowStartupCalibrationPromptIfNeeded(IWin32Window owner)
         {
+#pragma warning disable CS0162
+
             if (TEST_MODE)
             {
                 Properties.Settings.Default.ShowStartupCalibrationPrompt = true;
                 Properties.Settings.Default.CalibrationCompleted = false;
                 Properties.Settings.Default.Save();
             }
+#pragma warning restore CS0162
 
             if (!Properties.Settings.Default.ShowStartupCalibrationPrompt)
                 return;
