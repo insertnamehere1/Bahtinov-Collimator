@@ -20,6 +20,11 @@ namespace Bahtinov_Collimator
 
         #endregion
 
+        #region Variables
+        public bool RestartCapture { get; private set; }
+        
+        #endregion
+
         #region Constructor
 
         /// <summary>
@@ -202,6 +207,17 @@ namespace Bahtinov_Collimator
         {
             try
             {
+                if (Properties.Settings.Default.VoiceEnabled != VoiceCheckBox.Checked ||
+                    Properties.Settings.Default.SignChange != errorSignCheckBox.Checked ||
+                    Properties.Settings.Default.historyCount != int.Parse(historyMakersTextBox.Text) ||
+                    Properties.Settings.Default.SCTSelected != SCTRadioButton.Checked ||
+                    Properties.Settings.Default.MCTSelected != MakCassRadioButton.Checked)
+                {
+                    RestartCapture = true;
+                }
+                else
+                    RestartCapture = false;
+
                 // Parse input values and save them to application settings
                 Properties.Settings.Default.VoiceEnabled = VoiceCheckBox.Checked;
                 Properties.Settings.Default.SignChange = errorSignCheckBox.Checked;

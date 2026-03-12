@@ -1104,7 +1104,7 @@ namespace Bahtinov_Collimator
                     this.TopMost = false;   
 
                 // stop any running capture so that new settings will take effect, then restart if we were previously capturing
-                if (screenCaptureRunningFlag == true)
+                if (screenCaptureRunningFlag == true && settingsDialog.RestartCapture)
                     StartButton_Click(this, EventArgs.Empty);
             }
         }
