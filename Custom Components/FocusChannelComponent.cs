@@ -138,6 +138,8 @@ namespace Bahtinov_Collimator
             SetLabelText();
             offsetBarControl1.Maximum = 2.0f;
             offsetBarControl1.Minimum = -2.0f;
+            offsetBarControl1.Size = new Size(235, 44);
+            offsetBarControl1.Location = new Point(groupBox1.ClientSize.Width - offsetBarControl1.Width - 8, (groupBox1.ClientSize.Height - offsetBarControl1.Height) / 2 + 30);
         }
 
         /// <summary>

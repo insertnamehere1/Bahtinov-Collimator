@@ -29,9 +29,7 @@ namespace Bahtinov_Collimator
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.BorderColor = System.Drawing.Color.Gray;
             this.groupBox1.BorderThickness = 2;
             this.groupBox1.Controls.Add(this.offsetBarControl1);
@@ -42,11 +40,11 @@ namespace Bahtinov_Collimator
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.CornerRadius = 12;
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(3, 2);
+            this.groupBox1.Location = new System.Drawing.Point(4, 2);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(234, 146);
+            this.groupBox1.Size = new System.Drawing.Size(250, 142);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "FocusChannel";
@@ -58,12 +56,12 @@ namespace Bahtinov_Collimator
             | System.Windows.Forms.AnchorStyles.Right)));
             this.offsetBarControl1.BarColor = System.Drawing.Color.Gray;
             this.offsetBarControl1.Enabled = false;
-            this.offsetBarControl1.Location = new System.Drawing.Point(6, 85);
+            this.offsetBarControl1.Location = new System.Drawing.Point(6, 74);
             this.offsetBarControl1.MarkerColor = System.Drawing.Color.Green;
             this.offsetBarControl1.Maximum = 1F;
             this.offsetBarControl1.Minimum = -1F;
             this.offsetBarControl1.Name = "offsetBarControl1";
-            this.offsetBarControl1.Size = new System.Drawing.Size(222, 50);
+            this.offsetBarControl1.Size = new System.Drawing.Size(238, 47);
             this.offsetBarControl1.TabIndex = 8;
             this.offsetBarControl1.Text = "offsetBarControl1";
             this.offsetBarControl1.TextColor = System.Drawing.Color.White;
@@ -88,7 +86,7 @@ namespace Bahtinov_Collimator
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(12, 50);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(148, 18);
+            this.label5.Size = new System.Drawing.Size(179, 22);
             this.label5.TabIndex = 6;
             this.label5.Text = "Within Critical Focus:";
             // 
@@ -98,7 +96,7 @@ namespace Bahtinov_Collimator
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(170, 27);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(23, 18);
+            this.label2.Size = new System.Drawing.Size(29, 22);
             this.label2.TabIndex = 2;
             this.label2.Text = "px";
             // 
@@ -120,18 +118,17 @@ namespace Bahtinov_Collimator
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 28);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(108, 18);
+            this.label1.Size = new System.Drawing.Size(130, 22);
             this.label1.TabIndex = 0;
             this.label1.Text = "Error Distance:";
             // 
             // FocusChannelComponent
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox1);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "FocusChannelComponent";
-            this.Size = new System.Drawing.Size(237, 150);
+            this.Size = new System.Drawing.Size(254, 165);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
