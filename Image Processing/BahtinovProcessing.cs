@@ -1122,7 +1122,7 @@ namespace Bahtinov_Collimator
                 int circle_y = (int)(height - errorMarker_Y - circleRadius + yOffset);
                 int circle_width = circleRadius * 2;
                 int circle_height = circleRadius * 2;
-                string errorValue = (errorSign * (Math.Floor((float)errorDistanceD * 10) / 10)).ToString("F1");
+                string errorValue = bahtinovOffset.ToString("F1");
 
                 lineGroup.ErrorCircle = new BahtinovLineDataEventArgs.ErrorCircle(
                     new Point(circle_x, circle_y), circle_width, circle_height, errorValue);
