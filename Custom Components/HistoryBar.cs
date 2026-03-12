@@ -148,9 +148,7 @@ namespace Bahtinov_Collimator.Custom_Components
             // Base design size is 300x80 at 96 DPI.
             // Multiply by DpiScale so the default matches the current monitor DPI.
             var scale = DpiScale;
-            Size = new Size(
-                (int)(300 * scale),
-                (int)(60 * scale));
+            Size = new Size((int)(300 * DpiScale), GetPreferredHeight());
         }
 
         /// <summary>
@@ -208,7 +206,10 @@ namespace Bahtinov_Collimator.Custom_Components
             int margin = 0;
             int left = margin + (int)(designLeftPad * scale);
             int right = Width - margin - (int)(designRightPad * scale);
-            int centerY = Height / 2 + 10;
+
+            // Position the bar so content above (text+gap+marker) and below (tick) fit with 2px padding
+            float belowCenter = Math.Max(designZeroTickDown, designHistoryRadius) * scale;
+            int centerY = Height - (int)(belowCenter + 2 * scale);
 
             float zeroTickUp = designZeroTickUp * scale;
             float zeroTickDown = designZeroTickDown * scale;
@@ -319,6 +320,28 @@ namespace Bahtinov_Collimator.Custom_Components
                     markerX - valSize.Width / 2f,
                     markerRect.Top - valSize.Height - valueGap);
             }
+        }
+
+        private int GetPreferredHeight()
+        {
+            float scale = DpiScale;
+            const float designMarkerRadius = 7f;
+            const float designZeroTickDown = 12f;
+            const float designValueGap = 2f;
+
+            // Content above bar centre: value text + gap + marker radius
+            float aboveCenter = Font.Height + (designValueGap + designMarkerRadius) * scale;
+ 
+            // Content below bar centre: whichever is taller — zero tick or marker
+            float belowCenter = Math.Max(designZeroTickDown, designMarkerRadius) * scale;
+
+            return (int)(aboveCenter + belowCenter) + (int)(4 * scale); // 2px padding each side
+        }
+
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            Size = new Size(Width, GetPreferredHeight());
         }
 
         /// <summary>
