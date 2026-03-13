@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
@@ -35,11 +36,13 @@ namespace Bahtinov_Collimator
                 }
             }
 
+            MessageBox.Show("The required language files are missing. Please re-install", "Missing Language Files", MessageBoxButtons.OK, MessageBoxIcon.Error);
             throw new FileNotFoundException("No compatible language pack files were found.");
         }
 
         private static string GetOverrideLanguageCode()
         {
+            /// TODO Testing only - remove before release
             return "en";
             //return Environment.GetEnvironmentVariable(OverrideLanguageEnvironmentVariable)?.Trim();
         }
