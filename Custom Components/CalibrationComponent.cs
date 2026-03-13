@@ -474,18 +474,24 @@ namespace Bahtinov_Collimator.Custom_Components
 
                 rtb.AppendText("\n" + textPack.CalibrationAutoCompleteLine + "\r\n\r\n");
 
+                rtb.SelectionAlignment = HorizontalAlignment.Center;
                 rtb.AppendText("\n" + textPack.CalibrationMovePrompt + "\r\n");
                 BoldLastLine(rtb);
-
+                rtb.SelectionAlignment = HorizontalAlignment.Left;
                 return;
             }
 
             rtb.Clear();
+            rtb.SelectionAlignment = HorizontalAlignment.Center;
+            rtb.AppendText("\r\n" + textPack.CalibrationCompleteHeader + "\r\n\n\n\n");
+            rtb.SelectionAlignment = HorizontalAlignment.Left;
+            BoldLastLine(rtb);
 
-            rtb.AppendText("\r\n" + textPack.CalibrationCompleteHeader + "\r\n\n");
+            rtb.SelectionAlignment = HorizontalAlignment.Center;
+            rtb.Font = new Font(this.Font.FontFamily, UITheme.AboutHeadingFontSize, this.Font.Style);
+            rtb.AppendText("\r\n" + textPack.CalibrationCompleteSummary + "\r");
             BoldLastLine(rtb);
-            rtb.AppendText("\r\n" + textPack.CalibrationCompleteSummary);
-            BoldLastLine(rtb);
+            rtb.SelectionAlignment = HorizontalAlignment.Left;
         }
 
         /// <summary>
