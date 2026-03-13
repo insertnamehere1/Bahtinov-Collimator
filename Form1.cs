@@ -28,6 +28,7 @@ using Bahtinov_Collimator.Voice;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -84,7 +85,7 @@ namespace Bahtinov_Collimator
         private const int MAX_IMAGE_DISPLAY_X_OFFSET = 376;
 
         /// Sets testing mode for Calibration 
-        private const bool TEST_MODE = true;
+        private const bool TEST_MODE = false;
 
         #endregion
 
@@ -186,6 +187,7 @@ namespace Bahtinov_Collimator
 
             // Initialize the form's components.
             InitializeComponent();
+            RestoreWindowPosition();
             ApplyLocalization();
 
             // Initialize the red focus channel component.
@@ -441,6 +443,30 @@ namespace Bahtinov_Collimator
             toggleSwitch1.CheckedChanged += SlideSwitchChanged;
         }
 
+        /// <summary>
+        /// Restores the main window position from user settings, if a previously saved
+        /// position exists and is still visible on one of the connected screens.
+        /// Falls back to Windows default placement when no valid saved position is found.
+        /// </summary>
+        private void RestoreWindowPosition()
+        {
+            int x = Properties.Settings.Default.MainWindowX;
+            int y = Properties.Settings.Default.MainWindowY;
+
+            if (x == -1 && y == -1)
+                return;
+
+            // Ensure the top-left corner of the window is still visible on a screen.
+            Point savedLocation = new Point(x, y);
+            bool isOnScreen = Screen.AllScreens.Any(s => s.WorkingArea.Contains(savedLocation));
+
+            if (isOnScreen)
+            {
+                this.StartPosition = FormStartPosition.Manual;
+                this.Location = savedLocation;
+            }
+        }
+
         #endregion
 
         #region Events
@@ -450,6 +476,17 @@ namespace Bahtinov_Collimator
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The event data.</param>
+        /// <summary>
+        /// Saves the current window position to user settings when the form is closing,
+        /// so it can be restored on the next launch.
+        /// </summary>
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.MainWindowX = this.Location.X;
+            Properties.Settings.Default.MainWindowY = this.Location.Y;
+            Properties.Settings.Default.Save();
+        }
+
         private void StartButton_Click(object sender, EventArgs e)
         {
             if (screenCaptureRunningFlag == false)
