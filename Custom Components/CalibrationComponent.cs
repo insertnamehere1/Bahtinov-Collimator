@@ -449,7 +449,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
                 rtb.Clear();
 
-                rtb.AppendText(header2 + "\r\n\r\n\n" + textPack.CalibrationStep2Title + "\r\n\n");
+                rtb.AppendText(header2 + "\r\n\r\n" + textPack.CalibrationStep2Title + "\r\n\n");
                 BoldLastLine(rtb);
 
                 rtb.SelectionBullet = true;
@@ -475,7 +475,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 rtb.AppendText("\n" + textPack.CalibrationAutoCompleteLine + "\r\n\r\n");
 
                 rtb.SelectionAlignment = HorizontalAlignment.Center;
-                rtb.AppendText("\n" + textPack.CalibrationMovePrompt + "\r\n");
+                rtb.AppendText( textPack.CalibrationMovePrompt + "\r");
                 BoldLastLine(rtb);
                 rtb.SelectionAlignment = HorizontalAlignment.Left;
                 return;

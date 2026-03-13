@@ -43,8 +43,8 @@ namespace Bahtinov_Collimator
         private static string GetOverrideLanguageCode()
         {
             /// TODO Testing only - remove before release
-            return "es";
-            //return Environment.GetEnvironmentVariable(OverrideLanguageEnvironmentVariable)?.Trim();
+  //          return "zh";
+            return Environment.GetEnvironmentVariable(OverrideLanguageEnvironmentVariable)?.Trim();
         }
 
         private static IEnumerable<string> BuildLanguageCandidates(CultureInfo culture)

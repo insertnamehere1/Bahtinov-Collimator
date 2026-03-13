@@ -7,7 +7,7 @@
   "CaptureHeader": "Ein Tri-Bahtinov-Bild aufnehmen",
   "CaptureSummary": "Bitte nehmen Sie ein Bahtinov-Bild auf, um Anpassungen zu beginnen.",
   "CaptureBullet1": "Stellen Sie sicher, dass ein heller Stern zentriert ist.",
-  "CaptureBullet2": "Tri-Bahtinov-Maske anbringen und „Stern auswählen" klicken.",
+  "CaptureBullet2": "Tri-Bahtinov-Maske anbringen und \"Stern auswählen\" klicken.",
 
   "FocusOnlyHeader": "Fokusführung nicht verfügbar",
   "FocusOnlyNeedsAdjustingSummary": "Die Führung ist nur für Tri-Bahtinov-Bilder verfügbar.",
@@ -47,7 +47,7 @@
   "CalibrationTitle": "Tri-Bahtinov-Kalibrierung",
   "CalibrationQuitButtonText": "Beenden",
   "CalibrationCloseButtonText": "Schließen",
-  "CalibrationObjectiveHeader": "\nZiel – Die Kalibrierung ermöglicht SkyCal, bei Kollimationsschrauben-Anpassungen zu beraten und die Anleitung „Was soll ich als Nächstes tun?" zu aktivieren.",
+  "CalibrationObjectiveHeader": "\nZiel – Die Kalibrierung ermöglicht SkyCal, bei Kollimationsschrauben-Anpassungen zu beraten und die Anleitung \"Was soll ich als Nächstes tun?\" zu aktivieren.",
   "CalibrationStep1Title": "Schritt 1 – Einrichtung",
   "CalibrationStep1Bullet1": "Tri-Bahtinov-Kollimationsmaske am Teleskop anbringen.",
   "CalibrationStep1Bullet2": "Ein Sternbild aufnehmen.",
@@ -57,8 +57,8 @@
   "CalibrationStep2Title": "Schritt 2 – Fokussierer bewegen.",
   "CalibrationStep2Bullet1": "Wenn der Fokussierer den Hauptspiegel bewegt, nach INNEN bewegen, Richtung Sekundärspiegel.",
   "CalibrationStep2Bullet2": "Wenn der Fokussierer die Kamera bewegt, nach INNEN bewegen, Richtung Teleskopkörper.",
-  "CalibrationAutoCompleteLine": "Hinweis: Lassen Sie den Fokussierer nach jeder Aufnahme vollständig einrasten. Verstellen Sie den Fokus weiterhin in kleinen Schritten nach innen, bis die Kalibrierung abgeschlossen ist.",
-  "CalibrationMovePrompt": "Bitte den Fokussierer jetzt nach innen bewegen....",
+  "CalibrationAutoCompleteLine": "Hinweis: Warten Sie, bis der Fokussierer zwischen den Aufnahmen eingerastet ist. In kleinen Schritten nach innen verstellen, bis die Kalibrierung abgeschlossen ist",
+  "CalibrationMovePrompt": "Fokussierer nach innen bewegen...",
   "CalibrationCompleteHeader": "Kalibrierung erfolgreich abgeschlossen",
   "CalibrationCompleteSummary": "SkyCal hat seine Einstellungen aktualisiert."
 }

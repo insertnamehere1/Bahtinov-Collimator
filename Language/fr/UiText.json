@@ -45,7 +45,7 @@
   "SettingsInvalidInputMessage": "Entrée invalide, réessayez",
   "SettingsInvalidInputTitle": "Avertissement",
   "SettingsGroupMinimizeTitle": "Réduire",
-  "SettingsMinimizeDescription": "Réduire lors de la sélection d'étoile",
+  "SettingsMinimizeDescription": "Minimiser à la sélection",
   "SettingsMinimizeLabel": "Réduire SkyCal lors de la sélection d'une image d'étoile",
 
   "FocusGroupRed": "Groupe rouge",

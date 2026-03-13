@@ -123,17 +123,12 @@ namespace Bahtinov_Collimator
             if (!File.Exists(filePath))
                 throw new FileNotFoundException("Text pack JSON not found.", filePath);
 
-            using (var fs = File.OpenRead(filePath))
+            string json = File.ReadAllText(filePath, Encoding.UTF8);
+            using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
             {
-                // Strip BOM if present
-                var bom = new byte[3];
-                int read = fs.Read(bom, 0, 3);
-                if (read < 3 || bom[0] != 0xEF || bom[1] != 0xBB || bom[2] != 0xBF)
-                    fs.Seek(0, SeekOrigin.Begin); // No BOM, rewind
-
                 var ser = new DataContractJsonSerializer(typeof(NextStepTextPack));
 
-                var obj = ser.ReadObject(fs) as NextStepTextPack
+                var obj = ser.ReadObject(ms) as NextStepTextPack
                     ?? throw new SerializationException("Failed to deserialize NextStepTextPack from JSON.");
 
                 _current = obj;

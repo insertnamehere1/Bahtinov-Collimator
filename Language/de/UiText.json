@@ -36,7 +36,7 @@
   "SettingsGuidanceSct": "Schmidt–Cassegrain (SCT)",
   "SettingsGroupCalibrationTitle": "Kalibrierung",
   "SettingsCalibrationSignSwitch": "Vorzeichen umkehren",
-  "SettingsCalibrationDescription": "Vorzeichen umkehren, wenn die SkyCal-Hinweise umgekehrt erscheinen.",
+  "SettingsCalibrationDescription": "Vorzeichen umkehren, wenn die SkyCal-Hinweise umgekehrt erscheinen",
   "SettingsGroupHistoryTitle": "Verlaufsmarken",
   "SettingsHistoryMarkersLabel": "Verlaufsmarken",
   "SettingsHistoryMarkersDescription": "Legt die Anzahl der Verlaufsmarken fest, die auf der Fehlerleiste angezeigt werden",
@@ -45,7 +45,7 @@
   "SettingsInvalidInputMessage": "Ungültige Eingabe, bitte erneut versuchen",
   "SettingsInvalidInputTitle": "Warnung",
   "SettingsGroupMinimizeTitle": "Minimieren",
-  "SettingsMinimizeDescription": "Beim Auswählen des Sterns minimieren",
+  "SettingsMinimizeDescription": "Bei Sternauswahl minimieren",
   "SettingsMinimizeLabel": "SkyCal beim Auswählen eines Sternbildes minimieren",
 
   "FocusGroupRed": "Rote Gruppe",

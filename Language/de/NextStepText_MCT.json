@@ -57,8 +57,8 @@
   "CalibrationStep2Title": "Schritt 2 – Fokussierer bewegen.",
   "CalibrationStep2Bullet1": "Wenn der Fokussierer den Hauptspiegel bewegt, nach INNEN bewegen, Richtung Sekundärspiegel.",
   "CalibrationStep2Bullet2": "Wenn der Fokussierer die Kamera bewegt, nach INNEN bewegen, Richtung Teleskopkörper.",
-  "CalibrationAutoCompleteLine": "Hinweis: Lassen Sie den Fokussierer nach jeder Aufnahme vollständig einrasten. Verstellen Sie den Fokus weiterhin in kleinen Schritten nach innen, bis die Kalibrierung abgeschlossen ist.",
-  "CalibrationMovePrompt": "Bitte den Fokussierer jetzt nach innen bewegen....",
+  "CalibrationAutoCompleteLine": "Hinweis: Warten Sie, bis der Fokussierer zwischen den Aufnahmen eingerastet ist. In kleinen Schritten nach innen verstellen, bis die Kalibrierung abgeschlossen ist",
+  "CalibrationMovePrompt": "Fokussierer nach innen bewegen...",
   "CalibrationCompleteHeader": "Kalibrierung erfolgreich abgeschlossen",
   "CalibrationCompleteSummary": "SkyCal hat seine Einstellungen aktualisiert."
 }

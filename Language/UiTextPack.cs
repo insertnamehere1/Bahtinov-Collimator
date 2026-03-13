@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Security.Permissions;
+using System.Text;
 
 namespace Bahtinov_Collimator
 {
@@ -165,11 +166,12 @@ namespace Bahtinov_Collimator
             if (!File.Exists(filePath))
                 throw new FileNotFoundException("UI text JSON not found.", filePath);
 
-            using (var fs = File.OpenRead(filePath))
+            string json = File.ReadAllText(filePath, Encoding.UTF8);
+            using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
             {
                 var ser = new DataContractJsonSerializer(typeof(UiTextPack));
 
-                var obj = ser.ReadObject(fs) as UiTextPack
+                var obj = ser.ReadObject(ms) as UiTextPack
                     ?? throw new SerializationException("Failed to deserialize UiTextPack from JSON.");
 
                 _current = obj;

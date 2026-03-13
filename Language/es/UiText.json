@@ -123,6 +123,6 @@
   "UpdateNetworkErrorTitle": "Problema de red",
 
   "SettingsKeepOnTopLabel": "Hacer que SkyCal aparezca siempre encima de otras aplicaciones",
-  "SettingsKeepOnTopDescription": "Mantener SkyCal en primer plano",
+  "SettingsKeepOnTopDescription": "Mantener SkyCal encima",
   "SettingsGroupWindowTitle": "Siempre en primer plano"
 }
