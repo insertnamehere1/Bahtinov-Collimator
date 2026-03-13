@@ -1,0 +1,64 @@
+{
+  "DialogTitle": "次に何をすればいいですか？ (MCT)",
+  "DebugLineFormat": "値：赤 {0}   緑 {1}   青 {2}",
+
+  "SectionWhatToDoTitle": "操作方法",
+
+  "CaptureHeader": "トライバフティノフ画像をキャプチャ",
+  "CaptureSummary": "調整を開始するには、バフティノフ画像をキャプチャしてください。",
+  "CaptureBullet1": "明るい星が中央に配置されていることを確認してください。",
+  "CaptureBullet2": "トライバフティノフマスクを取り付け、「星を選択」をクリックしてください。",
+
+  "FocusOnlyHeader": "フォーカスガイダンスは利用できません",
+  "FocusOnlyNeedsAdjustingSummary": "ガイダンスはトライバフティノフ画像のみで利用可能です。",
+
+  "FocusBalancedHeader": "エラーマーカーを 0 の周りにバランス調整",
+  "FocusBalancedSummary": "3 つのエラー値が 0 の周りにバランスするまでフォーカスを調整してください。\n",
+  "FocusAllPositiveBullet": "すべての値が正です。フォーカサーを小刻みに内側へ動かしてください。",
+  "FocusAllNegativeBullet": "すべての値が負です。フォーカサーを小刻みに外側へ動かしてください。",
+  "FocusStraddleNotBalancedBullet1": "値は 0 をまたいでいますが、まだバランスが取れていません。",
+  "FocusStraddleNotBalancedBullet2Format": "3 つのエラー値が 0 の周りに均等に分布するまでフォーカサーを{0}方向に動かしてください。",
+  "FocusTargetLineFormat": "目標：0 に近い平均値で、大きさが似ていること。",
+  "FocusOnlyBeginScrewsBullet": "このバランスが達成されてからコリメーション調整を始めてください。",
+  "FocusFooterHint": "ヒント：内側とは主鏡を副鏡側へ、またはカメラを望遠鏡側へ動かすこと、\n外側とは主鏡を副鏡から離す、またはカメラを望遠鏡から離すことです",
+
+  "CollimationHeader": "MCT のコリメーション調整",
+  "CollimationSummary": "2 本以上のネジを同時に使用して、バランスの取れたコリメーション調整を行ってください。\n",
+
+  "DoneHeader": "良好です",
+  "DoneSummary": "すべての値がゼロに近い状態です。\n",
+  "DoneBullet": "調整は不要です。",
+  "CollimationPositiveInstructionFormat": "{0} 調整 - 緩める（反時計回り）。{0} が副鏡から離れすぎています。",
+  "CollimationNegativeInstructionFormat": "{0} 調整 - 締める（時計回り）。{0} が副鏡に近すぎます。",
+  "CollimationAdjustTogetherBullet": "\r\nテンションのバランスを保つため、これらのネジを一緒に調整してください。",
+  "CollimationFooterHint": "ヒント：星を再中心化し、値が再び 0 をまたぐまで再フォーカスしてから繰り返してください。",
+
+  "DirectionIn": "内側",
+  "DirectionOut": "外側",
+
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "{0} ネジ",
+
+  "ChannelRed": "赤",
+  "ChannelGreen": "緑",
+  "ChannelBlue": "青",
+
+  "CalibrationTitle": "トライバフティノフキャリブレーション",
+  "CalibrationQuitButtonText": "終了",
+  "CalibrationCloseButtonText": "閉じる",
+  "CalibrationObjectiveHeader": "\n目的 - キャリブレーションにより、SkyCal がコリメーションネジの調整をアドバイスし、「次に何をすればいいですか？」のガイダンスを有効にできます。",
+  "CalibrationStep1Title": "ステップ 1 - セットアップ",
+  "CalibrationStep1Bullet1": "トライバフティノフコリメーションマスクを取り付けてください。",
+  "CalibrationStep1Bullet2": "星の画像をキャプチャしてください。",
+  "CalibrationStep1Warning": "注意：回折スパイクが明確で明瞭に見えるようにキャプチャソフトウェアを調整してください。",
+  "CalibrationWaitingForImage": "有効なトライバフティノフ画像を待っています...",
+  "CalibrationAimHeader": "\n目標 - SkyCal がフォーカス位置によってコリメーションエラーがどのように変化するかを学習するために、フォーカスを内側に調整してください。",
+  "CalibrationStep2Title": "ステップ 2 - フォーカサーの移動",
+  "CalibrationStep2Bullet1": "フォーカサーが主鏡を動かす場合、副鏡に向かって内側に動かしてください。",
+  "CalibrationStep2Bullet2": "フォーカサーがカメラを動かす場合、望遠鏡本体に向かって内側に動かしてください。",
+  "CalibrationAutoCompleteLine": "注意：各画像をキャプチャする前にフォーカサーが完全に安定するのを待ってください。キャリブレーションが完了するまで小刻みにフォーカスを内側に調整し続けてください。",
+  "CalibrationMovePrompt": "今すぐフォーカサーを内側に動かしてください....",
+  "CalibrationCompleteHeader": "キャリブレーションが正常に完了しました",
+  "CalibrationCompleteSummary": "SkyCal の設定が更新されました。"
+}
