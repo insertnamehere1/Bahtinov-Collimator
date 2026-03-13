@@ -22,14 +22,14 @@
   "FocusOnlyBeginScrewsBullet": "Begin collimation adjustments only after this balance is achieved.",
   "FocusFooterHint": "Tip: IN is primary mirror towards secondary or camera towards telescope,\nOUT is primary away from secondary or camera away from telescope",
 
-  "CollimationHeader": "Collimation Adjustments for SCT",
+  "CollimationHeader": "Collimation Adjustments for MCT",
   "CollimationSummary": "Proceed with balanced collimation using 2 or more screws at the same time.\n",
 
   "DoneHeader": "Looks Good",
   "DoneSummary": "All values are close to zero.\n",
   "DoneBullet": "No adjustment required.",
-  "CollimationPositiveInstructionFormat": "{0} adjustment - LOOSEN (Counter Clockwise). {0} is too far from the primary.",
-  "CollimationNegativeInstructionFormat": "{0} adjustment - TIGHTEN (Clockwise). {0} is too close to the primary.",
+  "CollimationPositiveInstructionFormat": "{0} adjustment - LOOSEN (Counter Clockwise). {0} is too far from the secondary.",
+  "CollimationNegativeInstructionFormat": "{0} adjustment - TIGHTEN (Clockwise). {0} is too close to the secondary.",
   "CollimationAdjustTogetherBullet": "\r\nAdjust these screws together to keep tension balanced.",
   "CollimationFooterHint": "Tip: Re-center the star, then refocus until the values straddle 0 again before repeating.",
 
