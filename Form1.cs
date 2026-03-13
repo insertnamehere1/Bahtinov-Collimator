@@ -18,7 +18,7 @@
 //IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 //AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISINGtrst FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 
@@ -84,7 +84,7 @@ namespace Bahtinov_Collimator
         private const int MAX_IMAGE_DISPLAY_X_OFFSET = 376;
 
         /// Sets testing mode for Calibration 
-        private const bool TEST_MODE = false;
+        private const bool TEST_MODE = true;
 
         #endregion
 
@@ -555,9 +555,9 @@ namespace Bahtinov_Collimator
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue, groupBoxRed);
+                DecreaseFocusChannelSize();
                 whatDoIDoNextToolStripMenuItem.Enabled = false;
                 focusCalibrationToolStripMenuItem.Enabled = false;
-                
                StopCalibration();
             }
             else
@@ -887,7 +887,7 @@ namespace Bahtinov_Collimator
             if (InvokeRequired)
             {
                 // Marshal the call to the UI thread
-                Invoke(new Action(IncreaseFocusChannelSize));
+                Invoke(new Action(DecreaseFocusChannelSize));
             }
             else
             {
@@ -905,6 +905,11 @@ namespace Bahtinov_Collimator
                 }
 
                 imageDisplayComponent1.Location = new Point(MIN_IMAGE_DISPLAY_X_OFFSET, imageDisplayComponent1.Location.Y);
+
+                if (calibrationComponent != null)
+                {
+                    this.Width -= MAX_FOCUS_CHAN_SIZE - MIN_FOCUS_CHAN_SIZE;
+                }
             }
         }
 
