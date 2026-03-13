@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using System.Text;
 
 namespace Bahtinov_Collimator
 {
@@ -123,6 +125,12 @@ namespace Bahtinov_Collimator
 
             using (var fs = File.OpenRead(filePath))
             {
+                // Strip BOM if present
+                var bom = new byte[3];
+                int read = fs.Read(bom, 0, 3);
+                if (read < 3 || bom[0] != 0xEF || bom[1] != 0xBB || bom[2] != 0xBF)
+                    fs.Seek(0, SeekOrigin.Begin); // No BOM, rewind
+
                 var ser = new DataContractJsonSerializer(typeof(NextStepTextPack));
 
                 var obj = ser.ReadObject(fs) as NextStepTextPack

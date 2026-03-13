@@ -310,6 +310,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\Donate.resx">
       <DependentUpon>Donate.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Custom Components\FocusChannelComponent.resx">
       <DependentUpon>FocusChannelComponent.cs</DependentUpon>
@@ -320,6 +321,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Image Capture\ImageSelect.resx">
       <DependentUpon>ImageSelect.cs</DependentUpon>
@@ -336,6 +338,9 @@
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="Language\en\NextStepText_MCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Language\en\NextStepText_SCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

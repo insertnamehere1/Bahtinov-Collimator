@@ -1,5 +1,5 @@
-{
-  "DialogTitle": "What should I do next? (SCT)",
+﻿{
+  "DialogTitle": "What should I do next? (MCT)",
   "DebugLineFormat": "Values:  Red {0}   Green {1}   Blue {2}",
 
   "SectionWhatToDoTitle": "What to do",
@@ -51,7 +51,7 @@
   "CalibrationStep1Title": "Step 1 - Setup",
   "CalibrationStep1Bullet1": "Attach a Tri-Bahtinov collimation mask to your telescope.",
   "CalibrationStep1Bullet2": "Capture a star image.",
-  "CalibrationStep1Warning" : "Note: The diffraction lines must be clear and well defined. Adjust gain and exposure in your capture software if necessary.",
+  "CalibrationStep1Warning": "Note: The diffraction lines must be clear and well defined. Adjust gain and exposure in your capture software if necessary.",
   "CalibrationWaitingForImage": "Waiting for a valid Tri-Bahtinov image...",
   "CalibrationAimHeader": "\nAim - Adjust focus inward so SkyCal learns how collimation errors change with focus position.",
   "CalibrationStep2Title": "Step 2 - Moving the focuser.",
