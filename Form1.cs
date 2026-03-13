@@ -1043,6 +1043,10 @@ namespace Bahtinov_Collimator
 
         private void WhatDoIDoNextToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Reload the correct JSON based on current MCT/SCT setting
+            string model = Properties.Settings.Default.MCTSelected ? "MCT" : "SCT";
+            LanguageLoader.LoadFromSystemCulture(AppDomain.CurrentDomain.BaseDirectory, model);
+
             var nextStepText = NextStepText.Current;
             var screwMap = new Dictionary<string, string>
             {

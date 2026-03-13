@@ -15,7 +15,7 @@ namespace Bahtinov_Collimator
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            LanguageLoader.LoadFromSystemCulture(AppDomain.CurrentDomain.BaseDirectory);
+            LanguageLoader.LoadFromSystemCulture(AppDomain.CurrentDomain.BaseDirectory, Properties.Settings.Default.MCTSelected ? "MCT" : "SCT");
             DpiAwareForm.AppIcon = Properties.Resources.SkyCal;
             Application.Run(new Form1());
         }
