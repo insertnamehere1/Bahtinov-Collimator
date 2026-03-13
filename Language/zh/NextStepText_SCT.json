@@ -7,7 +7,7 @@
   "CaptureHeader": "捕获 Tri-Bahtinov 图像",
   "CaptureSummary": "请先捕获一张 Bahtinov 图像以开始调整。",
   "CaptureBullet1": "确保明亮的恒星居中。",
-  "CaptureBullet2": "安装 Tri-Bahtinov 面罩并点击"选择恒星"。",
+  "CaptureBullet2": "安装 Tri-Bahtinov 面罩并点击\"选择恒星\"。",
 
   "FocusOnlyHeader": "对焦引导不可用",
   "FocusOnlyNeedsAdjustingSummary": "引导仅适用于 Tri-Bahtinov 图像。",
@@ -47,7 +47,7 @@
   "CalibrationTitle": "Tri-Bahtinov 校准",
   "CalibrationQuitButtonText": "退出",
   "CalibrationCloseButtonText": "关闭",
-  "CalibrationObjectiveHeader": "\n目标 - 校准使 SkyCal 能够建议校准螺丝调整，并启用"我下一步该做什么？"引导。",
+  "CalibrationObjectiveHeader": "\n目标 - 校准使 SkyCal 能够建议校准螺丝调整，并启用\"我下一步该做什么？\"引导。",
   "CalibrationStep1Title": "步骤 1 - 设置",
   "CalibrationStep1Bullet1": "在望远镜上安装 Tri-Bahtinov 校准面罩。",
   "CalibrationStep1Bullet2": "捕获一张恒星图像。",
