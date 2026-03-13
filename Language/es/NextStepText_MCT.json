@@ -1,5 +1,5 @@
 {
-  "DialogTitle": "¿Qué debo hacer ahora? (SCT)",
+  "DialogTitle": "¿Qué debo hacer ahora? (MCT)",
   "DebugLineFormat": "Valores:  Rojo {0}   Verde {1}   Azul {2}",
 
   "SectionWhatToDoTitle": "Qué hacer",
@@ -22,14 +22,14 @@
   "FocusOnlyBeginScrewsBullet": "Comience los ajustes de colimación solo después de lograr este equilibrio.",
   "FocusFooterHint": "Consejo: ADENTRO = espejo primario hacia el secundario o cámara hacia el telescopio, \nAFUERA = primario alejándose del secundario o cámara alejándose del telescopio",
 
-  "CollimationHeader": "Ajustes de colimación para SCT",
+  "CollimationHeader": "Ajustes de colimación para MCT",
   "CollimationSummary": "Proceda con una colimación equilibrada usando 2 o más tornillos al mismo tiempo.\n",
 
   "DoneHeader": "Se ve bien",
   "DoneSummary": "Todos los valores están cerca de cero.\n",
   "DoneBullet": "No se requiere ajuste.",
-  "CollimationPositiveInstructionFormat": "Ajuste {0} - AFLOJAR (sentido antihorario). {0} está demasiado lejos del primario.",
-  "CollimationNegativeInstructionFormat": "Ajuste {0} - APRETAR (sentido horario). {0} está demasiado cerca del primario.",
+  "CollimationPositiveInstructionFormat": "Ajuste {0} - AFLOJAR (sentido antihorario). {0} está demasiado lejos del secundario.",
+  "CollimationNegativeInstructionFormat": "Ajuste {0} - APRETAR (sentido horario). {0} está demasiado cerca del secundario.",
   "CollimationAdjustTogetherBullet": "\r\nAjuste estos tornillos juntos para mantener la tensión equilibrada.",
   "CollimationFooterHint": "Consejo: recentre la estrella y vuelva a enfocar hasta que los valores vuelvan a rodear 0 antes de repetir.",
 

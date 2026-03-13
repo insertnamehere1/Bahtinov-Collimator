@@ -30,7 +30,7 @@
   "SettingsVoiceGuidanceLabel": "Guía por voz",
   "SettingsVoiceGuidanceDescription": "Habilite la guía por voz y pase el cursor sobre el cuadro de texto del grupo de enfoque para activar las indicaciones para ese canal",
   "SettingsGroupGuidanceTitle": "Configuración de guía",
-  "AnalysisModeGroupBox": "Modo de análisis",
+  "AnalysisModeGroupBox": "Captura de imagen",
   "SettingsGuidanceNewtonian": "Newtoniano",
   "SettingsGuidanceMakCass": "Maksutov-Cassegrain (MCT)",
   "SettingsGuidanceSct": "Schmidt–Cassegrain (SCT)",
@@ -44,6 +44,9 @@
   "SettingsCancelButton": "Cancelar",
   "SettingsInvalidInputMessage": "Entrada inválida, inténtelo de nuevo",
   "SettingsInvalidInputTitle": "Advertencia",
+  "SettingsGroupMinimizeTitle": "Minimizar",
+  "SettingsMinimizeDescription": "Minimizar al seleccionar estrella",
+  "SettingsMinimizeLabel": "Minimizar SkyCal al seleccionar una imagen de estrella",
 
   "FocusGroupRed": "Grupo rojo",
   "FocusGroupGreen": "Grupo verde",
@@ -57,7 +60,7 @@
   "AboutVersionFormat": "Versión {0}",
   "AboutDescription": "La aplicación está diseñada para ayudar a los astrónomos a colimar y enfocar sus telescopios con facilidad y precisión. Incorpora el algoritmo y el código desarrollados por el fallecido Niels Noordhoek para lograr ajustes precisos de enfoque y colimación.",
 
-  "StartupDialogTitle": "SkyCal",
+  "StartupDialogTitle": "Calibración SkyCal",
   "StartupDialogHeading": "Se recomienda la calibración:",
   "StartupDialogBody": "La calibración Tri-Bahtinov habilita toda la funcionalidad de SkyCal. Algunas funciones no están disponibles hasta completar la calibración. (La calibración también está disponible en el menú Configuración.)\r\n\r\n¿Desea calibrar SkyCal ahora?",
   "StartupDialogDontShowAgain": "No volver a mostrar",
@@ -117,5 +120,9 @@
   "UpdateNoneMessage": "No hay nuevas actualizaciones disponibles.",
   "UpdateNoneTitle": "Sin actualizaciones",
   "UpdateNetworkErrorMessage": "No se pudo conectar al servidor de actualizaciones.",
-  "UpdateNetworkErrorTitle": "Problema de red"
+  "UpdateNetworkErrorTitle": "Problema de red",
+
+  "SettingsKeepOnTopLabel": "Hacer que SkyCal aparezca siempre encima de otras aplicaciones",
+  "SettingsKeepOnTopDescription": "Mantener SkyCal en primer plano",
+  "SettingsGroupWindowTitle": "Siempre en primer plano"
 }

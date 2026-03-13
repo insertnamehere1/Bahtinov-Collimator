@@ -1,5 +1,5 @@
 {
-  "DialogTitle": "Que dois-je faire ensuite ? (SCT)",
+  "DialogTitle": "Que dois-je faire ensuite ? (MCT)",
   "DebugLineFormat": "Valeurs :  Rouge {0}   Vert {1}   Bleu {2}",
 
   "SectionWhatToDoTitle": "Que faire",
@@ -22,14 +22,14 @@
   "FocusOnlyBeginScrewsBullet": "Commencez les ajustements de collimation uniquement après cet équilibre.",
   "FocusFooterHint": "Astuce : ENTRANT = miroir primaire vers le secondaire ou caméra vers le télescope, \nSORTANT = primaire éloigné du secondaire ou caméra éloignée du télescope",
 
-  "CollimationHeader": "Ajustements de collimation pour SCT",
+  "CollimationHeader": "Ajustements de collimation pour MCT",
   "CollimationSummary": "Procédez à une collimation équilibrée en utilisant 2 vis ou plus en même temps.\n",
 
   "DoneHeader": "C'est bon",
   "DoneSummary": "Toutes les valeurs sont proches de zéro.\n",
   "DoneBullet": "Aucun ajustement requis.",
-  "CollimationPositiveInstructionFormat": "Ajustement {0} - DESSERRER (sens antihoraire). {0} est trop éloigné du primaire.",
-  "CollimationNegativeInstructionFormat": "Ajustement {0} - SERRER (sens horaire). {0} est trop proche du primaire.",
+  "CollimationPositiveInstructionFormat": "Ajustement {0} - DESSERRER (sens antihoraire). {0} est trop éloigné du secondaire.",
+  "CollimationNegativeInstructionFormat": "Ajustement {0} - SERRER (sens horaire). {0} est trop proche du secondaire.",
   "CollimationAdjustTogetherBullet": "\r\nAjustez ces vis ensemble pour garder une tension équilibrée.",
   "CollimationFooterHint": "Astuce : recentrez l'étoile, puis refaites la mise au point jusqu'à ce que les valeurs entourent 0 avant de recommencer.",
 

@@ -1,5 +1,5 @@
 {
-  "DialogTitle": "Was soll ich als Nächstes tun? (SCT)",
+  "DialogTitle": "Was soll ich als Nächstes tun? (MCT)",
   "DebugLineFormat": "Werte:  Rot {0}   Grün {1}   Blau {2}",
 
   "SectionWhatToDoTitle": "Was zu tun ist",
@@ -22,14 +22,14 @@
   "FocusOnlyBeginScrewsBullet": "Beginnen Sie mit Kollimationsanpassungen erst nach diesem Ausgleich.",
   "FocusFooterHint": "Tipp: INNEN = Hauptspiegel zur Sekundärspiegel oder Kamera zum Teleskop, \nAUSSEN = Hauptspiegel weg vom Sekundärspiegel oder Kamera vom Teleskop",
 
-  "CollimationHeader": "Kollimationsanpassungen für SCT",
+  "CollimationHeader": "Kollimationsanpassungen für MCT",
   "CollimationSummary": "Fahren Sie mit einer ausgewogenen Kollimation fort und verwenden Sie 2 oder mehr Schrauben gleichzeitig.\n",
 
   "DoneHeader": "Sieht gut aus",
   "DoneSummary": "Alle Werte liegen nahe bei Null.\n",
   "DoneBullet": "Keine Anpassung erforderlich.",
-  "CollimationPositiveInstructionFormat": "{0}-Anpassung – LÖSEN (gegen den Uhrzeigersinn). {0} ist zu weit vom Hauptspiegel entfernt.",
-  "CollimationNegativeInstructionFormat": "{0}-Anpassung – ANZIEHEN (im Uhrzeigersinn). {0} ist zu nahe am Hauptspiegel.",
+  "CollimationPositiveInstructionFormat": "{0}-Anpassung – LÖSEN (gegen den Uhrzeigersinn). {0} ist zu weit vom Sekundärspiegel entfernt.",
+  "CollimationNegativeInstructionFormat": "{0}-Anpassung – ANZIEHEN (im Uhrzeigersinn). {0} ist zu nahe am Sekundärspiegel.",
   "CollimationAdjustTogetherBullet": "\r\nDiese Schrauben gemeinsam einstellen, um die Spannung auszugleichen.",
   "CollimationFooterHint": "Tipp: Stern neu zentrieren, dann erneut fokussieren, bis die Werte wieder um 0 liegen, bevor Sie wiederholen.",
 

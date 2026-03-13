@@ -30,7 +30,7 @@
   "SettingsVoiceGuidanceLabel": "Guidage vocal",
   "SettingsVoiceGuidanceDescription": "Activez le guidage vocal et placez votre souris sur la zone de texte du groupe de focalisation pour activer les annonces\npour ce canal",
   "SettingsGroupGuidanceTitle": "Configuration du guidage",
-  "AnalysisModeGroupBox": "Mode d'analyse",
+  "AnalysisModeGroupBox": "Capture d'imagerie",
   "SettingsGuidanceNewtonian": "Newtonien",
   "SettingsGuidanceMakCass": "Maksutov-Cassegrain (MCT)",
   "SettingsGuidanceSct": "Schmidt–Cassegrain (SCT)",
@@ -44,6 +44,9 @@
   "SettingsCancelButton": "Annuler",
   "SettingsInvalidInputMessage": "Entrée invalide, réessayez",
   "SettingsInvalidInputTitle": "Avertissement",
+  "SettingsGroupMinimizeTitle": "Réduire",
+  "SettingsMinimizeDescription": "Réduire lors de la sélection d'étoile",
+  "SettingsMinimizeLabel": "Réduire SkyCal lors de la sélection d'une image d'étoile",
 
   "FocusGroupRed": "Groupe rouge",
   "FocusGroupGreen": "Groupe vert",
@@ -57,7 +60,7 @@
   "AboutVersionFormat": "Version {0}",
   "AboutDescription": "Cette application est conçue pour aider les astronomes à collimater et à mettre au point leurs télescopes avec facilité et précision. Elle intègre l'algorithme et le code développés par le regretté Niels Noordhoek pour obtenir des réglages précis de mise au point et de collimation.",
 
-  "StartupDialogTitle": "SkyCal",
+  "StartupDialogTitle": "Calibration SkyCal",
   "StartupDialogHeading": "La calibration est recommandée :",
   "StartupDialogBody": "La calibration Tri-Bahtinov active toutes les fonctionnalités de SkyCal. Certaines fonctions sont indisponibles tant que la calibration n'est pas terminée. (La calibration est également disponible dans le menu Configuration.)\r\n\r\nSouhaitez-vous calibrer SkyCal maintenant ?",
   "StartupDialogDontShowAgain": "Ne plus afficher",
@@ -117,5 +120,9 @@
   "UpdateNoneMessage": "Aucune nouvelle mise à jour n'est disponible.",
   "UpdateNoneTitle": "Aucune mise à jour",
   "UpdateNetworkErrorMessage": "Impossible de se connecter au serveur de mise à jour.",
-  "UpdateNetworkErrorTitle": "Problème réseau"
+  "UpdateNetworkErrorTitle": "Problème réseau",
+
+  "SettingsKeepOnTopLabel": "Rendre SkyCal toujours au premier plan de toutes les autres applications",
+  "SettingsKeepOnTopDescription": "Garder SkyCal au premier plan",
+  "SettingsGroupWindowTitle": "Toujours au premier plan"
 }

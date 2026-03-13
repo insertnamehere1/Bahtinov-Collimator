@@ -30,7 +30,7 @@
   "SettingsVoiceGuidanceLabel": "语音引导",
   "SettingsVoiceGuidanceDescription": "启用语音引导，并将鼠标悬停在对焦组文本框上以启用该通道的语音提示",
   "SettingsGroupGuidanceTitle": "引导配置",
-  "AnalysisModeGroupBox": "分析模式",
+  "AnalysisModeGroupBox": "图像捕获",
   "SettingsGuidanceNewtonian": "牛顿式",
   "SettingsGuidanceMakCass": "马卡塞格林 (MCT)",
   "SettingsGuidanceSct": "施密特-卡塞格林 (SCT)",
@@ -44,6 +44,9 @@
   "SettingsCancelButton": "取消",
   "SettingsInvalidInputMessage": "输入无效，请重试",
   "SettingsInvalidInputTitle": "警告",
+  "SettingsGroupMinimizeTitle": "最小化",
+  "SettingsMinimizeDescription": "选星时最小化",
+  "SettingsMinimizeLabel": "选择恒星图像时最小化 SkyCal",
 
   "FocusGroupRed": "红色组",
   "FocusGroupGreen": "绿色组",
@@ -57,7 +60,7 @@
   "AboutVersionFormat": "版本 {0}",
   "AboutDescription": "该应用旨在帮助天文学家轻松且精准地校准和对焦他们的望远镜。它整合了已故 Niels Noordhoek 开发的算法和代码，以实现对焦与校准的精确调整。",
 
-  "StartupDialogTitle": "SkyCal",
+  "StartupDialogTitle": "SkyCal 校准",
   "StartupDialogHeading": "建议进行校准：",
   "StartupDialogBody": "Tri-Bahtinov 校准可启用 SkyCal 的完整功能。某些功能在完成校准前不可用。（校准也可在设置菜单中找到。）\r\n\r\n是否现在校准 SkyCal？",
   "StartupDialogDontShowAgain": "不再显示",
@@ -117,5 +120,9 @@
   "UpdateNoneMessage": "没有可用更新。",
   "UpdateNoneTitle": "无更新",
   "UpdateNetworkErrorMessage": "无法连接到更新服务器。",
-  "UpdateNetworkErrorTitle": "网络问题"
+  "UpdateNetworkErrorTitle": "网络问题",
+
+  "SettingsKeepOnTopLabel": "使 SkyCal 始终显示在其他所有应用程序之上",
+  "SettingsKeepOnTopDescription": "保持 SkyCal 置顶",
+  "SettingsGroupWindowTitle": "置顶"
 }

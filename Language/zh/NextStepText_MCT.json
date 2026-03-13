@@ -1,5 +1,5 @@
 {
-  "DialogTitle": "我下一步该做什么？(SCT)",
+  "DialogTitle": "我下一步该做什么？(MCT)",
   "DebugLineFormat": "数值：  红 {0}   绿 {1}   蓝 {2}",
 
   "SectionWhatToDoTitle": "操作建议",
@@ -22,14 +22,14 @@
   "FocusOnlyBeginScrewsBullet": "达到平衡后再开始校准螺丝调整。",
   "FocusFooterHint": "提示：向内 = 主镜朝向副镜或相机朝向望远镜，\n向外 = 主镜远离副镜或相机远离望远镜",
 
-  "CollimationHeader": "SCT 校准调整",
+  "CollimationHeader": "MCT 校准调整",
   "CollimationSummary": "使用 2 个或更多螺丝同时进行平衡式校准。\n",
 
   "DoneHeader": "看起来不错",
   "DoneSummary": "所有数值都接近零。\n",
   "DoneBullet": "无需调整。",
-  "CollimationPositiveInstructionFormat": "{0} 调整 - 松开（逆时针）。{0} 离主镜太远。",
-  "CollimationNegativeInstructionFormat": "{0} 调整 - 拧紧（顺时针）。{0} 离主镜太近。",
+  "CollimationPositiveInstructionFormat": "{0} 调整 - 松开（逆时针）。{0} 离副镜太远。",
+  "CollimationNegativeInstructionFormat": "{0} 调整 - 拧紧（顺时针）。{0} 离副镜太近。",
   "CollimationAdjustTogetherBullet": "\r\n请一起调整这些螺丝以保持张力平衡。",
   "CollimationFooterHint": "提示：重新居中恒星，然后再次对焦，直到数值再次跨过 0 后再重复。",
 

@@ -1,5 +1,5 @@
 {
-  "DialogTitle": "Cosa devo fare dopo? (SCT)",
+  "DialogTitle": "Cosa devo fare dopo? (MCT)",
   "DebugLineFormat": "Valori:  Rosso {0}   Verde {1}   Blu {2}",
 
   "SectionWhatToDoTitle": "Cosa fare",
@@ -22,14 +22,14 @@
   "FocusOnlyBeginScrewsBullet": "Inizia le regolazioni di collimazione solo dopo aver raggiunto questo equilibrio.",
   "FocusFooterHint": "Suggerimento: DENTRO = specchio primario verso il secondario o camera verso il telescopio, \nFUORI = primario lontano dal secondario o camera lontana dal telescopio",
 
-  "CollimationHeader": "Regolazioni di collimazione per SCT",
+  "CollimationHeader": "Regolazioni di collimazione per MCT",
   "CollimationSummary": "Procedi con una collimazione bilanciata usando 2 o più viti contemporaneamente.\n",
 
   "DoneHeader": "Va bene",
   "DoneSummary": "Tutti i valori sono vicini a zero.\n",
   "DoneBullet": "Nessuna regolazione necessaria.",
-  "CollimationPositiveInstructionFormat": "Regolazione {0} - ALLENTARE (antiorario). {0} è troppo lontano dal primario.",
-  "CollimationNegativeInstructionFormat": "Regolazione {0} - SERRARE (orario). {0} è troppo vicino al primario.",
+  "CollimationPositiveInstructionFormat": "Regolazione {0} - ALLENTARE (antiorario). {0} è troppo lontano dal secondario.",
+  "CollimationNegativeInstructionFormat": "Regolazione {0} - SERRARE (orario). {0} è troppo vicino al secondario.",
   "CollimationAdjustTogetherBullet": "\r\nRegola queste viti insieme per mantenere la tensione bilanciata.",
   "CollimationFooterHint": "Suggerimento: ricentra la stella, quindi rifocalizza finché i valori tornano a cavallo di 0 prima di ripetere.",
 

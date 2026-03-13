@@ -30,7 +30,7 @@
   "SettingsVoiceGuidanceLabel": "Sprachführung",
   "SettingsVoiceGuidanceDescription": "Sprachführung aktivieren und den Mauszeiger über das Fokusgruppen-Textfeld bewegen, um Sprachhinweise für diesen Kanal zu aktivieren",
   "SettingsGroupGuidanceTitle": "Leitfaden-Konfiguration",
-  "AnalysisModeGroupBox": "Analysemodus",
+  "AnalysisModeGroupBox": "Bildaufnahme",
   "SettingsGuidanceNewtonian": "Newton",
   "SettingsGuidanceMakCass": "Maksutov-Cassegrain (MCT)",
   "SettingsGuidanceSct": "Schmidt–Cassegrain (SCT)",
@@ -44,6 +44,9 @@
   "SettingsCancelButton": "Abbrechen",
   "SettingsInvalidInputMessage": "Ungültige Eingabe, bitte erneut versuchen",
   "SettingsInvalidInputTitle": "Warnung",
+  "SettingsGroupMinimizeTitle": "Minimieren",
+  "SettingsMinimizeDescription": "Beim Auswählen des Sterns minimieren",
+  "SettingsMinimizeLabel": "SkyCal beim Auswählen eines Sternbildes minimieren",
 
   "FocusGroupRed": "Rote Gruppe",
   "FocusGroupGreen": "Grüne Gruppe",
@@ -57,7 +60,7 @@
   "AboutVersionFormat": "Version {0}",
   "AboutDescription": "Diese Anwendung unterstützt Astronomen beim Kollimieren und Fokussieren ihrer Teleskope mit Leichtigkeit und Präzision. Sie integriert den Algorithmus und Code des verstorbenen Niels Noordhoek, um genaue Anpassungen für Fokus und Kollimation zu erzielen.",
 
-  "StartupDialogTitle": "SkyCal",
+  "StartupDialogTitle": "SkyCal Kalibrierung",
   "StartupDialogHeading": "Kalibrierung wird empfohlen:",
   "StartupDialogBody": "Die Tri-Bahtinov-Kalibrierung aktiviert die volle SkyCal-Funktionalität. Einige Funktionen sind erst nach Abschluss der Kalibrierung verfügbar. (Die Kalibrierung ist auch im Menü Einrichten verfügbar.)\r\n\r\nMöchten Sie SkyCal jetzt kalibrieren?",
   "StartupDialogDontShowAgain": "Nicht mehr anzeigen",
@@ -117,5 +120,9 @@
   "UpdateNoneMessage": "Keine neuen Updates verfügbar.",
   "UpdateNoneTitle": "Keine Updates",
   "UpdateNetworkErrorMessage": "Verbindung zum Update-Server nicht möglich.",
-  "UpdateNetworkErrorTitle": "Netzwerkproblem"
+  "UpdateNetworkErrorTitle": "Netzwerkproblem",
+
+  "SettingsKeepOnTopLabel": "SkyCal immer im Vordergrund aller anderen Anwendungen anzeigen",
+  "SettingsKeepOnTopDescription": "SkyCal im Vordergrund halten",
+  "SettingsGroupWindowTitle": "Im Vordergrund halten"
 }

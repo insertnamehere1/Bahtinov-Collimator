@@ -43,7 +43,7 @@ namespace Bahtinov_Collimator
         private static string GetOverrideLanguageCode()
         {
             /// TODO Testing only - remove before release
-            return "en";
+            return "es";
             //return Environment.GetEnvironmentVariable(OverrideLanguageEnvironmentVariable)?.Trim();
         }
 
