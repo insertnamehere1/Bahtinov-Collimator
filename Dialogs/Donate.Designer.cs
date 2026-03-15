@@ -53,11 +53,11 @@ namespace Bahtinov_Collimator
             this.cancelButton.ImageOffsetX = 60;
             this.cancelButton.ImageOffsetY = 0;
             this.cancelButton.ImageWidth = 32;
-            this.cancelButton.Location = new System.Drawing.Point(421, 315);
+            this.cancelButton.Location = new System.Drawing.Point(421, 321);
             this.cancelButton.Margin = new System.Windows.Forms.Padding(4);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.cancelButton.Size = new System.Drawing.Size(100, 42);
+            this.cancelButton.Size = new System.Drawing.Size(106, 42);
             this.cancelButton.TabIndex = 2;
             this.cancelButton.Text = "Close";
             this.cancelButton.TextOffsetX = 10;
@@ -73,7 +73,7 @@ namespace Bahtinov_Collimator
             this.pictureBox1.Location = new System.Drawing.Point(0, 45);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(171, 343);
+            this.pictureBox1.Size = new System.Drawing.Size(171, 349);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
@@ -103,14 +103,14 @@ namespace Bahtinov_Collimator
             this.richTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.richTextBox.Name = "richTextBox";
             this.richTextBox.ReadOnly = true;
-            this.richTextBox.Size = new System.Drawing.Size(626, 221);
+            this.richTextBox.Size = new System.Drawing.Size(632, 227);
             this.richTextBox.TabIndex = 6;
             this.richTextBox.Text = "";
             // 
             // Donate
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(848, 384);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.ClientSize = new System.Drawing.Size(854, 390);
             this.Controls.Add(this.richTextBox);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);

@@ -28,10 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.SuspendLayout();
+            // 
+            // StartupDialog
+            // 
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.ClientSize = new System.Drawing.Size(800, 650);
+            this.Location = new System.Drawing.Point(0, 0);
+            this.Name = "StartupDialog";
             this.Text = "StartupDialog";
+            this.ResumeLayout(false);
+
         }
 
         #endregion

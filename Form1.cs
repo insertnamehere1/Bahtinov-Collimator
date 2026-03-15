@@ -39,7 +39,7 @@ using static Bahtinov_Collimator.BahtinovLineDataEventArgs;
 
 namespace Bahtinov_Collimator
 {
-    public partial class Form1 : DpiAwareForm
+    public partial class Form1 : Form
     {
         #region External Function
 
@@ -172,9 +172,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         public Form1()
         {
-            this.CornerRadius = 12;
-            this.CanMaximize = false;
-
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
 

@@ -65,9 +65,9 @@ namespace Bahtinov_Collimator
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.cancelButton);
             this.panel1.Controls.Add(this.okButton);
-            this.panel1.Location = new System.Drawing.Point(5, 190);
+            this.panel1.Location = new System.Drawing.Point(5, 196);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(493, 53);
+            this.panel1.Size = new System.Drawing.Size(499, 53);
             this.panel1.TabIndex = 4;
             // 
             // cancelButton
@@ -83,7 +83,7 @@ namespace Bahtinov_Collimator
             this.cancelButton.ImageOffsetX = 60;
             this.cancelButton.ImageOffsetY = 0;
             this.cancelButton.ImageWidth = 32;
-            this.cancelButton.Location = new System.Drawing.Point(271, 8);
+            this.cancelButton.Location = new System.Drawing.Point(277, 8);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.cancelButton.Size = new System.Drawing.Size(82, 30);
@@ -106,7 +106,7 @@ namespace Bahtinov_Collimator
             this.okButton.ImageOffsetX = 60;
             this.okButton.ImageOffsetY = 0;
             this.okButton.ImageWidth = 32;
-            this.okButton.Location = new System.Drawing.Point(388, 12);
+            this.okButton.Location = new System.Drawing.Point(394, 12);
             this.okButton.Name = "okButton";
             this.okButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.okButton.Size = new System.Drawing.Size(82, 30);
@@ -118,8 +118,8 @@ namespace Bahtinov_Collimator
             // 
             // DarkMessageBox
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(466, 267);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.ClientSize = new System.Drawing.Size(472, 273);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.iconBox);
             this.Controls.Add(this.messageLabel);

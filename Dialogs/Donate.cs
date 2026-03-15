@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
-    public partial class Donate : DpiAwareForm
+    public partial class Donate : Form
     {
         #region DLL Imports
 
@@ -29,7 +29,6 @@ namespace Bahtinov_Collimator
 
         public Donate()
         {
-            this.ShowMinimizeMaximize = false;
             InitializeComponent();
             ApplyLocalization();
             InitializeRichTextBox();

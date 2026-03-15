@@ -355,8 +355,8 @@ namespace Bahtinov_Collimator
             // 
             // Settings
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(736, 664);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.ClientSize = new System.Drawing.Size(742, 670);
             this.Controls.Add(this.minimizeGroupBox);
             this.Controls.Add(this.keepOnTopGroupBox);
             this.Controls.Add(this.groupBox4);

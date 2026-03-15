@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
-    public sealed class NextStepDialog : DpiAwareForm
+    public sealed class NextStepDialog : Form
     {
         #region DLL Imports
         [DllImport("dwmapi.dll", PreserveSig = true)]
@@ -32,7 +32,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         public NextStepDialog(NextStepGuidance guidance, Icon icon = null)
         {
-            this.ShowMinimizeMaximize = false;
             Text = guidance?.DialogTitle ?? "What should I do next?";
             Icon = icon;
 
@@ -406,6 +405,20 @@ namespace Bahtinov_Collimator
             }
 
             return Math.Max(600, maxWidth + WidthPadding);
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // NextStepDialog
+            // 
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.ClientSize = new System.Drawing.Size(300, 300);
+            this.Location = new System.Drawing.Point(0, 0);
+            this.Name = "NextStepDialog";
+            this.ResumeLayout(false);
+
         }
     }
 }

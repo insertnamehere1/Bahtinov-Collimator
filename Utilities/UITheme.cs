@@ -34,31 +34,25 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets or sets the dots per inch (DPI) value used for rendering or scaling operations.
         /// </summary>
-        public static float DpiValue { get;  set; }
-
-        public static int Scale(int value)
-        {
-            return (int)(value * UITheme.DpiValue / 96.0f);
-        }
 
         #endregion
 
         #region FontSizes
 
-        public static float GroupBoxFontSize        => 15f * 96.0f / DpiValue;
-        public static float MenuStripFontSize       => 15f * 96.0f / DpiValue;
-        public static float ButtonFontSize          => 14f * 96.0f / DpiValue;
-        public static float TextBoxFontSize         => 10f * 96.0f / DpiValue;
-        public static float MessageBoxFontSize      => 15f * 96.0f / DpiValue;
-        public static float MainFormDefaultFontSize => 14f * 96.0f / DpiValue;
-        public static float LabelFontSize           => 14f * 96.0f / DpiValue;
-        public static float AboutHeadingFontSize    => 17f * 96.0f / DpiValue;
-        public static float DialogDefaultFontSize   => 14f * 96.0f / DpiValue;
-        public static float NextStepFontSize        => 16f * 96.0f / DpiValue;
-        public static float NextStepTitleFontSize => 18f * 96.0f / DpiValue;
-        public static float CheckBoxFontSize        => 14f * 96.0f / DpiValue;
-        public static float CollimationTextFontSize => 12f * 96.0f / DpiValue;
-        public static float CollimationTitleFontSize => 15f * 96.0f / DpiValue;
+        public static float GroupBoxFontSize => 10f;
+        public static float MenuStripFontSize       => 10f;
+        public static float ButtonFontSize          => 10f;
+        public static float TextBoxFontSize         => 10f;
+        public static float MessageBoxFontSize      => 10f;
+        public static float MainFormDefaultFontSize => 9f;
+        public static float LabelFontSize           => 9f;
+        public static float AboutHeadingFontSize    => 12f;
+        public static float DialogDefaultFontSize   => 9f;
+        public static float NextStepFontSize        => 11f;
+        public static float NextStepTitleFontSize => 13f;
+        public static float CheckBoxFontSize        => 9f;
+        public static float CollimationTextFontSize => 8f;
+        public static float CollimationTitleFontSize => 10f;
 
         #endregion
 

@@ -15,7 +15,7 @@ namespace SkyCal
     /// Includes a "Do not show again" checkbox.
     /// The caller decides what to do with the checkbox state and persists it.
     /// </summary>
-    public partial class StartupDialog : DpiAwareForm
+    public partial class StartupDialog : Form
     {
 
         #region DLL Imports
@@ -50,7 +50,6 @@ namespace SkyCal
         /// </summary>
         public StartupDialog()
         {
-            this.ShowMinimizeMaximize = false;
             InitializeComponent();
             UISetup();
 

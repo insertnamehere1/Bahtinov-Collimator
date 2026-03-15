@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
-    public partial class Settings : DpiAwareForm
+    public partial class Settings : Form
     {
         #region DLL Imports
 
@@ -32,7 +32,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         public Settings()
         {
-            this.ShowMinimizeMaximize = false;
             InitializeComponent();
             ApplyLocalization();
             LoadSettings();

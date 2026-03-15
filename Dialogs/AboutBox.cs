@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
-    partial class AboutBox : DpiAwareForm
+    partial class AboutBox : Form
     {
         #region P/Invoke Declarations
 
@@ -28,7 +28,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         public AboutBox()
         {
-            this.ShowMinimizeMaximize = false;
             InitializeComponent();
             SetColorScheme();
 

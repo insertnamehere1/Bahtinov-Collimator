@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
-    public partial class DarkMessageBox : DpiAwareForm
+    public partial class DarkMessageBox : Form
     {
         #region DLL Imports
 
@@ -46,8 +46,6 @@ namespace Bahtinov_Collimator
         /// <param name="icon">The icon to display in the message box.</param>
         public DarkMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
-            this.ShowMinimizeMaximize = false;
-
             InitializeComponent();
             this.Text = title;
             messageLabel.Text = message;
