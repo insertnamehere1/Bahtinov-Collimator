@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
@@ -31,10 +33,9 @@ namespace Bahtinov_Collimator
         /// </summary>
         public static Color DarkForeground { get; } = Color.FromArgb(70, 80, 90);
 
-        /// <summary>
-        /// Gets or sets the dots per inch (DPI) value used for rendering or scaling operations.
-        /// </summary>
+        public static float DeviceDpi { get; set; } = 144f;
 
+        public static float DpiScaleFactor => DeviceDpi / 144f; 
         #endregion
 
         #region FontSizes
@@ -135,7 +136,10 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets or sets the size of the display window.
         /// </summary>
-        public static Point DisplayWindow { get; private set; } = new Point(600, 600);
+        public static Point DisplayWindow => new Point(
+            (int)Math.Round(600f * DpiScaleFactor),
+            (int)Math.Round(600f * DpiScaleFactor)
+        );
 
         /// <summary>
         /// Gets the background color for the display window.

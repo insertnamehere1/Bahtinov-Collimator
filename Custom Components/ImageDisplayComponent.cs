@@ -26,8 +26,6 @@ namespace Bahtinov_Collimator
         #region Constructor
         public ImageDisplayComponent()
         {
-            this.AutoScaleMode = AutoScaleMode.None;
-
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
 

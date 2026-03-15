@@ -151,12 +151,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         private int imageType = 0;
 
-        // Image Display Component
-        /// <summary>
-        /// Component responsible for displaying images with overlays and custom graphics.
-        /// </summary>
-        private ImageDisplayComponent imageDisplayComponent1;
-
         // Screen Capture Flag
         /// <summary>
         /// Indicates whether the screen capture process is currently running.
@@ -172,14 +166,12 @@ namespace Bahtinov_Collimator
         /// </summary>
         public Form1()
         {
+            UITheme.DeviceDpi = DeviceDpi;
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
 
-            // Set the form to not automatically scale based on its container.
-            this.AutoScaleMode = AutoScaleMode.None;
-
             // Disable automatic resizing and set the form to grow and shrink based on its content.
-            this.AutoSize = false;
+            this.AutoSize = true;
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             // Initialize the form's components.
@@ -198,9 +190,6 @@ namespace Bahtinov_Collimator
 
             // Set up event handlers for the form's controls.
             SetEvents();
-
-            // Initialize the image display component.
-            InitializeDisplayComponent();
 
             // Apply the new font size to the form's controls.
             SetFontSize();
@@ -242,29 +231,6 @@ namespace Bahtinov_Collimator
         {
             base.OnShown(e);
             ShowStartupCalibrationPromptIfNeeded(this);
-        }
-
-        /// <summary>
-        /// Initializes and configures the <see cref="ImageDisplayComponent"/> control, setting its location, size, and other properties.
-        /// </summary>
-        private void InitializeDisplayComponent()
-        {
-            this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent
-            {
-                Location = new System.Drawing.Point(276, 92),
-                Margin = new System.Windows.Forms.Padding(2),
-                Name = "imageDisplayComponent1",
-                Size = new System.Drawing.Size(600, 600),
-                TabIndex = 25
-            };
-
-            this.Controls.Add(this.imageDisplayComponent1);
-            imageDisplayComponent1.ClearDisplay();
-
-            if (Properties.Settings.Default.KeepOnTop == true)
-                this.TopMost = true;
-            else
-                this.TopMost = false;
         }
 
         /// <summary>
