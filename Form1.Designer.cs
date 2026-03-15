@@ -44,12 +44,15 @@
             this.pleaseDonateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.whatDoIDoNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.groupBoxBlue = new Bahtinov_Collimator.FocusChannelComponent();
+            this.groupBoxGreen = new Bahtinov_Collimator.FocusChannelComponent();
+            this.groupBoxRed = new Bahtinov_Collimator.FocusChannelComponent();
+            this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent();
             this.analysisGroupBox = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
             this.RoundedStartButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
             this.toggleSwitch1 = new ToggleSwitch();
             this.bahtinovLabel = new System.Windows.Forms.Label();
             this.defocusLabel = new System.Windows.Forms.Label();
-            this.imageDisplayComponent1 = new Bahtinov_Collimator.ImageDisplayComponent();
             this.menuStrip1.SuspendLayout();
             this.analysisGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -155,6 +158,44 @@
             this.whatDoIDoNextToolStripMenuItem.Text = "What Should I Do Next?";
             this.whatDoIDoNextToolStripMenuItem.Click += new System.EventHandler(this.WhatDoIDoNextToolStripMenuItem_Click);
             // 
+            // groupBoxBlue
+            // 
+            this.groupBoxBlue.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.groupBoxBlue.Location = new System.Drawing.Point(15, 332);
+            this.groupBoxBlue.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBoxBlue.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
+            this.groupBoxBlue.Name = "groupBoxBlue";
+            this.groupBoxBlue.Size = new System.Drawing.Size(253, 153);
+            this.groupBoxBlue.TabIndex = 36;
+            // 
+            // groupBoxGreen
+            // 
+            this.groupBoxGreen.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.groupBoxGreen.Location = new System.Drawing.Point(15, 179);
+            this.groupBoxGreen.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBoxGreen.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
+            this.groupBoxGreen.Name = "groupBoxGreen";
+            this.groupBoxGreen.Size = new System.Drawing.Size(253, 153);
+            this.groupBoxGreen.TabIndex = 35;
+            // 
+            // groupBoxRed
+            // 
+            this.groupBoxRed.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.groupBoxRed.Location = new System.Drawing.Point(15, 32);
+            this.groupBoxRed.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBoxRed.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
+            this.groupBoxRed.Name = "groupBoxRed";
+            this.groupBoxRed.Size = new System.Drawing.Size(253, 150);
+            this.groupBoxRed.TabIndex = 34;
+            // 
+            // imageDisplayComponent1
+            // 
+            this.imageDisplayComponent1.Location = new System.Drawing.Point(286, 43);
+            this.imageDisplayComponent1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.imageDisplayComponent1.Name = "imageDisplayComponent1";
+            this.imageDisplayComponent1.Size = new System.Drawing.Size(600, 600);
+            this.imageDisplayComponent1.TabIndex = 29;
+            // 
             // analysisGroupBox
             // 
             this.analysisGroupBox.BorderColor = System.Drawing.Color.Gray;
@@ -236,19 +277,14 @@
             this.defocusLabel.Text = "Defocus";
             this.defocusLabel.Click += new System.EventHandler(this.DefocusLabel_Click);
             // 
-            // imageDisplayComponent1
-            // 
-            this.imageDisplayComponent1.Location = new System.Drawing.Point(286, 43);
-            this.imageDisplayComponent1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.imageDisplayComponent1.Name = "imageDisplayComponent1";
-            this.imageDisplayComponent1.Size = new System.Drawing.Size(600, 600);
-            this.imageDisplayComponent1.TabIndex = 29;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(901, 655);
+            this.Controls.Add(this.groupBoxBlue);
+            this.Controls.Add(this.groupBoxGreen);
+            this.Controls.Add(this.groupBoxRed);
             this.Controls.Add(this.imageDisplayComponent1);
             this.Controls.Add(this.analysisGroupBox);
             this.Controls.Add(this.menuStrip1);
@@ -293,6 +329,9 @@
         private ToggleSwitch toggleSwitch1;
         private Custom_Components.RoundedGroupBox analysisGroupBox;
         private ImageDisplayComponent imageDisplayComponent1;
+        private FocusChannelComponent groupBoxRed;
+        private FocusChannelComponent groupBoxGreen;
+        private FocusChannelComponent groupBoxBlue;
     }
 }
 

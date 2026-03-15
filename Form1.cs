@@ -97,22 +97,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         private CalibrationComponent calibrationComponent;
 
-        // Focus Group Boxes
-        /// <summary>
-        /// Represents the red focus channel component for visualizing focus adjustments.
-        /// </summary>
-        private FocusChannelComponent groupBoxRed;
-
-        /// <summary>
-        /// Represents the green focus channel component for visualizing focus adjustments.
-        /// </summary>
-        private FocusChannelComponent groupBoxGreen;
-
-        /// <summary>
-        /// Represents the blue focus channel component for visualizing focus adjustments.
-        /// </summary>
-        private FocusChannelComponent groupBoxBlue;
-
         // New image capture, first pass
         /// <summary>
         /// Indicates whether the first pass of image capture has been completed.
@@ -176,6 +160,7 @@ namespace Bahtinov_Collimator
 
             // Initialize the form's components.
             InitializeComponent();
+            imageDisplayComponent1.ClearDisplay(); 
             RestoreWindowPosition();
             ApplyLocalization();
 
@@ -211,6 +196,12 @@ namespace Bahtinov_Collimator
             defocusLabel.ForeColor = UITheme.ImageCaptureGroupBoxDisabledColor;
             bahtinovLabel.ForeColor = UITheme.ImageCaptureGroupBoxColor;
             toggleSwitch1.IsOn = Properties.Settings.Default.DefocusSwitch;
+
+            // Should we be on top?
+            if (Properties.Settings.Default.KeepOnTop == true)
+                this.TopMost = true;
+            else
+                this.TopMost = false;
         }
         #endregion
 
@@ -252,21 +243,14 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void InitializeRedFocusBox()
         {
-            if (groupBoxRed != null)
-            {
-                RemoveAndDisposeControls(groupBoxRed);
-            }
-
             bool isCalibrated = Properties.Settings.Default.CalibrationCompleted;
             bool isTriBahtinov = (bahtinovLineData?.LineValue.Length == 9);
             bool isWidened = isCalibrated && isTriBahtinov;
+            groupBoxRed.Visible = true;
+            groupBoxRed.ConfigureFocusChannel(0, isWidened);
+            groupBoxGreen.Visible = false;
+            groupBoxBlue.Visible = false;
 
-            groupBoxRed = new FocusChannelComponent(0, isWidened)
-            {
-                Size = new Size(255, 140),
-                Location = new Point(10, 79)
-            };
-            this.Controls.Add(groupBoxRed);
         }
 
         /// <summary>
@@ -275,17 +259,8 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void InitializeGreenFocusBox()
         {
-            if (groupBoxGreen != null)
-            {
-                RemoveAndDisposeControls(groupBoxGreen);
-            }
-
-            groupBoxGreen = new FocusChannelComponent(1, Properties.Settings.Default.CalibrationCompleted)
-            {
-                Size = new Size(255, 140),
-                Location = new Point(10, 216)
-            };
-            this.Controls.Add(groupBoxGreen);
+            groupBoxGreen.Visible = true;
+            groupBoxGreen.ConfigureFocusChannel(1, Properties.Settings.Default.CalibrationCompleted);
         }
 
         /// <summary>
@@ -294,17 +269,8 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void InitializeBlueFocusBox()
         {
-            if (groupBoxBlue != null)
-            {
-                RemoveAndDisposeControls(groupBoxBlue);
-            }
-
-            groupBoxBlue = new FocusChannelComponent(2, Properties.Settings.Default.CalibrationCompleted)
-            {
-                Size = new Size(255, 140),
-                Location = new Point(10, 353)
-            };
-            this.Controls.Add(groupBoxBlue);
+            groupBoxBlue.Visible = true;
+            groupBoxBlue.ConfigureFocusChannel(2, Properties.Settings.Default.CalibrationCompleted);
         }
 
         /// <summary>
@@ -458,7 +424,8 @@ namespace Bahtinov_Collimator
                 ImageCapture.StopImageCapture();
                 imageDisplayComponent1.ClearDisplay();
                 bahtinovProcessing.StopImageProcessing();
-                RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
+                groupBoxGreen.Visible = false;
+                groupBoxBlue.Visible = false;
                 MinimizeWindow();
 
                 // Start image capture if star selection is successful
@@ -482,9 +449,11 @@ namespace Bahtinov_Collimator
                 bahtinovProcessing.StopImageProcessing();
                 bahtinovLineData = null;
                 imageType = 0;
-                RemoveAndDisposeControls(groupBoxRed, groupBoxGreen, groupBoxBlue);
-                
-                if(Properties.Settings.Default.DefocusSwitch == false)
+                groupBoxRed.Visible = false;
+                groupBoxGreen.Visible = false;
+                groupBoxBlue.Visible = false;
+
+                if (Properties.Settings.Default.DefocusSwitch == false)
                     InitializeRedFocusBox();
                 
                 screenCaptureRunningFlag = false;
@@ -554,7 +523,9 @@ namespace Bahtinov_Collimator
                 screenCaptureRunningFlag = false;
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
-                RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue, groupBoxRed);
+                groupBoxRed.Visible = false;
+                groupBoxGreen.Visible = false;
+                groupBoxBlue.Visible = false;
                 DecreaseFocusChannelSize();
                 whatDoIDoNextToolStripMenuItem.Enabled = false;
                 focusCalibrationToolStripMenuItem.Enabled = false;
@@ -566,7 +537,9 @@ namespace Bahtinov_Collimator
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 bahtinovLineData = null;
-                RemoveAndDisposeControls(groupBoxRed, groupBoxGreen, groupBoxBlue);
+                groupBoxRed.Visible = false;
+                groupBoxGreen.Visible = false;
+                groupBoxBlue.Visible = false;
                 InitializeRedFocusBox();
                 screenCaptureRunningFlag = false;
                 whatDoIDoNextToolStripMenuItem.Enabled = Properties.Settings.Default.CalibrationCompleted;
@@ -593,7 +566,9 @@ namespace Bahtinov_Collimator
                 Invoke(new Action(() =>
                 {
                     bahtinovLineData = null;
-                    RemoveAndDisposeControls(groupBoxRed, groupBoxGreen, groupBoxBlue);
+                    groupBoxRed.Visible = false;
+                    groupBoxGreen.Visible = false;
+                    groupBoxBlue.Visible = false;
                     InitializeRedFocusBox();
                     RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                     RoundedStartButton.Image = Properties.Resources.SelectionCircle;                
@@ -605,7 +580,9 @@ namespace Bahtinov_Collimator
             else
             {
                 bahtinovLineData = null;
-                RemoveAndDisposeControls(groupBoxRed, groupBoxGreen, groupBoxBlue);
+                groupBoxRed.Visible = false;
+                groupBoxGreen.Visible = false;
+                groupBoxBlue.Visible = false;
                 InitializeRedFocusBox();
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
@@ -834,7 +811,8 @@ namespace Bahtinov_Collimator
             else
             {
                 // Remove existing controls and initialize focus controls based on the number of lines
-                RemoveAndDisposeControls(groupBoxGreen, groupBoxBlue);
+                groupBoxGreen.Visible = false;
+                groupBoxBlue.Visible = false;
 
                 if (numberOfLines == 9)
                 {

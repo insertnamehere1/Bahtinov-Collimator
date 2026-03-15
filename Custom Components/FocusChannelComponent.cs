@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bahtinov_Collimator.Custom_Components;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -24,7 +25,7 @@ namespace Bahtinov_Collimator
 
 
         private bool disposed = false; // To detect redundant calls
-        private readonly int groupID;
+        private int groupID;
 
         #endregion
 
@@ -34,12 +35,11 @@ namespace Bahtinov_Collimator
         /// Initializes a new instance of the <see cref="FocusChannelComponent"/> class.
         /// </summary>
         /// <param name="groupID">The group ID for the component.</param>
-        public FocusChannelComponent(int groupID, bool isTribahtinov)
+        public FocusChannelComponent()
         {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
 
-            this.groupID = groupID;
             InitializeComponent();
             this.AutoScaleMode = AutoScaleMode.None;
 
@@ -48,38 +48,51 @@ namespace Bahtinov_Collimator
             ApplyTheme();
             SubscribeToEvents();
             UpdateMirrorPanelLayout();
+            focusChannelCount++;
+        }
+
+        public void ConfigureFocusChannel(int groupID, bool isTribahtinov)
+        {
+            UnsubscribeToEvents();
+
+            if (focusChannelCount > 0)
+                focusChannelCount--;
+        
+            this.groupID = groupID;
+
+            switch (groupID)
+            {
+                case 0:
+                    groupBox1.Text = UiText.Current.FocusGroupRed;
+                    break;
+                case 1:
+                    groupBox1.Text = UiText.Current.FocusGroupGreen;
+                    break;
+                case 2:
+                    groupBox1.Text = UiText.Current.FocusGroupBlue;
+                    break;
+                default:
+                    break;
+            }
+            groupBox1.Tag = groupID;
 
             if (isTribahtinov)
             {
                 if (Properties.Settings.Default.SCTSelected == true)
                     mirrorDrawingComponent1.MirrorType = Custom_Components.MirrorType.SctPrimary;
-
                 if (Properties.Settings.Default.MCTSelected == true)
                     mirrorDrawingComponent1.MirrorType = Custom_Components.MirrorType.MctSecondary;
-
                 mirrorDrawingComponent1.Visible = true;
             }
             else
                 mirrorDrawingComponent1.Visible = false;
-
-            switch (groupID)
-                {
-                    case 0:
-                        groupBox1.Text = UiText.Current.FocusGroupRed;
-                        break;
-                    case 1:
-                        groupBox1.Text = UiText.Current.FocusGroupGreen;
-                        break;
-                    case 2:
-                        groupBox1.Text = UiText.Current.FocusGroupBlue;
-                        break;
-                    default:
-                        break;
-                }
-
-            groupBox1.Tag = groupID;
+            
+            ApplyTheme();
+            SubscribeToEvents();
+            UpdateMirrorPanelLayout();
             focusChannelCount++;
         }
+            
 
         #endregion
 
@@ -122,8 +135,6 @@ namespace Bahtinov_Collimator
             groupBox1.ForeColor = UITheme.GetGroupBoxTextColor(groupID);
             mirrorDrawingComponent1.BackColor = groupBox1.BackColor;
             mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
-            offsetBarControl1.Size = new Size(240, 64);
-            offsetBarControl1.Location = new Point(groupBox1.ClientSize.Width - offsetBarControl1.Width - 8, (groupBox1.ClientSize.Height/2 - offsetBarControl1.Height/2) - 13);
         }
 
         #endregion
