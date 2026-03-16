@@ -44,7 +44,9 @@ namespace Bahtinov_Collimator
             // 
             // offsetBarControl1
             // 
-            this.offsetBarControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.offsetBarControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.offsetBarControl1.BarColor = System.Drawing.Color.Gray;
             this.offsetBarControl1.Enabled = false;
             this.offsetBarControl1.Location = new System.Drawing.Point(9, 32);
@@ -74,7 +76,6 @@ namespace Bahtinov_Collimator
             // FocusChannelComponent
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Controls.Add(this.groupBox1);
             this.DoubleBuffered = true;
             this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;

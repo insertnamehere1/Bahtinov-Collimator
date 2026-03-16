@@ -33,18 +33,18 @@ namespace Bahtinov_Collimator
         /// </summary>
         public static Color DarkForeground { get; } = Color.FromArgb(70, 80, 90);
 
-        public static float DeviceDpi { get; set; } = 144f;
+        public static float DeviceDpi { get; set; } = 96f;
 
-        public static float DpiScaleFactor => DeviceDpi / 144f; 
+        public static float DpiScaleFactor => DeviceDpi / 96f; 
         #endregion
 
         #region FontSizes
 
-        public static float GroupBoxFontSize => 10f;
-        public static float MenuStripFontSize       => 10f;
-        public static float ButtonFontSize          => 10f;
+        public static float GroupBoxFontSize => 9f;
+        public static float MenuStripFontSize       => 9f;
+        public static float ButtonFontSize          => 9f;
         public static float TextBoxFontSize         => 10f;
-        public static float MessageBoxFontSize      => 10f;
+        public static float MessageBoxFontSize      => 9f;
         public static float MainFormDefaultFontSize => 9f;
         public static float LabelFontSize           => 9f;
         public static float AboutHeadingFontSize    => 12f;
