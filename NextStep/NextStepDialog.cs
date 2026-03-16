@@ -44,13 +44,13 @@ namespace Bahtinov_Collimator
             MinimizeBox = false;
             MaximizeBox = false;
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(760, 550);
+            ClientSize = new Size(760, 580);
             BackColor = UITheme.DarkBackground;
             ForeColor = Color.White;
 
             _scroll = new Panel
             {
-                Location = new Point(20, 50),
+                Location = new Point(20, 10),
                 Size = new Size(ClientSize.Width - 40, ClientSize.Height - 90),
                 AutoScroll = true,
                 BackColor = UITheme.DarkBackground
@@ -81,7 +81,7 @@ namespace Bahtinov_Collimator
                 TextOffsetX = 0,
                 BackColor = UITheme.ButtonDarkBackground,
                 ForeColor = UITheme.ButtonDarkForeground,
-                FlatStyle = FlatStyle.Popup
+                FlatStyle = FlatStyle.Popup                
             };
 
             Controls.Add(_scroll);
@@ -131,7 +131,7 @@ namespace Bahtinov_Collimator
             int newHeight = Math.Min(required, maxHeight);
 
             ClientSize = new Size(newClientWidth, newHeight);
-            _scroll.Size = new Size(newClientWidth - 40, newHeight - 90);
+            _scroll.Size = new Size(newClientWidth - 40, newHeight - 100);
             _ok.Location = new Point(newClientWidth - 130, newHeight - 50);
         }
 
@@ -140,7 +140,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void RelayoutForNewSize()
         {
-            _scroll.Size = new Size(ClientSize.Width - 40, ClientSize.Height - 120);
+            _scroll.Size = new Size(ClientSize.Width - 40, ClientSize.Height - 190);
             _ok.Location = new Point(ClientSize.Width - 130, ClientSize.Height - 50);
 
             int w = ContentWidth();
