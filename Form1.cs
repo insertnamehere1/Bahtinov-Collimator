@@ -1,4 +1,4 @@
-﻿// Sections of the following code are covered by and existing copyright
+// Sections of the following code are covered by and existing copyright
 //
 //MIT License
 

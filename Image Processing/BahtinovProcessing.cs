@@ -1,4 +1,4 @@
-﻿
+
 // Sections of the following code are covered by and existing copyright
 //
 //MIT License
@@ -644,12 +644,13 @@ namespace Bahtinov_Collimator
             // Lock the bitmap data.
             BitmapData bitmapData = starImage.LockBits(rect, ImageLockMode.ReadWrite, starImage.PixelFormat);
             IntPtr scan0 = bitmapData.Scan0;
-            int imagePixelCount = bitmapData.Stride * starImage.Height;
+            int stride = bitmapData.Stride;
+            int bytesPerPixel = Image.GetPixelFormatSize(starImage.PixelFormat) / 8;
+            int imagePixelCount = stride * starImage.Height;
             byte[] starImageArray = new byte[imagePixelCount];
 
             // Copy pixel data to byte array and back to the image.
             Marshal.Copy(scan0, starImageArray, 0, imagePixelCount);
-            Marshal.Copy(starImageArray, 0, scan0, imagePixelCount);
             starImage.UnlockBits(bitmapData);
 
             int width = starImage.Width;
@@ -677,10 +678,14 @@ namespace Bahtinov_Collimator
             {
                 for (int y = topEdge; y < bottomEdge; ++y)
                 {
-                    int pixelIndex = (x + y * width) * bitmapData.Stride / width;
-                    byte redValue = starImageArray[pixelIndex];
+                    int pixelIndex = y * stride + x * bytesPerPixel;
+                    if (pixelIndex < 0 || pixelIndex + 2 >= starImageArray.Length)
+                        continue;
+
+                    // Common WinForms formats are BGR/BGRA in memory.
+                    byte blueValue = starImageArray[pixelIndex];
                     byte greenValue = starImageArray[pixelIndex + 1];
-                    byte blueValue = starImageArray[pixelIndex + 2];
+                    byte redValue = starImageArray[pixelIndex + 2];
 
                     float pixelValue = (redValue + greenValue + blueValue) * divisionFactor;
                     starArray2D[x, y] = (float)Math.Sqrt(pixelValue);

@@ -281,7 +281,7 @@ namespace Bahtinov_Collimator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1899, 1473);
+            this.ClientSize = new System.Drawing.Size(1200, 800);
             this.Controls.Add(this.groupBoxBlue);
             this.Controls.Add(this.groupBoxGreen);
             this.Controls.Add(this.groupBoxRed);
