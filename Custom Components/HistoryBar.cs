@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -16,12 +16,18 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public partial class HistoryBar : Control
     {
+        private const int WM_DPICHANGED = 0x02E0;
+        private const int WM_DPICHANGED_BEFOREPARENT = 0x02E2;
+        private const int WM_DPICHANGED_AFTERPARENT = 0x02E3;
+
         private float minimum = -1.0f;
         private float maximum = 1.0f;
         private float value = float.NaN;
 
         // Stores the last N values for drawing semi transparent history markers.
         private readonly Queue<float> valueHistory = new Queue<float>();
+
+        private int lastKnownDpi = DesignDpi;
 
         /// <summary>
         /// The number of previous values to keep and render as semi-opaque markers.
@@ -147,7 +153,6 @@ namespace Bahtinov_Collimator.Custom_Components
 
             // Base design size is 300x80 at 96 DPI.
             // Multiply by DpiScale so the default matches the current monitor DPI.
-            var scale = DpiScale;
             Size = new Size((int)(300 * DpiScale), GetPreferredHeight());
         }
 
@@ -172,6 +177,52 @@ namespace Bahtinov_Collimator.Custom_Components
 
             while (valueHistory.Count > HistoryCapacity)
                 valueHistory.Dequeue();
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            lastKnownDpi = DeviceDpi > 0 ? DeviceDpi : DesignDpi;
+            UpdateLayoutForDpiChange();
+        }
+
+        protected override void OnParentChanged(EventArgs e)
+        {
+            base.OnParentChanged(e);
+            UpdateLayoutForDpiChange();
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            int oldDpi = lastKnownDpi;
+
+            base.WndProc(ref m);
+
+            if (m.Msg == WM_DPICHANGED ||
+                m.Msg == WM_DPICHANGED_BEFOREPARENT ||
+                m.Msg == WM_DPICHANGED_AFTERPARENT)
+            {
+                int newDpi = DeviceDpi > 0 ? DeviceDpi : DesignDpi;
+                if (newDpi != oldDpi)
+                {
+                    lastKnownDpi = newDpi;
+                    UpdateLayoutForDpiChange();
+                }
+            }
+        }
+
+        private void UpdateLayoutForDpiChange()
+        {
+            if (IsDisposed)
+                return;
+
+            int preferredHeight = GetPreferredHeight();
+
+            // Avoid fighting layout managers/anchoring by only growing if needed.
+            if (Height < preferredHeight)
+                Height = preferredHeight;
+
+            Invalidate();
         }
 
         /// <summary>
@@ -207,10 +258,6 @@ namespace Bahtinov_Collimator.Custom_Components
             int left = margin + (int)(designLeftPad * scale);
             int right = Width - margin - (int)(designRightPad * scale);
 
-            // Position the bar so content above (text+gap+marker) and below (tick) fit with 2px padding
-            float belowCenter = Math.Max(designZeroTickDown, designHistoryRadius) * scale;
-            int centerY = Height - (int)(belowCenter + 2 * scale);
-
             float zeroTickUp = designZeroTickUp * scale;
             float zeroTickDown = designZeroTickDown * scale;
             float historyRadius = designHistoryRadius * scale;
@@ -221,6 +268,16 @@ namespace Bahtinov_Collimator.Custom_Components
             float markerOutlineThickness = designMarkerOutlineThickness * scale;
             float alertOutlineThickness = designAlertOutlineThickness * scale;
             float valueGap = designValueGap * scale;
+
+            // Vertically center the whole drawing block within whatever Height the layout gives us.
+            // This prevents "drifting" when the container scales the control differently at 100/150/300%.
+            float textHeight = Font.Height;
+            float aboveCenter = textHeight + valueGap + markerRadius;
+            float belowCenter = Math.Max(zeroTickDown, historyRadius);
+            float contentHeight = aboveCenter + belowCenter;
+            float padding = 2f * scale;
+            float top = Math.Max(padding, (Height - contentHeight) / 2f);
+            float centerY = top + aboveCenter;
 
             // Draw main bar line
             using (var barPen = new Pen(BarColor, barThickness))
@@ -254,11 +311,10 @@ namespace Bahtinov_Collimator.Custom_Components
             // Draw history markers (semi opaque, smaller, behind current marker)
             Color historyColor = Color.FromArgb(128, Color.White);
             using (var historyBrush = new SolidBrush(historyColor))
-            using (var historyPen = new Pen(Color.FromArgb(255, Color.Black)))
             {
                 foreach (float histValue in valueHistory)
                 {
-                    if (histValue != float.NaN)
+                    if (!float.IsNaN(histValue))
                     {
                         float clampedHist = Math.Max(minimum, Math.Min(maximum, histValue));
                         float ht = (clampedHist - minimum) / range;
@@ -288,7 +344,6 @@ namespace Bahtinov_Collimator.Custom_Components
 
             // Draw current marker
             using (var markerBrush = new SolidBrush(MarkerColor))
-            using (var markerPen = new Pen(Color.Black, markerOutlineThickness))
             {
                 g.FillEllipse(markerBrush, markerRect);
             }

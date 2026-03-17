@@ -1,4 +1,4 @@
-﻿using Bahtinov_Collimator.Custom_Components;
+using Bahtinov_Collimator.Custom_Components;
 using System.Drawing;
 
 namespace Bahtinov_Collimator
@@ -44,12 +44,10 @@ namespace Bahtinov_Collimator
             // 
             // offsetBarControl1
             // 
-            this.offsetBarControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.offsetBarControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.offsetBarControl1.BarColor = System.Drawing.Color.Gray;
             this.offsetBarControl1.Enabled = false;
-            this.offsetBarControl1.Location = new System.Drawing.Point(9, 32);
+            this.offsetBarControl1.Location = new System.Drawing.Point(6, 15);
             this.offsetBarControl1.MarkerColor = System.Drawing.Color.Green;
             this.offsetBarControl1.Maximum = 2F;
             this.offsetBarControl1.Minimum = -2F;

@@ -1,4 +1,4 @@
-﻿using Bahtinov_Collimator.Custom_Components;
+using Bahtinov_Collimator.Custom_Components;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -47,6 +47,7 @@ namespace Bahtinov_Collimator
 
             ApplyTheme();
             SubscribeToEvents();
+            UpdateHistoryBarLayout();
             UpdateMirrorPanelLayout();
             focusChannelCount++;
         }
@@ -206,7 +207,22 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void GroupBox1_Resize(object sender, EventArgs e)
         {
+            UpdateHistoryBarLayout();
             UpdateMirrorPanelLayout();
+        }
+
+        private void UpdateHistoryBarLayout()
+        {
+            if (offsetBarControl1 == null || groupBox1 == null)
+                return;
+
+            // Center within the group box content area (excludes caption where supported).
+            Rectangle content = groupBox1.DisplayRectangle;
+            int targetTop = content.Top + ((content.Height - offsetBarControl1.Height) / 2) - 15;
+            targetTop = Math.Max(content.Top, targetTop);
+
+            if (offsetBarControl1.Top != targetTop)
+                offsetBarControl1.Top = targetTop;
         }
 
         /// <summary>

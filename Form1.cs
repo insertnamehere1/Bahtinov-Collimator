@@ -155,7 +155,7 @@ namespace Bahtinov_Collimator
             this.UpdateStyles();
 
             // Disable automatic resizing and set the form to grow and shrink based on its content.
-            this.AutoSize = true;
+            this.AutoSize = false;
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             // Initialize the form's components.
