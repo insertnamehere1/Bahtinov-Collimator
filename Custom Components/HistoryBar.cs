@@ -16,23 +16,39 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public partial class HistoryBar : Control
     {
+        /// <summary>
+        /// Window message sent when the DPI for this window has changed.
+        /// </summary>
         private const int WM_DPICHANGED = 0x02E0;
+
+        /// <summary>
+        /// Window message sent to a child window before its parent processes a DPI change.
+        /// </summary>
         private const int WM_DPICHANGED_BEFOREPARENT = 0x02E2;
+
+        /// <summary>
+        /// Window message sent to a child window after its parent processes a DPI change.
+        /// </summary>
         private const int WM_DPICHANGED_AFTERPARENT = 0x02E3;
 
         private float minimum = -1.0f;
         private float maximum = 1.0f;
         private float value = float.NaN;
 
-        // Stores the last N values for drawing semi transparent history markers.
+        /// <summary>
+        /// Stores the last N values for drawing semi-transparent history markers.
+        /// </summary>
         private readonly Queue<float> valueHistory = new Queue<float>();
 
+        /// <summary>
+        /// Tracks the last observed DPI for this control so DPI transitions can be detected reliably.
+        /// </summary>
         private int lastKnownDpi = DesignDpi;
 
         /// <summary>
         /// The number of previous values to keep and render as semi-opaque markers.
         /// </summary>
-        private int HistoryCapacity = 6;
+        private int historyCapacity = 6;
 
         /// <summary>
         /// Design-time DPI (WinForms baseline).
@@ -43,7 +59,6 @@ namespace Bahtinov_Collimator.Custom_Components
 
         /// <summary>
         /// Gets the current DPI scale factor relative to the design DPI.
-        /// For example, at 150 percent scaling this will be 1.5.
         /// </summary>
         private float DpiScale => DeviceDpi / (float)DesignDpi;
 
@@ -94,7 +109,7 @@ namespace Bahtinov_Collimator.Custom_Components
             get => value;
             set
             {
-                HistoryCapacity = Properties.Settings.Default.historyCount;
+                historyCapacity = Properties.Settings.Default.historyCount;
 
                 // Only record history if the existing value is valid
                 if (!float.IsNaN(this.value))
@@ -159,6 +174,8 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Ensures preferred size is also DPI aware when the designer or layout engine asks.
         /// </summary>
+        /// <param name="proposedSize">The requested size proposed by the layout engine.</param>
+        /// <returns>The preferred size for this control at the current DPI.</returns>
         public override Size GetPreferredSize(Size proposedSize)
         {
             var scale = DpiScale;
@@ -175,10 +192,14 @@ namespace Bahtinov_Collimator.Custom_Components
         {
             valueHistory.Enqueue(oldValue);
 
-            while (valueHistory.Count > HistoryCapacity)
+            while (valueHistory.Count > historyCapacity)
                 valueHistory.Dequeue();
         }
 
+        /// <summary>
+        /// Captures the initial DPI once the underlying window handle is created.
+        /// </summary>
+        /// <param name="e">Event data.</param>
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
@@ -186,12 +207,20 @@ namespace Bahtinov_Collimator.Custom_Components
             UpdateLayoutForDpiChange();
         }
 
+        /// <summary>
+        /// Updates layout when the control is reparented (which can occur during DPI transitions).
+        /// </summary>
+        /// <param name="e">Event data.</param>
         protected override void OnParentChanged(EventArgs e)
         {
             base.OnParentChanged(e);
             UpdateLayoutForDpiChange();
         }
 
+        /// <summary>
+        /// Intercepts DPI-change related window messages and refreshes layout when the DPI changes.
+        /// </summary>
+        /// <param name="m">The Windows message.</param>
         protected override void WndProc(ref Message m)
         {
             int oldDpi = lastKnownDpi;
@@ -211,6 +240,9 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
+        /// <summary>
+        /// Updates size/layout in response to a DPI change.
+        /// </summary>
         private void UpdateLayoutForDpiChange()
         {
             if (IsDisposed)
@@ -249,7 +281,6 @@ namespace Bahtinov_Collimator.Custom_Components
             float designMarkerRadius = 7f;
             float designBarThickness = 2f;
             float designZeroThickness = 2f;
-            float designMarkerOutlineThickness = 0f;
             float designAlertOutlineThickness = 1f;
             float designValueGap = 2f;
 
@@ -265,7 +296,6 @@ namespace Bahtinov_Collimator.Custom_Components
 
             float barThickness = designBarThickness * scale;
             float zeroThickness = designZeroThickness * scale;
-            float markerOutlineThickness = designMarkerOutlineThickness * scale;
             float alertOutlineThickness = designAlertOutlineThickness * scale;
             float valueGap = designValueGap * scale;
 
@@ -352,9 +382,10 @@ namespace Bahtinov_Collimator.Custom_Components
             string valueStr = (float.IsNaN(value) ? 0.0f : value).ToString("0.0");
             SizeF valSize = g.MeasureString(valueStr, Font);
 
-            Color valueTextColor = TextColor;
+            bool outOfRange = value < minimum || value > maximum;
+            Color valueTextColor = outOfRange ? Color.OrangeRed : TextColor;
 
-            if (value < minimum || value > maximum)
+            if (outOfRange)
             {
                 using (var alertPen = new Pen(Color.OrangeRed, alertOutlineThickness))
                 {
@@ -377,6 +408,10 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
+        /// <summary>
+        /// Calculates the minimum height needed to render the marker, ticks, and value text without clipping.
+        /// </summary>
+        /// <returns>The minimum control height in pixels for the current DPI and font.</returns>
         private int GetPreferredHeight()
         {
             float scale = DpiScale;
@@ -393,6 +428,10 @@ namespace Bahtinov_Collimator.Custom_Components
             return (int)(aboveCenter + belowCenter) + (int)(4 * scale); // 2px padding each side
         }
 
+        /// <summary>
+        /// Updates the preferred height when the font changes, since text height affects layout.
+        /// </summary>
+        /// <param name="e">Event data.</param>
         protected override void OnFontChanged(EventArgs e)
         {
             base.OnFontChanged(e);

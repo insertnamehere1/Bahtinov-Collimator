@@ -1,4 +1,4 @@
-﻿namespace Bahtinov_Collimator
+namespace Bahtinov_Collimator
 {
     partial class Form1
     {
@@ -69,8 +69,8 @@
             this.whatDoIDoNextToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(22, 6, 0, 6);
-            this.menuStrip1.Size = new System.Drawing.Size(906, 41);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(50, 14, 0, 14);
+            this.menuStrip1.Size = new System.Drawing.Size(1824, 57);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.MouseEnter += new System.EventHandler(this.MenuStrip1_MouseEnter);
@@ -161,39 +161,39 @@
             // groupBoxBlue
             // 
             this.groupBoxBlue.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.groupBoxBlue.Location = new System.Drawing.Point(24, 352);
-            this.groupBoxBlue.Margin = new System.Windows.Forms.Padding(9, 6, 9, 6);
+            this.groupBoxBlue.Location = new System.Drawing.Point(17, 348);
+            this.groupBoxBlue.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxBlue.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
             this.groupBoxBlue.Name = "groupBoxBlue";
-            this.groupBoxBlue.Size = new System.Drawing.Size(275, 121);
+            this.groupBoxBlue.Size = new System.Drawing.Size(256, 119);
             this.groupBoxBlue.TabIndex = 36;
             // 
             // groupBoxGreen
             // 
             this.groupBoxGreen.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.groupBoxGreen.Location = new System.Drawing.Point(24, 190);
-            this.groupBoxGreen.Margin = new System.Windows.Forms.Padding(9, 6, 9, 6);
+            this.groupBoxGreen.Location = new System.Drawing.Point(17, 208);
+            this.groupBoxGreen.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxGreen.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
             this.groupBoxGreen.Name = "groupBoxGreen";
-            this.groupBoxGreen.Size = new System.Drawing.Size(275, 121);
+            this.groupBoxGreen.Size = new System.Drawing.Size(256, 119);
             this.groupBoxGreen.TabIndex = 35;
             // 
             // groupBoxRed
             // 
             this.groupBoxRed.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.groupBoxRed.Location = new System.Drawing.Point(24, 57);
-            this.groupBoxRed.Margin = new System.Windows.Forms.Padding(9, 6, 9, 6);
+            this.groupBoxRed.Location = new System.Drawing.Point(19, 71);
+            this.groupBoxRed.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxRed.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
             this.groupBoxRed.Name = "groupBoxRed";
-            this.groupBoxRed.Size = new System.Drawing.Size(275, 121);
+            this.groupBoxRed.Size = new System.Drawing.Size(256, 119);
             this.groupBoxRed.TabIndex = 34;
             // 
             // imageDisplayComponent1
             // 
-            this.imageDisplayComponent1.Location = new System.Drawing.Point(324, 72);
-            this.imageDisplayComponent1.Margin = new System.Windows.Forms.Padding(9, 6, 9, 6);
+            this.imageDisplayComponent1.Location = new System.Drawing.Point(287, 80);
+            this.imageDisplayComponent1.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.imageDisplayComponent1.Name = "imageDisplayComponent1";
-            this.imageDisplayComponent1.Size = new System.Drawing.Size(1350, 1350);
+            this.imageDisplayComponent1.Size = new System.Drawing.Size(3038, 3038);
             this.imageDisplayComponent1.TabIndex = 29;
             // 
             // analysisGroupBox
@@ -205,11 +205,11 @@
             this.analysisGroupBox.Controls.Add(this.bahtinovLabel);
             this.analysisGroupBox.Controls.Add(this.defocusLabel);
             this.analysisGroupBox.CornerRadius = 12;
-            this.analysisGroupBox.Location = new System.Drawing.Point(26, 493);
-            this.analysisGroupBox.Margin = new System.Windows.Forms.Padding(14, 14, 14, 14);
+            this.analysisGroupBox.Location = new System.Drawing.Point(19, 492);
+            this.analysisGroupBox.Margin = new System.Windows.Forms.Padding(32, 32, 32, 32);
             this.analysisGroupBox.Name = "analysisGroupBox";
-            this.analysisGroupBox.Padding = new System.Windows.Forms.Padding(14, 14, 14, 14);
-            this.analysisGroupBox.Size = new System.Drawing.Size(275, 184);
+            this.analysisGroupBox.Padding = new System.Windows.Forms.Padding(32, 32, 32, 32);
+            this.analysisGroupBox.Size = new System.Drawing.Size(260, 191);
             this.analysisGroupBox.TabIndex = 28;
             this.analysisGroupBox.TabStop = false;
             this.analysisGroupBox.Text = "roundedGroupBox1";
@@ -231,11 +231,11 @@
             this.RoundedStartButton.ImageOffsetX = -85;
             this.RoundedStartButton.ImageOffsetY = 0;
             this.RoundedStartButton.ImageWidth = 32;
-            this.RoundedStartButton.Location = new System.Drawing.Point(20, 96);
-            this.RoundedStartButton.Margin = new System.Windows.Forms.Padding(14, 14, 14, 14);
+            this.RoundedStartButton.Location = new System.Drawing.Point(9, 119);
+            this.RoundedStartButton.Margin = new System.Windows.Forms.Padding(32, 32, 32, 32);
             this.RoundedStartButton.Name = "RoundedStartButton";
             this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.RoundedStartButton.Size = new System.Drawing.Size(227, 66);
+            this.RoundedStartButton.Size = new System.Drawing.Size(245, 63);
             this.RoundedStartButton.TabIndex = 25;
             this.RoundedStartButton.Text = "Select Star";
             this.RoundedStartButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -247,19 +247,19 @@
             // 
             this.toggleSwitch1.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.toggleSwitch1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.toggleSwitch1.Location = new System.Drawing.Point(26, 28);
-            this.toggleSwitch1.Margin = new System.Windows.Forms.Padding(14, 14, 14, 14);
+            this.toggleSwitch1.Location = new System.Drawing.Point(11, 31);
+            this.toggleSwitch1.Margin = new System.Windows.Forms.Padding(32, 32, 32, 32);
             this.toggleSwitch1.Name = "toggleSwitch1";
             this.toggleSwitch1.RotationDegrees = 90;
-            this.toggleSwitch1.Size = new System.Drawing.Size(28, 54);
+            this.toggleSwitch1.Size = new System.Drawing.Size(25, 61);
             this.toggleSwitch1.TabIndex = 26;
             this.toggleSwitch1.Text = "toggleSwitch1";
             // 
             // bahtinovLabel
             // 
             this.bahtinovLabel.AutoSize = true;
-            this.bahtinovLabel.Location = new System.Drawing.Point(74, 33);
-            this.bahtinovLabel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.bahtinovLabel.Location = new System.Drawing.Point(46, 35);
+            this.bahtinovLabel.Margin = new System.Windows.Forms.Padding(14, 0, 14, 0);
             this.bahtinovLabel.Name = "bahtinovLabel";
             this.bahtinovLabel.Size = new System.Drawing.Size(71, 20);
             this.bahtinovLabel.TabIndex = 22;
@@ -269,8 +269,8 @@
             // defocusLabel
             // 
             this.defocusLabel.AutoSize = true;
-            this.defocusLabel.Location = new System.Drawing.Point(74, 62);
-            this.defocusLabel.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.defocusLabel.Location = new System.Drawing.Point(48, 67);
+            this.defocusLabel.Margin = new System.Windows.Forms.Padding(14, 0, 14, 0);
             this.defocusLabel.Name = "defocusLabel";
             this.defocusLabel.Size = new System.Drawing.Size(69, 20);
             this.defocusLabel.TabIndex = 23;
@@ -279,23 +279,22 @@
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(950, 700);
+            this.ClientSize = new System.Drawing.Size(1899, 1473);
             this.Controls.Add(this.groupBoxBlue);
             this.Controls.Add(this.groupBoxGreen);
             this.Controls.Add(this.groupBoxRed);
             this.Controls.Add(this.imageDisplayComponent1);
             this.Controls.Add(this.analysisGroupBox);
             this.Controls.Add(this.menuStrip1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(18, 18, 18, 18);
+            this.Margin = new System.Windows.Forms.Padding(40, 40, 40, 40);
             this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Padding = new System.Windows.Forms.Padding(0, 0, 33, 33);
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.Padding = new System.Windows.Forms.Padding(0, 0, 75, 75);
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.Text = "SkyCal - Focus and Collimation Tool";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.MouseEnter += new System.EventHandler(this.Form1_MouseEnter);
