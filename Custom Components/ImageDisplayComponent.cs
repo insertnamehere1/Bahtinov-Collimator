@@ -1,4 +1,4 @@
-﻿using Bahtinov_Collimator.Image_Processing;
+using Bahtinov_Collimator.Image_Processing;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -21,6 +21,13 @@ namespace Bahtinov_Collimator
 
         // scalable font for the displayed error values
         private Font errorFont;
+
+        // Track current layer bitmap size so we can recreate on DPI/resize.
+        private Size layerSize = Size.Empty;
+
+        // The coordinate-space of the incoming image/overlay data (typically 600x600).
+        private int sourceWidth = 600;
+        private int sourceHeight = 600;
         #endregion
 
         #region Constructor
@@ -52,6 +59,7 @@ namespace Bahtinov_Collimator
             DefocusStarProcessing.DefocusCircleEvent += OnDefocusCirceReceived;
 
             this.pictureBox1.Paint += new PaintEventHandler(this.PictureBoxPaint);
+            this.pictureBox1.Resize += new EventHandler(this.PictureBoxResized);
         }
 
         /// <summary>
@@ -73,21 +81,20 @@ namespace Bahtinov_Collimator
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            UpdateErrorFontForCurrentDpi();
+            EnsureLayerSizeMatchesPictureBox(forceRecreate: true);
+        }
 
-            // Get the current DPI of the display
-            using (Graphics g = this.CreateGraphics())
-            {
-                float dpi = g.DpiX; // Horizontal DPI (DpiY can also be used)
-
-                // Set the base font size in points (e.g., 12 points)
-                float baseFontSize = 25.0f;
-
-                // Calculate the font size based on DPI (assuming 96 DPI as standard)
-                float scaledFontSize = baseFontSize * 96f / dpi;
-
-                // Apply the scaled font to the form or controls
-                this.errorFont = new Font(this.Font.FontFamily, scaledFontSize);
-            }
+        /// <summary>
+        /// WinForms per-monitor DPI: called when the parent DPI changes.
+        /// We need to recreate our backing bitmaps and invalidate so the image scales correctly.
+        /// </summary>
+        protected override void OnDpiChangedAfterParent(EventArgs e)
+        {
+            base.OnDpiChangedAfterParent(e);
+            UpdateErrorFontForCurrentDpi();
+            EnsureLayerSizeMatchesPictureBox(forceRecreate: true);
+            pictureBox1.Invalidate();
         }
 
         #endregion
@@ -183,8 +190,8 @@ namespace Bahtinov_Collimator
 
             DrawImageOnFirstLayer(image);
 
-            var centerX = UITheme.DisplayWindow.X / 2;
-            var centerY = UITheme.DisplayWindow.Y / 2;
+            var centerX = sourceWidth / 2;
+            var centerY = sourceHeight / 2;
             var radius = centerX - 20;
 
             var clippingRegion = CreateCircularClippingRegion(centerX, centerY, radius);
@@ -213,9 +220,12 @@ namespace Bahtinov_Collimator
                 g.CompositingMode = CompositingMode.SourceOver;
                 g.CompositingQuality = CompositingQuality.HighQuality;
                 g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-                float layerCentreX = UITheme.DisplayWindow.X / 2f;
-                float layerCentreY = UITheme.DisplayWindow.Y / 2f;
+                ApplyContentTransform(g);
+
+                float layerCentreX = sourceWidth / 2f;
+                float layerCentreY = sourceHeight / 2f;
 
                 // Convert circle centres into layer pixel coordinates once.
                 var innerPx = new PointF(layerCentreX + (float)innerCentre.X, layerCentreY + (float)innerCentre.Y);
@@ -269,9 +279,22 @@ namespace Bahtinov_Collimator
         /// <param name="image">The Bitmap image to draw.</param>
         private void DrawImageOnFirstLayer(Bitmap image)
         {
+            if (image == null)
+                return;
+
+            sourceWidth = image.Width;
+            sourceHeight = image.Height;
+
             using (var g = Graphics.FromImage(layers[0]))
             {
-                g.DrawImage(image, new Point(0, 0));
+                g.SmoothingMode = SmoothingMode.HighQuality;
+                g.CompositingQuality = CompositingQuality.HighQuality;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+                // Draw the source bitmap scaled to fit inside the component, preserving aspect ratio.
+                ApplyContentTransform(g);
+                g.DrawImage(image, new Rectangle(0, 0, sourceWidth, sourceHeight));
             }
         }
 
@@ -284,6 +307,15 @@ namespace Bahtinov_Collimator
         {
             using (var g = Graphics.FromImage(layers[group.GroupId + 1]))
             {
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.CompositingQuality = CompositingQuality.HighQuality;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+                // Draw in source coordinates, scaled/centered to fit the current control size.
+                ApplyContentTransform(g);
+                // Clip path is defined in source coordinates; with the transform set above,
+                // GDI+ will apply the same transform to the clip region.
                 g.SetClip(clippingRegion);
 
                 const int alpha = 150;   // 0–255  lower = more transparent, higher = more opaque
@@ -329,12 +361,12 @@ namespace Bahtinov_Collimator
         {
             var solidBrush = UITheme.GetErrorTextBrush(group.GroupId);
 
-            var radius = (UITheme.DisplayWindow.X / 2) - 50;
+            var radius = (sourceWidth / 2) - 50;
 
             var textStart = group.Lines[1].Start;
             var textEnd = group.Lines[1].End;
 
-            var (adjustedStart, adjustedEnd) = AdjustPointsForRadius(textStart, textEnd, this.Width, this.Height, radius);
+            var (adjustedStart, adjustedEnd) = AdjustPointsForRadius(textStart, textEnd, sourceWidth, sourceHeight, radius);
 
             if (group.GroupId == 1)
                 DrawLineWithCenteredText(g, adjustedStart, group.ErrorCircle.ErrorValue, errorFont, solidBrush);
@@ -374,9 +406,11 @@ namespace Bahtinov_Collimator
         {
             for (int i = 0; i < count; i++)
             {
-                var layer = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+                var layer = new Bitmap(Math.Max(1, pictureBox1.Width), Math.Max(1, pictureBox1.Height));
                 layers.Add(layer);
             }
+
+            layerSize = pictureBox1.ClientSize;
         }
 
         /// <summary>
@@ -386,19 +420,36 @@ namespace Bahtinov_Collimator
         /// <param name="e">An <see cref="PaintEventArgs"/> that contains information about the paint event, including the <see cref="Graphics"/> object used for drawing.</param>
         private void PictureBoxPaint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawImage(layers[0], 0, 0);
+            EnsureLayerSizeMatchesPictureBox(forceRecreate: false);
+
+            e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            Rectangle destRect = pictureBox1.ClientRectangle;
+            if (destRect.Width <= 0 || destRect.Height <= 0)
+                return;
+
+            // Draw scaled so DPI/resize changes scale the content.
+            e.Graphics.DrawImage(layers[0], destRect);
 
             if (selectedGroup == 0)
             {
-                foreach (var layer in layers)
+                for (int i = 1; i < layers.Count; i++)
                 {
-                    e.Graphics.DrawImage(layer, 0, 0);
+                    e.Graphics.DrawImage(layers[i], destRect);
                 }
             }
             else if (selectedGroup > 0 && selectedGroup < layers.Count)
             {
-                e.Graphics.DrawImage(layers[selectedGroup], 0, 0);
+                e.Graphics.DrawImage(layers[selectedGroup], destRect);
             }
+        }
+
+        private void PictureBoxResized(object sender, EventArgs e)
+        {
+            EnsureLayerSizeMatchesPictureBox(forceRecreate: true);
+            pictureBox1.Invalidate();
         }
 
         /// <summary>
@@ -415,6 +466,67 @@ namespace Bahtinov_Collimator
             }
         }
 
+        private void UpdateErrorFontForCurrentDpi()
+        {
+            // Keep the error font’s physical size stable across DPI changes.
+            using (Graphics g = this.CreateGraphics())
+            {
+                float dpi = g.DpiX;
+                float baseFontSize = 25.0f; // points at 96 DPI
+                float scaledFontSize = baseFontSize * 96f / dpi;
+
+                errorFont?.Dispose();
+                errorFont = new Font(this.Font.FontFamily, scaledFontSize);
+            }
+        }
+
+        private void EnsureLayerSizeMatchesPictureBox(bool forceRecreate)
+        {
+            Size target = pictureBox1.ClientSize;
+            if (target.Width <= 0 || target.Height <= 0)
+                return;
+
+            if (!forceRecreate && layerSize == target)
+                return;
+
+            if (layers == null || layers.Count == 0)
+            {
+                layerSize = target;
+                return;
+            }
+
+            // Recreate each layer bitmap to match the new size, scaling previous content
+            // so the displayed image/overlays remain visually consistent after DPI changes.
+            for (int i = 0; i < layers.Count; i++)
+            {
+                Bitmap old = layers[i];
+                if (old == null)
+                {
+                    layers[i] = new Bitmap(target.Width, target.Height);
+                    continue;
+                }
+
+                if (!forceRecreate && old.Width == target.Width && old.Height == target.Height)
+                    continue;
+
+                Bitmap resized = new Bitmap(target.Width, target.Height);
+                using (var g = Graphics.FromImage(resized))
+                {
+                    g.SmoothingMode = SmoothingMode.HighQuality;
+                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    g.CompositingQuality = CompositingQuality.HighQuality;
+                    g.Clear(Color.Transparent);
+                    g.DrawImage(old, new Rectangle(0, 0, target.Width, target.Height));
+                }
+
+                layers[i] = resized;
+                old.Dispose();
+            }
+
+            layerSize = target;
+        }
+
         /// <summary>
         /// Creates a circular clipping region centered at a specified point with a given radius.
         /// </summary>
@@ -427,6 +539,32 @@ namespace Bahtinov_Collimator
             var path = new GraphicsPath();
             path.AddEllipse(centerX - radius, centerY - radius, radius * 2, radius * 2);
             return path;
+        }
+
+        private void ApplyContentTransform(Graphics g)
+        {
+            if (g == null)
+                return;
+
+            // Map the source coordinate space (e.g. 600x600) into the current layer bitmap size,
+            // preserving aspect ratio and centering (letterboxing/pillarboxing as needed).
+            var target = layers != null && layers.Count > 0 ? layers[0].Size : pictureBox1.ClientSize;
+            if (target.Width <= 0 || target.Height <= 0 || sourceWidth <= 0 || sourceHeight <= 0)
+                return;
+
+            float sx = (float)target.Width / sourceWidth;
+            float sy = (float)target.Height / sourceHeight;
+            float scale = Math.Min(sx, sy);
+
+            float scaledW = sourceWidth * scale;
+            float scaledH = sourceHeight * scale;
+            float offsetX = (target.Width - scaledW) / 2f;
+            float offsetY = (target.Height - scaledH) / 2f;
+
+            var m = new Matrix();
+            m.Translate(offsetX, offsetY);
+            m.Scale(scale, scale);
+            g.Transform = m;
         }
 
         /// <summary>

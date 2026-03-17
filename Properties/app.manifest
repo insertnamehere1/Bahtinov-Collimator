@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
   <assemblyIdentity version="1.0.0.0" name="MyApplication.app"/>
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
@@ -16,5 +16,15 @@
 			<supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
 		</application>
 	</compatibility>
+
+  <!-- Enable per-monitor DPI so moving between monitors triggers DPI change notifications -->
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <!-- Prefer PerMonitorV2 (Windows 10+) -->
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
+      <!-- Fallback for older Windows versions -->
+      <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true/pm</dpiAware>
+    </windowsSettings>
+  </application>
 	
 </assembly>
