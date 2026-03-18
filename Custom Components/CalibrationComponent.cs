@@ -38,8 +38,6 @@ namespace Bahtinov_Collimator.Custom_Components
 
         private CalibrationState _state = CalibrationState.WaitingForFirstValidRead;
 
-        private readonly Font labelFont;
-
         private enum CalibrationState
         {
             WaitingForFirstValidRead,
@@ -63,12 +61,10 @@ namespace Bahtinov_Collimator.Custom_Components
             {
                 Interval = 1000 // 1 second
             };
+
             _aggregationTimer.Tick += AggregationTimer_Tick;
 
             this.AutoScaleMode = AutoScaleMode.None;
-
-            // Apply the scaled font to the form or controls
-            this.labelFont = new Font(this.Font.FontFamily, UITheme.CollimationTextFontSize);
 
             SetupUI();
             SubscribeToEvents();
@@ -81,49 +77,10 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         private void SetupUI()
         {
+            // internationalize text
             var textPack = NextStepText.Current;
-
-            roundedPanel1.Font = labelFont;
-            quitButton.Font = labelFont;
-            titledRoundedRichTextBox1.Font = labelFont;
-
-            var titleFont = new Font(this.Font.FontFamily, UITheme.CollimationTitleFontSize);
-
-            titledRoundedRichTextBox1.TitleFont = titleFont;
-            titledRoundedRichTextBox1.TitlePaddingLeft = 140;
-
-            // Scale form size (these were originally designed for 96 DPI).
-            this.ClientSize = new Size(390, 624);
-
-            // Bottom panel
-            roundedPanel1.Size = new Size(390, 83);
-            roundedPanel1.Location = new Point(0, 541);
-            roundedPanel1.BackColor = UITheme.DarkBackground;
-            roundedPanel1.ForeColor = UITheme.MenuHighlightBackground;
-
-            // Quit button
-            quitButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize);
-
-            quitButton.Size = new Size(160, 44);
-            quitButton.Location = new Point(116, 20);
-            quitButton.BackColor = UITheme.ButtonDarkBackground;
-            quitButton.ForeColor = UITheme.ButtonDarkForeground;
-            quitButton.FlatStyle = FlatStyle.Popup;
-            quitButton.CornerRadius = 8;
-            quitButton.TextOffsetX = 0;
-            quitButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
-            quitButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
             quitButton.Text = textPack.CalibrationQuitButtonText;
-
-            // RichText box container
-            titledRoundedRichTextBox1.Size = new Size(384, 506);
-            titledRoundedRichTextBox1.Location = new Point(3, 23);
-            titledRoundedRichTextBox1.BackColor = UITheme.MenuDarkBackground;
-            titledRoundedRichTextBox1.ForeColor = Color.White;
-            titledRoundedRichTextBox1.TitleForeColor = Color.White;
-            titledRoundedRichTextBox1.TitleBackColor = UITheme.ButtonDarkBackground;
             titledRoundedRichTextBox1.TitleText = textPack.CalibrationTitle;
-            titledRoundedRichTextBox1.TitlePaddingLeft = 80;
         }
 
         /// <summary>
@@ -488,7 +445,6 @@ namespace Bahtinov_Collimator.Custom_Components
             BoldLastLine(rtb);
 
             rtb.SelectionAlignment = HorizontalAlignment.Center;
-            rtb.Font = new Font(this.Font.FontFamily, UITheme.AboutHeadingFontSize, this.Font.Style);
             rtb.AppendText("\r\n" + textPack.CalibrationCompleteSummary + "\r");
             BoldLastLine(rtb);
             rtb.SelectionAlignment = HorizontalAlignment.Left;

@@ -41,10 +41,6 @@ namespace Bahtinov_Collimator
             this.UpdateStyles();
 
             InitializeComponent();
-            this.AutoScaleMode = AutoScaleMode.None;
-
-            this.groupBox1.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
-
             ApplyTheme();
             SubscribeToEvents();
             UpdateHistoryBarLayout();

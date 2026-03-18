@@ -32,7 +32,7 @@ namespace Bahtinov_Collimator
             this.groupBox1.Controls.Add(this.mirrorDrawingComponent1);
             this.groupBox1.CornerRadius = 12;
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
@@ -44,7 +44,8 @@ namespace Bahtinov_Collimator
             // 
             // offsetBarControl1
             // 
-            this.offsetBarControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.offsetBarControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.offsetBarControl1.BarColor = System.Drawing.Color.Gray;
             this.offsetBarControl1.Enabled = false;
             this.offsetBarControl1.Location = new System.Drawing.Point(6, 15);
@@ -52,7 +53,7 @@ namespace Bahtinov_Collimator
             this.offsetBarControl1.Maximum = 2F;
             this.offsetBarControl1.Minimum = -2F;
             this.offsetBarControl1.Name = "offsetBarControl1";
-            this.offsetBarControl1.Size = new System.Drawing.Size(240, 58);
+            this.offsetBarControl1.Size = new System.Drawing.Size(240, 41);
             this.offsetBarControl1.TabIndex = 8;
             this.offsetBarControl1.Text = "offsetBarControl1";
             this.offsetBarControl1.TextColor = System.Drawing.Color.White;
