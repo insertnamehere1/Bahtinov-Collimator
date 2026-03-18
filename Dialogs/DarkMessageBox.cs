@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -51,61 +51,19 @@ namespace Bahtinov_Collimator
             messageLabel.Text = message;
             okButton.Text = UiText.Current.CommonOk;
             cancelButton.Text = UiText.Current.CommonCancel;
-            DrawIconInPictureBox(icon);
-            SetTextSize();
-            SetColor();
+            DrawIconInPictureBox(icon); 
             ConfigureButtons(buttons);
             AutoSizeControls();
+
+            // Set Color of Title bar to match the dark theme
+            var color = UITheme.DarkBackground;
+            int colorValue = color.R | (color.G << 8) | (color.B << 16);
+            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
         }
 
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Sets the color scheme of the message box and its controls.
-        /// </summary>
-        private void SetColor()
-        {
-            var color = UITheme.DarkBackground;
-            int colorValue = color.R | (color.G << 8) | (color.B << 16);
-            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
-
-            panel1.BackColor = UITheme.MessageBoxPanelBackground;
-            this.BackColor = UITheme.DarkBackground;
-            messageLabel.ForeColor = UITheme.MessageBoxTextColor;
-
-            okButton.BackColor = UITheme.ButtonDarkBackground;
-            okButton.ForeColor = UITheme.ButtonDarkForeground;
-            okButton.FlatStyle = FlatStyle.Popup;
-            okButton.CornerRadius = 4;
-            okButton.TextOffsetX = 0;
-            okButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
-            okButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
-
-            cancelButton.BackColor = UITheme.ButtonDarkBackground;
-            cancelButton.ForeColor = UITheme.ButtonDarkForeground;
-            cancelButton.FlatStyle = FlatStyle.Popup;
-            cancelButton.CornerRadius = 4;
-            cancelButton.TextOffsetX = 0;
-            cancelButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
-            cancelButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
-
-        }
-
-        /// <summary>
-        /// Increases the font size of the message box and its controls.
-        /// </summary>
-        private void SetTextSize()
-        {
-            Font newFont = new Font(this.Font.FontFamily, UITheme.MessageBoxFontSize, this.Font.Style);
-
-            // Adjust fonts
-            this.Font = newFont;
-            this.messageLabel.Font = newFont;
-            this.cancelButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
-            this.okButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
-        }
 
         /// <summary>
         /// Configures the visibility and text of the buttons based on the specified button options.
@@ -116,17 +74,39 @@ namespace Bahtinov_Collimator
             okButton.Visible = false;
             cancelButton.Visible = false;
 
-            if (buttons.HasFlag(MessageBoxButtons.OK))
+            switch (buttons)
             {
-                okButton.Visible = true;
-            }
+                case MessageBoxButtons.OK:
+                    okButton.Visible = true;
+                    okButton.Text = UiText.Current.CommonOk;
+                    break;
 
-            if (buttons.HasFlag(MessageBoxButtons.YesNo))
-            {
-                okButton.Visible = true;
-                cancelButton.Visible = true;
-                okButton.Text = UiText.Current.CommonYes;
-                cancelButton.Text = UiText.Current.CommonNo;
+                case MessageBoxButtons.OKCancel:
+                    okButton.Visible = true;
+                    cancelButton.Visible = true;
+                    okButton.Text = UiText.Current.CommonOk;
+                    cancelButton.Text = UiText.Current.CommonCancel;
+                    break;
+
+                case MessageBoxButtons.YesNo:
+                    okButton.Visible = true;
+                    cancelButton.Visible = true;
+                    okButton.Text = UiText.Current.CommonYes;
+                    cancelButton.Text = UiText.Current.CommonNo;
+                    break;
+
+                case MessageBoxButtons.YesNoCancel:
+                    okButton.Visible = true;
+                    cancelButton.Visible = true;
+                    okButton.Text = UiText.Current.CommonYes;
+                    cancelButton.Text = UiText.Current.CommonCancel;
+                    break;
+
+                default:
+                    // Keep a safe fallback rather than showing no buttons.
+                    okButton.Visible = true;
+                    okButton.Text = UiText.Current.CommonOk;
+                    break;
             }
         }
 
@@ -135,12 +115,55 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void AutoSizeControls()
         {
-            this.messageLabel.AutoSize = true;
-            int width = Math.Max(this.messageLabel.Width + 150, this.okButton.Width + 255);
-            int height = this.messageLabel.Height + this.okButton.Height + 105; // Padding and spacing
-            this.ClientSize = new Size(width, height);
-            panel1.Location = new Point(0, this.ClientSize.Height - panel1.Height);
-            panel1.Width = this.ClientSize.Width;
+            // The form is already `AutoScaleMode.Dpi`; we only need to ensure any *manual*
+            // padding/spacing stays proportional and doesn't truncate at 125%/150% DPI.
+            float dpiScale = DeviceDpi / 96f;
+
+            int ScaleLogicalPixels(int logicalPixels)
+            {
+                return (int)Math.Round(logicalPixels * dpiScale, MidpointRounding.AwayFromZero);
+            }
+
+            SuspendLayout();
+
+            messageLabel.AutoSize = true;
+            messageLabel.MaximumSize = new Size(ScaleLogicalPixels(650), 0);
+            messageLabel.PerformLayout();
+
+            // Ensure autosized label has a final size before we measure.
+            PerformLayout();
+
+            int horizontalPadding = ScaleLogicalPixels(24);
+            int verticalPadding = ScaleLogicalPixels(20);
+            int bottomPanelTopSpacing = ScaleLogicalPixels(18);
+
+            int contentLeft = Math.Min(iconBox.Left, messageLabel.Left);
+            int contentRight = Math.Max(iconBox.Right, messageLabel.Right);
+            int contentTop = Math.Min(iconBox.Top, messageLabel.Top);
+            int contentBottom = Math.Max(iconBox.Bottom, messageLabel.Bottom);
+
+            // If the message is long, the label will wrap (via MaximumSize) and its Right edge will be reliable.
+            int desiredClientWidth = (contentRight - contentLeft) + (horizontalPadding * 2);
+
+            // Ensure there's enough width for the button panel's content.
+            // The controls inside `panel1` are already DPI-scaled by WinForms.
+            int desiredClientWidthForButtons = (okButton.Visible ? okButton.Width : 0)
+                + (cancelButton.Visible ? cancelButton.Width : 0)
+                + ScaleLogicalPixels(48); // side padding + button gap allowance
+
+            int finalClientWidth = Math.Max(desiredClientWidth, desiredClientWidthForButtons);
+
+            // Height: content + spacing + bottom panel.
+            int contentHeight = (contentBottom - contentTop);
+            int finalClientHeight = verticalPadding + contentHeight + bottomPanelTopSpacing + panel1.Height;
+
+            ClientSize = new Size(finalClientWidth, finalClientHeight);
+
+            // Stretch the bottom panel across the form and pin it to the bottom.
+            panel1.Location = new Point(0, ClientSize.Height - panel1.Height);
+            panel1.Width = ClientSize.Width;
+
+            ResumeLayout(performLayout: true);
         }
 
         /// <summary>
