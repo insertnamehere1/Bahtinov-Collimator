@@ -82,7 +82,7 @@ namespace Bahtinov_Collimator
             this.cancelButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.cancelButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
             this.cancelButton.BevelThickness = 2;
-            this.cancelButton.CornerRadius = 4;
+            this.cancelButton.CornerRadius = 6;
             this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.cancelButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.cancelButton.ForeColor = System.Drawing.Color.LightGray;
@@ -108,7 +108,7 @@ namespace Bahtinov_Collimator
             this.okButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.okButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
             this.okButton.BevelThickness = 2;
-            this.okButton.CornerRadius = 4;
+            this.okButton.CornerRadius = 6;
             this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.okButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.okButton.ForeColor = System.Drawing.Color.LightGray;
