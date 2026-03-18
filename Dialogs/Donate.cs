@@ -31,8 +31,11 @@ namespace Bahtinov_Collimator
         {
             InitializeComponent();
             ApplyLocalization();
-            InitializeRichTextBox();
-            SetColorScheme();
+
+            // Set Title Bar color
+            var color = UITheme.DarkBackground;
+            int colorValue = color.R | (color.G << 8) | (color.B << 16);
+            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
         }
 
         #endregion
@@ -42,10 +45,6 @@ namespace Bahtinov_Collimator
         protected override async void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-
-            this.Font = new Font(this.Font.FontFamily, UITheme.DialogDefaultFontSize, this.Font.Style);
-            richTextBox.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
-            cancelButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
 
             bool hasInternet = await HasInternetAccessAsync().ConfigureAwait(true);
 
@@ -94,32 +93,6 @@ namespace Bahtinov_Collimator
             Height += diff;
 
             richTextBox.Anchor = savedAnchor;
-        }
-
-        private void SetColorScheme()
-        {
-            this.ForeColor = UITheme.DarkForeground;
-            this.BackColor = UITheme.DarkBackground;
-
-            cancelButton.BackColor = UITheme.ButtonDarkBackground;
-            cancelButton.ForeColor = UITheme.ButtonDarkForeground;
-            cancelButton.FlatStyle = FlatStyle.Popup;
-            cancelButton.CornerRadius = 4;
-            cancelButton.TextOffsetX = 0;
-            cancelButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
-            cancelButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
-
-            var color = UITheme.DarkBackground;
-            int colorValue = color.R | (color.G << 8) | (color.B << 16);
-            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
-            pictureBox1.BackColor = UITheme.DonatePictureBackground;
-        }
-
-        private void InitializeRichTextBox()
-        {
-            richTextBox.BackColor = UITheme.DarkBackground;
-            richTextBox.ForeColor = UITheme.DonateTextColor;
-            richTextBox.Text = UiText.Current.DonateRichTextOnline;
         }
 
         private string GenerateDonationUrl()
@@ -195,6 +168,7 @@ namespace Bahtinov_Collimator
             var textPack = UiText.Current;
             Text = textPack.DonateTitle;
             cancelButton.Text = textPack.DonateCloseButton;
+            richTextBox.Text = UiText.Current.DonateRichTextOnline;
         }
 
         #endregion
