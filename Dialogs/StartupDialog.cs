@@ -1,4 +1,4 @@
-﻿using Bahtinov_Collimator;
+using Bahtinov_Collimator;
 using Bahtinov_Collimator.Custom_Components;
 using System;
 using System.Diagnostics;
@@ -80,26 +80,30 @@ namespace SkyCal
             MaximizeBox = false;
             MinimizeBox = false;
             ShowInTaskbar = false;
-            AutoScaleMode = AutoScaleMode.None;
             Font = SystemFonts.MessageBoxFont;
 
-            Padding = new Padding(14);
-            ClientSize = new Size(520, 250);
+            // This dialog builds its UI dynamically, so we must scale all hard-coded pixel values ourselves.
+            // (Designer autoscaling only applies to designer-created controls.)
+            float s = DeviceDpi / 96f;
+            int S(int v) => (int)Math.Round(v * s);
+
+            Padding = new Padding(S(14));
+            ClientSize = new Size(S(520), S(250));
 
             _titleLabel = new System.Windows.Forms.Label
             {
                 AutoSize = true,
                 Text = UiText.Current.StartupDialogHeading,
                 Font = new Font(Font, FontStyle.Bold),
-                Location = new Point(14, 54)
+                Location = new Point(S(14), S(54))
             };
 
             _bodyLabel = new System.Windows.Forms.Label
             {
                 AutoSize = false,
                 Text = UiText.Current.StartupDialogBody,
-                Location = new Point(14, _titleLabel.Bottom + 20),
-                Size = new Size(ClientSize.Width - 28, 150)
+                Location = new Point(S(14), _titleLabel.Bottom + S(20)),
+                Size = new Size(ClientSize.Width - S(28), S(150))
             };
 
 
@@ -107,14 +111,14 @@ namespace SkyCal
             {
                 AutoSize = true,
                 Text = UiText.Current.StartupDialogDontShowAgain,
-                Location = new Point(20, _bodyLabel.Bottom + 10)
+                Location = new Point(S(20), _bodyLabel.Bottom + S(10))
             };
 
             _runButton = new RoundedButton
             {
                 Text = UiText.Current.StartupDialogYesButton,
                 DialogResult = DialogResult.OK,
-                Size = new Size(120, 35),
+                Size = new Size(S(120), S(35)),
                 CornerRadius = 4,
                 BackColor = UITheme.ButtonDarkBackground,
                 ForeColor = UITheme.ButtonDarkForeground,
@@ -128,7 +132,7 @@ namespace SkyCal
             {
                 Text = UiText.Current.StartupDialogNotNowButton,
                 DialogResult = DialogResult.Cancel,
-                Size = new Size(120, 35),
+                Size = new Size(S(120), S(35)),
                 CornerRadius = 4,
                 BackColor = UITheme.ButtonDarkBackground,
                 ForeColor = UITheme.ButtonDarkForeground,
@@ -142,9 +146,9 @@ namespace SkyCal
             CancelButton = _notNowButton;
 
             // Button placement (bottom-right)
-            int bottomY = ClientSize.Height - 14 - _runButton.Height;
-            _notNowButton.Location = new Point(ClientSize.Width - 14 - _notNowButton.Width, bottomY);
-            _runButton.Location = new Point(_notNowButton.Left - 10 - _runButton.Width, bottomY);
+            int bottomY = ClientSize.Height - S(14) - _runButton.Height;
+            _notNowButton.Location = new Point(ClientSize.Width - S(14) - _notNowButton.Width, bottomY);
+            _runButton.Location = new Point(_notNowButton.Left - S(10) - _runButton.Width, bottomY);
 
             Controls.Add(_titleLabel);
             Controls.Add(_bodyLabel);
@@ -165,6 +169,7 @@ namespace SkyCal
             _runButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
             _notNowButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
 
+            PerformLayout();
             BeginInvoke(new Action(ResizeFormToContent));
         }
 
@@ -182,11 +187,13 @@ namespace SkyCal
                 TextFormatFlags.WordBreak);
 
             _bodyLabel.Height = contentSize.Height;
-            _dontShowAgainCheckBox.Location = new Point(20, _bodyLabel.Bottom + 20);
+            float s = DeviceDpi / 96f;
+            int S(int v) => (int)Math.Round(v * s);
+            _dontShowAgainCheckBox.Location = new Point(S(20), _bodyLabel.Bottom + S(20));
             
-            _notNowButton.Location = new Point(ClientSize.Width - 20 - _notNowButton.Width, _dontShowAgainCheckBox.Bottom + 20);
-            _runButton.Location = new Point(_notNowButton.Left - 10 - _runButton.Width, _dontShowAgainCheckBox.Bottom + 20);
-            Height = _runButton.Bottom + 20;
+            _notNowButton.Location = new Point(ClientSize.Width - S(20) - _notNowButton.Width, _dontShowAgainCheckBox.Bottom + S(20));
+            _runButton.Location = new Point(_notNowButton.Left - S(10) - _runButton.Width, _dontShowAgainCheckBox.Bottom + S(20));
+            Height = _runButton.Bottom + S(20);
 
             _bodyLabel.Anchor = savedAnchor;
         }

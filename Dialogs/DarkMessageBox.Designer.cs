@@ -1,4 +1,4 @@
-﻿using Bahtinov_Collimator.Custom_Components;
+using Bahtinov_Collimator.Custom_Components;
 
 namespace Bahtinov_Collimator
 {
@@ -118,7 +118,8 @@ namespace Bahtinov_Collimator
             // 
             // DarkMessageBox
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(472, 273);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.iconBox);

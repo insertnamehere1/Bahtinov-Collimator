@@ -1,4 +1,4 @@
-﻿namespace SkyCal
+namespace SkyCal
 {
     partial class StartupDialog
     {
@@ -32,7 +32,8 @@
             // 
             // StartupDialog
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(800, 650);
             this.Location = new System.Drawing.Point(0, 0);
             this.Name = "StartupDialog";

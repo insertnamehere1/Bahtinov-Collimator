@@ -176,9 +176,6 @@ namespace Bahtinov_Collimator
             // Set up event handlers for the form's controls.
             SetEvents();
 
-            // Apply the new font size to the form's controls.
-            SetFontSize();
-
             // disable and gray the "what should i do next" menu item if we havent been calibrated
             menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted;
 
@@ -222,19 +219,6 @@ namespace Bahtinov_Collimator
         {
             base.OnShown(e);
             ShowStartupCalibrationPromptIfNeeded(this);
-        }
-
-        /// <summary>
-        /// Sets the font size for various controls on the form.
-        /// </summary>
-        /// <param name="newFont">The new font to be applied to the controls.</param>
-        private void SetFontSize()
-        {
-            menuStrip1.Font = new Font(this.Font.FontFamily, UITheme.MenuStripFontSize, this.Font.Style);
-            bahtinovLabel.Font = new Font(this.Font.FontFamily, UITheme.LabelFontSize, this.Font.Style);
-            defocusLabel.Font = new Font(this.Font.FontFamily, UITheme.LabelFontSize, this.Font.Style);
-            RoundedStartButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
-            analysisGroupBox.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
         }
 
         /// <summary>
@@ -571,8 +555,9 @@ namespace Bahtinov_Collimator
                     groupBoxBlue.Visible = false;
                     InitializeRedFocusBox();
                     RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
-                    RoundedStartButton.Image = Properties.Resources.SelectionCircle;                
-                    imageDisplayComponent1.Location = new Point(MIN_IMAGE_DISPLAY_X_OFFSET, imageDisplayComponent1.Location.Y);
+                    RoundedStartButton.Image = Properties.Resources.SelectionCircle;
+                    int minOffset = ScaleLogical(MIN_IMAGE_DISPLAY_X_OFFSET);
+                    imageDisplayComponent1.Location = new Point(minOffset, imageDisplayComponent1.Location.Y);
 
                     DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
                 }));
@@ -586,7 +571,8 @@ namespace Bahtinov_Collimator
                 InitializeRedFocusBox();
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
-                imageDisplayComponent1.Location = new Point(MIN_IMAGE_DISPLAY_X_OFFSET, imageDisplayComponent1.Location.Y);
+                int minOffset = ScaleLogical(MIN_IMAGE_DISPLAY_X_OFFSET);
+                imageDisplayComponent1.Location = new Point(minOffset, imageDisplayComponent1.Location.Y);
 
                 DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
             }
@@ -702,6 +688,20 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Scales a logical design-time pixel value to the current monitor DPI.
+        /// The original designer baseline for this form was 144 DPI, so we
+        /// preserve that relationship here to keep calibrated layouts consistent
+        /// across monitors.
+        /// </summary>
+        /// <param name="logical">Value in logical pixels at the original 144 DPI baseline.</param>
+        private int ScaleLogical(int logical)
+        {
+            const float designDpi = 144f;
+            float scale = DeviceDpi / designDpi;
+            return (int)Math.Round(logical * scale);
+        }
 
         /// <summary>
         /// Processes the provided image and displays it based on whether it's a Bahtinov mask or a defocus star.
@@ -837,25 +837,30 @@ namespace Bahtinov_Collimator
             }
             else
             {
-                if (groupBoxRed != null && groupBoxRed.Size.Width < MAX_FOCUS_CHAN_SIZE)
+                int maxWidth = ScaleLogical(MAX_FOCUS_CHAN_SIZE);
+                int minWidth = ScaleLogical(MIN_FOCUS_CHAN_SIZE);
+
+                if (groupBoxRed != null && groupBoxRed.Size.Width < maxWidth)
                 {
-                    groupBoxRed.Size = new Size(MAX_FOCUS_CHAN_SIZE, groupBoxRed.Size.Height);
+                    groupBoxRed.Size = new Size(maxWidth, groupBoxRed.Size.Height);
                 }
-                if (groupBoxGreen != null && groupBoxGreen.Size.Width < MAX_FOCUS_CHAN_SIZE)
+                if (groupBoxGreen != null && groupBoxGreen.Size.Width < maxWidth)
                 {
-                    groupBoxGreen.Size = new Size(MAX_FOCUS_CHAN_SIZE, groupBoxGreen.Size.Height);
+                    groupBoxGreen.Size = new Size(maxWidth, groupBoxGreen.Size.Height);
                 }
-                if (groupBoxBlue != null && groupBoxBlue.Size.Width < MAX_FOCUS_CHAN_SIZE)
+                if (groupBoxBlue != null && groupBoxBlue.Size.Width < maxWidth)
                 {
-                    groupBoxBlue.Size = new Size(MAX_FOCUS_CHAN_SIZE, groupBoxBlue.Size.Height);
+                    groupBoxBlue.Size = new Size(maxWidth, groupBoxBlue.Size.Height);
                 }
 
-                imageDisplayComponent1.Location = new Point(MAX_IMAGE_DISPLAY_X_OFFSET, imageDisplayComponent1.Location.Y);
+                int maxOffset = ScaleLogical(MAX_IMAGE_DISPLAY_X_OFFSET);
+                imageDisplayComponent1.Location = new Point(maxOffset, imageDisplayComponent1.Location.Y);
 
                 if (calibrationComponent != null)
                 {
                     this.AutoSizeMode = AutoSizeMode.GrowOnly;
-                    this.Width += MAX_FOCUS_CHAN_SIZE - MIN_FOCUS_CHAN_SIZE;
+                    int delta = maxWidth - minWidth;
+                    this.Width += delta;
                 }
             }
         }
@@ -869,24 +874,29 @@ namespace Bahtinov_Collimator
             }
             else
             {
-                if (groupBoxRed != null && groupBoxRed.Size.Width > MIN_FOCUS_CHAN_SIZE)
+                int maxWidth = ScaleLogical(MAX_FOCUS_CHAN_SIZE);
+                int minWidth = ScaleLogical(MIN_FOCUS_CHAN_SIZE);
+
+                if (groupBoxRed != null && groupBoxRed.Size.Width > minWidth)
                 {
-                    groupBoxRed.Size = new Size(MIN_FOCUS_CHAN_SIZE, groupBoxRed.Size.Height);
+                    groupBoxRed.Size = new Size(minWidth, groupBoxRed.Size.Height);
                 }
-                if (groupBoxGreen != null && groupBoxGreen.Size.Width > MIN_FOCUS_CHAN_SIZE)
+                if (groupBoxGreen != null && groupBoxGreen.Size.Width > minWidth)
                 {
-                    groupBoxGreen.Size = new Size(MIN_FOCUS_CHAN_SIZE, groupBoxGreen.Size.Height);
+                    groupBoxGreen.Size = new Size(minWidth, groupBoxGreen.Size.Height);
                 }
-                if (groupBoxBlue != null && groupBoxBlue.Size.Width > MIN_FOCUS_CHAN_SIZE)
+                if (groupBoxBlue != null && groupBoxBlue.Size.Width > minWidth)
                 {
-                    groupBoxBlue.Size = new Size(MIN_FOCUS_CHAN_SIZE, groupBoxBlue.Size.Height);
+                    groupBoxBlue.Size = new Size(minWidth, groupBoxBlue.Size.Height);
                 }
 
-                imageDisplayComponent1.Location = new Point(MIN_IMAGE_DISPLAY_X_OFFSET, imageDisplayComponent1.Location.Y);
+                int minOffset = ScaleLogical(MIN_IMAGE_DISPLAY_X_OFFSET);
+                imageDisplayComponent1.Location = new Point(minOffset, imageDisplayComponent1.Location.Y);
 
                 if (calibrationComponent != null)
                 {
-                    this.Width -= MAX_FOCUS_CHAN_SIZE - MIN_FOCUS_CHAN_SIZE;
+                    int delta = maxWidth - minWidth;
+                    this.Width -= delta;
                 }
             }
         }
@@ -1211,6 +1221,11 @@ namespace Bahtinov_Collimator
                 this.BringToFront(); // Optional: bring to front
                 this.Activate();     // Optional: give it focus
             }
+        }
+
+        private void imageDisplayComponent1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Bahtinov_Collimator.Custom_Components;
+using Bahtinov_Collimator.Custom_Components;
 
 namespace Bahtinov_Collimator
 {
@@ -45,6 +45,7 @@ namespace Bahtinov_Collimator
             this.pictureBox1.BorderColor = System.Drawing.Color.Gray;
             this.pictureBox1.BorderThickness = 2;
             this.pictureBox1.CornerRadius = 12;
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox1.Name = "pictureBox1";
@@ -55,7 +56,7 @@ namespace Bahtinov_Collimator
             // 
             // ImageDisplayComponent
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.pictureBox1);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
