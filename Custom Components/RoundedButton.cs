@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -121,8 +121,20 @@ namespace Bahtinov_Collimator.Custom_Components
             // so the border fits within the client rectangle.
             Rectangle rect = new Rectangle(0, 0, Width - 1, Height - 1);
 
+            int ScaleLogicalPixels(int logicalPixels)
+            {
+                // Treat design-time values as 96-DPI logical pixels.
+                float dpiScale = DeviceDpi / 96f;
+                return (int)Math.Round(logicalPixels * dpiScale, MidpointRounding.AwayFromZero);
+            }
+
+            int scaledRadius = ScaleLogicalPixels(CornerRadius);
+            // Prevent arcs larger than the rect; avoids odd geometry at small sizes.
+            int maxRadius = Math.Max(0, Math.Min(rect.Width, rect.Height) / 2);
+            scaledRadius = Math.Max(0, Math.Min(scaledRadius, maxRadius));
+
             // Create a rounded path from the button rectangle.
-            using (GraphicsPath path = GetRoundPath(rect, CornerRadius))
+            using (GraphicsPath path = GetRoundPath(rect, scaledRadius))
             {
                 // Limit the clickable/hit region to the rounded shape.
                 Region = new Region(path);
@@ -146,7 +158,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 }
 
                 // Draw the bevel along the rounded border.
-                DrawBevel(e.Graphics, rect, CornerRadius);
+                DrawBevel(e.Graphics, rect, scaledRadius);
 
                 // Draw image and text.
                 DrawContent(e.Graphics, rect);
