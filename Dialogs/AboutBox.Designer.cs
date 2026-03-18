@@ -55,7 +55,7 @@ namespace Bahtinov_Collimator
             this.tableLayoutPanel.Controls.Add(this.textBoxDescription, 1, 4);
             this.tableLayoutPanel.Controls.Add(this.okButton, 1, 5);
             this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel.Location = new System.Drawing.Point(14, 59);
+            this.tableLayoutPanel.Location = new System.Drawing.Point(14, 14);
             this.tableLayoutPanel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tableLayoutPanel.Name = "tableLayoutPanel";
             this.tableLayoutPanel.RowCount = 6;
@@ -66,7 +66,7 @@ namespace Bahtinov_Collimator
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(648, 419);
+            this.tableLayoutPanel.Size = new System.Drawing.Size(648, 464);
             this.tableLayoutPanel.TabIndex = 0;
             // 
             // logoPictureBox
@@ -78,7 +78,7 @@ namespace Bahtinov_Collimator
             this.logoPictureBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.logoPictureBox.Name = "logoPictureBox";
             this.tableLayoutPanel.SetRowSpan(this.logoPictureBox, 6);
-            this.logoPictureBox.Size = new System.Drawing.Size(205, 409);
+            this.logoPictureBox.Size = new System.Drawing.Size(205, 454);
             this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.logoPictureBox.TabIndex = 12;
             this.logoPictureBox.TabStop = false;
@@ -86,6 +86,7 @@ namespace Bahtinov_Collimator
             // labelProductName
             // 
             this.labelProductName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelProductName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.labelProductName.Location = new System.Drawing.Point(222, 0);
             this.labelProductName.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
             this.labelProductName.MaximumSize = new System.Drawing.Size(0, 26);
@@ -98,7 +99,7 @@ namespace Bahtinov_Collimator
             // labelVersion
             // 
             this.labelVersion.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelVersion.Location = new System.Drawing.Point(222, 41);
+            this.labelVersion.Location = new System.Drawing.Point(222, 46);
             this.labelVersion.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
             this.labelVersion.MaximumSize = new System.Drawing.Size(0, 26);
             this.labelVersion.Name = "labelVersion";
@@ -110,7 +111,7 @@ namespace Bahtinov_Collimator
             // labelCopyright
             // 
             this.labelCopyright.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelCopyright.Location = new System.Drawing.Point(222, 82);
+            this.labelCopyright.Location = new System.Drawing.Point(222, 92);
             this.labelCopyright.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
             this.labelCopyright.MaximumSize = new System.Drawing.Size(0, 26);
             this.labelCopyright.Name = "labelCopyright";
@@ -122,7 +123,7 @@ namespace Bahtinov_Collimator
             // labelCompanyName
             // 
             this.labelCompanyName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelCompanyName.Location = new System.Drawing.Point(222, 123);
+            this.labelCompanyName.Location = new System.Drawing.Point(222, 138);
             this.labelCompanyName.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
             this.labelCompanyName.MaximumSize = new System.Drawing.Size(0, 26);
             this.labelCompanyName.Name = "labelCompanyName";
@@ -135,12 +136,12 @@ namespace Bahtinov_Collimator
             // 
             this.textBoxDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxDescription.Location = new System.Drawing.Point(222, 169);
+            this.textBoxDescription.Location = new System.Drawing.Point(222, 189);
             this.textBoxDescription.Margin = new System.Windows.Forms.Padding(9, 5, 4, 5);
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.ReadOnly = true;
-            this.textBoxDescription.Size = new System.Drawing.Size(422, 199);
+            this.textBoxDescription.Size = new System.Drawing.Size(422, 222);
             this.textBoxDescription.TabIndex = 23;
             this.textBoxDescription.TabStop = false;
             this.textBoxDescription.Text = "Description";
@@ -159,7 +160,7 @@ namespace Bahtinov_Collimator
             this.okButton.ImageOffsetX = 60;
             this.okButton.ImageOffsetY = 0;
             this.okButton.ImageWidth = 32;
-            this.okButton.Location = new System.Drawing.Point(532, 381);
+            this.okButton.Location = new System.Drawing.Point(532, 426);
             this.okButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.okButton.Name = "okButton";
             this.okButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -176,9 +177,9 @@ namespace Bahtinov_Collimator
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(676, 492);
             this.Controls.Add(this.tableLayoutPanel);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Location = new System.Drawing.Point(0, 0);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -187,7 +188,6 @@ namespace Bahtinov_Collimator
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "About SkyCal";
-            this.Controls.SetChildIndex(this.tableLayoutPanel, 0);
             this.tableLayoutPanel.ResumeLayout(false);
             this.tableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();

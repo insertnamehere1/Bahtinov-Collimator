@@ -157,25 +157,6 @@ namespace Bahtinov_Collimator
             this.Close();
         }
 
-        /// <summary>
-        /// Handles the Load event of the form. Increases the font size of the form and its controls.
-        /// </summary>
-        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            Font newFont = new Font(this.Font.FontFamily, UITheme.LabelFontSize, this.Font.Style);
-
-            // Adjust fonts
-            this.Font = newFont;
-            this.labelProductName.Font = new Font(this.Font.FontFamily, UITheme.AboutHeadingFontSize, this.Font.Style);
-            this.labelVersion.Font = newFont;
-            this.labelCopyright.Font = newFont;
-            this.labelCompanyName.Font = newFont;
-            this.textBoxDescription.Font = newFont;
-        }
-
         #endregion
 
         #region Helper Methods
