@@ -1,4 +1,6 @@
 using Bahtinov_Collimator.Custom_Components;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
@@ -71,7 +73,7 @@ namespace Bahtinov_Collimator
             // 
             // logoPictureBox
             // 
-            this.logoPictureBox.BackColor = System.Drawing.Color.White;
+            this.logoPictureBox.BackColor = UITheme.AboutPictureBackground;
             this.logoPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.logoPictureBox.Image = global::Bahtinov_Collimator.Properties.Resources.SkyCal_logo;
             this.logoPictureBox.Location = new System.Drawing.Point(4, 5);
@@ -85,6 +87,7 @@ namespace Bahtinov_Collimator
             // 
             // labelProductName
             // 
+            this.labelProductName.ForeColor = UITheme.AboutTextColor;
             this.labelProductName.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelProductName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.labelProductName.Location = new System.Drawing.Point(222, 0);
@@ -98,6 +101,7 @@ namespace Bahtinov_Collimator
             // 
             // labelVersion
             // 
+            this.labelVersion.ForeColor = UITheme.AboutTextColor;
             this.labelVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelVersion.Location = new System.Drawing.Point(222, 46);
             this.labelVersion.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
@@ -110,6 +114,7 @@ namespace Bahtinov_Collimator
             // 
             // labelCopyright
             // 
+            this.labelCopyright.ForeColor = UITheme.AboutTextColor;
             this.labelCopyright.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelCopyright.Location = new System.Drawing.Point(222, 92);
             this.labelCopyright.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
@@ -122,6 +127,7 @@ namespace Bahtinov_Collimator
             // 
             // labelCompanyName
             // 
+            this.labelCompanyName.ForeColor = UITheme.AboutTextColor;
             this.labelCompanyName.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelCompanyName.Location = new System.Drawing.Point(222, 138);
             this.labelCompanyName.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
@@ -134,6 +140,8 @@ namespace Bahtinov_Collimator
             // 
             // textBoxDescription
             // 
+            this.textBoxDescription.ForeColor = UITheme.AboutTextColor;
+            this.textBoxDescription.BackColor = UITheme.DarkBackground;
             this.textBoxDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxDescription.Location = new System.Drawing.Point(222, 189);
@@ -149,12 +157,14 @@ namespace Bahtinov_Collimator
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.okButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.okButton.BackColor = System.Drawing.Color.DimGray;
+            this.okButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.okButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
             this.okButton.BevelThickness = 2;
-            this.okButton.CornerRadius = 12;
+            this.okButton.CornerRadius = 4;
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.okButton.ForeColor = System.Drawing.Color.LightGray;
             this.okButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.okButton.ImageHeight = 32;
             this.okButton.ImageOffsetX = 60;
@@ -167,7 +177,8 @@ namespace Bahtinov_Collimator
             this.okButton.Size = new System.Drawing.Size(112, 33);
             this.okButton.TabIndex = 24;
             this.okButton.Text = "&OK";
-            this.okButton.TextOffsetX = 10;
+            this.okButton.TextOffsetX = 0;
+            this.okButton.UseVisualStyleBackColor = false;
             this.okButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
             // AboutBox
@@ -175,9 +186,11 @@ namespace Bahtinov_Collimator
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(676, 492);
             this.Controls.Add(this.tableLayoutPanel);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(80)))), ((int)(((byte)(90)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);

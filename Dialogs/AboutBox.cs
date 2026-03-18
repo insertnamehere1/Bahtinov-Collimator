@@ -29,20 +29,20 @@ namespace Bahtinov_Collimator
         public AboutBox()
         {
             InitializeComponent();
-            SetColorScheme();
 
+            // Internationalize text
             this.Text = string.Format(UiText.Current.AboutDialogTitleFormat, AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
-            this.labelProductName.ForeColor = UITheme.AboutTextColor;
             this.labelVersion.Text = string.Format(UiText.Current.AboutVersionFormat, GetVersion());
-            this.labelVersion.ForeColor = UITheme.AboutTextColor;
             this.labelCopyright.Text = AssemblyCopyright;
-            this.labelCopyright.ForeColor = UITheme.AboutTextColor;
             this.labelCompanyName.Text = AssemblyCompany;
-            this.labelCompanyName.ForeColor = UITheme.AboutTextColor;
             this.textBoxDescription.Text = UiText.Current.AboutDescription;
-            this.textBoxDescription.ForeColor = UITheme.AboutTextColor;
-            okButton.Text = UiText.Current.CommonOk;
+            this.okButton.Text = UiText.Current.CommonOk;
+
+            // Set colors for titlebar
+            var color = UITheme.DarkBackground;
+            int colorValue = color.R | (color.G << 8) | (color.B << 16);
+            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
         }
 
         #endregion
@@ -172,35 +172,6 @@ namespace Bahtinov_Collimator
                 return ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
             }
             return AssemblyVersion;
-        }
-
-        /// <summary>
-        /// Applies the color scheme to the form and its controls.
-        /// </summary>
-        private void SetColorScheme()
-        {
-            // Set colors for main form
-            this.ForeColor = UITheme.DarkForeground;
-            this.BackColor = UITheme.DarkBackground;
-
-            // Set colors for OK button
-            okButton.BackColor = UITheme.ButtonDarkBackground;
-            okButton.ForeColor = UITheme.ButtonDarkForeground;
-            okButton.FlatStyle = FlatStyle.Popup;
-            okButton.CornerRadius = 4;
-            okButton.TextOffsetX = 0;
-            okButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
-            okButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
-
-            // Set colors for titlebar
-            var color = UITheme.DarkBackground;
-            int colorValue = color.R | (color.G << 8) | (color.B << 16);
-            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
-
-            // Set colors for other controls
-            textBoxDescription.ForeColor = UITheme.AboutTextColor;
-            textBoxDescription.BackColor = UITheme.DarkBackground;
-            logoPictureBox.BackColor = UITheme.AboutPictureBackground;
         }
 
         #endregion

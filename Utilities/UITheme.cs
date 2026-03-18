@@ -35,23 +35,23 @@ namespace Bahtinov_Collimator
 
         public static float DeviceDpi { get; set; } = 96f;
 
-        public static float DpiScaleFactor => DeviceDpi / 96f; 
+        public static float DpiScaleFactor => DeviceDpi / 96f;
         #endregion
 
         #region FontSizes
 
         //public static float GroupBoxFontSize => 9f;
-        //public static float MenuStripFontSize       => 9f;
-        //public static float ButtonFontSize          => 9f;
-        //public static float TextBoxFontSize         => 10f;
-        //public static float MessageBoxFontSize      => 9f;
+        //public static float MenuStripFontSize => 9f;
+        //public static float ButtonFontSize => 9f;
+        //public static float TextBoxFontSize => 10f;
+        //public static float MessageBoxFontSize => 9f;
         //public static float MainFormDefaultFontSize => 9f;
-        //public static float LabelFontSize           => 9f;
-        //public static float AboutHeadingFontSize    => 12f;
-        //public static float DialogDefaultFontSize   => 9f;
-        //public static float NextStepFontSize        => 11f;
+        //public static float LabelFontSize => 9f;
+        //public static float AboutHeadingFontSize => 12f;
+        //public static float DialogDefaultFontSize => 9f;
+        //public static float NextStepFontSize => 11f;
         //public static float NextStepTitleFontSize => 13f;
-        //public static float CheckBoxFontSize        => 9f;
+        //public static float CheckBoxFontSize => 9f;
         //public static float CollimationTextFontSize => 8f;
         //public static float CollimationTitleFontSize => 10f;
 
