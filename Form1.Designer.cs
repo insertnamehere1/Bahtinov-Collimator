@@ -80,13 +80,13 @@ namespace Bahtinov_Collimator
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.quitToolStripMenuItem2});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 19);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(41, 23);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // quitToolStripMenuItem2
             // 
             this.quitToolStripMenuItem2.Name = "quitToolStripMenuItem2";
-            this.quitToolStripMenuItem2.Size = new System.Drawing.Size(97, 22);
+            this.quitToolStripMenuItem2.Size = new System.Drawing.Size(105, 24);
             this.quitToolStripMenuItem2.Text = "Quit";
             this.quitToolStripMenuItem2.Click += new System.EventHandler(this.QuitToolStripMenuItem2_Click);
             // 
@@ -96,20 +96,20 @@ namespace Bahtinov_Collimator
             this.generalSettingsToolStripMenuItem,
             this.focusCalibrationToolStripMenuItem});
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(49, 19);
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(56, 23);
             this.settingsToolStripMenuItem1.Text = "Setup";
             // 
             // generalSettingsToolStripMenuItem
             // 
             this.generalSettingsToolStripMenuItem.Name = "generalSettingsToolStripMenuItem";
-            this.generalSettingsToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.generalSettingsToolStripMenuItem.Size = new System.Drawing.Size(144, 24);
             this.generalSettingsToolStripMenuItem.Text = "Settings";
             this.generalSettingsToolStripMenuItem.Click += new System.EventHandler(this.GeneralSettingsToolStripMenuItem_Click);
             // 
             // focusCalibrationToolStripMenuItem
             // 
             this.focusCalibrationToolStripMenuItem.Name = "focusCalibrationToolStripMenuItem";
-            this.focusCalibrationToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.focusCalibrationToolStripMenuItem.Size = new System.Drawing.Size(144, 24);
             this.focusCalibrationToolStripMenuItem.Text = "Calibration";
             this.focusCalibrationToolStripMenuItem.Click += new System.EventHandler(this.FocusCalibrationToolStripMenuItem_Click);
             // 
@@ -120,41 +120,41 @@ namespace Bahtinov_Collimator
             this.checkForUpdatesToolStripMenuItem,
             this.aboutToolStripMenuItem2});
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(44, 19);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(49, 23);
             this.aboutToolStripMenuItem.Text = "Help";
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(191, 24);
             this.helpToolStripMenuItem.Text = "User Manual";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
             // checkForUpdatesToolStripMenuItem
             // 
             this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(191, 24);
             this.checkForUpdatesToolStripMenuItem.Text = "Check for Updates";
             this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.CheckForUpdatesToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem2
             // 
             this.aboutToolStripMenuItem2.Name = "aboutToolStripMenuItem2";
-            this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(171, 22);
+            this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(191, 24);
             this.aboutToolStripMenuItem2.Text = "About";
             this.aboutToolStripMenuItem2.Click += new System.EventHandler(this.AboutToolStripMenuItem2_Click);
             // 
             // pleaseDonateToolStripMenuItem
             // 
             this.pleaseDonateToolStripMenuItem.Name = "pleaseDonateToolStripMenuItem";
-            this.pleaseDonateToolStripMenuItem.Size = new System.Drawing.Size(99, 19);
+            this.pleaseDonateToolStripMenuItem.Size = new System.Drawing.Size(114, 23);
             this.pleaseDonateToolStripMenuItem.Text = "Support SkyCal";
             this.pleaseDonateToolStripMenuItem.Click += new System.EventHandler(this.PleaseDonateToolStripMenuItem_Click);
             // 
             // whatDoIDoNextToolStripMenuItem
             // 
             this.whatDoIDoNextToolStripMenuItem.Name = "whatDoIDoNextToolStripMenuItem";
-            this.whatDoIDoNextToolStripMenuItem.Size = new System.Drawing.Size(143, 19);
+            this.whatDoIDoNextToolStripMenuItem.Size = new System.Drawing.Size(168, 23);
             this.whatDoIDoNextToolStripMenuItem.Text = "What Should I Do Next?";
             this.whatDoIDoNextToolStripMenuItem.Click += new System.EventHandler(this.WhatDoIDoNextToolStripMenuItem_Click);
             // 
@@ -221,7 +221,7 @@ namespace Bahtinov_Collimator
             this.RoundedStartButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.RoundedStartButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
             this.RoundedStartButton.BevelThickness = 4;
-            this.RoundedStartButton.CornerRadius = 12;
+            this.RoundedStartButton.CornerRadius = 10;
             this.RoundedStartButton.FlatAppearance.BorderSize = 0;
             this.RoundedStartButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RoundedStartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
@@ -232,7 +232,7 @@ namespace Bahtinov_Collimator
             this.RoundedStartButton.ImageOffsetX = -57;
             this.RoundedStartButton.ImageOffsetY = 0;
             this.RoundedStartButton.ImageWidth = 32;
-            this.RoundedStartButton.Location = new System.Drawing.Point(11, 77);
+            this.RoundedStartButton.Location = new System.Drawing.Point(12, 77);
             this.RoundedStartButton.Margin = new System.Windows.Forms.Padding(32);
             this.RoundedStartButton.Name = "RoundedStartButton";
             this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
@@ -248,7 +248,7 @@ namespace Bahtinov_Collimator
             // 
             this.toggleSwitch1.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.toggleSwitch1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.toggleSwitch1.Location = new System.Drawing.Point(22, 25);
+            this.toggleSwitch1.Location = new System.Drawing.Point(24, 25);
             this.toggleSwitch1.Margin = new System.Windows.Forms.Padding(32);
             this.toggleSwitch1.Name = "toggleSwitch1";
             this.toggleSwitch1.RotationDegrees = 90;
@@ -260,7 +260,7 @@ namespace Bahtinov_Collimator
             // 
             this.bahtinovLabel.AutoSize = true;
             this.bahtinovLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bahtinovLabel.Location = new System.Drawing.Point(43, 26);
+            this.bahtinovLabel.Location = new System.Drawing.Point(45, 26);
             this.bahtinovLabel.Margin = new System.Windows.Forms.Padding(14, 0, 14, 0);
             this.bahtinovLabel.Name = "bahtinovLabel";
             this.bahtinovLabel.Size = new System.Drawing.Size(54, 15);
@@ -272,7 +272,7 @@ namespace Bahtinov_Collimator
             // 
             this.defocusLabel.AutoSize = true;
             this.defocusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.defocusLabel.Location = new System.Drawing.Point(43, 50);
+            this.defocusLabel.Location = new System.Drawing.Point(45, 50);
             this.defocusLabel.Margin = new System.Windows.Forms.Padding(14, 0, 14, 0);
             this.defocusLabel.Name = "defocusLabel";
             this.defocusLabel.Size = new System.Drawing.Size(52, 15);
