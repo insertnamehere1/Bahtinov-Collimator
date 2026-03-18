@@ -33,7 +33,7 @@ namespace SkyCal
 
         private System.Windows.Forms.Label _titleLabel;
         private System.Windows.Forms.Label _bodyLabel;
-        private FixedCheckBox _dontShowAgainCheckBox;
+        private System.Windows.Forms.CheckBox _dontShowAgainCheckBox;
         private RoundedButton _runButton;
         private RoundedButton _notNowButton;
 
@@ -107,7 +107,7 @@ namespace SkyCal
             };
 
 
-            _dontShowAgainCheckBox = new FixedCheckBox
+            _dontShowAgainCheckBox = new System.Windows.Forms.CheckBox
             {
                 AutoSize = true,
                 Text = UiText.Current.StartupDialogDontShowAgain,
@@ -160,15 +160,6 @@ namespace SkyCal
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-
-            this.Font = new Font(this.Font.FontFamily, UITheme.DialogDefaultFontSize, this.Font.Style);
-
-            _titleLabel.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
-            _bodyLabel.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
-            _dontShowAgainCheckBox.Font = new Font(this.Font.FontFamily, UITheme.CheckBoxFontSize, this.Font.Style);
-            _runButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
-            _notNowButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
-
             PerformLayout();
             BeginInvoke(new Action(ResizeFormToContent));
         }

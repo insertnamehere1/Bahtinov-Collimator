@@ -35,109 +35,16 @@ namespace Bahtinov_Collimator
             InitializeComponent();
             ApplyLocalization();
             LoadSettings();
-            SetColorScheme();
+
+            // Set Title bar color
+            var color = UITheme.DarkBackground;
+            int colorValue = color.R | (color.G << 8) | (color.B << 16);
+            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
         }
 
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Handles the Load event of the form. Increases the font size of the form and its controls.
-        /// </summary>
-        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            // Adjust fonts
-            this.Font = new Font(this.Font.FontFamily, UITheme.DialogDefaultFontSize, this.Font.Style);
-            groupBox1.Font = new Font(this.Font.FontFamily, UITheme.GroupBoxFontSize, this.Font.Style);
-            label5.Font = new Font(this.Font.FontFamily, UITheme.LabelFontSize, this.Font.Style);
-            CancelSettingsButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
-            okButton.Font = new Font(this.Font.FontFamily, UITheme.ButtonFontSize, this.Font.Style);
-            SCTRadioButton.Font = new Font(this.Font.FontFamily, UITheme.CheckBoxFontSize, this.Font.Style);
-            MakCassRadioButton.Font = new Font(this.Font.FontFamily, UITheme.CheckBoxFontSize, this.Font.Style);
-            errorSignCheckBox.Font = new Font(this.Font.FontFamily, UITheme.CheckBoxFontSize, this.Font.Style);
-            onTopCheckBox.Font = new Font(this.Font.FontFamily, UITheme.CheckBoxFontSize, this.Font.Style);
-            minimizeCheckBox.Font = new Font(this.Font.FontFamily, UITheme.CheckBoxFontSize, this.Font.Style);
-            minimizeLabel.Font = new Font(this.Font.FontFamily, UITheme.LabelFontSize, this.Font.Style);
-            VoiceCheckBox.Font = new Font(this.Font.FontFamily, UITheme.CheckBoxFontSize, this.Font.Style);
-
-            SCTRadioButton.BoxSize = 20;
-            MakCassRadioButton.BoxSize = 20;
-            newtonianRadioButton.BoxSize = 20;
-            errorSignCheckBox.BoxSize = 20;
-            onTopCheckBox.BoxSize = 20;
-            VoiceCheckBox.BoxSize = 20;
-            minimizeCheckBox.BoxSize = 20;
-
-
-        }
-
-        /// <summary>
-        /// Sets the color scheme of the form and its controls.
-        /// </summary>
-        private void SetColorScheme()
-        {
-            // Main form
-            this.ForeColor = UITheme.DarkForeground;
-            this.BackColor = UITheme.DarkBackground;
-
-            // OK button
-            okButton.BackColor = UITheme.ButtonDarkBackground;
-            okButton.ForeColor = UITheme.ButtonDarkForeground;
-            okButton.FlatStyle = FlatStyle.Popup;
-            okButton.CornerRadius = 4;
-            okButton.TextOffsetX = 0;
-            okButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
-            okButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
-
-            // Cancel button
-            CancelSettingsButton.BackColor = UITheme.ButtonDarkBackground;
-            CancelSettingsButton.ForeColor = UITheme.ButtonDarkForeground;
-            CancelSettingsButton.FlatStyle = FlatStyle.Popup;
-            CancelSettingsButton.CornerRadius = 4;
-            CancelSettingsButton.TextOffsetX = 0;
-            CancelSettingsButton.BevelDark = Color.FromArgb(180, 90, 90, 90);
-            CancelSettingsButton.BevelLight = Color.FromArgb(220, 160, 160, 160);
-
-            // Title bar
-            var color = UITheme.DarkBackground;
-            int colorValue = color.R | (color.G << 8) | (color.B << 16);
-            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
-
-            // Group Boxes
-            ChangeLabelColors(groupBox1, UITheme.MenuDarkForeground);
-            ChangeLabelColors(groupBox3, UITheme.MenuDarkForeground);
-            ChangeLabelColors(groupBox4, UITheme.MenuDarkForeground);
-            groupBox1.ForeColor = UITheme.MenuDarkForeground;
-            groupBox3.ForeColor = UITheme.MenuDarkForeground;
-            groupBox4.ForeColor = UITheme.MenuDarkForeground;
-            ErrorSignGroupBox.ForeColor = UITheme.MenuDarkForeground;
-            keepOnTopGroupBox.ForeColor = UITheme.MenuDarkForeground;
-            minimizeGroupBox.ForeColor = UITheme.MenuDarkForeground;
-
-            // text boxes
-            ChangeTextBoxColors(groupBox4);
-        }
-
-        /// <summary>
-        /// Changes the background and foreground colors of TextBox controls within a parent control.
-        /// </summary>
-        /// <param name="parent">The parent control containing the TextBox controls.</param>
-        private void ChangeTextBoxColors(Control parent)
-        {
-            foreach (Control control in parent.Controls)
-            {
-                if (control is TextBox textBox)
-                {
-                    textBox.ForeColor = UITheme.TextBoxForeground;
-                    textBox.BackColor = UITheme.TextBoxBackground;
-                    textBox.BorderStyle = BorderStyle.None;
-                }
-            }
-        }
 
         /// <summary>
         /// Changes the foreground color of Label controls within a parent control.
