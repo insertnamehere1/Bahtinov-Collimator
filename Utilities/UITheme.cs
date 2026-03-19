@@ -40,9 +40,8 @@ namespace Bahtinov_Collimator
 
         #region Next Step Font Sizes
 
-        public static float ButtonFontSize => 9f;
-        public static float NextStepFontSize => 11f;
-        public static float NextStepTitleFontSize => 13f;
+        public static float NextStepFontSize => 10f;
+        public static float NextStepTitleFontSize => 12f;
 
         #endregion
 

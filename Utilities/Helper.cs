@@ -85,51 +85,6 @@ namespace Bahtinov_Collimator.Helper
             }
         }
         #endregion
-
-        #region Line Class
-
-        /// <summary>
-        /// Represents a line with start and end points, slope, and intercept.
-        /// </summary>
-        public class Line
-        {
-            /// <summary>
-            /// Gets the X coordinate of the start point.
-            /// </summary>
-            public float StartX { get; }
-
-            /// <summary>
-            /// Gets the Y coordinate of the start point.
-            /// </summary>
-            public float StartY { get; }
-
-            /// <summary>
-            /// Gets the X coordinate of the end point.
-            /// </summary>
-            public float EndX { get; }
-
-            /// <summary>
-            /// Gets the Y coordinate of the end point.
-            /// </summary>
-            public float EndY { get; }
-
-            /// <summary>
-            /// Gets or sets the slope of the line.
-            /// </summary>
-            public float Slope { get; set; }
-
-            /// <summary>
-            /// Gets or sets the intercept of the line.
-            /// </summary>
-            public float Intercept { get; private set; }
-
-            /// <summary>
-            /// Gets a value indicating whether the line is first or third in some context.
-            /// </summary>
-            public bool IsFirstOrThird { get; }
-        }
-
-        #endregion
     }
 
     #region PointD Struct

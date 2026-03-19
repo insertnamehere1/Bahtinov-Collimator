@@ -253,8 +253,11 @@
     <Compile Include="NextStep\NextStepDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="NextStep\NextStepDialog.Designer.cs">
+      <DependentUpon>NextStepDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="NextStep\NextStepGuidance.cs" />
-    <Compile Include="NextStep\NextStepTextPack.cs" />
+    <Compile Include="Language\NextStepTextPack.cs" />
     <Compile Include="Language\LanguageLoader.cs" />
     <Compile Include="Language\UiTextPack.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

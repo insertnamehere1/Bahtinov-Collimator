@@ -1,4 +1,4 @@
-﻿using Bahtinov_Collimator.Custom_Components;
+using Bahtinov_Collimator.Custom_Components;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
-    public sealed class NextStepDialog : Form
+    public sealed partial class NextStepDialog : Form
     {
         #region DLL Imports
         [DllImport("dwmapi.dll", PreserveSig = true)]
@@ -16,22 +16,33 @@ namespace Bahtinov_Collimator
         #region Constants
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
 
-        private const int ContentPadding = 30;
+        // These values were originally tuned at 144 DPI.
+        // We normalize them to a 96-DPI baseline, then scale to the current monitor DPI.
+        private const int ContentPadding = 26;
         private const int WidthPadding = 90;
 
         #endregion
 
-        #region Fields
-        private readonly Panel _scroll;
-        private readonly FlowLayoutPanel _stack;
-        private readonly RoundedButton _ok;
-        #endregion
+        private int ScaleFrom96(int logicalPixelsAt96)
+        {
+            float dpiScale = DeviceDpi / 96f;
+            return (int)Math.Round(logicalPixelsAt96 * dpiScale, MidpointRounding.AwayFromZero);
+        }
+
+        /// <summary>
+        /// Design-time constructor required by WinForms designer.
+        /// </summary>
+        public NextStepDialog() : this(null, null)
+        {
+        }
 
         /// <summary>
         /// Initializes and displays the "Next Step" guidance dialog.
         /// </summary>
         public NextStepDialog(NextStepGuidance guidance, Icon icon = null)
         {
+            InitializeComponent();
+
             Text = guidance?.DialogTitle ?? "What should I do next?";
             Icon = icon;
 
@@ -39,54 +50,9 @@ namespace Bahtinov_Collimator
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
 
-            StartPosition = FormStartPosition.CenterParent;
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MinimizeBox = false;
-            MaximizeBox = false;
-            AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(760, 580);
             BackColor = UITheme.DarkBackground;
             ForeColor = Color.White;
-
-            _scroll = new Panel
-            {
-                Location = new Point(20, 10),
-                Size = new Size(ClientSize.Width - 40, ClientSize.Height - 90),
-                AutoScroll = true,
-                BackColor = UITheme.DarkBackground
-            };
-
-            _stack = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Top,
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                FlowDirection = FlowDirection.TopDown,
-                WrapContents = false,
-                BackColor = UITheme.DarkBackground,
-                Margin = Padding.Empty,
-                Padding = Padding.Empty
-            };
-
-            _scroll.Controls.Add(_stack);
-
-            _ok = new RoundedButton
-            {
-                Font = new Font("Segoe UI", UITheme.ButtonFontSize, FontStyle.Bold),
-                Text = "OK",
-                DialogResult = DialogResult.OK,
-                Size = new Size(110, 34),
-                Location = new Point(ClientSize.Width - 130, ClientSize.Height - 50),
-                CornerRadius = 6,
-                TextOffsetX = 0,
-                BackColor = UITheme.ButtonDarkBackground,
-                ForeColor = UITheme.ButtonDarkForeground,
-                FlatStyle = FlatStyle.Popup                
-            };
-
-            Controls.Add(_scroll);
-            Controls.Add(_ok);
-            AcceptButton = _ok;
+            AcceptButton = okButton;
 
             RenderGuidance(guidance);
 
@@ -105,34 +71,44 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Sizes the form to fit the current stack content, clamped to screen height.
+        /// Sizes the form to fit the current stackLayout content, clamped to screen height.
         /// </summary>
         private void SizeFormToContent()
         {
+            int screenEdgeMargin = ScaleFrom96(53);
+            int minClientWidth = ScaleFrom96(227);
+            int horizontalInset = ScaleFrom96(27);
+            int contentInsetBottom = ScaleFrom96(67);
+            int buttonRightInset = ScaleFrom96(87);
+            int buttonBottomInset = ScaleFrom96(33);
+            int topChromePadding = ScaleFrom96(33);
+            int bottomChromePadding = ScaleFrom96(27);
+            int contentPadding = ScaleFrom96(ContentPadding);
+
             // Step 1: measure and apply required width
-            int maxScreenWidth = Screen.FromControl(this).WorkingArea.Width - 80;
-            int newClientWidth = Math.Max(400, Math.Min(MeasureRequiredWidth(), maxScreenWidth));
+            int maxScreenWidth = Screen.FromControl(this).WorkingArea.Width - screenEdgeMargin;
+            int newClientWidth = Math.Max(minClientWidth, Math.Min(MeasureRequiredWidth(), maxScreenWidth));
 
             // Step 2: update control widths and remeasure heights with new width
-            int contentWidth = newClientWidth - 40 - SystemInformation.VerticalScrollBarWidth - 2;
-            foreach (Control c in _stack.Controls)
+            int contentWidth = newClientWidth - horizontalInset - SystemInformation.VerticalScrollBarWidth - ScaleFrom96(1);
+            foreach (Control c in stackLayout.Controls)
             {
                 c.Width = contentWidth;
                 if (c is Label lbl) lbl.Height = MeasureLabelHeight(lbl);
                 else if (c is RichTextBox rtb) rtb.Height = GetRichTextHeight(rtb);
             }
 
-            _stack.PerformLayout();
+            stackLayout.PerformLayout();
 
             // Step 3: measure and apply required height
-            int contentHeight = _stack.Height;
-            int required = 50 + contentHeight + 40 + ContentPadding;
-            int maxHeight = Screen.FromControl(this).WorkingArea.Height - 80;
+            int contentHeight = stackLayout.Height;
+            int required = topChromePadding + contentHeight + bottomChromePadding + contentPadding;
+            int maxHeight = Screen.FromControl(this).WorkingArea.Height - screenEdgeMargin;
             int newHeight = Math.Min(required, maxHeight);
 
             ClientSize = new Size(newClientWidth, newHeight);
-            _scroll.Size = new Size(newClientWidth - 40, newHeight - 100);
-            _ok.Location = new Point(newClientWidth - 130, newHeight - 50);
+            scrollPanel.Size = new Size(newClientWidth - horizontalInset, newHeight - contentInsetBottom);
+            okButton.Location = new Point(newClientWidth - buttonRightInset, newHeight - buttonBottomInset);
         }
 
         /// <summary>
@@ -140,11 +116,16 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void RelayoutForNewSize()
         {
-            _scroll.Size = new Size(ClientSize.Width - 40, ClientSize.Height - 190);
-            _ok.Location = new Point(ClientSize.Width - 130, ClientSize.Height - 50);
+            int horizontalInset = ScaleFrom96(27);
+            int contentInsetBottom = ScaleFrom96(127);
+            int buttonRightInset = ScaleFrom96(87);
+            int buttonBottomInset = ScaleFrom96(33);
+
+            scrollPanel.Size = new Size(ClientSize.Width - horizontalInset, ClientSize.Height - contentInsetBottom);
+            okButton.Location = new Point(ClientSize.Width - buttonRightInset, ClientSize.Height - buttonBottomInset);
 
             int w = ContentWidth();
-            foreach (Control c in _stack.Controls)
+            foreach (Control c in stackLayout.Controls)
             {
                 if (c is Label lbl)
                 {
@@ -164,12 +145,12 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Calculates the available content width within the scroll panel.
+        /// Calculates the available content width within the scrollPanel panel.
         /// </summary>
         private int ContentWidth()
         {
             int scrollBar = SystemInformation.VerticalScrollBarWidth;
-            return Math.Max(100, _scroll.ClientSize.Width - scrollBar - 2);
+            return Math.Max(ScaleFrom96(67), scrollPanel.ClientSize.Width - scrollBar - ScaleFrom96(1));
         }
 
         /// <summary>
@@ -177,21 +158,21 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void RenderGuidance(NextStepGuidance g)
         {
-            _stack.SuspendLayout();
-            _stack.Controls.Clear();
+            stackLayout.SuspendLayout();
+            stackLayout.Controls.Clear();
 
             if (g == null)
             {
-                _stack.Controls.Add(MakeLabel("No guidance available.", UITheme.NextStepFontSize, FontStyle.Italic));
-                _stack.ResumeLayout(true);
+                stackLayout.Controls.Add(MakeLabel("No guidance available.", UITheme.NextStepFontSize, FontStyle.Italic));
+                stackLayout.ResumeLayout(true);
                 return;
             }
 
             if (!string.IsNullOrWhiteSpace(g.Header))
-                _stack.Controls.Add(MakeHeaderBox(g.Header));
+                stackLayout.Controls.Add(MakeHeaderBox(g.Header));
 
             if (!string.IsNullOrWhiteSpace(g.Summary))
-                _stack.Controls.Add(MakeLabel(g.Summary, UITheme.NextStepFontSize, FontStyle.Regular));
+                stackLayout.Controls.Add(MakeLabel(g.Summary, UITheme.NextStepFontSize, FontStyle.Regular));
 
             if (g.Sections != null)
             {
@@ -200,17 +181,17 @@ namespace Bahtinov_Collimator
                     if (section == null) continue;
 
                     if (!string.IsNullOrWhiteSpace(section.Title))
-                        _stack.Controls.Add(MakeTitleBox(section));
+                        stackLayout.Controls.Add(MakeTitleBox(section));
 
-                    _stack.Controls.Add(MakeSectionBody(section));
-                    _stack.Controls.Add(MakeSpacer(10));
+                    stackLayout.Controls.Add(MakeSectionBody(section));
+                    stackLayout.Controls.Add(MakeSpacer(ScaleFrom96(7)));
                 }
             }
 
             if (!string.IsNullOrWhiteSpace(g.FooterHint))
-                _stack.Controls.Add(MakeLabel(g.FooterHint, UITheme.NextStepFontSize, FontStyle.Italic));
+                stackLayout.Controls.Add(MakeLabel(g.FooterHint, UITheme.NextStepFontSize, FontStyle.Italic));
 
-            _stack.ResumeLayout(true);
+            stackLayout.ResumeLayout(true);
         }
 
         /// <summary>
@@ -240,7 +221,11 @@ namespace Bahtinov_Collimator
                 ForeColor = Color.White,
                 BackColor = UITheme.DarkBackground,
                 Width = ContentWidth(),
-                Margin = new Padding(4, 8, 0, 6)
+                Margin = new Padding(
+                    ScaleFrom96(3),
+                    ScaleFrom96(6),
+                    0,
+                    ScaleFrom96(4))
             };
             lbl.Height = MeasureLabelHeight(lbl);
             return lbl;
@@ -251,11 +236,11 @@ namespace Bahtinov_Collimator
         /// </summary>
         private int MeasureLabelHeight(Label lbl)
         {
-            if (lbl == null) return 24;
+            if (lbl == null) return ScaleFrom96(16);
             var sz = TextRenderer.MeasureText(lbl.Text ?? "", lbl.Font,
                 new Size(Math.Max(10, lbl.Width), int.MaxValue),
                 TextFormatFlags.WordBreak);
-            return Math.Max(24, sz.Height + 2);
+            return Math.Max(ScaleFrom96(16), sz.Height + ScaleFrom96(1));
         }
 
         /// <summary>
@@ -268,7 +253,7 @@ namespace Bahtinov_Collimator
                 Text = header,
                 AutoSize = true,
                 Width = ContentWidth(),
-                Margin = new Padding(0, 8, 0, 6),
+                Margin = new Padding(0, ScaleFrom96(6), 0, ScaleFrom96(4)),
                 BorderColor = UITheme.ButtonDarkForeground,
                 FillColor = Color.FromArgb(35, 255, 255, 255),
                 CornerRadius = 8,
@@ -289,7 +274,7 @@ namespace Bahtinov_Collimator
             {
                 Text = section.Title,
                 AutoSize = true,
-                Margin = new Padding(0, 8, 0, 6),
+                Margin = new Padding(0, ScaleFrom96(6), 0, ScaleFrom96(4)),
                 BorderColor = UITheme.ButtonDarkForeground,
                 FillColor = Color.FromArgb(35, 255, 255, 255),
                 CornerRadius = 8,
@@ -336,7 +321,7 @@ namespace Bahtinov_Collimator
                 Cursor = Cursors.Default
             };
 
-            GotFocus += (s, e) => _ok.Focus();
+            GotFocus += (s, e) => okButton.Focus();
 
             if (section.Lines != null)
             {
@@ -364,13 +349,13 @@ namespace Bahtinov_Collimator
         /// </summary>
         private int GetRichTextHeight(RichTextBox rtb)
         {
-            if (rtb == null) return 24;
+            if (rtb == null) return ScaleFrom96(16);
             if (!rtb.IsHandleCreated) rtb.CreateControl();
 
             int len = rtb.TextLength;
             Point pt = rtb.GetPositionFromCharIndex(len);
             int lineHeight = (int)Math.Ceiling(rtb.Font.GetHeight());
-            return Math.Max(24, pt.Y + lineHeight + 6);
+            return Math.Max(ScaleFrom96(16), pt.Y + lineHeight + ScaleFrom96(4));
         }
 
         private int MeasureRequiredWidth()
@@ -379,7 +364,7 @@ namespace Bahtinov_Collimator
 
             using (Graphics g = CreateGraphics())
             {
-                foreach (Control c in _stack.Controls)
+                foreach (Control c in stackLayout.Controls)
                 {
                     int w = 0;
 
@@ -397,28 +382,16 @@ namespace Bahtinov_Collimator
                     }
                     else if (c is TitleBox tb)
                     {
-                        w = (int)g.MeasureString(tb.Text, tb.Font).Width + 40;
+                        w = (int)g.MeasureString(tb.Text, tb.Font).Width + ScaleFrom96(27);
                     }
 
                     maxWidth = Math.Max(maxWidth, w);
                 }
             }
 
-            return Math.Max(600, maxWidth + WidthPadding);
-        }
-
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // NextStepDialog
-            // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.ClientSize = new System.Drawing.Size(300, 300);
-            this.Location = new System.Drawing.Point(0, 0);
-            this.Name = "NextStepDialog";
-            this.ResumeLayout(false);
-
+            int minWidth = ScaleFrom96(400);
+            int widthPadding = ScaleFrom96(WidthPadding);
+            return Math.Max(minWidth, maxWidth + widthPadding);
         }
     }
 }
