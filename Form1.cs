@@ -1223,7 +1223,7 @@ namespace Bahtinov_Collimator
             }
         }
 
-        private void imageDisplayComponent1_Load(object sender, EventArgs e)
+        private void ImageDisplayComponent1_Load(object sender, EventArgs e)
         {
 
         }
