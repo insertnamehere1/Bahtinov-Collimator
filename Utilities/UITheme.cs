@@ -271,10 +271,9 @@ namespace Bahtinov_Collimator
         #region Calibration
 
         /// <summary>
-        /// Gets the width of the calibration side frame to the main form.
+        /// Gets the width of the calibration side frame to the main form at 96DPI
         /// </summary>
         public static int CalibrateFrameWidth { get; } = 400;
-        
         #endregion
 
 

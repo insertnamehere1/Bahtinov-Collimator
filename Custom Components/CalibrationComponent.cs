@@ -1,10 +1,8 @@
-﻿using Bahtinov_Collimator.Properties;
+using Bahtinov_Collimator.Properties;
 using SkyCal.Custom_Components;
 using System;
 using System.Drawing;
-using System.Security.Policy;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Bahtinov_Collimator.Custom_Components
 {
@@ -59,12 +57,10 @@ namespace Bahtinov_Collimator.Custom_Components
 
             _aggregationTimer = new Timer
             {
-                Interval = 1000 // 1 second
+                Interval = 500 // half second
             };
 
             _aggregationTimer.Tick += AggregationTimer_Tick;
-
-            this.AutoScaleMode = AutoScaleMode.None;
 
             SetupUI();
             SubscribeToEvents();
@@ -135,9 +131,9 @@ namespace Bahtinov_Collimator.Custom_Components
         private bool HasEnoughDataToBaseline()
         {
             if (IsTriBahtinov)
-                return _current[0] != float.NaN && _current[1] != float.NaN && _current[2] != float.NaN;
+                return !float.IsNaN(_current[0]) && !float.IsNaN(_current[1]) && !float.IsNaN(_current[2]);
 
-            return _current[0] != float.NaN;
+            return !float.IsNaN(_current[0]);
         }
         /// <summary>
         /// Handles incoming focus data updates. Aggregates channel updates over a short
@@ -463,9 +459,8 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
-        public new void Dispose()
+        internal void CleanupResources()
         {
-            base.Dispose();
             _aggregationTimer.Stop();
             UnsubscribeToEvents();
         }
