@@ -250,10 +250,10 @@
     <Compile Include="Dialogs\DarkMessageBox.Designer.cs">
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="NextStep\NextStepDialog.cs">
+    <Compile Include="Dialogs\NextStepDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NextStep\NextStepDialog.Designer.cs">
+    <Compile Include="Dialogs\NextStepDialog.Designer.cs">
       <DependentUpon>NextStepDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="NextStep\NextStepGuidance.cs" />
@@ -323,7 +323,7 @@
     <EmbeddedResource Include="Image Capture\ImageSelect.resx">
       <DependentUpon>ImageSelect.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NextStep\NextStepDialog.resx">
+    <EmbeddedResource Include="Dialogs\NextStepDialog.resx">
       <DependentUpon>NextStepDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
