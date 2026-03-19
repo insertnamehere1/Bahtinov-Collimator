@@ -276,7 +276,6 @@ namespace Bahtinov_Collimator
         public static int CalibrateFrameWidth { get; } = 400;
         #endregion
 
-
         #region Dictionaries
 
         private static readonly Dictionary<int, Color> GroupBoxTextColors;

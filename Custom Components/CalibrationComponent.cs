@@ -68,7 +68,7 @@ namespace Bahtinov_Collimator.Custom_Components
         }
 
         /// <summary>
-        /// Sets fonts and theme styling, then updates the instruction text.
+        /// Sets and updates the instruction text.
         /// Scales pixel-based sizes/positions using the current DPI so layout stays consistent.
         /// </summary>
         private void SetupUI()

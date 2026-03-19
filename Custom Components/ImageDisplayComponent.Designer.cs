@@ -44,7 +44,7 @@ namespace Bahtinov_Collimator
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.BorderColor = System.Drawing.Color.Gray;
             this.pictureBox1.BorderThickness = 2;
-            this.pictureBox1.CornerRadius = 12;
+            this.pictureBox1.CornerRadius = 8;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);

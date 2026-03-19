@@ -53,7 +53,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.quitButton.CornerRadius = 8;
             this.quitButton.FlatAppearance.BorderSize = 0;
             this.quitButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.quitButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.quitButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.quitButton.ForeColor = System.Drawing.Color.LightGray;
             this.quitButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.quitButton.ImageHeight = 32;
@@ -78,10 +78,12 @@ namespace Bahtinov_Collimator.Custom_Components
             | System.Windows.Forms.AnchorStyles.Right)));
             this.titledRoundedRichTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
             this.titledRoundedRichTextBox1.BorderColor = System.Drawing.Color.Gray;
+            this.titledRoundedRichTextBox1.BorderThickness = 2;
+            this.titledRoundedRichTextBox1.CornerRadius = 10;
             this.titledRoundedRichTextBox1.ForeColor = System.Drawing.Color.White;
             // 
             // 
-            //
+            // 
             this.titledRoundedRichTextBox1.InnerRichTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
             this.titledRoundedRichTextBox1.InnerRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.titledRoundedRichTextBox1.InnerRichTextBox.DetectUrls = false;
@@ -92,18 +94,19 @@ namespace Bahtinov_Collimator.Custom_Components
             this.titledRoundedRichTextBox1.InnerRichTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.titledRoundedRichTextBox1.InnerRichTextBox.Size = new System.Drawing.Size(360, 442);
             this.titledRoundedRichTextBox1.InnerRichTextBox.TabIndex = 0;
-            this.titledRoundedRichTextBox1.Location = new System.Drawing.Point(3, 23);
+            this.titledRoundedRichTextBox1.InnerRichTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.titledRoundedRichTextBox1.Location = new System.Drawing.Point(3, 22);
             this.titledRoundedRichTextBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.titledRoundedRichTextBox1.Name = "titledRoundedRichTextBox1";
             this.titledRoundedRichTextBox1.Padding = new System.Windows.Forms.Padding(11, 12, 11, 12);
             this.titledRoundedRichTextBox1.ReadOnly = true;
-            this.titledRoundedRichTextBox1.Size = new System.Drawing.Size(384, 518);
+            this.titledRoundedRichTextBox1.Size = new System.Drawing.Size(384, 522);
             this.titledRoundedRichTextBox1.TabIndex = 0;
             this.titledRoundedRichTextBox1.TitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.titledRoundedRichTextBox1.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.titledRoundedRichTextBox1.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 14F);
             this.titledRoundedRichTextBox1.TitleForeColor = System.Drawing.Color.White;
             this.titledRoundedRichTextBox1.TitleHeight = 50;
-            this.titledRoundedRichTextBox1.TitlePaddingLeft = 140;
+            this.titledRoundedRichTextBox1.TitlePaddingLeft = 90;
             this.titledRoundedRichTextBox1.TitleText = "Summary";
             // 
             // roundedPanel1
@@ -114,10 +117,10 @@ namespace Bahtinov_Collimator.Custom_Components
             this.roundedPanel1.BorderColor = System.Drawing.Color.Gray;
             this.roundedPanel1.BorderThickness = 3;
             this.roundedPanel1.Controls.Add(this.quitButton);
-            this.roundedPanel1.CornerRadius = 8;
+            this.roundedPanel1.CornerRadius = 10;
             this.roundedPanel1.FillColor = System.Drawing.Color.Transparent;
             this.roundedPanel1.ForeColor = System.Drawing.Color.Gray;
-            this.roundedPanel1.Location = new System.Drawing.Point(2, 549);
+            this.roundedPanel1.Location = new System.Drawing.Point(2, 550);
             this.roundedPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.roundedPanel1.Name = "roundedPanel1";
             this.roundedPanel1.Size = new System.Drawing.Size(384, 62);

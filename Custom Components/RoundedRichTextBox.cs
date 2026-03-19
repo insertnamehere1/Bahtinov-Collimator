@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -17,7 +17,7 @@ namespace SkyCal.Custom_Components
     /// - This version is hardened against designer-time/property-change ordering issues
     ///   (e.g., ForeColor/BackColor changes firing before child controls exist).
     /// </summary>
-    public sealed class TitledRoundedRichTextBox : UserControl
+    public sealed partial class TitledRoundedRichTextBox : UserControl
     {
         private RichTextBox _richTextBox;
 
@@ -97,6 +97,7 @@ namespace SkyCal.Custom_Components
         /// Radius of the rounded corners in pixels.
         /// </summary>
         [Category("Appearance")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         [DefaultValue(12)]
         public int CornerRadius
         {
@@ -263,6 +264,8 @@ namespace SkyCal.Custom_Components
         /// </summary>
         public TitledRoundedRichTextBox()
         {
+            InitializeComponent();
+
             SetStyle(
                 ControlStyles.AllPaintingInWmPaint |
                 ControlStyles.OptimizedDoubleBuffer |
