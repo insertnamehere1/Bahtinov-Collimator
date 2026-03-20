@@ -89,7 +89,13 @@ namespace Bahtinov_Collimator
             UpdateMirrorPanelLayout();
             focusChannelCount++;
         }
-            
+
+        private int S(int logicalPixelsAt96)
+        {
+            float dpiScale = DeviceDpi / 96f;
+            return (int)Math.Round(logicalPixelsAt96 * dpiScale, MidpointRounding.AwayFromZero);
+        }
+
 
         #endregion
 
@@ -214,7 +220,7 @@ namespace Bahtinov_Collimator
 
             // Center within the group box content area (excludes caption where supported).
             Rectangle content = groupBox1.DisplayRectangle;
-            int targetTop = content.Top + ((content.Height - offsetBarControl1.Height) / 2) - 15;
+            int targetTop = content.Top + ((content.Height - offsetBarControl1.Height) / 2) - S(15);
             targetTop = Math.Max(content.Top, targetTop);
 
             if (offsetBarControl1.Top != targetTop)
@@ -226,10 +232,10 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void UpdateMirrorPanelLayout()
         {
-            int panelWidth = 100;
-            int panelHeight = Math.Min(100, Math.Max(40, groupBox1.ClientSize.Height - 42));
-            int panelX = Math.Max(8, offsetBarControl1.Left - panelWidth - 8);
-            int panelY = Math.Max(31, (groupBox1.ClientSize.Height - panelHeight) / 2);
+            int panelWidth = S(100);
+            int panelHeight = Math.Min(S(100), Math.Max(S(40), groupBox1.ClientSize.Height - S(42)));
+            int panelX = Math.Max(S(8), offsetBarControl1.Left - panelWidth - S(8));
+            int panelY = Math.Max(S(31), (groupBox1.ClientSize.Height - panelHeight) / 2);
 
             mirrorDrawingComponent1.Bounds = new Rectangle(panelX, panelY, panelWidth, panelHeight);
             mirrorDrawingComponent1.BackColor = groupBox1.BackColor;
