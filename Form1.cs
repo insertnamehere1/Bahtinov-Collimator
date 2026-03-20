@@ -627,6 +627,8 @@ namespace Bahtinov_Collimator
                 Invoke(new Action(() =>
                 {
                     bahtinovLineData = null;
+                    DecreaseFocusChannelSize();
+                    StopCalibration();
                     groupBoxRed.Visible = false;
                     groupBoxGreen.Visible = false;
                     groupBoxBlue.Visible = false;
@@ -641,6 +643,8 @@ namespace Bahtinov_Collimator
             else
             {
                 bahtinovLineData = null;
+                DecreaseFocusChannelSize();
+                StopCalibration();
                 groupBoxRed.Visible = false;
                 groupBoxGreen.Visible = false;
                 groupBoxBlue.Visible = false;
@@ -887,22 +891,15 @@ namespace Bahtinov_Collimator
                 if (groupBoxRed != null && groupBoxRed.Size.Width < maxWidth)
                 {
                     groupBoxRed.Size = new Size(maxWidth, groupBoxRed.Size.Height);
-                }
-                if (groupBoxGreen != null && groupBoxGreen.Size.Width < maxWidth)
-                {
                     groupBoxGreen.Size = new Size(maxWidth, groupBoxGreen.Size.Height);
-                }
-                if (groupBoxBlue != null && groupBoxBlue.Size.Width < maxWidth)
-                {
                     groupBoxBlue.Size = new Size(maxWidth, groupBoxBlue.Size.Height);
                 }
-
-                ApplyMainWorkspaceLayout();
+                    ApplyMainWorkspaceLayout();
 
                 // Client width is set inside ApplyMainWorkspaceLayout → AdjustFormWidthToWorkspace
                 // from image bounds (replaces fixed +/- delta on this.Width).
-                if (calibrationComponent != null)
-                    this.AutoSizeMode = AutoSizeMode.GrowOnly;
+  //              if (calibrationComponent != null)
+  //                  this.AutoSizeMode = AutoSizeMode.GrowOnly;
             }
         }
 
@@ -922,13 +919,7 @@ namespace Bahtinov_Collimator
                 if (groupBoxRed != null && groupBoxRed.Size.Width != defaultWidth)
                 {
                     groupBoxRed.Size = new Size(defaultWidth, groupBoxRed.Size.Height);
-                }
-                if (groupBoxGreen != null && groupBoxGreen.Size.Width != defaultWidth)
-                {
                     groupBoxGreen.Size = new Size(defaultWidth, groupBoxGreen.Size.Height);
-                }
-                if (groupBoxBlue != null && groupBoxBlue.Size.Width != defaultWidth)
-                {
                     groupBoxBlue.Size = new Size(defaultWidth, groupBoxBlue.Size.Height);
                 }
 
