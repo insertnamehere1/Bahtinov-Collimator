@@ -64,25 +64,32 @@ namespace Bahtinov_Collimator
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
 
         /// <summary>
-        /// Represents the maximum allowed size for a focus channel.
+        /// Maximum focus channel width (96 DPI logical px) when Tri-Bahtinov + calibrated (widened layout).
         /// </summary>
-        ///
         private const int MAX_FOCUS_CHAN_SIZE = 237;
 
         /// <summary>
-        /// Represents the minimum allowed size for a focus channel.
+        /// Default focus channel width (96 DPI logical px). Must match <see cref="Form1"/> designer
+        /// (<c>groupBoxRed</c> / <c>analysisGroupBox</c> at 185). Used when restoring after capture stops.
         /// </summary>
-        private const int MIN_FOCUS_CHAN_SIZE = 170;
+        private const int DEFAULT_FOCUS_CHAN_WIDTH_AT96 = 185;
 
         /// <summary>
-        /// Represents the minimum X offset for the image display component on the form.
+        /// Horizontal gap (96 DPI logical px) between the focus column and the image display.
+        /// Matches designer: image at X=202, red group at (9,23) with width 185 → 9+185+8=202.
         /// </summary>
-        private const int MIN_IMAGE_DISPLAY_X_OFFSET = 276;
+        private const int ImageGapAfterFocusColumnAt96 = 8;
 
         /// <summary>
-        /// Represents the maximum X offset for the image display component on the form.
+        /// Right margin (96 DPI logical px) after the image display inside the client area.
+        /// Designer: ClientSize 659, image right 652 → 7px.
         /// </summary>
-        private const int MAX_IMAGE_DISPLAY_X_OFFSET = 184;
+        private const int RightMarginAfterImageAt96 = 7;
+
+        /// <summary>
+        /// Gap (96 DPI) between image display and calibration panel when calibration is open.
+        /// </summary>
+        private const int GapImageToCalibrationAt96 = 8;
 
         /// Sets testing mode for Calibration 
         private const bool TEST_MODE = false;
@@ -156,8 +163,8 @@ namespace Bahtinov_Collimator
             this.UpdateStyles();
 
             // Disable automatic resizing and set the form to grow and shrink based on its content.
-            this.AutoSize = false;
-            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+ //           this.AutoSize = false;
+ //           this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             // Initialize the form's components.
             InitializeComponent();
@@ -212,6 +219,60 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
+        /// Positions the image display immediately to the right of the focus channel column
+        /// using actual control bounds (reactive to narrow/wide channel widths and DPI).
+        /// </summary>
+        private void ApplyMainWorkspaceLayout()
+        {
+            if (!IsHandleCreated || imageDisplayComponent1 == null)
+                return;
+
+            if (InvokeRequired)
+            {
+                Invoke(new Action(ApplyMainWorkspaceLayout));
+                return;
+            }
+
+            int anchorRight;
+            if (groupBoxRed != null && groupBoxRed.Visible)
+                anchorRight = groupBoxRed.Right;
+            else if (analysisGroupBox != null && analysisGroupBox.Visible)
+                anchorRight = analysisGroupBox.Right;
+            else
+                anchorRight = S(9) + S(DEFAULT_FOCUS_CHAN_WIDTH_AT96);
+
+            int left = anchorRight + S(ImageGapAfterFocusColumnAt96);
+            int y = imageDisplayComponent1.Location.Y;
+            imageDisplayComponent1.Location = new Point(left, y);
+
+            AdjustFormWidthToWorkspace();
+        }
+
+        /// <summary>
+        /// Expands or contracts the form client width so it matches the image position/size
+        /// (and calibration strip when visible). Keeps a consistent right margin.
+        /// </summary>
+        private void AdjustFormWidthToWorkspace()
+        {
+            if (imageDisplayComponent1 == null)
+                return;
+
+            int minClientWidth = imageDisplayComponent1.Right + S(RightMarginAfterImageAt96);
+
+            if (calibrationComponent != null)
+            {
+                int calWidth = S(UITheme.CalibrateFrameWidth);
+                // Match StartCalibration: calibration left = ClientSize.Width - calWidth - S(3)
+                int minForImageAndCalibration =
+                    imageDisplayComponent1.Right + S(GapImageToCalibrationAt96) + calWidth + S(3);
+                minClientWidth = Math.Max(minClientWidth, minForImageAndCalibration);
+            }
+
+            if (ClientSize.Width != minClientWidth)
+                ClientSize = new Size(minClientWidth, ClientSize.Height);
+        }
+
+        /// <summary>
         /// Invoked when the main form is first shown to the user.
         ///
         /// This override is used to display the optional startup calibration prompt
@@ -225,7 +286,17 @@ namespace Bahtinov_Collimator
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
+            ApplyMainWorkspaceLayout();
             ShowStartupCalibrationPromptIfNeeded(this);
+        }
+
+        /// <summary>
+        /// Keeps the image aligned with the focus column when DPI / scaling changes.
+        /// </summary>
+        protected override void OnDpiChanged(DpiChangedEventArgs e)
+        {
+            base.OnDpiChanged(e);
+            ApplyMainWorkspaceLayout();
         }
 
         /// <summary>
@@ -562,8 +633,8 @@ namespace Bahtinov_Collimator
                     InitializeRedFocusBox();
                     RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                     RoundedStartButton.Image = Properties.Resources.SelectionCircle;
-                    int minOffset = S(MIN_IMAGE_DISPLAY_X_OFFSET);
-                    imageDisplayComponent1.Location = new Point(minOffset, imageDisplayComponent1.Location.Y);
+                    ApplyMainWorkspaceLayout();
+
                     DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
                 }));
             }
@@ -576,8 +647,8 @@ namespace Bahtinov_Collimator
                 InitializeRedFocusBox();
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
-                int minOffset = S(MIN_IMAGE_DISPLAY_X_OFFSET);
-                imageDisplayComponent1.Location = new Point(minOffset, imageDisplayComponent1.Location.Y);
+                ApplyMainWorkspaceLayout();
+
                 DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
             }
         }
@@ -812,7 +883,6 @@ namespace Bahtinov_Collimator
             else
             {
                 int maxWidth = S(MAX_FOCUS_CHAN_SIZE);
-                int minWidth = S(MIN_FOCUS_CHAN_SIZE);
 
                 if (groupBoxRed != null && groupBoxRed.Size.Width < maxWidth)
                 {
@@ -827,15 +897,12 @@ namespace Bahtinov_Collimator
                     groupBoxBlue.Size = new Size(maxWidth, groupBoxBlue.Size.Height);
                 }
 
-                int maxOffset = S(MAX_IMAGE_DISPLAY_X_OFFSET);
-                imageDisplayComponent1.Location = new Point(maxOffset, imageDisplayComponent1.Location.Y);
+                ApplyMainWorkspaceLayout();
 
+                // Client width is set inside ApplyMainWorkspaceLayout → AdjustFormWidthToWorkspace
+                // from image bounds (replaces fixed +/- delta on this.Width).
                 if (calibrationComponent != null)
-                {
                     this.AutoSizeMode = AutoSizeMode.GrowOnly;
-                    int delta = maxWidth - minWidth;
-                    this.Width += delta;
-                }
             }
         }
 
@@ -848,30 +915,24 @@ namespace Bahtinov_Collimator
             }
             else
             {
-                int maxWidth = S(MAX_FOCUS_CHAN_SIZE);
-                int minWidth = S(MIN_FOCUS_CHAN_SIZE);
+                // Restore to designer default (185), not the old 170 "min" — otherwise the image shifts
+                // left over <c>analysisGroupBox</c> (still 185 wide). Also fixes any stale 170px width.
+                int defaultWidth = S(DEFAULT_FOCUS_CHAN_WIDTH_AT96);
 
-                if (groupBoxRed != null && groupBoxRed.Size.Width > minWidth)
+                if (groupBoxRed != null && groupBoxRed.Size.Width != defaultWidth)
                 {
-                    groupBoxRed.Size = new Size(minWidth, groupBoxRed.Size.Height);
+                    groupBoxRed.Size = new Size(defaultWidth, groupBoxRed.Size.Height);
                 }
-                if (groupBoxGreen != null && groupBoxGreen.Size.Width > minWidth)
+                if (groupBoxGreen != null && groupBoxGreen.Size.Width != defaultWidth)
                 {
-                    groupBoxGreen.Size = new Size(minWidth, groupBoxGreen.Size.Height);
+                    groupBoxGreen.Size = new Size(defaultWidth, groupBoxGreen.Size.Height);
                 }
-                if (groupBoxBlue != null && groupBoxBlue.Size.Width > minWidth)
+                if (groupBoxBlue != null && groupBoxBlue.Size.Width != defaultWidth)
                 {
-                    groupBoxBlue.Size = new Size(minWidth, groupBoxBlue.Size.Height);
+                    groupBoxBlue.Size = new Size(defaultWidth, groupBoxBlue.Size.Height);
                 }
 
-                int minOffset = S(MIN_IMAGE_DISPLAY_X_OFFSET);
-                imageDisplayComponent1.Location = new Point(minOffset, imageDisplayComponent1.Location.Y);
-
-                if (calibrationComponent != null)
-                {
-                    int delta = maxWidth - minWidth;
-                    this.Width -= delta;
-                }
+                ApplyMainWorkspaceLayout();
             }
         }
 
@@ -1104,6 +1165,7 @@ namespace Bahtinov_Collimator
 
             this.Controls.Add(calibrationComponent);
             calibrationComponent.BringToFront();
+            ApplyMainWorkspaceLayout();
         }
 
         public void StopCalibration()
@@ -1115,6 +1177,8 @@ namespace Bahtinov_Collimator
             calibrationComponent = null;
             this.Width -= S(UITheme.CalibrateFrameWidth);
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+            ApplyMainWorkspaceLayout();
 
             if(screenCaptureRunningFlag == true)
                 StartButton_Click(this, EventArgs.Empty);

@@ -102,14 +102,14 @@ namespace Bahtinov_Collimator
             // generalSettingsToolStripMenuItem
             // 
             this.generalSettingsToolStripMenuItem.Name = "generalSettingsToolStripMenuItem";
-            this.generalSettingsToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.generalSettingsToolStripMenuItem.Size = new System.Drawing.Size(144, 24);
             this.generalSettingsToolStripMenuItem.Text = "Settings";
             this.generalSettingsToolStripMenuItem.Click += new System.EventHandler(this.GeneralSettingsToolStripMenuItem_Click);
             // 
             // focusCalibrationToolStripMenuItem
             // 
             this.focusCalibrationToolStripMenuItem.Name = "focusCalibrationToolStripMenuItem";
-            this.focusCalibrationToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.focusCalibrationToolStripMenuItem.Size = new System.Drawing.Size(144, 24);
             this.focusCalibrationToolStripMenuItem.Text = "Calibration";
             this.focusCalibrationToolStripMenuItem.Click += new System.EventHandler(this.FocusCalibrationToolStripMenuItem_Click);
             // 
@@ -284,7 +284,7 @@ namespace Bahtinov_Collimator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(659, 486);
+            this.ClientSize = new System.Drawing.Size(659, 487);
             this.Controls.Add(this.groupBoxBlue);
             this.Controls.Add(this.groupBoxGreen);
             this.Controls.Add(this.groupBoxRed);
