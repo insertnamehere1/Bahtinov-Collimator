@@ -23,7 +23,7 @@ namespace Bahtinov_Collimator
 
         #endregion
 
-        private int ScaleFrom96(int logicalPixelsAt96)
+        private int S(int logicalPixelsAt96)
         {
             float dpiScale = DeviceDpi / 96f;
             return (int)Math.Round(logicalPixelsAt96 * dpiScale, MidpointRounding.AwayFromZero);
@@ -75,22 +75,22 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void SizeFormToContent()
         {
-            int screenEdgeMargin = ScaleFrom96(53);
-            int minClientWidth = ScaleFrom96(227);
-            int horizontalInset = ScaleFrom96(27);
-            int contentInsetBottom = ScaleFrom96(67);
-            int buttonRightInset = ScaleFrom96(87);
-            int buttonBottomInset = ScaleFrom96(33);
-            int topChromePadding = ScaleFrom96(33);
-            int bottomChromePadding = ScaleFrom96(27);
-            int contentPadding = ScaleFrom96(ContentPadding);
+            int screenEdgeMargin = S(53);
+            int minClientWidth = S(227);
+            int horizontalInset = S(27);
+            int contentInsetBottom = S(67);
+            int buttonRightInset = S(87);
+            int buttonBottomInset = S(33);
+            int topChromePadding = S(33);
+            int bottomChromePadding = S(27);
+            int contentPadding = S(ContentPadding);
 
             // Step 1: measure and apply required width
             int maxScreenWidth = Screen.FromControl(this).WorkingArea.Width - screenEdgeMargin;
             int newClientWidth = Math.Max(minClientWidth, Math.Min(MeasureRequiredWidth(), maxScreenWidth));
 
             // Step 2: update control widths and remeasure heights with new width
-            int contentWidth = newClientWidth - horizontalInset - SystemInformation.VerticalScrollBarWidth - ScaleFrom96(1);
+            int contentWidth = newClientWidth - horizontalInset - SystemInformation.VerticalScrollBarWidth - S(1);
             foreach (Control c in stackLayout.Controls)
             {
                 c.Width = contentWidth;
@@ -116,10 +116,10 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void RelayoutForNewSize()
         {
-            int horizontalInset = ScaleFrom96(27);
-            int contentInsetBottom = ScaleFrom96(127);
-            int buttonRightInset = ScaleFrom96(87);
-            int buttonBottomInset = ScaleFrom96(33);
+            int horizontalInset = S(27);
+            int contentInsetBottom = S(127);
+            int buttonRightInset = S(87);
+            int buttonBottomInset = S(33);
 
             scrollPanel.Size = new Size(ClientSize.Width - horizontalInset, ClientSize.Height - contentInsetBottom);
             okButton.Location = new Point(ClientSize.Width - buttonRightInset, ClientSize.Height - buttonBottomInset);
@@ -150,7 +150,7 @@ namespace Bahtinov_Collimator
         private int ContentWidth()
         {
             int scrollBar = SystemInformation.VerticalScrollBarWidth;
-            return Math.Max(ScaleFrom96(67), scrollPanel.ClientSize.Width - scrollBar - ScaleFrom96(1));
+            return Math.Max(S(67), scrollPanel.ClientSize.Width - scrollBar - S(1));
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace Bahtinov_Collimator
                         stackLayout.Controls.Add(MakeTitleBox(section));
 
                     stackLayout.Controls.Add(MakeSectionBody(section));
-                    stackLayout.Controls.Add(MakeSpacer(ScaleFrom96(7)));
+                    stackLayout.Controls.Add(MakeSpacer(S(7)));
                 }
             }
 
@@ -222,10 +222,10 @@ namespace Bahtinov_Collimator
                 BackColor = UITheme.DarkBackground,
                 Width = ContentWidth(),
                 Margin = new Padding(
-                    ScaleFrom96(3),
-                    ScaleFrom96(6),
+                    S(3),
+                    S(6),
                     0,
-                    ScaleFrom96(4))
+                    S(4))
             };
             lbl.Height = MeasureLabelHeight(lbl);
             return lbl;
@@ -236,11 +236,11 @@ namespace Bahtinov_Collimator
         /// </summary>
         private int MeasureLabelHeight(Label lbl)
         {
-            if (lbl == null) return ScaleFrom96(16);
+            if (lbl == null) return S(16);
             var sz = TextRenderer.MeasureText(lbl.Text ?? "", lbl.Font,
                 new Size(Math.Max(10, lbl.Width), int.MaxValue),
                 TextFormatFlags.WordBreak);
-            return Math.Max(ScaleFrom96(16), sz.Height + ScaleFrom96(1));
+            return Math.Max(S(16), sz.Height + S(1));
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace Bahtinov_Collimator
                 Text = header,
                 AutoSize = true,
                 Width = ContentWidth(),
-                Margin = new Padding(0, ScaleFrom96(6), 0, ScaleFrom96(4)),
+                Margin = new Padding(0, S(6), 0, S(4)),
                 BorderColor = UITheme.ButtonDarkForeground,
                 FillColor = Color.FromArgb(35, 255, 255, 255),
                 CornerRadius = 8,
@@ -274,7 +274,7 @@ namespace Bahtinov_Collimator
             {
                 Text = section.Title,
                 AutoSize = true,
-                Margin = new Padding(0, ScaleFrom96(6), 0, ScaleFrom96(4)),
+                Margin = new Padding(0, S(6), 0, S(4)),
                 BorderColor = UITheme.ButtonDarkForeground,
                 FillColor = Color.FromArgb(35, 255, 255, 255),
                 CornerRadius = 8,
@@ -349,13 +349,13 @@ namespace Bahtinov_Collimator
         /// </summary>
         private int GetRichTextHeight(RichTextBox rtb)
         {
-            if (rtb == null) return ScaleFrom96(16);
+            if (rtb == null) return S(16);
             if (!rtb.IsHandleCreated) rtb.CreateControl();
 
             int len = rtb.TextLength;
             Point pt = rtb.GetPositionFromCharIndex(len);
             int lineHeight = (int)Math.Ceiling(rtb.Font.GetHeight());
-            return Math.Max(ScaleFrom96(16), pt.Y + lineHeight + ScaleFrom96(4));
+            return Math.Max(S(16), pt.Y + lineHeight + S(4));
         }
 
         private int MeasureRequiredWidth()
@@ -382,15 +382,15 @@ namespace Bahtinov_Collimator
                     }
                     else if (c is TitleBox tb)
                     {
-                        w = (int)g.MeasureString(tb.Text, tb.Font).Width + ScaleFrom96(27);
+                        w = (int)g.MeasureString(tb.Text, tb.Font).Width + S(27);
                     }
 
                     maxWidth = Math.Max(maxWidth, w);
                 }
             }
 
-            int minWidth = ScaleFrom96(400);
-            int widthPadding = ScaleFrom96(WidthPadding);
+            int minWidth = S(400);
+            int widthPadding = S(WidthPadding);
             return Math.Max(minWidth, maxWidth + widthPadding);
         }
     }

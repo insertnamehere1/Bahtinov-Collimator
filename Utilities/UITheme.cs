@@ -39,7 +39,6 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Next Step Font Sizes
-
         public static float NextStepFontSize => 10f;
         public static float NextStepTitleFontSize => 12f;
 
@@ -273,7 +272,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the width of the calibration side frame to the main form at 96DPI
         /// </summary>
-        public static int CalibrateFrameWidth { get; } = 400;
+        public static int CalibrateFrameWidth { get; } = 395;
         #endregion
 
         #region Dictionaries

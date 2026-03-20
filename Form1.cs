@@ -67,12 +67,12 @@ namespace Bahtinov_Collimator
         /// Represents the maximum allowed size for a focus channel.
         /// </summary>
         ///
-        private const int MAX_FOCUS_CHAN_SIZE = 355;
+        private const int MAX_FOCUS_CHAN_SIZE = 237;
 
         /// <summary>
         /// Represents the minimum allowed size for a focus channel.
         /// </summary>
-        private const int MIN_FOCUS_CHAN_SIZE = 255;
+        private const int MIN_FOCUS_CHAN_SIZE = 170;
 
         /// <summary>
         /// Represents the minimum X offset for the image display component on the form.
@@ -82,7 +82,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Represents the maximum X offset for the image display component on the form.
         /// </summary>
-        private const int MAX_IMAGE_DISPLAY_X_OFFSET = 376;
+        private const int MAX_IMAGE_DISPLAY_X_OFFSET = 184;
 
         /// Sets testing mode for Calibration 
         private const bool TEST_MODE = false;
@@ -151,6 +151,7 @@ namespace Bahtinov_Collimator
         public Form1()
         {
             UITheme.DeviceDpi = DeviceDpi;
+
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
 
@@ -204,6 +205,12 @@ namespace Bahtinov_Collimator
 
         #region Configure Form
 
+        private int S(int logicalPixelsAt96)
+        {
+            float dpiScale = DeviceDpi / 96f;
+            return (int)Math.Round(logicalPixelsAt96 * dpiScale, MidpointRounding.AwayFromZero);
+        }
+
         /// <summary>
         /// Invoked when the main form is first shown to the user.
         ///
@@ -234,7 +241,6 @@ namespace Bahtinov_Collimator
             groupBoxRed.ConfigureFocusChannel(0, isWidened);
             groupBoxGreen.Visible = false;
             groupBoxBlue.Visible = false;
-
         }
 
         /// <summary>
@@ -556,9 +562,8 @@ namespace Bahtinov_Collimator
                     InitializeRedFocusBox();
                     RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                     RoundedStartButton.Image = Properties.Resources.SelectionCircle;
-                    int minOffset = ScaleLogical(MIN_IMAGE_DISPLAY_X_OFFSET);
+                    int minOffset = S(MIN_IMAGE_DISPLAY_X_OFFSET);
                     imageDisplayComponent1.Location = new Point(minOffset, imageDisplayComponent1.Location.Y);
-
                     DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
                 }));
             }
@@ -571,9 +576,8 @@ namespace Bahtinov_Collimator
                 InitializeRedFocusBox();
                 RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
                 RoundedStartButton.Image = Properties.Resources.SelectionCircle;
-                int minOffset = ScaleLogical(MIN_IMAGE_DISPLAY_X_OFFSET);
+                int minOffset = S(MIN_IMAGE_DISPLAY_X_OFFSET);
                 imageDisplayComponent1.Location = new Point(minOffset, imageDisplayComponent1.Location.Y);
-
                 DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
             }
         }
@@ -660,22 +664,6 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Removes and disposes of specified controls from the form.
-        /// </summary>
-        /// <param name="controls">The controls to be removed and disposed of.</param>
-        private void RemoveAndDisposeControls(params Control[] controls)
-        {
-            foreach (var control in controls)
-            {
-                if (Controls.Contains(control))
-                {
-                    Controls.Remove(control);
-                    control.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
         /// Activates the form when the mouse enters the form area.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -688,20 +676,6 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Scales a logical design-time pixel value to the current monitor DPI.
-        /// The original designer baseline for this form was 144 DPI, so we
-        /// preserve that relationship here to keep calibrated layouts consistent
-        /// across monitors.
-        /// </summary>
-        /// <param name="logical">Value in logical pixels at the original 144 DPI baseline.</param>
-        private int ScaleLogical(int logical)
-        {
-            const float designDpi = 144f;
-            float scale = DeviceDpi / designDpi;
-            return (int)Math.Round(logical * scale);
-        }
 
         /// <summary>
         /// Processes the provided image and displays it based on whether it's a Bahtinov mask or a defocus star.
@@ -837,8 +811,8 @@ namespace Bahtinov_Collimator
             }
             else
             {
-                int maxWidth = ScaleLogical(MAX_FOCUS_CHAN_SIZE);
-                int minWidth = ScaleLogical(MIN_FOCUS_CHAN_SIZE);
+                int maxWidth = S(MAX_FOCUS_CHAN_SIZE);
+                int minWidth = S(MIN_FOCUS_CHAN_SIZE);
 
                 if (groupBoxRed != null && groupBoxRed.Size.Width < maxWidth)
                 {
@@ -853,7 +827,7 @@ namespace Bahtinov_Collimator
                     groupBoxBlue.Size = new Size(maxWidth, groupBoxBlue.Size.Height);
                 }
 
-                int maxOffset = ScaleLogical(MAX_IMAGE_DISPLAY_X_OFFSET);
+                int maxOffset = S(MAX_IMAGE_DISPLAY_X_OFFSET);
                 imageDisplayComponent1.Location = new Point(maxOffset, imageDisplayComponent1.Location.Y);
 
                 if (calibrationComponent != null)
@@ -874,8 +848,8 @@ namespace Bahtinov_Collimator
             }
             else
             {
-                int maxWidth = ScaleLogical(MAX_FOCUS_CHAN_SIZE);
-                int minWidth = ScaleLogical(MIN_FOCUS_CHAN_SIZE);
+                int maxWidth = S(MAX_FOCUS_CHAN_SIZE);
+                int minWidth = S(MIN_FOCUS_CHAN_SIZE);
 
                 if (groupBoxRed != null && groupBoxRed.Size.Width > minWidth)
                 {
@@ -890,7 +864,7 @@ namespace Bahtinov_Collimator
                     groupBoxBlue.Size = new Size(minWidth, groupBoxBlue.Size.Height);
                 }
 
-                int minOffset = ScaleLogical(MIN_IMAGE_DISPLAY_X_OFFSET);
+                int minOffset = S(MIN_IMAGE_DISPLAY_X_OFFSET);
                 imageDisplayComponent1.Location = new Point(minOffset, imageDisplayComponent1.Location.Y);
 
                 if (calibrationComponent != null)
@@ -1029,7 +1003,6 @@ namespace Bahtinov_Collimator
                 public override Color ImageMarginGradientMiddle => UITheme.DarkBackground;
                 public override Color ImageMarginGradientEnd => UITheme.DarkBackground;
             }
-
         }
 
         #endregion
@@ -1117,15 +1090,15 @@ namespace Bahtinov_Collimator
                 return;
 
             this.AutoSizeMode = AutoSizeMode.GrowOnly;
-            this.Width += UITheme.CalibrateFrameWidth;
+            this.Width += S(UITheme.CalibrateFrameWidth);
 
-            int calWidth = UITheme.CalibrateFrameWidth;
+            int calWidth = S(UITheme.CalibrateFrameWidth);
 
             calibrationComponent = new CalibrationComponent(this)
             { 
                 Width = UITheme.CalibrateFrameWidth,
                 Height = this.ClientSize.Height,
-                Location = new Point(this.ClientSize.Width - calWidth - 3, 8),
+                Location = new Point(this.ClientSize.Width - calWidth - S(3), S(8)),
                 Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right
             };
 
@@ -1140,7 +1113,7 @@ namespace Bahtinov_Collimator
             this.Controls.Remove(calibrationComponent);
             calibrationComponent.Dispose();
             calibrationComponent = null;
-            this.Width -= UITheme.CalibrateFrameWidth;
+            this.Width -= S(UITheme.CalibrateFrameWidth);
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             if(screenCaptureRunningFlag == true)
@@ -1223,11 +1196,6 @@ namespace Bahtinov_Collimator
                 this.BringToFront(); // Optional: bring to front
                 this.Activate();     // Optional: give it focus
             }
-        }
-
-        private void ImageDisplayComponent1_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }
