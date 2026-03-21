@@ -462,11 +462,6 @@ namespace Bahtinov_Collimator
         #region Events
 
         /// <summary>
-        /// Handles the click event for the start button. Toggles the image capture process and updates button text accordingly.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
-        /// <summary>
         /// Saves the current window position to user settings when the form is closing,
         /// so it can be restored on the next launch.
         /// </summary>
@@ -477,58 +472,67 @@ namespace Bahtinov_Collimator
             Properties.Settings.Default.Save();
         }
 
+        /// <summary>
+        /// Starts or stops screen capture: select star region then capture, or stop and reset UI.
+        /// </summary>
         private void StartButton_Click(object sender, EventArgs e)
         {
-            if (screenCaptureRunningFlag == false)
+            if (screenCaptureRunningFlag)
             {
-                // Stop image capture and processing, clear the display, and remove focus channel components
-                ImageCapture.StopImageCapture();
-                imageDisplayComponent1.ClearDisplay();
-                bahtinovProcessing.StopImageProcessing();
-                groupBoxGreen.Visible = false;
-                groupBoxBlue.Visible = false;
-                MinimizeWindow();
+                StopCaptureSession();
+                return;
+            }
 
-                // Start image capture if star selection is successful
-                if (ImageCapture.SelectStar())
-                {
-                    ImageCapture.TrackingType = Properties.Settings.Default.DefocusSwitch ? 2 : 1;
-                    firstPassCompleted = false;
-                    ImageCapture.StartImageCapture();
-                }
+            // Clean slate before region selection (same as when stopping mid-session).
+            ImageCapture.StopImageCapture();
+            imageDisplayComponent1.ClearDisplay();
+            bahtinovProcessing.StopImageProcessing();
+            groupBoxGreen.Visible = false;
+            groupBoxBlue.Visible = false;
 
+            MinimizeWindow();
+            if (!ImageCapture.SelectStar())
+            {
                 RestoreWindow();
-                screenCaptureRunningFlag = true;
-                RoundedStartButton.Text = UiText.Current.StartButtonStop;
-                RoundedStartButton.Image = Properties.Resources.Stop;
+                return;
             }
-            else
-            {
-                // Stop image capture and processing, clear the display, and reset button text
-                ImageCapture.StopImageCapture();
-                imageDisplayComponent1.ClearDisplay();
-                bahtinovProcessing.StopImageProcessing();
-                bahtinovLineData = null;
-                imageType = 0;
-                groupBoxRed.Visible = false;
-                groupBoxGreen.Visible = false;
-                groupBoxBlue.Visible = false;
 
-                if (Properties.Settings.Default.DefocusSwitch == false)
-                    InitializeRedFocusBox();
-                
-                screenCaptureRunningFlag = false;
-                RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
-                RoundedStartButton.Image = Properties.Resources.SelectionCircle;
-                DecreaseFocusChannelSize();
+            ImageCapture.TrackingType = Properties.Settings.Default.DefocusSwitch ? 2 : 1;
+            firstPassCompleted = false;
+            ImageCapture.StartImageCapture();
 
-                if (Properties.Settings.Default.CalibrationCompleted && calibrationComponent != null)
-                {
-                    StopCalibration();
-                }
+            RestoreWindow();
+            screenCaptureRunningFlag = true;
+            RoundedStartButton.Text = UiText.Current.StartButtonStop;
+            RoundedStartButton.Image = Properties.Resources.Stop;
+        }
 
-                firstPassCompleted = false;
-            }
+        /// <summary>
+        /// Stops capture, resets Bahtinov/focus UI, and returns the start button to idle.
+        /// </summary>
+        private void StopCaptureSession()
+        {
+            ImageCapture.StopImageCapture();
+            imageDisplayComponent1.ClearDisplay();
+            bahtinovProcessing.StopImageProcessing();
+            bahtinovLineData = null;
+            imageType = 0;
+            groupBoxRed.Visible = false;
+            groupBoxGreen.Visible = false;
+            groupBoxBlue.Visible = false;
+
+            if (!Properties.Settings.Default.DefocusSwitch)
+                InitializeRedFocusBox();
+
+            screenCaptureRunningFlag = false;
+            RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
+            RoundedStartButton.Image = Properties.Resources.SelectionCircle;
+            DecreaseFocusChannelSize();
+
+            if (Properties.Settings.Default.CalibrationCompleted && calibrationComponent != null)
+                StopCalibration();
+
+            firstPassCompleted = false;
         }
 
         /// <summary>
