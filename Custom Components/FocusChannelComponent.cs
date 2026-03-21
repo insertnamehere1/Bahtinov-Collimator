@@ -194,8 +194,10 @@ namespace Bahtinov_Collimator
                 }
                 else
                 {
-                    offsetBarControl1.ResetHistory();
+                    // Idle state: clear bar + history (ResetHistory alone left Value/ErrorOffset stale).
+                    offsetBarControl1.ResetValueAndHistory();
                     offsetBarControl1.MarkerColor = Color.Green;
+                    ErrorOffset = 0.0;
                 }
             }
         }

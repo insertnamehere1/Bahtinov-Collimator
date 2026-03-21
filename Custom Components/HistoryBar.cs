@@ -446,5 +446,16 @@ namespace Bahtinov_Collimator.Custom_Components
             valueHistory.Clear();
             Invalidate();         // force redraw without old markers
         }
+
+        /// <summary>
+        /// Clears history and resets the current value to idle (<see cref="float.NaN"/>) without
+        /// pushing the previous value into history — used when capture stops or display is cleared.
+        /// </summary>
+        public void ResetValueAndHistory()
+        {
+            valueHistory.Clear();
+            value = float.NaN;
+            Invalidate();
+        }
     }
 }

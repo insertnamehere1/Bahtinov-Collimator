@@ -593,52 +593,39 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Handles the event when an image is lost during capture, displaying an error message.
+        /// Stops capture/processing when an image is lost, then (on the UI thread) resets the capture UI
+        /// and shows an error message.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data containing the error message.</param>
         private void HandleImageLost(object sender, ImageLostEventArgs e)
         {
-            // Stop any image capture and processing
             ImageCapture.StopImageCapture();
             bahtinovProcessing.StopImageProcessing();
             firstPassCompleted = false;
             screenCaptureRunningFlag = false;
 
-            // Ensure UI updates are performed on the UI thread
             if (InvokeRequired)
-            {
-                Invoke(new Action(() =>
-                {
-                    bahtinovLineData = null;
-                    DecreaseFocusChannelSize();
-                    StopCalibration();
-                    groupBoxRed.Visible = false;
-                    groupBoxGreen.Visible = false;
-                    groupBoxBlue.Visible = false;
-                    InitializeRedFocusBox();
-                    RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
-                    RoundedStartButton.Image = Properties.Resources.SelectionCircle;
-                    ApplyMainWorkspaceLayout();
-
-                    DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
-                }));
-            }
+                Invoke(new Action(() => HandleImageLostUi(e)));
             else
-            {
-                bahtinovLineData = null;
-                DecreaseFocusChannelSize();
-                StopCalibration();
-                groupBoxRed.Visible = false;
-                groupBoxGreen.Visible = false;
-                groupBoxBlue.Visible = false;
-                InitializeRedFocusBox();
-                RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
-                RoundedStartButton.Image = Properties.Resources.SelectionCircle;
-                ApplyMainWorkspaceLayout();
+                HandleImageLostUi(e);
+        }
 
-                DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
-            }
+        /// <summary>
+        /// Resets capture UI and shows the error; must run on the UI thread.
+        /// </summary>
+        private void HandleImageLostUi(ImageLostEventArgs e)
+        {
+            bahtinovLineData = null;
+            DecreaseFocusChannelSize();
+            StopCalibration();
+            groupBoxRed.Visible = false;
+            groupBoxGreen.Visible = false;
+            groupBoxBlue.Visible = false;
+            InitializeRedFocusBox();
+            RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
+            RoundedStartButton.Image = Properties.Resources.SelectionCircle;
+            ApplyMainWorkspaceLayout();
+
+            DarkMessageBox.Show(e.Message, e.Title, e.Icon, e.Button, this);
         }
 
         /// <summary>
