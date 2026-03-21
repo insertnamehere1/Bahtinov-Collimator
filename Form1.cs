@@ -543,66 +543,50 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Handles changes in the slide switch control, updating settings and UI accordingly.
+        /// Bahtinov vs Defocus mode: persists <see cref="Properties.Settings.DefocusSwitch"/>, stops capture,
+        /// and updates labels, focus UI, and menu availability.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
         private void SlideSwitchChanged(object sender, EventArgs e)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                // Marshal the call to the UI thread
-                this.Invoke(new Action<object, EventArgs>(SlideSwitchChanged), sender, e);
+                Invoke(new Action(() => SlideSwitchChanged(sender, e)));
                 return;
             }
 
-            ToggleSwitch toggleControl = sender as ToggleSwitch;
-            bool toggle = toggleControl.IsOn;
+            if (!(sender is ToggleSwitch toggle))
+                return;
 
-            if(toggle)
-            {
-                defocusLabel.ForeColor = UITheme.ImageCaptureGroupBoxColor;
-                bahtinovLabel.ForeColor = UITheme.ImageCaptureGroupBoxDisabledColor;
-            }
-            else
-            {
-                defocusLabel.ForeColor = UITheme.ImageCaptureGroupBoxDisabledColor;
-                bahtinovLabel.ForeColor = UITheme.ImageCaptureGroupBoxColor;
-            }
+            bool defocusMode = toggle.IsOn;
 
-            // Update settings based on slide switch state
-            Properties.Settings.Default.DefocusSwitch = toggle;
+            defocusLabel.ForeColor = defocusMode ? UITheme.ImageCaptureGroupBoxColor : UITheme.ImageCaptureGroupBoxDisabledColor;
+            bahtinovLabel.ForeColor = defocusMode ? UITheme.ImageCaptureGroupBoxDisabledColor : UITheme.ImageCaptureGroupBoxColor;
+
+            Properties.Settings.Default.DefocusSwitch = defocusMode;
             Properties.Settings.Default.Save();
 
-            // Stop image capture and processing, clear the display, and update UI
             ImageCapture.StopImageCapture();
             imageDisplayComponent1.ClearDisplay();
             bahtinovProcessing.StopImageProcessing();
 
-            if (toggle)
+            screenCaptureRunningFlag = false;
+            RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
+            RoundedStartButton.Image = Properties.Resources.SelectionCircle;
+            groupBoxRed.Visible = false;
+            groupBoxGreen.Visible = false;
+            groupBoxBlue.Visible = false;
+
+            if (defocusMode)
             {
-                screenCaptureRunningFlag = false;
-                RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
-                RoundedStartButton.Image = Properties.Resources.SelectionCircle;
-                groupBoxRed.Visible = false;
-                groupBoxGreen.Visible = false;
-                groupBoxBlue.Visible = false;
                 DecreaseFocusChannelSize();
                 whatDoIDoNextToolStripMenuItem.Enabled = false;
                 focusCalibrationToolStripMenuItem.Enabled = false;
-               StopCalibration();
+                StopCalibration();
             }
             else
             {
-                screenCaptureRunningFlag = false;
-                RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
-                RoundedStartButton.Image = Properties.Resources.SelectionCircle;
                 bahtinovLineData = null;
-                groupBoxRed.Visible = false;
-                groupBoxGreen.Visible = false;
-                groupBoxBlue.Visible = false;
                 InitializeRedFocusBox();
-                screenCaptureRunningFlag = false;
                 whatDoIDoNextToolStripMenuItem.Enabled = Properties.Settings.Default.CalibrationCompleted;
                 focusCalibrationToolStripMenuItem.Enabled = true;
             }
