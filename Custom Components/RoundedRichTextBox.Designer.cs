@@ -1,6 +1,9 @@
+using System.Drawing;
+using System.Windows.Forms;
+
 namespace SkyCal.Custom_Components
 {
-    partial class TitledRoundedRichTextBox
+    sealed partial class TitledRoundedRichTextBox
     {
         /// <summary>
         /// Required designer variable.
@@ -24,12 +27,29 @@ namespace SkyCal.Custom_Components
         #region Component Designer generated code
 
         /// <summary>
-        /// Required method for Designer support - do not modify
+        /// Required method for Designer support — do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.components = new System.ComponentModel.Container();
+
+            this.SuspendLayout();
+
+            this.SetStyle(
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.ResizeRedraw |
+                ControlStyles.UserPaint,
+                true);
+
+            this.AutoScaleMode = AutoScaleMode.Dpi;
+            this.BackColor = Color.White;
+            this.ForeColor = Color.Black;
+            this.Name = "TitledRoundedRichTextBox";
+            this.Padding = new Padding(10);
+
+            this.ResumeLayout(false);
         }
 
         #endregion

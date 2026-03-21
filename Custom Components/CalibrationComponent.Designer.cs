@@ -49,15 +49,15 @@ namespace Bahtinov_Collimator.Custom_Components
             | System.Windows.Forms.AnchorStyles.Right)));
             this.roundedPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
             this.roundedPanel1.BorderColor = System.Drawing.Color.Gray;
-            this.roundedPanel1.BorderThickness = 3;
+            this.roundedPanel1.BorderThickness = 2;
             this.roundedPanel1.Controls.Add(this.quitButton);
-            this.roundedPanel1.CornerRadius = 10;
+            this.roundedPanel1.CornerRadius = 8;
             this.roundedPanel1.FillColor = System.Drawing.Color.Transparent;
             this.roundedPanel1.ForeColor = System.Drawing.Color.Gray;
-            this.roundedPanel1.Location = new System.Drawing.Point(2, 550);
+            this.roundedPanel1.Location = new System.Drawing.Point(2, 556);
             this.roundedPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.roundedPanel1.Name = "roundedPanel1";
-            this.roundedPanel1.Size = new System.Drawing.Size(300, 62);
+            this.roundedPanel1.Size = new System.Drawing.Size(300, 53);
             this.roundedPanel1.TabIndex = 3;
             // 
             // quitButton
@@ -77,7 +77,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.quitButton.ImageOffsetX = 60;
             this.quitButton.ImageOffsetY = 0;
             this.quitButton.ImageWidth = 32;
-            this.quitButton.Location = new System.Drawing.Point(65, 11);
+            this.quitButton.Location = new System.Drawing.Point(65, 6);
             this.quitButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.quitButton.Name = "quitButton";
             this.quitButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -96,7 +96,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.titledRoundedRichTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
             this.titledRoundedRichTextBox1.BorderColor = System.Drawing.Color.Gray;
             this.titledRoundedRichTextBox1.BorderThickness = 2;
-            this.titledRoundedRichTextBox1.CornerRadius = 10;
+            this.titledRoundedRichTextBox1.CornerRadius = 8;
             this.titledRoundedRichTextBox1.ForeColor = System.Drawing.Color.White;
             // 
             // 
@@ -110,14 +110,14 @@ namespace Bahtinov_Collimator.Custom_Components
             this.titledRoundedRichTextBox1.InnerRichTextBox.Name = "";
             this.titledRoundedRichTextBox1.InnerRichTextBox.ReadOnly = true;
             this.titledRoundedRichTextBox1.InnerRichTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.titledRoundedRichTextBox1.InnerRichTextBox.Size = new System.Drawing.Size(274, 444);
+            this.titledRoundedRichTextBox1.InnerRichTextBox.Size = new System.Drawing.Size(274, 448);
             this.titledRoundedRichTextBox1.InnerRichTextBox.TabIndex = 0;
             this.titledRoundedRichTextBox1.Location = new System.Drawing.Point(3, 22);
             this.titledRoundedRichTextBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.titledRoundedRichTextBox1.Name = "titledRoundedRichTextBox1";
             this.titledRoundedRichTextBox1.Padding = new System.Windows.Forms.Padding(11, 12, 11, 12);
             this.titledRoundedRichTextBox1.ReadOnly = true;
-            this.titledRoundedRichTextBox1.Size = new System.Drawing.Size(300, 522);
+            this.titledRoundedRichTextBox1.Size = new System.Drawing.Size(300, 526);
             this.titledRoundedRichTextBox1.TabIndex = 0;
             this.titledRoundedRichTextBox1.TitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.titledRoundedRichTextBox1.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 14F);

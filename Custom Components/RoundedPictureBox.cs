@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -7,34 +7,36 @@ using System.Windows.Forms;
 namespace Bahtinov_Collimator.Custom_Components
 {
     /// <summary>
-    /// A PictureBox with rounded corners, optional border, and smooth clipping.
-    /// The region of the control is updated to match the rounded shape.
+    /// A PictureBox with rounded corners and optional border.
+    /// Uses the same rounded-rectangle path as <see cref="RoundedGroupBox"/> (clamped radius + AddArc chain)
+    /// so corners stay circular. The image is drawn with <see cref="TextureBrush"/> + <see cref="Graphics.FillPath"/>
+    /// for smooth anti-aliased edges (unlike pixel-based <see cref="Region"/> clipping).
+    /// <para>
+    /// The image is filled using the <em>same</em> rounded rectangle as the border stroke (inset by half the
+    /// pen width, then <see cref="CornerRadius"/> on that rect). The border is drawn on top, so the visible
+    /// curve matches the <see cref="CornerRadius"/> you set — unlike filling a separate inner path with radius
+    /// <c>CornerRadius − BorderThickness</c>, which always looked tighter than the border and than
+    /// <see cref="RoundedPanel"/> / titled rich text borders for the same property values.
+    /// </para>
     /// </summary>
     public partial class RoundedPictureBox : PictureBox
     {
-        // Backing fields for properties.
         private int cornerRadius = 12;
         private Color borderColor = Color.Gray;
-        private int borderThickness = 2;
+        private int borderThickness = 1;
 
-        /// <summary>
-        /// Gets or sets the radius used for rounding the four corners.
-        /// </summary>
         [Category("Appearance")]
+        [DefaultValue(12)]
         public int CornerRadius
         {
             get => cornerRadius;
             set
             {
-                // Prevent negative values, update hit/clipping region.
                 cornerRadius = Math.Max(0, value);
-                UpdateRegion();
+                Invalidate();
             }
         }
 
-        /// <summary>
-        /// Gets or sets the color of the rounded border.
-        /// </summary>
         [Category("Appearance")]
         public Color BorderColor
         {
@@ -42,134 +44,159 @@ namespace Bahtinov_Collimator.Custom_Components
             set { borderColor = value; Invalidate(); }
         }
 
-        /// <summary>
-        /// Gets or sets the thickness of the border in pixels.
-        /// </summary>
         [Category("Appearance")]
+        [DefaultValue(1)]
         public int BorderThickness
         {
             get => borderThickness;
             set
             {
-                // Prevent invalid 0 or negative thickness.
                 borderThickness = Math.Max(1, value);
                 Invalidate();
             }
         }
 
-        /// <summary>
-        /// Constructs the rounded picture box and configures double buffering,
-        /// transparency, and resizing behavior.
-        /// </summary>
         public RoundedPictureBox()
         {
-            // Transparent background so parent visuals show through.
-            BackColor = Color.Transparent;
-
-            // Default scaling for images.
-            SizeMode = PictureBoxSizeMode.Zoom;
-
-            // Enable custom painting, double buffering, and no flicker.
-            SetStyle(ControlStyles.UserPaint |
-                     ControlStyles.AllPaintingInWmPaint |
-                     ControlStyles.OptimizedDoubleBuffer,
-                     true);
-
-            // When the control is resized, update its rounded shape.
-            Resize += (s, e) => UpdateRegion();
+            InitializeComponent();
+            Resize += (s, e) => Invalidate();
         }
 
         /// <summary>
-        /// Recalculates the rounded clipping region based on the current size
-        /// and corner radius.
+        /// Maximum corner radius so each quarter-circle fits; larger values cause GDI+ to insert
+        /// straight segments between arcs (flat spots / squared corners).
         /// </summary>
-        private void UpdateRegion()
+        private static int ClampRadius(Rectangle bounds, int radius)
         {
-            // Avoid errors for invalid sizes.
-            if (Width <= 0 || Height <= 0) return;
+            if (bounds.Width <= 0 || bounds.Height <= 0)
+                return 0;
+            int max = Math.Min(bounds.Width, bounds.Height) / 2;
+            return Math.Max(0, Math.Min(radius, max));
+        }
 
-            // rect defines the full bounds of the picture box.
-            using (GraphicsPath path = RoundedRect(new Rectangle(0, 0, Width, Height), cornerRadius))
+        /// <summary>
+        /// Same construction as <see cref="RoundedGroupBox"/> GetRoundPath (no StartFigure — one continuous figure).
+        /// </summary>
+        private static GraphicsPath GetRoundPath(Rectangle rect, int radius)
+        {
+            int r = ClampRadius(rect, radius);
+            int d = r * 2;
+
+            var path = new GraphicsPath();
+
+            if (r <= 0)
             {
-                // Apply as the control's hit-test region.
-                Region = new Region(path);
+                path.AddRectangle(rect);
+                return path;
             }
 
-            // Repaint the control after region change.
-            Invalidate();
-        }
-
-        /// <summary>
-        /// Creates a GraphicsPath describing a rectangle with rounded corners.
-        /// </summary>
-        /// <param name="rect">Rectangle to round.</param>
-        /// <param name="radius">Corner radius.</param>
-        /// <returns>A rounded GraphicsPath.</returns>
-        private GraphicsPath RoundedRect(Rectangle rect, int radius)
-        {
-            // Diameter of the arc corners.
-            int d = radius * 2;
-
-            GraphicsPath path = new GraphicsPath();
-
-            path.StartFigure();
-
-            // Add arcs for each corner in clockwise order.
-            path.AddArc(rect.X, rect.Y, d, d, 180, 90);                    // Top-left
-            path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90);            // Top-right
-            path.AddArc(rect.Right - d, rect.Bottom - d, d, d, 0, 90);     // Bottom-right
-            path.AddArc(rect.X, rect.Bottom - d, d, d, 90, 90);            // Bottom-left
-
-            // Close the figure to form a complete rounded frame.
+            path.AddArc(rect.X, rect.Y, d, d, 180, 90);
+            path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90);
+            path.AddArc(rect.Right - d, rect.Bottom - d, d, d, 0, 90);
+            path.AddArc(rect.X, rect.Bottom - d, d, d, 90, 90);
             path.CloseFigure();
 
             return path;
         }
 
         /// <summary>
-        /// Custom painting method to handle rounded clipping on the image
-        /// and properly draw the border.
+        /// Maps the image into <paramref name="fillBounds"/> (client coordinates) for the current <see cref="PictureBoxSizeMode"/>.
         /// </summary>
-        protected override void OnPaint(PaintEventArgs e)
+        private static void ConfigureTextureBrushForSizeMode(
+            TextureBrush brush, Image image, PictureBoxSizeMode mode, Rectangle fillBounds)
         {
-            // Enable anti-aliasing for smoother corners.
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-            // ---------------------------------------------
-            // 1. Clip IMAGE to the rounded region.
-            //    Only the image is clipped, NOT the border.
-            // ---------------------------------------------
-            using (GraphicsPath clipPath = RoundedRect(new Rectangle(0, 0, Width, Height), cornerRadius))
-            using (Region clipRegion = new Region(clipPath))
+            int iw = image.Width;
+            int ih = image.Height;
+            if (iw <= 0 || ih <= 0)
             {
-                // Replace the existing clipping region with the rounded one.
-                e.Graphics.SetClip(clipRegion, CombineMode.Replace);
-
-                // Draw the PictureBox normally inside the clip.
-                base.OnPaint(e);
+                brush.Transform = new Matrix();
+                return;
             }
 
-            // ---------------------------------------------
-            // 2. Reset clipping so border draws outside image region.
-            // ---------------------------------------------
-            e.Graphics.ResetClip();
+            int cw = fillBounds.Width;
+            int ch = fillBounds.Height;
+            float ox = fillBounds.X;
+            float oy = fillBounds.Y;
 
-            // ---------------------------------------------
-            // 3. Draw border
-            // ---------------------------------------------
-            // borderRect shrinks the border so it fits inside the control bounds.
-            Rectangle borderRect = new Rectangle(
-                borderThickness / 2,
-                borderThickness / 2,
-                Width - borderThickness,
-                Height - borderThickness
-            );
-
-            // Create rounded path for the border outline.
-            using (GraphicsPath borderPath = RoundedRect(borderRect, cornerRadius))
-            using (Pen pen = new Pen(borderColor, borderThickness))
+            switch (mode)
             {
-                e.Graphics.DrawPath(pen, borderPath);
+                case PictureBoxSizeMode.StretchImage:
+                    brush.Transform = new Matrix(
+                        (float)cw / iw, 0, 0, (float)ch / ih, ox, oy);
+                    break;
+
+                case PictureBoxSizeMode.Zoom:
+                    {
+                        float scale = Math.Min((float)cw / iw, (float)ch / ih);
+                        float dw = iw * scale;
+                        float dh = ih * scale;
+                        float dx = (cw - dw) / 2f + ox;
+                        float dy = (ch - dh) / 2f + oy;
+                        brush.Transform = new Matrix(scale, 0, 0, scale, dx, dy);
+                        break;
+                    }
+
+                case PictureBoxSizeMode.CenterImage:
+                    {
+                        float dx = (cw - iw) / 2f + ox;
+                        float dy = (ch - ih) / 2f + oy;
+                        brush.Transform = new Matrix(1, 0, 0, 1, dx, dy);
+                        break;
+                    }
+
+                case PictureBoxSizeMode.AutoSize:
+                case PictureBoxSizeMode.Normal:
+                default:
+                    brush.Transform = new Matrix(1, 0, 0, 1, ox, oy);
+                    break;
+            }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.CompositingQuality = CompositingQuality.HighQuality;
+
+            // Use client size (same coordinate space as paint DC) for parity with other rounded controls.
+            Rectangle client = ClientRectangle;
+            int cw = client.Width;
+            int ch = client.Height;
+            if (cw <= 0 || ch <= 0)
+                return;
+
+            int t = borderThickness;
+            // Stroke path: inset by half the pen width so PenAlignment.Center does not draw
+            // outside the client rect (top/left were clipped → looked thinner than bottom/right).
+            int strokeInset = t / 2;
+            Rectangle strokeBounds = new Rectangle(
+                strokeInset,
+                strokeInset,
+                Math.Max(0, cw - t),
+                Math.Max(0, ch - t));
+
+            // One path for image + border so the image follows the same arc as the stroke (full CornerRadius on
+            // strokeBounds). A separate inner path (radius CornerRadius − t) always read as “smaller radius”
+            // than RoundedPanel / TitledRoundedRichTextBox borders for the same property values.
+            using (GraphicsPath path = GetRoundPath(strokeBounds, cornerRadius))
+            {
+                if (Image != null)
+                {
+                    using (TextureBrush brush = new TextureBrush(Image, WrapMode.Clamp))
+                    {
+                        ConfigureTextureBrushForSizeMode(brush, Image, SizeMode, strokeBounds);
+                        g.FillPath(brush, path);
+                    }
+                }
+
+                using (Pen pen = new Pen(borderColor, t))
+                {
+                    pen.Alignment = PenAlignment.Center;
+                    g.DrawPath(pen, path);
+                }
             }
         }
     }

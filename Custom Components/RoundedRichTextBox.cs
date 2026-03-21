@@ -10,6 +10,9 @@ namespace SkyCal.Custom_Components
     /// <summary>
     /// A composite WinForms control that hosts a RichTextBox inside a rounded container
     /// with an optional title bar drawn inside the border.
+    /// The outer stroke and inner fill use the same geometry as
+    /// <see cref="Bahtinov_Collimator.Custom_Components.RoundedPictureBox"/> (inner radius =
+    /// <c>CornerRadius − BorderThickness</c>; default border is 1 px).
     ///
     /// Notes:
     /// - This is the reliable approach for .NET Framework 4.8.1 because RichTextBox is a native control
@@ -266,19 +269,8 @@ namespace SkyCal.Custom_Components
         {
             InitializeComponent();
 
-            SetStyle(
-                ControlStyles.AllPaintingInWmPaint |
-                ControlStyles.OptimizedDoubleBuffer |
-                ControlStyles.ResizeRedraw |
-                ControlStyles.UserPaint,
-                true);
-
-            AutoScaleMode = AutoScaleMode.Dpi;
-
-            // Defaults
-            base.BackColor = Color.White;
-            base.ForeColor = Color.Black;
-            Padding = new Padding(10);
+            // Matches RoundedPanel — reduces stair-stepping on rounded strokes.
+            DoubleBuffered = true;
 
             CreateInnerControl();
 
@@ -418,87 +410,124 @@ namespace SkyCal.Custom_Components
 
         /// <summary>
         /// Paints the rounded border and (optionally) the title bar inside the border.
+        /// Stroke/fill geometry matches <see cref="RoundedPanel"/> / <see cref="RoundedPictureBox"/>:
+        /// stroke path inset by half pen width so <see cref="PenAlignment.Center"/> is not clipped on edges.
+        /// Window <see cref="Region"/> is cleared for the vector pass then restored in <c>finally</c>
+        /// (same pattern as <see cref="Bahtinov_Collimator.Custom_Components.RoundedPanel"/>) so HRGN clipping
+        /// does not destroy anti-aliasing on curved corners.
         /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
 
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            g.CompositingQuality = CompositingQuality.HighQuality;
 
-            // Outer border bounds (pen is inset aligned)
-            Rectangle outer = new Rectangle(0, 0, Width - 1, Height - 1);
-
-            // Fill bounds inside the border
-            Rectangle innerFill = new Rectangle(
-                _borderThickness,
-                _borderThickness,
-                Math.Max(0, Width - 1 - (_borderThickness * 2)),
-                Math.Max(0, Height - 1 - (_borderThickness * 2)));
-
-            int innerRadius = Math.Max(0, _cornerRadius - _borderThickness);
-
-            // Background fill
-            using (var fillPath = CreateRoundedRectPath(innerFill, innerRadius))
-            using (var backBrush = new SolidBrush(BackColor))
+            int cw = Width;
+            int ch = Height;
+            if (cw <= 0 || ch <= 0)
             {
-                e.Graphics.FillPath(backBrush, fillPath);
+                Region = null;
+                return;
             }
 
-            // Title bar fill (rounded only at top corners)
-            if (_showTitleBar && _titleHeight > 0)
-            {
-                Rectangle titleRect = new Rectangle(
-                    _borderThickness,
-                    _borderThickness,
-                    Math.Max(0, Width - (_borderThickness * 2)),
-                    Math.Max(0, _titleHeight));
+            // Clear window region for this paint. A Region from a GraphicsPath is pixel-snapped;
+            // if left from the previous frame it clips the DC before FillPath/DrawPath and
+            // destroys anti-aliasing (chunky corners).
+            Region = null;
 
-                using (var titlePath = CreateTopRoundedRectPath(titleRect, innerRadius))
-                using (var titleBrush = new SolidBrush(_titleBackColor))
+            try
+            {
+                int t = _borderThickness;
+                int strokeInset = t / 2;
+
+                Rectangle strokeBounds = new Rectangle(
+                    strokeInset,
+                    strokeInset,
+                    Math.Max(0, cw - t),
+                    Math.Max(0, ch - t));
+
+                Rectangle innerFill = new Rectangle(
+                    t,
+                    t,
+                    Math.Max(0, cw - 2 * t),
+                    Math.Max(0, ch - 2 * t));
+                int innerRadius = Math.Max(0, _cornerRadius - t);
+
+                // Background fill
+                using (var fillPath = CreateRoundedRectPath(innerFill, innerRadius))
+                using (var backBrush = new SolidBrush(BackColor))
                 {
-                    e.Graphics.FillPath(titleBrush, titlePath);
+                    g.FillPath(backBrush, fillPath);
                 }
 
-                if (_showTitleSeparator)
+                // Title bar fill (rounded only at top corners)
+                if (_showTitleBar && _titleHeight > 0)
                 {
-                    int y = _borderThickness + _titleHeight;
-                    using (var sepPen = new Pen(_borderColor, 1f))
+                    Rectangle titleRect = new Rectangle(
+                        t,
+                        t,
+                        Math.Max(0, cw - 2 * t),
+                        Math.Max(0, _titleHeight));
+
+                    using (var titlePath = CreateTopRoundedRectPath(titleRect, innerRadius))
+                    using (var titleBrush = new SolidBrush(_titleBackColor))
                     {
-                        e.Graphics.DrawLine(
-                            sepPen,
-                            _borderThickness,
-                            y,
-                            Width - _borderThickness - 1,
-                            y);
+                        g.FillPath(titleBrush, titlePath);
+                    }
+
+                    if (_showTitleSeparator)
+                    {
+                        int y = t + _titleHeight;
+                        using (var sepPen = new Pen(_borderColor, 1f))
+                        {
+                            g.DrawLine(sepPen, t, y, cw - t - 1, y);
+                        }
+                    }
+
+                    using (var textBrush = new SolidBrush(_titleForeColor))
+                    using (var fmt = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center })
+                    {
+                        Font tf = _titleFont ?? new Font(Font, FontStyle.Bold);
+
+                        Rectangle textRect = new Rectangle(
+                            t + _titlePaddingLeft,
+                            t,
+                            Math.Max(0, cw - 2 * t - _titlePaddingLeft - 6),
+                            _titleHeight);
+
+                        g.DrawString(_titleText ?? string.Empty, tf, textBrush, textRect, fmt);
+
+                        if (_titleFont == null)
+                            tf.Dispose();
                     }
                 }
 
-                // Title text
-                using (var textBrush = new SolidBrush(_titleForeColor))
-                using (var fmt = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center })
+                using (var borderPath = CreateRoundedRectPath(strokeBounds, _cornerRadius))
+                using (var pen = new Pen(_borderColor, t))
                 {
-                    Font tf = _titleFont ?? new Font(Font, FontStyle.Bold);
-
-                    Rectangle textRect = new Rectangle(
-                        _borderThickness + _titlePaddingLeft,
-                        _borderThickness,
-                        Math.Max(0, Width - (_borderThickness * 2) - _titlePaddingLeft - 6),
-                        _titleHeight);
-
-                    e.Graphics.DrawString(_titleText ?? string.Empty, tf, textBrush, textRect, fmt);
-
-                    if (_titleFont == null)
-                        tf.Dispose();
+                    pen.Alignment = PenAlignment.Center;
+                    g.DrawPath(pen, borderPath);
                 }
             }
-
-            // Border
-            using (var borderPath = CreateRoundedRectPath(outer, _cornerRadius))
-            using (var pen = new Pen(_borderColor, _borderThickness))
+            finally
             {
-                pen.Alignment = PenAlignment.Inset;
-                e.Graphics.DrawPath(pen, borderPath);
+                using (GraphicsPath regionPath = CreateRoundedRectPath(new Rectangle(0, 0, cw, ch), _cornerRadius))
+                    Region = new Region(regionPath);
             }
+        }
+
+        /// <summary>
+        /// Limits radius so quarter-arcs fit the rectangle.
+        /// </summary>
+        private static int ClampRadius(Rectangle bounds, int radius)
+        {
+            if (bounds.Width <= 0 || bounds.Height <= 0)
+                return 0;
+            int max = Math.Min(bounds.Width, bounds.Height) / 2;
+            return Math.Max(0, Math.Min(radius, max));
         }
 
         /// <summary>
@@ -506,15 +535,16 @@ namespace SkyCal.Custom_Components
         /// </summary>
         private static GraphicsPath CreateRoundedRectPath(Rectangle rect, int radius)
         {
+            int r = ClampRadius(rect, radius);
+            int d = r * 2;
+
             var path = new GraphicsPath();
 
-            if (radius <= 0)
+            if (r <= 0)
             {
                 path.AddRectangle(rect);
                 return path;
             }
-
-            int d = radius * 2;
 
             path.AddArc(rect.X, rect.Y, d, d, 180, 90);
             path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90);
@@ -531,23 +561,23 @@ namespace SkyCal.Custom_Components
         /// </summary>
         private static GraphicsPath CreateTopRoundedRectPath(Rectangle rect, int radius)
         {
+            int r = ClampRadius(rect, radius);
             var path = new GraphicsPath();
 
-            if (radius <= 0)
+            if (r <= 0)
             {
                 path.AddRectangle(rect);
                 return path;
             }
 
-            int d = radius * 2;
+            int d = r * 2;
 
             path.AddArc(rect.X, rect.Y, d, d, 180, 90);
             path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90);
 
-            // Square bottom
-            path.AddLine(rect.Right, rect.Y + radius, rect.Right, rect.Bottom);
+            path.AddLine(rect.Right, rect.Y + r, rect.Right, rect.Bottom);
             path.AddLine(rect.Right, rect.Bottom, rect.X, rect.Bottom);
-            path.AddLine(rect.X, rect.Bottom, rect.X, rect.Y + radius);
+            path.AddLine(rect.X, rect.Bottom, rect.X, rect.Y + r);
 
             path.CloseFigure();
             return path;

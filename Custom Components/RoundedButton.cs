@@ -114,12 +114,21 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <param name="e">Paint event data, including graphics context.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            // Smooth edges for rounded shapes.
+            // Smooth edges for rounded shapes; avoid clipping to Region during this pass
+            // (HRGN is pixel-snapped and would make anti-aliased curves look chunky).
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            e.Graphics.CompositingQuality = CompositingQuality.HighQuality;
 
             // Rectangle for the full button area, reduced by 1 pixel
             // so the border fits within the client rectangle.
             Rectangle rect = new Rectangle(0, 0, Width - 1, Height - 1);
+
+            if (rect.Width <= 0 || rect.Height <= 0)
+            {
+                Region = null;
+                return;
+            }
 
             int ScaleLogicalPixels(int logicalPixels)
             {
@@ -133,35 +142,37 @@ namespace Bahtinov_Collimator.Custom_Components
             int maxRadius = Math.Max(0, Math.Min(rect.Width, rect.Height) / 2);
             scaledRadius = Math.Max(0, Math.Min(scaledRadius, maxRadius));
 
-            // Create a rounded path from the button rectangle.
-            using (GraphicsPath path = GetRoundPath(rect, scaledRadius))
+            // Do not set Region until after vector drawing: Region clips to integer HRGN
+            // and ruins anti-aliasing on the same paint cycle.
+            Region = null;
+            try
             {
-                // Limit the clickable/hit region to the rounded shape.
-                Region = new Region(path);
-
-                // Fill the background with the button BackColor.
-                using (SolidBrush sb = new SolidBrush(BackColor))
-                    e.Graphics.FillPath(sb, path);
-
-                // Draw overlay for pressed or hovered state.
-                if (isPressed)
+                using (GraphicsPath path = GetRoundPath(rect, scaledRadius))
                 {
-                    // Darker overlay when pressed.
-                    using (SolidBrush sb = new SolidBrush(PressedOverlay))
+                    // Fill the background with the button BackColor.
+                    using (SolidBrush sb = new SolidBrush(BackColor))
                         e.Graphics.FillPath(sb, path);
-                }
-                else if (isHovered)
-                {
-                    // Lighter overlay when hovered.
-                    using (SolidBrush sb = new SolidBrush(HoverOverlay))
-                        e.Graphics.FillPath(sb, path);
-                }
 
-                // Draw the bevel along the rounded border.
-                DrawBevel(e.Graphics, rect, scaledRadius);
+                    // Draw overlay for pressed or hovered state.
+                    if (isPressed)
+                    {
+                        using (SolidBrush sb = new SolidBrush(PressedOverlay))
+                            e.Graphics.FillPath(sb, path);
+                    }
+                    else if (isHovered)
+                    {
+                        using (SolidBrush sb = new SolidBrush(HoverOverlay))
+                            e.Graphics.FillPath(sb, path);
+                    }
 
-                // Draw image and text.
-                DrawContent(e.Graphics, rect);
+                    DrawBevel(e.Graphics, rect, scaledRadius);
+                    DrawContent(e.Graphics, rect);
+                }
+            }
+            finally
+            {
+                using (GraphicsPath path = GetRoundPath(rect, scaledRadius))
+                    Region = new Region(path);
             }
         }
 

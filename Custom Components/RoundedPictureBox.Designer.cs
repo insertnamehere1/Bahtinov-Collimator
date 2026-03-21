@@ -1,4 +1,7 @@
-﻿namespace Bahtinov_Collimator.Custom_Components
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace Bahtinov_Collimator.Custom_Components
 {
     partial class RoundedPictureBox
     {
@@ -7,7 +10,7 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -17,18 +20,38 @@
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
         #region Component Designer generated code
 
         /// <summary>
-        /// Required method for Designer support - do not modify
+        /// Required method for Designer support — do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.components = new System.ComponentModel.Container();
+
+            this.SuspendLayout();
+
+            // Transparent background so parent visuals show through.
+            this.BackColor = Color.Transparent;
+
+            // Default scaling for images.
+            this.SizeMode = PictureBoxSizeMode.Zoom;
+
+            // Enable custom painting, double buffering, and no flicker.
+            this.SetStyle(
+                ControlStyles.UserPaint |
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.OptimizedDoubleBuffer,
+                true);
+
+            this.Name = "RoundedPictureBox";
+
+            this.ResumeLayout(false);
         }
 
         #endregion

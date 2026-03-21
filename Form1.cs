@@ -1115,7 +1115,7 @@ namespace Bahtinov_Collimator
             { 
                 Width = S(UITheme.CalibrateFrameWidth),
                 Height = this.ClientSize.Height,
-                Location = new Point(this.ClientSize.Width - S(UITheme.CalibrateFrameWidth) - S(3), S(8)),
+                Location = new Point(this.ClientSize.Width - S(UITheme.CalibrateFrameWidth) - S(6), S(8)),
                 Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right
             };
 
