@@ -7,6 +7,12 @@ namespace Bahtinov_Collimator
 {
     public partial class FocusChannelComponent : UserControl
     {
+        #region Constants
+
+        private const int HISTORYBAR_VERTICAL_POSITION = -10;
+
+        #endregion
+
         #region Fields
 
         public delegate void ChannelSelectEventHandler(object sender, ChannelSelectEventArgs e);
@@ -26,6 +32,15 @@ namespace Bahtinov_Collimator
 
         private bool disposed = false; // To detect redundant calls
         private int groupID;
+
+        /// <summary>Horizontal inset from group box left/right (96 DPI logical px).</summary>
+        private const int HistoryBarHorizontalMarginAt96 = 6;
+
+        /// <summary>
+        /// Default focus channel width (96 DPI logical px), same as <see cref="Form1"/> default channel width.
+        /// Used to compute the history bar width when the mirror is visible: same width as a full-stretch bar at that size.
+        /// </summary>
+        private const int DefaultFocusChannelWidthAt96 = 185;
 
         #endregion
 
@@ -86,6 +101,7 @@ namespace Bahtinov_Collimator
             
             ApplyTheme();
             SubscribeToEvents();
+            UpdateHistoryBarLayout();
             UpdateMirrorPanelLayout();
             focusChannelCount++;
         }
@@ -220,9 +236,42 @@ namespace Bahtinov_Collimator
             if (offsetBarControl1 == null || groupBox1 == null)
                 return;
 
-            // Center within the group box content area (excludes caption where supported).
+            int margin = S(HistoryBarHorizontalMarginAt96);
+            int clientW = groupBox1.ClientSize.Width;
+
+            if (mirrorDrawingComponent1.Visible)
+            {
+                // Same width as a full-stretch bar at default channel width (not stretched when channel widens).
+                // Right edge stays at the horizontal margin from the group box right edge.
+                int barW = S(DefaultFocusChannelWidthAt96) - 2 * S(HistoryBarHorizontalMarginAt96);
+                barW = Math.Max(S(80), barW);
+
+                int left = clientW - margin - barW;
+                if (left < margin)
+                {
+                    // Extremely narrow: fall back to full width between margins.
+                    offsetBarControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+                    offsetBarControl1.Left = margin;
+                    offsetBarControl1.Width = Math.Max(S(80), clientW - (2 * margin));
+                }
+                else
+                {
+                    offsetBarControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+                    offsetBarControl1.Width = barW;
+                    offsetBarControl1.Left = left;
+                }
+            }
+            else
+            {
+                // Bahtinov-only: bar spans available width between margins.
+                offsetBarControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+                offsetBarControl1.Left = margin;
+                offsetBarControl1.Width = Math.Max(S(80), clientW - (2 * margin));
+            }
+
+            // Center vertically within the group box content area (excludes caption where supported).
             Rectangle content = groupBox1.DisplayRectangle;
-            int targetTop = content.Top + ((content.Height - offsetBarControl1.Height) / 2) - S(15);
+            int targetTop = content.Top + ((content.Height - offsetBarControl1.Height) / 2) + S(HISTORYBAR_VERTICAL_POSITION);
             targetTop = Math.Max(content.Top, targetTop);
 
             if (offsetBarControl1.Top != targetTop)
@@ -237,7 +286,7 @@ namespace Bahtinov_Collimator
             int panelWidth = S(100);
             int panelHeight = Math.Min(S(100), Math.Max(S(40), groupBox1.ClientSize.Height - S(42)));
             int panelX = Math.Max(S(8), offsetBarControl1.Left - panelWidth - S(8));
-            int panelY = Math.Max(S(31), (groupBox1.ClientSize.Height - panelHeight) / 2);
+            int panelY = Math.Max(S(26), (groupBox1.ClientSize.Height - panelHeight) / 2);
 
             mirrorDrawingComponent1.Bounds = new Rectangle(panelX, panelY, panelWidth, panelHeight);
             mirrorDrawingComponent1.BackColor = groupBox1.BackColor;

@@ -161,21 +161,21 @@ namespace Bahtinov_Collimator
             // groupBoxBlue
             // 
             this.groupBoxBlue.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.groupBoxBlue.Location = new System.Drawing.Point(9, 237);
+            this.groupBoxBlue.Location = new System.Drawing.Point(9, 240);
             this.groupBoxBlue.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxBlue.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
             this.groupBoxBlue.Name = "groupBoxBlue";
-            this.groupBoxBlue.Size = new System.Drawing.Size(185, 97);
+            this.groupBoxBlue.Size = new System.Drawing.Size(185, 105);
             this.groupBoxBlue.TabIndex = 36;
             // 
             // groupBoxGreen
             // 
             this.groupBoxGreen.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.groupBoxGreen.Location = new System.Drawing.Point(9, 132);
+            this.groupBoxGreen.Location = new System.Drawing.Point(9, 130);
             this.groupBoxGreen.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxGreen.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
             this.groupBoxGreen.Name = "groupBoxGreen";
-            this.groupBoxGreen.Size = new System.Drawing.Size(185, 97);
+            this.groupBoxGreen.Size = new System.Drawing.Size(185, 105);
             this.groupBoxGreen.TabIndex = 35;
             // 
             // groupBoxRed
@@ -185,7 +185,7 @@ namespace Bahtinov_Collimator
             this.groupBoxRed.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxRed.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
             this.groupBoxRed.Name = "groupBoxRed";
-            this.groupBoxRed.Size = new System.Drawing.Size(185, 97);
+            this.groupBoxRed.Size = new System.Drawing.Size(185, 105);
             this.groupBoxRed.TabIndex = 34;
             // 
             // imageDisplayComponent1

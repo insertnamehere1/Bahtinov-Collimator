@@ -66,7 +66,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Maximum focus channel width (96 DPI logical px) when Tri-Bahtinov + calibrated (widened layout).
         /// </summary>
-        private const int MAX_FOCUS_CHAN_SIZE = 237;
+        private const int MAX_FOCUS_CHAN_SIZE = 270;
 
         /// <summary>
         /// Default focus channel width (96 DPI logical px). Must match <see cref="Form1"/> designer
