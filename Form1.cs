@@ -895,11 +895,6 @@ namespace Bahtinov_Collimator
                     groupBoxBlue.Size = new Size(maxWidth, groupBoxBlue.Size.Height);
                 }
                     ApplyMainWorkspaceLayout();
-
-                // Client width is set inside ApplyMainWorkspaceLayout → AdjustFormWidthToWorkspace
-                // from image bounds (replaces fixed +/- delta on this.Width).
-  //              if (calibrationComponent != null)
-  //                  this.AutoSizeMode = AutoSizeMode.GrowOnly;
             }
         }
 
@@ -1141,16 +1136,11 @@ namespace Bahtinov_Collimator
             if (calibrationComponent != null)
                 return;
 
-            this.AutoSizeMode = AutoSizeMode.GrowOnly;
-            this.Width += S(UITheme.CalibrateFrameWidth);
-
-            int calWidth = S(UITheme.CalibrateFrameWidth);
-
             calibrationComponent = new CalibrationComponent(this)
             { 
-                Width = UITheme.CalibrateFrameWidth,
+                Width = S(UITheme.CalibrateFrameWidth),
                 Height = this.ClientSize.Height,
-                Location = new Point(this.ClientSize.Width - calWidth - S(3), S(8)),
+                Location = new Point(this.ClientSize.Width - S(UITheme.CalibrateFrameWidth) - S(3), S(8)),
                 Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right
             };
 
@@ -1163,12 +1153,10 @@ namespace Bahtinov_Collimator
         {
             if (calibrationComponent == null)
                 return;
+  
             this.Controls.Remove(calibrationComponent);
             calibrationComponent.Dispose();
             calibrationComponent = null;
-            this.Width -= S(UITheme.CalibrateFrameWidth);
-            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-
             ApplyMainWorkspaceLayout();
 
             if(screenCaptureRunningFlag == true)
