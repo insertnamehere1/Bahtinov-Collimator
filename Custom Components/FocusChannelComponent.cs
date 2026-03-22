@@ -48,6 +48,9 @@ namespace Bahtinov_Collimator
         /// <summary>Minimum gap between the mirror’s right edge and the history bar’s left (96 DPI logical px).</summary>
         private const int MirrorGapToHistoryBarAt96 = 8;
 
+        /// <summary>Mirror height as a fraction of <see cref="Control.ClientSize.Height"/> of the group box (scales when the channel resizes).</summary>
+        private const double MirrorHeightFractionOfGroupClient = 0.62;
+
         #endregion
 
         #region Constructor
@@ -288,20 +291,22 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Anchors the mirror to the left inside the group box; width is capped so it does not overlap the history bar.
-        /// <see cref="Custom_Components.MirrorDrawingComponent"/> draws in a 50×100 (96-DPI) cell; use S(50)×S(100)
-        /// so the control bounds match the artwork and we do not paint a large empty BackColor over the bar.
+        /// Anchors the mirror to the left; width uses space left of the history bar, height tracks group box height.
+        /// <see cref="Custom_Components.MirrorDrawingComponent"/> scales a fixed 50×100 design to this bounds via <c>Graphics.ScaleTransform</c>.
         /// </summary>
         private void UpdateMirrorPanelLayout()
         {
             int leftInset = S(MirrorHorizontalInsetAt96);
             int gapToBar = S(MirrorGapToHistoryBarAt96);
-            // Width: design 50 @ 96 DPI, but never past the bar minus gap.
             int maxMirrorW = Math.Max(0, offsetBarControl1.Left - gapToBar - leftInset);
-            int panelWidth = Math.Min(S(50), maxMirrorW);
-            int panelHeight = Math.Min(S(100), Math.Max(S(40), groupBox1.ClientSize.Height - S(42)));
+            int panelWidth = Math.Max(1, maxMirrorW);
+
+            int ch = groupBox1.ClientSize.Height;
+            int maxH = Math.Max(0, ch - S(42));
+            int panelHeight = Math.Max(S(40), Math.Min(maxH, (int)Math.Round(ch * MirrorHeightFractionOfGroupClient)));
+
             int panelX = leftInset;
-            int panelY = Math.Max(S(26), (groupBox1.ClientSize.Height - panelHeight) / 2);
+            int panelY = Math.Max(S(26), (ch - panelHeight) / 2);
 
             mirrorDrawingComponent1.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             mirrorDrawingComponent1.Bounds = new Rectangle(panelX, panelY, panelWidth, panelHeight);
