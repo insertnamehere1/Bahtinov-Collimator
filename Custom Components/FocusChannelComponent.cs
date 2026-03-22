@@ -63,6 +63,14 @@ namespace Bahtinov_Collimator
             focusChannelCount++;
         }
 
+        /// <inheritdoc />
+        protected override void OnDpiChangedAfterParent(EventArgs e)
+        {
+            base.OnDpiChangedAfterParent(e);
+            UpdateHistoryBarLayout();
+            UpdateMirrorPanelLayout();
+        }
+
         public void ConfigureFocusChannel(int groupID, bool isTribahtinov)
         {
             UnsubscribeToEvents();
@@ -238,35 +246,27 @@ namespace Bahtinov_Collimator
 
             int margin = S(HistoryBarHorizontalMarginAt96);
             int clientW = groupBox1.ClientSize.Width;
+            // Space between left/right margins — never let S()-scaled bar width exceed this (fixes high-DPI blow-up).
+            int innerW = Math.Max(0, clientW - 2 * margin);
 
             if (mirrorDrawingComponent1.Visible)
             {
-                // Same width as a full-stretch bar at default channel width (not stretched when channel widens).
-                // Right edge stays at the horizontal margin from the group box right edge.
-                int barW = S(DefaultFocusChannelWidthAt96) - 2 * S(HistoryBarHorizontalMarginAt96);
-                barW = Math.Max(S(80), barW);
+                // Target width from design (96-DPI logical), then clamp to what actually fits in the group box.
+                int desiredBarW = S(DefaultFocusChannelWidthAt96) - 2 * S(HistoryBarHorizontalMarginAt96);
+                desiredBarW = Math.Max(S(80), desiredBarW);
+                int barW = Math.Min(desiredBarW, innerW);
 
-                int left = clientW - margin - barW;
-                if (left < margin)
-                {
-                    // Extremely narrow: fall back to full width between margins.
-                    offsetBarControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-                    offsetBarControl1.Left = margin;
-                    offsetBarControl1.Width = Math.Max(S(80), clientW - (2 * margin));
-                }
-                else
-                {
-                    offsetBarControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-                    offsetBarControl1.Width = barW;
-                    offsetBarControl1.Left = left;
-                }
+                offsetBarControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+                offsetBarControl1.Width = barW;
+                offsetBarControl1.Left = clientW - margin - barW;
             }
             else
             {
                 // Bahtinov-only: bar spans available width between margins.
                 offsetBarControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
                 offsetBarControl1.Left = margin;
-                offsetBarControl1.Width = Math.Max(S(80), clientW - (2 * margin));
+                // Prefer ≥ S(80), but never wider than the space between margins.
+                offsetBarControl1.Width = Math.Min(Math.Max(S(80), innerW), Math.Max(innerW, 1));
             }
 
             // Center vertically within the group box content area (excludes caption where supported).
@@ -276,16 +276,24 @@ namespace Bahtinov_Collimator
 
             if (offsetBarControl1.Top != targetTop)
                 offsetBarControl1.Top = targetTop;
+
+            // Mirror is added after the bar in the designer and paints on top — keep the bar visible when they overlap.
+            offsetBarControl1.BringToFront();
         }
 
         /// <summary>
-        /// Keeps the mirror drawing panel just left of the history bar with a max size of 50x100.
+        /// Places the mirror to the left of the history bar.
+        /// <see cref="Custom_Components.MirrorDrawingComponent"/> draws in a 50×100 (96-DPI) cell; use S(50)×S(100)
+        /// so the control bounds match the artwork and we do not paint a large empty BackColor over the bar.
         /// </summary>
         private void UpdateMirrorPanelLayout()
         {
-            int panelWidth = S(100);
+            int gap = S(8);
+            // Horizontal room left of the history bar (mirror must not extend under the bar).
+            int maxMirrorW = Math.Max(0, offsetBarControl1.Left - 2 * gap);
+            int panelWidth = Math.Min(S(50), maxMirrorW);
             int panelHeight = Math.Min(S(100), Math.Max(S(40), groupBox1.ClientSize.Height - S(42)));
-            int panelX = Math.Max(S(8), offsetBarControl1.Left - panelWidth - S(8));
+            int panelX = Math.Max(gap, offsetBarControl1.Left - panelWidth - gap);
             int panelY = Math.Max(S(26), (groupBox1.ClientSize.Height - panelHeight) / 2);
 
             mirrorDrawingComponent1.Bounds = new Rectangle(panelX, panelY, panelWidth, panelHeight);
