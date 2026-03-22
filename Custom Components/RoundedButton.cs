@@ -17,14 +17,14 @@ namespace Bahtinov_Collimator.Custom_Components
         public int CornerRadius { get; set; } = 12;
 
         /// <summary>
-        /// Target width for the drawn image in pixels.
-        /// The image is scaled to this width.
+        /// Target width for the drawn image in 96-DPI logical pixels (same basis as <see cref="CornerRadius"/>).
+        /// The image is scaled to this width after DPI scaling.
         /// </summary>
         public int ImageWidth { get; set; } = 32;
 
         /// <summary>
-        /// Target height for the drawn image in pixels.
-        /// The image is scaled to this height.
+        /// Target height for the drawn image in 96-DPI logical pixels.
+        /// The image is scaled to this height after DPI scaling.
         /// </summary>
         public int ImageHeight { get; set; } = 32;
 
@@ -39,19 +39,19 @@ namespace Bahtinov_Collimator.Custom_Components
         public Color PressedOverlay { get; set; } = Color.FromArgb(60, Color.Black);
 
         /// <summary>
-        /// Extra horizontal offset (in pixels) applied to the image position.
+        /// Extra horizontal offset in 96-DPI logical pixels applied to the image position.
         /// Positive values move the image to the right.
         /// </summary>
         public int ImageOffsetX { get; set; } = 60;
 
         /// <summary>
-        /// Extra vertical offset (in pixels) applied to the image position.
+        /// Extra vertical offset in 96-DPI logical pixels applied to the image position.
         /// Positive values move the image down.
         /// </summary>
         public int ImageOffsetY { get; set; } = 0;
 
         /// <summary>
-        /// Extra horizontal offset (in pixels) applied to the text rectangle.
+        /// Extra horizontal offset in 96-DPI logical pixels applied to the text rectangle.
         /// Positive values move the text to the right.
         /// </summary>
         public int TextOffsetX { get; set; } = 10;
@@ -108,6 +108,16 @@ namespace Bahtinov_Collimator.Custom_Components
         }
 
         /// <summary>
+        /// Converts 96-DPI design/logical pixel distances to device pixels for the current <see cref="Control.DeviceDpi"/>,
+        /// matching <see cref="CornerRadius"/> handling so layout stays consistent when DPI or form scaling changes.
+        /// </summary>
+        private int ScaleLogicalPixels(int logicalPixels)
+        {
+            float dpiScale = DeviceDpi / 96f;
+            return (int)Math.Round(logicalPixels * dpiScale, MidpointRounding.AwayFromZero);
+        }
+
+        /// <summary>
         /// Custom paint routine that draws the rounded background,
         /// hover/pressed overlay, bevel, and content (image + text).
         /// </summary>
@@ -128,13 +138,6 @@ namespace Bahtinov_Collimator.Custom_Components
             {
                 Region = null;
                 return;
-            }
-
-            int ScaleLogicalPixels(int logicalPixels)
-            {
-                // Treat design-time values as 96-DPI logical pixels.
-                float dpiScale = DeviceDpi / 96f;
-                return (int)Math.Round(logicalPixels * dpiScale, MidpointRounding.AwayFromZero);
             }
 
             int scaledRadius = ScaleLogicalPixels(CornerRadius);
@@ -231,8 +234,15 @@ namespace Bahtinov_Collimator.Custom_Components
             // Small pressed offset to simulate a "pushed in" look.
             int offset = isPressed ? 1 : 0;
 
-            // contentRect is the area inside the bevel, slightly inset.
-            Rectangle contentRect = Rectangle.Inflate(bounds, -4, -4);
+            // contentRect is the area inside the bevel, slightly inset (matches scaled corner/bevel in device pixels).
+            int contentInset = ScaleLogicalPixels(4);
+            Rectangle contentRect = Rectangle.Inflate(bounds, -contentInset, -contentInset);
+
+            int imgW = Math.Max(1, ScaleLogicalPixels(ImageWidth));
+            int imgH = Math.Max(1, ScaleLogicalPixels(ImageHeight));
+            int imgOffX = ScaleLogicalPixels(ImageOffsetX);
+            int imgOffY = ScaleLogicalPixels(ImageOffsetY);
+            int textOffX = ScaleLogicalPixels(TextOffsetX);
 
             // 1) Draw image, positioned using ImageAlign and user offsets.
             if (Image != null)
@@ -240,7 +250,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 // imageRect is the area where the image will be aligned
                 // before applying user offsets and scaling.
                 Rectangle imageRect = GetAlignedRectangle(
-                    new Size(ImageWidth, ImageHeight),
+                    new Size(imgW, imgH),
                     contentRect,
                     ImageAlign
                 );
@@ -249,16 +259,16 @@ namespace Bahtinov_Collimator.Custom_Components
                 imageRect.Offset(offset, offset);
 
                 // Apply user defined offsets.
-                imageRect.Offset(ImageOffsetX, ImageOffsetY);
+                imageRect.Offset(imgOffX, imgOffY);
 
                 // scaled is the final rectangle used when drawing the image.
-                // It enforces the ImageWidth and ImageHeight.
+                // It enforces the device-pixel size derived from ImageWidth/ImageHeight.
                 // Center the scaled image within the aligned rectangle if imageRect is larger.
                 var scaled = new Rectangle(
-                    imageRect.X + (imageRect.Width - ImageWidth) / 2,
-                    imageRect.Y + (imageRect.Height - ImageHeight) / 2,
-                    ImageWidth,
-                    ImageHeight
+                    imageRect.X + (imageRect.Width - imgW) / 2,
+                    imageRect.Y + (imageRect.Height - imgH) / 2,
+                    imgW,
+                    imgH
                 );
 
                 // Draw the image scaled to the target size.
@@ -272,7 +282,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 Rectangle textRect = contentRect;
 
                 // Apply pressed offset and additional horizontal text offset.
-                textRect.Offset(offset + TextOffsetX, offset);
+                textRect.Offset(offset + textOffX, offset);
 
                 // flags defines text alignment and ellipsis behavior.
                 TextFormatFlags flags = TextFormatFlags.WordEllipsis;
