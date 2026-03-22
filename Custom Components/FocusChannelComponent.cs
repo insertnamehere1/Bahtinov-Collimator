@@ -42,6 +42,12 @@ namespace Bahtinov_Collimator
         /// </summary>
         private const int DefaultFocusChannelWidthAt96 = 185;
 
+        /// <summary>Distance from the group box’s left client edge to the mirror (96 DPI logical px).</summary>
+        private const int MirrorHorizontalInsetAt96 = 8;
+
+        /// <summary>Minimum gap between the mirror’s right edge and the history bar’s left (96 DPI logical px).</summary>
+        private const int MirrorGapToHistoryBarAt96 = 8;
+
         #endregion
 
         #region Constructor
@@ -282,20 +288,22 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Places the mirror to the left of the history bar.
+        /// Anchors the mirror to the left inside the group box; width is capped so it does not overlap the history bar.
         /// <see cref="Custom_Components.MirrorDrawingComponent"/> draws in a 50×100 (96-DPI) cell; use S(50)×S(100)
         /// so the control bounds match the artwork and we do not paint a large empty BackColor over the bar.
         /// </summary>
         private void UpdateMirrorPanelLayout()
         {
-            int gap = S(8);
-            // Horizontal room left of the history bar (mirror must not extend under the bar).
-            int maxMirrorW = Math.Max(0, offsetBarControl1.Left - 2 * gap);
+            int leftInset = S(MirrorHorizontalInsetAt96);
+            int gapToBar = S(MirrorGapToHistoryBarAt96);
+            // Width: design 50 @ 96 DPI, but never past the bar minus gap.
+            int maxMirrorW = Math.Max(0, offsetBarControl1.Left - gapToBar - leftInset);
             int panelWidth = Math.Min(S(50), maxMirrorW);
             int panelHeight = Math.Min(S(100), Math.Max(S(40), groupBox1.ClientSize.Height - S(42)));
-            int panelX = Math.Max(gap, offsetBarControl1.Left - panelWidth - gap);
+            int panelX = leftInset;
             int panelY = Math.Max(S(26), (groupBox1.ClientSize.Height - panelHeight) / 2);
 
+            mirrorDrawingComponent1.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             mirrorDrawingComponent1.Bounds = new Rectangle(panelX, panelY, panelWidth, panelHeight);
             mirrorDrawingComponent1.BackColor = groupBox1.BackColor;
             mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
