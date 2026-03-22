@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator.Custom_Components
@@ -21,6 +22,13 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public partial class RoundedPictureBox : PictureBox
     {
+        /// <summary>
+        /// Key used by <see cref="Control"/> for the <see cref="Control.Paint"/> event list
+        /// (same reference as <c>Control.EventPaint</c>).
+        /// </summary>
+        private static readonly object EventPaintKey =
+            typeof(Control).GetField("EventPaint", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null);
+
         private int cornerRadius = 12;
         private Color borderColor = Color.Gray;
         private int borderThickness = 1;
@@ -198,6 +206,12 @@ namespace Bahtinov_Collimator.Custom_Components
                     g.DrawPath(pen, path);
                 }
             }
+
+            // Hosts such as ImageDisplayComponent subscribe to Paint and composite layer bitmaps there (they do
+            // not use the Image property for live capture). Overriding OnPaint replaces PictureBox.OnPaint, so
+            // we must raise the Paint event the same way Control.OnPaint would, or those handlers never run.
+            if (EventPaintKey != null)
+                RaisePaintEvent(EventPaintKey, e);
         }
     }
 }
