@@ -23,9 +23,19 @@ namespace Bahtinov_Collimator
 
         #endregion
 
+        private int panelLeftInset;
+        private int panelTopInset;
+        private int panelRightInset;
+        private int panelBottomInset;
+        private int buttonBottomGap;
+
         private int S(int logicalPixelsAt96)
         {
-            float dpiScale = DeviceDpi / 96f;
+            float dpiScale;
+            using (Graphics g = CreateGraphics())
+            {
+                dpiScale = g.DpiX / 96f;
+            }
             return (int)Math.Round(logicalPixelsAt96 * dpiScale, MidpointRounding.AwayFromZero);
         }
 
@@ -54,6 +64,12 @@ namespace Bahtinov_Collimator
             ForeColor = Color.White;
             AcceptButton = okButton;
 
+            panelLeftInset = scrollPanel.Left;
+            panelTopInset = scrollPanel.Top;
+            panelRightInset = ClientSize.Width - scrollPanel.Right;
+            panelBottomInset = ClientSize.Height - scrollPanel.Bottom;
+            buttonBottomGap = ClientSize.Height - okButton.Bottom;
+
             RenderGuidance(guidance);
 
             ClientSizeChanged += (s, e) => RelayoutForNewSize();
@@ -77,20 +93,16 @@ namespace Bahtinov_Collimator
         {
             int screenEdgeMargin = S(53);
             int minClientWidth = S(227);
-            int horizontalInset = S(27);
-            int contentInsetBottom = S(67);
-            int buttonRightInset = S(87);
-            int buttonBottomInset = S(33);
-            int topChromePadding = S(33);
-            int bottomChromePadding = S(27);
             int contentPadding = S(ContentPadding);
 
             // Step 1: measure and apply required width
             int maxScreenWidth = Screen.FromControl(this).WorkingArea.Width - screenEdgeMargin;
-            int newClientWidth = Math.Max(minClientWidth, Math.Min(MeasureRequiredWidth(), maxScreenWidth));
+            int chromeWidth = panelLeftInset + panelRightInset + SystemInformation.VerticalScrollBarWidth + S(1);
+            int newClientWidth = Math.Max(minClientWidth, Math.Min(MeasureRequiredWidth() + chromeWidth, maxScreenWidth));
 
             // Step 2: update control widths and remeasure heights with new width
-            int contentWidth = newClientWidth - horizontalInset - SystemInformation.VerticalScrollBarWidth - S(1);
+            int panelWidth = Math.Max(S(67), newClientWidth - panelLeftInset - panelRightInset);
+            int contentWidth = Math.Max(S(67), panelWidth - SystemInformation.VerticalScrollBarWidth - S(1));
             foreach (Control c in stackLayout.Controls)
             {
                 c.Width = contentWidth;
@@ -102,13 +114,13 @@ namespace Bahtinov_Collimator
 
             // Step 3: measure and apply required height
             int contentHeight = stackLayout.Height;
-            int required = topChromePadding + contentHeight + bottomChromePadding + contentPadding;
+            int requiredPanelHeight = contentHeight + contentPadding;
+            int required = panelTopInset + requiredPanelHeight + panelBottomInset;
             int maxHeight = Screen.FromControl(this).WorkingArea.Height - screenEdgeMargin;
             int newHeight = Math.Min(required, maxHeight);
 
             ClientSize = new Size(newClientWidth, newHeight);
-            scrollPanel.Size = new Size(newClientWidth - horizontalInset, newHeight - contentInsetBottom);
-            okButton.Location = new Point(newClientWidth - buttonRightInset, newHeight - buttonBottomInset);
+            RelayoutForNewSize();
         }
 
         /// <summary>
@@ -116,13 +128,9 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void RelayoutForNewSize()
         {
-            int horizontalInset = S(27);
-            int contentInsetBottom = S(127);
-            int buttonRightInset = S(87);
-            int buttonBottomInset = S(33);
-
-            scrollPanel.Size = new Size(ClientSize.Width - horizontalInset, ClientSize.Height - contentInsetBottom);
-            okButton.Location = new Point(ClientSize.Width - buttonRightInset, ClientSize.Height - buttonBottomInset);
+            int panelWidth = Math.Max(S(67), ClientSize.Width - panelLeftInset - panelRightInset);
+            int panelHeight = Math.Max(S(67), ClientSize.Height - panelTopInset - panelBottomInset);
+            scrollPanel.Bounds = new Rectangle(panelLeftInset, panelTopInset, panelWidth, panelHeight);
 
             int w = ContentWidth();
             foreach (Control c in stackLayout.Controls)
@@ -142,6 +150,18 @@ namespace Bahtinov_Collimator
                     p.Width = w;
                 }
             }
+        }
+
+        protected override void OnDpiChanged(DpiChangedEventArgs e)
+        {
+            base.OnDpiChanged(e);
+
+            BeginInvoke(new Action(() =>
+            {
+                if (IsDisposed) return;
+                SizeFormToContent();
+                RelayoutForNewSize();
+            }));
         }
 
         /// <summary>
