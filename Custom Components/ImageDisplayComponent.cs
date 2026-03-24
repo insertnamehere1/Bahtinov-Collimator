@@ -28,6 +28,21 @@ namespace Bahtinov_Collimator
         // The coordinate-space of the incoming image/overlay data (typically 600x600).
         private int sourceWidth = 600;
         private int sourceHeight = 600;
+
+        private enum OverlayMode
+        {
+            None,
+            Defocus,
+            Bahtinov
+        }
+
+        private OverlayMode cachedOverlayMode = OverlayMode.None;
+        private Bitmap cachedSourceImage;
+        private PointD cachedInnerCentre;
+        private PointD cachedOuterCentre;
+        private double cachedInnerRadius;
+        private double cachedOuterRadius;
+        private BahtinovLineDataEventArgs.BahtinovLineData cachedBahtinovData;
         #endregion
 
         #region Constructor
@@ -94,7 +109,7 @@ namespace Bahtinov_Collimator
             base.OnDpiChangedAfterParent(e);
             UpdateErrorFontForCurrentDpi();
             EnsureLayerSizeMatchesPictureBox(forceRecreate: true);
-            pictureBox1.Invalidate();
+            RedrawFromCache();
         }
 
         #endregion
@@ -172,11 +187,16 @@ namespace Bahtinov_Collimator
         /// <param name="outerRadius">The radius of the outer defocus circle.</param>
         private void UpdatePictureBox(Bitmap image, PointD innerCentre, double innerRadius, PointD outerCentre, double outerRadius)
         {
-            ClearAllLayers();
+            CacheSourceImage(image);
+            cachedOverlayMode = OverlayMode.Defocus;
+            cachedInnerCentre = innerCentre;
+            cachedInnerRadius = innerRadius;
+            cachedOuterCentre = outerCentre;
+            cachedOuterRadius = outerRadius;
+            cachedBahtinovData = null;
 
-            DrawImageOnFirstLayer(image);
-            DrawDefocusCircles(innerCentre, innerRadius, outerCentre, outerRadius);
-            pictureBox1.Invalidate();
+            RedrawFromCache();
+            image.Dispose();
         }
 
         /// <summary>
@@ -186,22 +206,12 @@ namespace Bahtinov_Collimator
         /// <param name="data">The Bahtinov line information and the bahtinov error values.</param>
         private void UpdatePictureBox(Bitmap image, BahtinovLineDataEventArgs.BahtinovLineData data)
         {
-            ClearAllLayers();
+            CacheSourceImage(image);
+            cachedOverlayMode = OverlayMode.Bahtinov;
+            cachedBahtinovData = CloneBahtinovData(data);
 
-            DrawImageOnFirstLayer(image);
-
-            var centerX = sourceWidth / 2;
-            var centerY = sourceHeight / 2;
-            var radius = centerX - 20;
-
-            var clippingRegion = CreateCircularClippingRegion(centerX, centerY, radius);
-
-            foreach (var group in data.LineGroups)
-            {
-                DrawGroupLines(group, clippingRegion);
-            }
-
-            pictureBox1.Invalidate();
+            RedrawFromCache();
+            image.Dispose();
         }
         #endregion
 
@@ -226,13 +236,14 @@ namespace Bahtinov_Collimator
 
                 float layerCentreX = sourceWidth / 2f;
                 float layerCentreY = sourceHeight / 2f;
+                float overlayScale = GetOverlayScale();
 
                 // Convert circle centres into layer pixel coordinates once.
                 var innerPx = new PointF(layerCentreX + (float)innerCentre.X, layerCentreY + (float)innerCentre.Y);
                 var outerPx = new PointF(layerCentreX + (float)outerCentre.X, layerCentreY + (float)outerCentre.Y);
 
-                const float penWidth = 3f;
-                const float crossSize = 20f;  // overall width/height of cross
+                float penWidth = 3f * overlayScale;
+                float crossSize = 20f * overlayScale;  // overall width/height of cross
                 const int crossAlpha = 200;   // 0..255. Lower = more blending.
 
                 using (var innerPen = new Pen(Color.FromArgb(crossAlpha, UITheme.DefocusInnerCircleColor), penWidth))
@@ -346,10 +357,22 @@ namespace Bahtinov_Collimator
         private void DrawErrorCircleAndLine(Graphics g, BahtinovLineDataEventArgs.LineGroup group)
         {
             var errorPen = UITheme.GetErrorCirclePen(group.GroupId);
-            var circleRadius = UITheme.ErrorCircleRadius;
+            float overlayScale = GetOverlayScale();
 
-            g.DrawEllipse(errorPen, group.ErrorCircle.Origin.X, group.ErrorCircle.Origin.Y, circleRadius * 2, circleRadius * 2);
-            g.DrawLine(errorPen, group.ErrorLine.Start.X, group.ErrorLine.Start.Y, group.ErrorLine.End.X, group.ErrorLine.End.Y);
+            // Preserve center position but scale marker geometry with source image dimensions.
+            float baseCircleRadius = Math.Max(1f, group.ErrorCircle.Width / 2f);
+            float scaledCircleRadius = baseCircleRadius * overlayScale;
+            float centerX = group.ErrorCircle.Origin.X + baseCircleRadius;
+            float centerY = group.ErrorCircle.Origin.Y + baseCircleRadius;
+
+            g.DrawEllipse(errorPen, centerX - scaledCircleRadius, centerY - scaledCircleRadius, scaledCircleRadius * 2f, scaledCircleRadius * 2f);
+
+            float midX = (group.ErrorLine.Start.X + group.ErrorLine.End.X) * 0.5f;
+            float midY = (group.ErrorLine.Start.Y + group.ErrorLine.End.Y) * 0.5f;
+            float halfDx = (group.ErrorLine.End.X - group.ErrorLine.Start.X) * 0.5f * overlayScale;
+            float halfDy = (group.ErrorLine.End.Y - group.ErrorLine.Start.Y) * 0.5f * overlayScale;
+
+            g.DrawLine(errorPen, midX - halfDx, midY - halfDy, midX + halfDx, midY + halfDy);
         }
 
         /// <summary>
@@ -360,6 +383,7 @@ namespace Bahtinov_Collimator
         private void DrawErrorValueText(Graphics g, BahtinovLineDataEventArgs.LineGroup group)
         {
             var solidBrush = UITheme.GetErrorTextBrush(group.GroupId);
+            float overlayScale = GetOverlayScale();
 
             var radius = (sourceWidth / 2) - 50;
 
@@ -368,10 +392,13 @@ namespace Bahtinov_Collimator
 
             var (adjustedStart, adjustedEnd) = AdjustPointsForRadius(textStart, textEnd, sourceWidth, sourceHeight, radius);
 
-            if (group.GroupId == 1)
-                DrawLineWithCenteredText(g, adjustedStart, group.ErrorCircle.ErrorValue, errorFont, solidBrush);
-            else
-                DrawLineWithCenteredText(g, adjustedEnd, group.ErrorCircle.ErrorValue, errorFont, solidBrush);
+            using (var font = new Font(this.Font.FontFamily, Math.Max(8f, 25f * overlayScale), FontStyle.Regular, GraphicsUnit.Pixel))
+            {
+                if (group.GroupId == 1)
+                    DrawLineWithCenteredText(g, adjustedStart, group.ErrorCircle.ErrorValue, font, solidBrush);
+                else
+                    DrawLineWithCenteredText(g, adjustedEnd, group.ErrorCircle.ErrorValue, font, solidBrush);
+            }
         }
 
         /// <summary>
@@ -449,7 +476,7 @@ namespace Bahtinov_Collimator
         private void PictureBoxResized(object sender, EventArgs e)
         {
             EnsureLayerSizeMatchesPictureBox(forceRecreate: true);
-            pictureBox1.Invalidate();
+            RedrawFromCache();
         }
 
         /// <summary>
@@ -468,16 +495,19 @@ namespace Bahtinov_Collimator
 
         private void UpdateErrorFontForCurrentDpi()
         {
-            // Keep the error font’s physical size stable across DPI changes.
-            using (Graphics g = this.CreateGraphics())
-            {
-                float dpi = g.DpiX;
-                float baseFontSize = 25.0f; // points at 96 DPI
-                float scaledFontSize = baseFontSize * 96f / dpi;
+            // Keep a base font around for compatibility; actual error-value drawing scales
+            // from source image dimensions in DrawErrorValueText.
+            const float sourcePixelFontSize = 25.0f;
 
-                errorFont?.Dispose();
-                errorFont = new Font(this.Font.FontFamily, scaledFontSize);
-            }
+            errorFont?.Dispose();
+            errorFont = new Font(this.Font.FontFamily, sourcePixelFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+        }
+
+        private float GetOverlayScale()
+        {
+            const float referenceSize = 600f;
+            float minSource = Math.Max(1f, Math.Min(sourceWidth, sourceHeight));
+            return minSource / referenceSize;
         }
 
         private void EnsureLayerSizeMatchesPictureBox(bool forceRecreate)
@@ -495,8 +525,8 @@ namespace Bahtinov_Collimator
                 return;
             }
 
-            // Recreate each layer bitmap to match the new size, scaling previous content
-            // so the displayed image/overlays remain visually consistent after DPI changes.
+            // Recreate each layer bitmap to match the new size.
+            // Rendering is done from cached source data to avoid quality loss from resampling.
             for (int i = 0; i < layers.Count; i++)
             {
                 Bitmap old = layers[i];
@@ -510,21 +540,90 @@ namespace Bahtinov_Collimator
                     continue;
 
                 Bitmap resized = new Bitmap(target.Width, target.Height);
-                using (var g = Graphics.FromImage(resized))
-                {
-                    g.SmoothingMode = SmoothingMode.HighQuality;
-                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                    g.CompositingQuality = CompositingQuality.HighQuality;
-                    g.Clear(Color.Transparent);
-                    g.DrawImage(old, new Rectangle(0, 0, target.Width, target.Height));
-                }
 
                 layers[i] = resized;
                 old.Dispose();
             }
 
             layerSize = target;
+        }
+
+        private void CacheSourceImage(Bitmap image)
+        {
+            cachedSourceImage?.Dispose();
+            cachedSourceImage = image != null ? new Bitmap(image) : null;
+        }
+
+        private void RedrawFromCache()
+        {
+            ClearAllLayers();
+
+            if (cachedSourceImage == null)
+            {
+                pictureBox1.Invalidate();
+                return;
+            }
+
+            DrawImageOnFirstLayer(cachedSourceImage);
+
+            switch (cachedOverlayMode)
+            {
+                case OverlayMode.Defocus:
+                    DrawDefocusCircles(cachedInnerCentre, cachedInnerRadius, cachedOuterCentre, cachedOuterRadius);
+                    break;
+
+                case OverlayMode.Bahtinov:
+                    if (cachedBahtinovData != null)
+                    {
+                        var centerX = sourceWidth / 2;
+                        var centerY = sourceHeight / 2;
+                        var radius = centerX - 20;
+
+                        using (var clippingRegion = CreateCircularClippingRegion(centerX, centerY, radius))
+                        {
+                            foreach (var group in cachedBahtinovData.LineGroups)
+                            {
+                                DrawGroupLines(group, clippingRegion);
+                            }
+                        }
+                    }
+                    break;
+            }
+
+            pictureBox1.Invalidate();
+        }
+
+        private static BahtinovLineDataEventArgs.BahtinovLineData CloneBahtinovData(BahtinovLineDataEventArgs.BahtinovLineData data)
+        {
+            if (data == null)
+                return null;
+
+            var clone = new BahtinovLineDataEventArgs.BahtinovLineData
+            {
+                NumberOfGroups = data.NumberOfGroups
+            };
+
+            foreach (var group in data.LineGroups)
+            {
+                var groupClone = new BahtinovLineDataEventArgs.LineGroup(group.GroupId)
+                {
+                    ErrorLine = group.ErrorLine != null
+                        ? new BahtinovLineDataEventArgs.ErrorLine(group.ErrorLine.Start, group.ErrorLine.End)
+                        : null,
+                    ErrorCircle = group.ErrorCircle != null
+                        ? new BahtinovLineDataEventArgs.ErrorCircle(group.ErrorCircle.Origin, group.ErrorCircle.Height, group.ErrorCircle.Width, group.ErrorCircle.ErrorValue)
+                        : null
+                };
+
+                foreach (var line in group.Lines)
+                {
+                    groupClone.AddLine(new BahtinovLineDataEventArgs.Line(line.Start, line.End, line.LineId));
+                }
+
+                clone.AddLineGroup(groupClone);
+            }
+
+            return clone;
         }
 
         /// <summary>
@@ -618,6 +717,10 @@ namespace Bahtinov_Collimator
             else
             {
                 ClearAllLayers();
+                cachedSourceImage?.Dispose();
+                cachedSourceImage = null;
+                cachedBahtinovData = null;
+                cachedOverlayMode = OverlayMode.None;
 
                 // Dispose of the current image if it exists
                 pictureBox1.Image?.Dispose();
@@ -628,6 +731,15 @@ namespace Bahtinov_Collimator
                 pictureBox1.Image = Properties.Resources.TBMask_DarkGray;
                 pictureBox1.BackColor = UITheme.DarkBackground;
             }
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            errorFont?.Dispose();
+            errorFont = null;
+            cachedSourceImage?.Dispose();
+            cachedSourceImage = null;
+            base.OnHandleDestroyed(e);
         }
         #endregion
     }
