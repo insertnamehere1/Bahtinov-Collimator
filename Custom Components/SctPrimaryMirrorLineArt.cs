@@ -34,6 +34,20 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>Front (reflective) edge X offset from <see cref="BackInsetLeft"/> when building geometry.</summary>
         private const int FrontEdgeOffsetFromBack = 10;
 
+        // --- Left-side concave symmetry (was previously a straight vertical edge) ---
+        /// <summary>Horizontal bulge for the left mirrored curve (0 = vertical line, sign flips bow direction).</summary>
+        /// <remarks>
+        /// Positive values bow one way; negative values bow the opposite way.
+        /// Use magnitude to control how far the left curve deviates from vertical.
+        /// </remarks>
+        private const float LeftCurveControlXFactor = -1f;
+
+        /// <summary>Vertical bulge multiplier for the left curve when <c>cornerRadius &gt; 0</c>.</summary>
+        private const float LeftConcaveCurveOffsetYFactor = 5f;
+
+        /// <summary>Vertical bulge multiplier for the left curve when <c>cornerRadius == 0</c>.</summary>
+        private const float LeftFlatCurveOffsetYFactor = 5f;
+
         // --- Rounded-corner outline (when corner radius > 0) ---
         /// <summary>Vertical offset (down) for Bezier control points from top/bottom when using rounded outline.</summary>
         private const int ConcaveBezierOffsetY = 18;
@@ -44,10 +58,10 @@ namespace Bahtinov_Collimator.Custom_Components
 
         // --- Baffle tube (rear opening) ---
         /// <summary>Horizontal length of the two baffle rail lines from the back edge.</summary>
-        private const int BaffleWallLength = 40;
+        private const int BaffleWallLength = 60;
 
         /// <summary>Min side of the square baffle opening (clamped up from height / divisor).</summary>
-        private const int BaffleSquareMin = 6;
+        private const int BaffleSquareMin = 0;
 
         private const int BaffleSquareMax = 16;
 
@@ -55,14 +69,27 @@ namespace Bahtinov_Collimator.Custom_Components
         private const int BaffleSquareHeightDivisor = 6;
 
         /// <summary>Subtract from (<c>concaveDepthX - backX</c>) when building the through-cut rectangle width.</summary>
-        private const int BaffleThroughCutInset = 9;
+        private const int BaffleThroughCutInset = 20;
+
+        /// <summary>
+        /// Baffle back (left edge) inset relative to mirror bounds left.
+        /// Keeps the mirror outline independent from how far the baffle is shifted.
+        /// </summary>
+        private const int BaffleBackInsetLeft = -7;
+
+        /// <summary>Extra inset from design-left (x=0 in the 50×100 design space) for the through-cut hole.</summary>
+        /// <remarks>
+        /// Set to <c>0</c> to make the baffle cut-through reach all the way to <c>x=0</c>.
+        /// </remarks>
+        private const int BaffleThroughCutLeftInset = 0;
 
         // --- Glass body fill (tinted by outline color) ---
-        private static readonly Color GlassDarkBase = Color.FromArgb(85, 190, 190, 190);
+        // Keep alpha identical across the gradient so body opacity is uniform.
+        private static readonly Color GlassDarkBase = Color.FromArgb(70, 190, 190, 190);
 
-        private static readonly Color GlassLightBase = Color.FromArgb(55, 235, 235, 235);
+        private static readonly Color GlassLightBase = Color.FromArgb(70, 235, 235, 235);
 
-        private const float GlassTintStrength = 0.45f;
+        private const float GlassTintStrength = 1f;
 
         // --- Reflective coating stroke ---
         private const float CoatingPenThickness = 2f;
@@ -79,10 +106,13 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>Inflate baffle cutout when clipping so coating doesn’t leak into the hole.</summary>
         private const int CoatingClipBaffleInflate = 2;
 
-        // --- Baffle rail lines (drawn after body) ---
+        // --- Baffle rail lines (drawn after body) --
         private static readonly Color BafflePenColor = Color.DarkGray;
 
         private const float BafflePenWidth = 2f;
+
+        /// <summary>Inflate tube interior exclusion to avoid anti-aliased fill/metal remnants.</summary>
+        private const int BaffleInteriorEraseInflate = 1;
 
         // --- Optical axis (dotted) ---
         /// <summary>Axis starts at <c>mirrorBounds.Left + AxisStartOffsetFromLeft</c>.</summary>
@@ -112,6 +142,12 @@ namespace Bahtinov_Collimator.Custom_Components
             int backX = mirrorBounds.Left + BackInsetLeft;
             int concaveDepthX = mirrorBounds.Right - ConcaveInsetFromRight;
             int frontEdgeX = backX + FrontEdgeOffsetFromBack;
+            int baffleBackX = mirrorBounds.Left + BaffleBackInsetLeft;
+
+            // Compute left curve control X as a mirrored version of the right curve control point.
+            // Baseline mirror across the midpoint between left endpoint (backX) and right endpoint (concaveDepthX).
+            float leftCurveCtrlXBase = backX + concaveDepthX - frontEdgeX;
+            float leftCurveCtrlX = backX + (leftCurveCtrlXBase - backX) * LeftCurveControlXFactor;
 
             int maxRadius = Math.Max(0, Math.Min((concaveDepthX - backX) / 2, (bottomY - topY) / 2));
             int radius = Math.Min(cornerRadius, maxRadius);
@@ -121,7 +157,7 @@ namespace Bahtinov_Collimator.Custom_Components
             int baffleSquareSize = Math.Max(BaffleSquareMin, Math.Min(BaffleSquareMax, mirrorBounds.Height / BaffleSquareHeightDivisor));
 
             Rectangle baffleCutout = new Rectangle(
-                backX,
+                baffleBackX,
                 axisY - (baffleSquareSize / 2),
                 baffleSquareSize,
                 baffleSquareSize);
@@ -129,11 +165,24 @@ namespace Bahtinov_Collimator.Custom_Components
             if (baffleCutout.Top < topY) baffleCutout.Y = topY;
             if (baffleCutout.Bottom > bottomY) baffleCutout.Y = bottomY - baffleCutout.Height;
 
+            int baffleCutoutThroughX = mirrorBounds.Left + BaffleThroughCutLeftInset;
             Rectangle baffleCutoutThrough = new Rectangle(
-                backX,
+                baffleCutoutThroughX,
                 baffleCutout.Top,
-                Math.Max(1, concaveDepthX - backX - BaffleThroughCutInset),
+                Math.Max(1, concaveDepthX - baffleCutoutThroughX - BaffleThroughCutInset),
                 baffleCutout.Height);
+
+            int baffleStartX = baffleBackX;
+            int baffleEndX = Math.Min(bounds.Right, baffleStartX + BaffleWallLength);
+            Rectangle baffleTubeInterior = Rectangle.FromLTRB(
+                Math.Min(baffleStartX, baffleEndX),
+                baffleCutout.Top,
+                Math.Max(baffleStartX, baffleEndX),
+                baffleCutout.Bottom);
+            if (baffleTubeInterior.Width < 1)
+                baffleTubeInterior.Width = 1;
+            if (baffleTubeInterior.Height < 1)
+                baffleTubeInterior.Height = 1;
 
             using (GraphicsPath outlinePath = new GraphicsPath())
             {
@@ -157,7 +206,27 @@ namespace Bahtinov_Collimator.Custom_Components
                     outlinePath.AddArc(concaveDepthX - d, bottomY - d, d, d, 0f, 90f);
                     outlinePath.AddLine(concaveDepthX - radius, bottomY, backX + radius, bottomY);
                     outlinePath.AddArc(backX, bottomY - d, d, d, 90f, 90f);
-                    outlinePath.AddLine(backX, bottomY - radius, backX, topY + radius);
+                    // Replace the straight left vertical edge with a mirrored Bezier curve.
+                    float leftOffsetY = ConcaveBezierOffsetY * LeftConcaveCurveOffsetYFactor;
+                    float maxRoundedOffset = ((bottomY - radius) - (topY + radius)) * 0.45f;
+                    if (leftOffsetY > maxRoundedOffset)
+                        leftOffsetY = Math.Max(0f, maxRoundedOffset);
+                    float leftCtrlTopY = topY + radius + leftOffsetY;
+                    float leftCtrlBottomY = bottomY - radius - leftOffsetY;
+                    if (leftCtrlBottomY < leftCtrlTopY)
+                    {
+                        float mid = (leftCtrlTopY + leftCtrlBottomY) * 0.5f;
+                        leftCtrlTopY = mid;
+                        leftCtrlBottomY = mid;
+                    }
+
+                    outlinePath.AddBezier(
+                        backX, bottomY - radius,
+                        // Swap control point Y order so the left curve bows in the same
+                        // "direction" as the right concave surface.
+                        leftCurveCtrlX, leftCtrlTopY,
+                        leftCurveCtrlX, leftCtrlBottomY,
+                        backX, topY + radius);
                     outlinePath.AddArc(backX, topY, d, d, 180f, 90f);
                 }
                 else
@@ -169,27 +238,51 @@ namespace Bahtinov_Collimator.Custom_Components
                         frontEdgeX, bottomY - FlatFaceBezierOffsetY,
                         concaveDepthX, bottomY);
                     outlinePath.AddLine(concaveDepthX, bottomY, backX, bottomY);
-                    outlinePath.AddLine(backX, bottomY, backX, topY);
+                    // Replace the straight left vertical edge with a mirrored Bezier curve.
+                    float leftOffsetY = FlatFaceBezierOffsetY * LeftFlatCurveOffsetYFactor;
+                    float maxFlatOffset = (bottomY - topY) * 0.45f;
+                    if (leftOffsetY > maxFlatOffset)
+                        leftOffsetY = Math.Max(0f, maxFlatOffset);
+                    float leftCtrlTopY = topY + leftOffsetY;
+                    float leftCtrlBottomY = bottomY - leftOffsetY;
+                    if (leftCtrlBottomY < leftCtrlTopY)
+                    {
+                        float mid = (leftCtrlTopY + leftCtrlBottomY) * 0.5f;
+                        leftCtrlTopY = mid;
+                        leftCtrlBottomY = mid;
+                    }
+
+                    outlinePath.AddBezier(
+                        backX, bottomY,
+                        // Swap control point Y order so the left curve bows in the same
+                        // "direction" as the right concave surface.
+                        leftCurveCtrlX, leftCtrlTopY,
+                        leftCurveCtrlX, leftCtrlBottomY,
+                        backX, topY);
                 }
 
                 outlinePath.CloseFigure();
 
-                using (GraphicsPath fillPath = (GraphicsPath)outlinePath.Clone())
+                Color glassDarkTinted = MirrorLineArtTint.TintColor(GlassDarkBase, mirrorOutlineColor, GlassTintStrength);
+                Color glassLightTinted = MirrorLineArtTint.TintColor(GlassLightBase, mirrorOutlineColor, GlassTintStrength);
+
+                using (LinearGradientBrush glassBrush = new LinearGradientBrush(
+                    new Point(backX, topY),
+                    new Point(concaveDepthX, topY),
+                    glassDarkTinted,
+                    glassLightTinted))
+                using (Region glassRegion = new Region(outlinePath))
                 {
-                    fillPath.FillMode = FillMode.Alternate;
-                    fillPath.AddRectangle(baffleCutoutThrough);
-
-                    Color glassDarkTinted = MirrorLineArtTint.TintColor(GlassDarkBase, mirrorOutlineColor, GlassTintStrength);
-                    Color glassLightTinted = MirrorLineArtTint.TintColor(GlassLightBase, mirrorOutlineColor, GlassTintStrength);
-
-                    using (LinearGradientBrush glassBrush = new LinearGradientBrush(
-                        new Point(backX, topY),
-                        new Point(concaveDepthX, topY),
-                        glassDarkTinted,
-                        glassLightTinted))
-                    {
-                        graphics.FillPath(glassBrush, fillPath);
-                    }
+                    // Exclude the through-cut explicitly so it never "adds back" fill
+                    // when the rectangle extends outside the mirror silhouette.
+                    glassRegion.Exclude(baffleCutoutThrough);
+                    // Also exclude the rear square baffle opening so the entire baffle box
+                    // has no glass fill even when the through-cut width is narrower.
+                    glassRegion.Exclude(baffleCutout);
+                    Rectangle glassEraseTube = baffleTubeInterior;
+                    glassEraseTube.Inflate(BaffleInteriorEraseInflate, BaffleInteriorEraseInflate);
+                    glassRegion.Exclude(glassEraseTube);
+                    graphics.FillRegion(glassBrush, glassRegion);
                 }
 
                 using (GraphicsPath concaveFacePath = new GraphicsPath())
@@ -237,9 +330,17 @@ namespace Bahtinov_Collimator.Custom_Components
                         {
                             using (Region r = new Region(bounds))
                             {
-                                Rectangle clipHole = baffleCutoutThrough;
-                                clipHole.Inflate(CoatingClipBaffleInflate, CoatingClipBaffleInflate);
-                                r.Exclude(clipHole);
+                                Rectangle clipHoleThrough = baffleCutoutThrough;
+                                clipHoleThrough.Inflate(CoatingClipBaffleInflate, CoatingClipBaffleInflate);
+                                r.Exclude(clipHoleThrough);
+
+                                Rectangle clipHoleSquare = baffleCutout;
+                                clipHoleSquare.Inflate(CoatingClipBaffleInflate, CoatingClipBaffleInflate);
+                                r.Exclude(clipHoleSquare);
+
+                                Rectangle clipTube = baffleTubeInterior;
+                                clipTube.Inflate(BaffleInteriorEraseInflate, BaffleInteriorEraseInflate);
+                                r.Exclude(clipTube);
                                 graphics.SetClip(r, CombineMode.Replace);
                             }
 
@@ -252,9 +353,6 @@ namespace Bahtinov_Collimator.Custom_Components
                     }
                 }
             }
-
-            int baffleStartX = backX;
-            int baffleEndX = Math.Min(bounds.Right, baffleStartX + BaffleWallLength);
 
             using (Pen bafflePen = new Pen(BafflePenColor, BafflePenWidth))
             {

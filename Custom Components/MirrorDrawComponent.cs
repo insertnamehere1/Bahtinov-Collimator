@@ -18,11 +18,11 @@ namespace Bahtinov_Collimator.Custom_Components
     public partial class MirrorDrawingComponent : Control
     {
         /// <summary>Authoring size for mirror geometry (96-DPI logical units). Drawing is scaled uniformly to <see cref="ClientRectangle"/>.</summary>
-        private const int DesignWidth = 50;
+        private const int DesignWidth = 100;
         private const int DesignHeight = 100;
 
         private int cornerRadius = 1;
-        private int opticalAxisLength = 50;
+        private int opticalAxisLength = 100;
         private Color mirrorOutlineColor = Color.DimGray;
         private MirrorType mirrorType = MirrorType.SctPrimary;
 
