@@ -37,6 +37,14 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         public RoundedPanel()
         {
+            this.SetStyle(
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.UserPaint |
+                ControlStyles.ResizeRedraw |
+                ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.SupportsTransparentBackColor,
+                true);
+
             InitializeComponent();
             // Reduces stair-stepping on rounded strokes when combined with custom painting.
             DoubleBuffered = true;

@@ -267,6 +267,14 @@ namespace SkyCal.Custom_Components
         /// </summary>
         public TitledRoundedRichTextBox()
         {
+
+            this.SetStyle(
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.ResizeRedraw |
+                ControlStyles.UserPaint,
+            true);
+
             InitializeComponent();
 
             // Matches RoundedPanel — reduces stair-stepping on rounded strokes.

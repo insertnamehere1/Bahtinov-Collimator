@@ -33,16 +33,7 @@ namespace Bahtinov_Collimator.Custom_Components
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-
             this.SuspendLayout();
-
-            this.SetStyle(
-                ControlStyles.AllPaintingInWmPaint |
-                ControlStyles.UserPaint |
-                ControlStyles.ResizeRedraw |
-                ControlStyles.OptimizedDoubleBuffer |
-                ControlStyles.SupportsTransparentBackColor,
-                true);
 
             // Allow fully transparent backgrounds so the form shows behind.
             this.BackColor = Color.Transparent;

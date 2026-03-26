@@ -41,16 +41,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
             // Default scaling for images.
             this.SizeMode = PictureBoxSizeMode.Zoom;
-
-            // Enable custom painting, double buffering, and no flicker.
-            this.SetStyle(
-                ControlStyles.UserPaint |
-                ControlStyles.AllPaintingInWmPaint |
-                ControlStyles.OptimizedDoubleBuffer,
-                true);
-
             this.Name = "RoundedPictureBox";
-
             this.ResumeLayout(false);
         }
 

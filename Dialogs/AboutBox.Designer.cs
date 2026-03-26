@@ -170,11 +170,11 @@ namespace Bahtinov_Collimator
             this.okButton.ImageOffsetX = 60;
             this.okButton.ImageOffsetY = 0;
             this.okButton.ImageWidth = 32;
-            this.okButton.Location = new System.Drawing.Point(428, 262);
+            this.okButton.Location = new System.Drawing.Point(428, 255);
             this.okButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.okButton.Name = "okButton";
             this.okButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.okButton.Size = new System.Drawing.Size(86, 27);
+            this.okButton.Size = new System.Drawing.Size(86, 34);
             this.okButton.TabIndex = 24;
             this.okButton.Text = "&OK";
             this.okButton.TextOffsetX = 0;

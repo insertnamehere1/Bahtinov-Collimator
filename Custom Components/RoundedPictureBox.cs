@@ -66,6 +66,13 @@ namespace Bahtinov_Collimator.Custom_Components
 
         public RoundedPictureBox()
         {
+            // Enable custom painting, double buffering, and no flicker.
+            this.SetStyle(
+                ControlStyles.UserPaint |
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.OptimizedDoubleBuffer,
+                true);
+
             InitializeComponent();
             Resize += (s, e) => Invalidate();
         }

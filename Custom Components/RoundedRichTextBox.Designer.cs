@@ -35,14 +35,6 @@ namespace SkyCal.Custom_Components
             this.components = new System.ComponentModel.Container();
 
             this.SuspendLayout();
-
-            this.SetStyle(
-                ControlStyles.AllPaintingInWmPaint |
-                ControlStyles.OptimizedDoubleBuffer |
-                ControlStyles.ResizeRedraw |
-                ControlStyles.UserPaint,
-                true);
-
             this.AutoScaleMode = AutoScaleMode.Dpi;
             this.BackColor = Color.White;
             this.ForeColor = Color.Black;

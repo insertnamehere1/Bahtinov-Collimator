@@ -161,7 +161,7 @@ namespace Bahtinov_Collimator
             // groupBoxBlue
             // 
             this.groupBoxBlue.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.groupBoxBlue.Location = new System.Drawing.Point(9, 240);
+            this.groupBoxBlue.Location = new System.Drawing.Point(9, 239);
             this.groupBoxBlue.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxBlue.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
             this.groupBoxBlue.Name = "groupBoxBlue";
@@ -171,7 +171,7 @@ namespace Bahtinov_Collimator
             // groupBoxGreen
             // 
             this.groupBoxGreen.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.groupBoxGreen.Location = new System.Drawing.Point(9, 130);
+            this.groupBoxGreen.Location = new System.Drawing.Point(9, 131);
             this.groupBoxGreen.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxGreen.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
             this.groupBoxGreen.Name = "groupBoxGreen";
@@ -181,7 +181,7 @@ namespace Bahtinov_Collimator
             // groupBoxRed
             // 
             this.groupBoxRed.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.groupBoxRed.Location = new System.Drawing.Point(9, 23);
+            this.groupBoxRed.Location = new System.Drawing.Point(9, 22);
             this.groupBoxRed.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxRed.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
             this.groupBoxRed.Name = "groupBoxRed";
@@ -221,10 +221,10 @@ namespace Bahtinov_Collimator
             this.RoundedStartButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.RoundedStartButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
             this.RoundedStartButton.BevelThickness = 4;
-            this.RoundedStartButton.CornerRadius = 10;
+            this.RoundedStartButton.CornerRadius = 8;
             this.RoundedStartButton.FlatAppearance.BorderSize = 0;
             this.RoundedStartButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RoundedStartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.RoundedStartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.RoundedStartButton.ForeColor = System.Drawing.Color.White;
             this.RoundedStartButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.RoundedStartButton.Image = ((System.Drawing.Image)(resources.GetObject("RoundedStartButton.Image")));
@@ -240,7 +240,7 @@ namespace Bahtinov_Collimator
             this.RoundedStartButton.TabIndex = 25;
             this.RoundedStartButton.Text = "Select Star";
             this.RoundedStartButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.RoundedStartButton.TextOffsetX = 42;
+            this.RoundedStartButton.TextOffsetX = 37;
             this.RoundedStartButton.UseVisualStyleBackColor = false;
             this.RoundedStartButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
@@ -260,7 +260,7 @@ namespace Bahtinov_Collimator
             // 
             this.bahtinovLabel.AutoSize = true;
             this.bahtinovLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bahtinovLabel.Location = new System.Drawing.Point(45, 26);
+            this.bahtinovLabel.Location = new System.Drawing.Point(45, 25);
             this.bahtinovLabel.Margin = new System.Windows.Forms.Padding(14, 0, 14, 0);
             this.bahtinovLabel.Name = "bahtinovLabel";
             this.bahtinovLabel.Size = new System.Drawing.Size(54, 15);
@@ -272,7 +272,7 @@ namespace Bahtinov_Collimator
             // 
             this.defocusLabel.AutoSize = true;
             this.defocusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.defocusLabel.Location = new System.Drawing.Point(45, 50);
+            this.defocusLabel.Location = new System.Drawing.Point(45, 47);
             this.defocusLabel.Margin = new System.Windows.Forms.Padding(14, 0, 14, 0);
             this.defocusLabel.Name = "defocusLabel";
             this.defocusLabel.Size = new System.Drawing.Size(52, 15);

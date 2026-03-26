@@ -92,7 +92,7 @@ namespace Bahtinov_Collimator
         private const int GapImageToCalibrationAt96 = 8;
 
         /// Sets testing mode for Calibration 
-        private const bool TEST_MODE = false;
+        private const bool TEST_MODE = true;
 
         #endregion
 
@@ -161,10 +161,6 @@ namespace Bahtinov_Collimator
 
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
-
-            // Disable automatic resizing and set the form to grow and shrink based on its content.
- //           this.AutoSize = false;
- //           this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             // Initialize the form's components.
             InitializeComponent();
