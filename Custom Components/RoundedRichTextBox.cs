@@ -488,14 +488,14 @@ namespace SkyCal.Custom_Components
                     }
 
                     using (var textBrush = new SolidBrush(_titleForeColor))
-                    using (var fmt = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center })
+                    using (var fmt = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
                     {
                         Font tf = _titleFont ?? new Font(Font, FontStyle.Bold);
 
                         Rectangle textRect = new Rectangle(
-                            t + _titlePaddingLeft,
                             t,
-                            Math.Max(0, cw - 2 * t - _titlePaddingLeft - 6),
+                            t,
+                            Math.Max(0, cw - 2 * t),
                             _titleHeight);
 
                         g.DrawString(_titleText ?? string.Empty, tf, textBrush, textRect, fmt);
