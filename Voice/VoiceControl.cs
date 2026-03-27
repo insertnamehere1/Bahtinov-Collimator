@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Speech.Synthesis;
 using System.Windows.Forms;
@@ -62,24 +62,21 @@ namespace Bahtinov_Collimator.Voice
             if (group == -1)
             {
                 errorValues.Clear();
-                lastPlayedValues.Clear(); // Clear the last played values when resetting
+                lastPlayedValues.Clear();
             }
             else
             {
                 errorValues[group] = focusValue;
 
-                // If the current channel is the one that was updated, check if the value has changed
                 if (channelPlaying != -1 && errorValues.ContainsKey(channelPlaying))
                 {
                     double currentValue = errorValues[channelPlaying];
 
-                    // Check if the value has changed since the last time it was played
                     if (!lastPlayedValues.ContainsKey(channelPlaying) || lastPlayedValues[channelPlaying] != currentValue)
                     {
                         Play(RemoveLeading0(currentValue), 2);
                         Console.WriteLine(currentValue.ToString("F1"));
 
-                        // Update the last played value for the channel
                         lastPlayedValues[channelPlaying] = currentValue;
                     }
                 }
@@ -89,8 +86,6 @@ namespace Bahtinov_Collimator.Voice
         /// <summary>
         /// Handles channel selection events to update the current channel and play the associated error value.
         /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="e">The event data containing selected channels.</param>
         private void ChannelSelected(object sender, ChannelSelectEventArgs e)
         {
             channelPlaying = -1;
@@ -102,7 +97,7 @@ namespace Bahtinov_Collimator.Voice
                 {
                     channelPlaying = i;
                     Play("Channel " + (i + 1), 2);
-                    Play( RemoveLeading0(errorValues[i]) , 2);
+                    Play(RemoveLeading0(errorValues[i]), 2);
                     break;
                 }
             }
@@ -112,21 +107,18 @@ namespace Bahtinov_Collimator.Voice
         /// Converts a double value to a string and removes the leading zero 
         /// if the value is between -1 and 1 (exclusive).
         /// </summary>
-        /// <param name="value">The double value to be converted to a string.</param>
         /// <returns>A string representation of the double value without a leading zero 
         /// if the value is between -1 and 1 (exclusive), otherwise the standard formatted string.</returns>
         private string RemoveLeading0(double value)
         {
-            // Format the number to one decimal place
             string result = value.ToString("F1");
 
-            // If the value is between -1 and 1 and has a leading zero, remove it
             if (value > -1 && value < 1)
             {
                 if (result.StartsWith("0."))
-                    result = result.Substring(1);  // Remove the leading '0' for positive numbers
+                    result = result.Substring(1);
                 else if (result.StartsWith("-0."))
-                    result = "-" + result.Substring(2); // Remove the leading '0' after the negative sign
+                    result = "-" + result.Substring(2);
             }
 
             return result;
@@ -137,7 +129,6 @@ namespace Bahtinov_Collimator.Voice
         /// </summary>
         public void LoadSettings()
         {
-            // Load settings from application configuration
             voiceEnabled = Properties.Settings.Default.VoiceEnabled;
 
             if (voiceEnabled)
@@ -157,13 +148,11 @@ namespace Bahtinov_Collimator.Voice
             {
                 if (synthesizer.State == SynthesizerState.Ready || synthesizer.State == SynthesizerState.Speaking)
                 {
-                    // Enqueue the message if the queue has space
                     if (messageQueue.Count == 0)
                     {
                         messageQueue.Enqueue((text, speechRate));
                     }
 
-                    // Start the first message if the synthesizer is ready
                     if (synthesizer.State == SynthesizerState.Ready)
                     {
                         PlayNextMessage();
@@ -189,22 +178,17 @@ namespace Bahtinov_Collimator.Voice
         /// <summary>
         /// Handles the completion of speech synthesis to update the speech rate.
         /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="e">The event data.</param>
         private void OnSpeakCompleted(object sender, SpeakCompletedEventArgs e)
         {
-            synthesizer.SpeakCompleted -= OnSpeakCompleted; // Unsubscribe to avoid multiple triggers
+            synthesizer.SpeakCompleted -= OnSpeakCompleted;
             synthesizer.Rate = newSpeechRate;
         }
 
         /// <summary>
         /// Handles the completion of speech synthesis to play the next message in the queue.
         /// </summary>
-        /// <param name="sender">The sender of the event.</param>
-        /// <param name="e">The event data.</param>
         private void Synthesizer_SpeakCompleted(object sender, SpeakCompletedEventArgs e)
         {
-            // Play the next message if any
             PlayNextMessage();
         }
 
