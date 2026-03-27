@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -11,10 +11,20 @@ namespace Bahtinov_Collimator
     /// </summary>
     public static class NextStep
     {
+        #region Public API
+
         /// <summary>
         /// Creates the guidance content for the "What should I do next?" dialog based on:
         /// capture state, Tri-Bahtinov visibility, channel values, tolerance, and screw labels.
         /// </summary>
+        /// <param name="capturing">Indicates whether image capture is currently active.</param>
+        /// <param name="triBahtinovVisible">Indicates whether the Tri-Bahtinov pattern is currently visible.</param>
+        /// <param name="red">Current red channel offset value.</param>
+        /// <param name="green">Current green channel offset value.</param>
+        /// <param name="blue">Current blue channel offset value.</param>
+        /// <param name="tolerance">Absolute threshold used to determine balanced or completed states.</param>
+        /// <param name="groupToScrewLabel">Mapping from channel/group name to screw label text.</param>
+        /// <returns>A fully populated guidance model for the current state.</returns>
         public static NextStepGuidance GetNextStepGuidance(
             bool capturing,
             bool triBahtinovVisible,
@@ -55,17 +65,18 @@ namespace Bahtinov_Collimator
                 return g;
             }
 
-            // If TB mask is not visible, this is focus-only behaviour
             if (!triBahtinovVisible)
                 return FocusOnlyGuidance(g);
 
-            // STEP 1: Focus until values are BALANCED around 0
             if (!IsBalancedAroundZero(channels))
                 return FocusToBalancedGuidance(g, channels);
 
-            // STEP 2: Balanced -> collimation
             return BalancedCollimationGuidance(g, channels, tolerance, groupToScrewLabel, inv);
         }
+
+        #endregion
+
+        #region Balance Evaluation
 
         /// <summary>
         /// Determines whether channel values satisfy any of the balance tests (signed-sum, pair-vs-single, extremes).
@@ -112,22 +123,20 @@ namespace Bahtinov_Collimator
             var positives = channels.Where(c => c.Value > 0).ToList();
             var negatives = channels.Where(c => c.Value < 0).ToList();
 
-            // Must be 2 on one side, 1 on the other
             if (positives.Count == 2 && negatives.Count == 1)
             {
                 double avgPair = positives.Average(c => c.Value);
-                double single = -negatives[0].Value; // abs
+                double single = -negatives[0].Value;
                 return Math.Abs(avgPair - single) <= tolerance;
             }
 
             if (negatives.Count == 2 && positives.Count == 1)
             {
-                double avgPair = negatives.Average(c => -c.Value); // abs
+                double avgPair = negatives.Average(c => -c.Value);
                 double single = positives[0].Value;
                 return Math.Abs(avgPair - single) <= tolerance;
             }
 
-            // All same sign or zero-heavy case → not balanced
             return false;
         }
 
@@ -153,6 +162,10 @@ namespace Bahtinov_Collimator
 
             return Math.Abs(maxPositive - Math.Abs(minNegative)) <= tolerance;
         }
+
+        #endregion
+
+        #region Guidance Builders
 
         /// <summary>
         /// Guidance shown when TB is visible but focus is not yet balanced around zero.
@@ -233,7 +246,6 @@ namespace Bahtinov_Collimator
             var positives = channels.Where(c => c.Value > 0).OrderByDescending(c => c.Value).ToList();
             var negatives = channels.Where(c => c.Value < 0).OrderBy(c => c.Value).ToList();
 
-            // If we're basically done
             if (channels.All(c => Math.Abs(c.Value) <= tolerance))
             {
                 g.Kind = NextStepKind.Done;
@@ -248,7 +260,6 @@ namespace Bahtinov_Collimator
                 return g;
             }
 
-            // One positive, two negative
             if (positives.Count == 1 && negatives.Count >= 2)
             {
                 return BuildBalancedInstructionGuidance(
@@ -259,7 +270,6 @@ namespace Bahtinov_Collimator
                     inv);
             }
 
-            // One negative, two positive
             if (negatives.Count == 1 && positives.Count >= 2)
             {
                 return BuildBalancedInstructionGuidance(
@@ -270,7 +280,6 @@ namespace Bahtinov_Collimator
                     inv);
             }
 
-            // Fallback: strongest imbalance + counterbalance
             var worst = channels.OrderByDescending(c => Math.Abs(c.Value)).First();
             var counter = channels
                 .Where(c => c.Name != worst.Name)
@@ -326,6 +335,10 @@ namespace Bahtinov_Collimator
             return g;
         }
 
+        #endregion
+
+        #region Formatting Helpers
+
         /// <summary>
         /// Returns a screw label for the given channel/group name using the provided mapping, or a fallback format.
         /// </summary>
@@ -347,8 +360,18 @@ namespace Bahtinov_Collimator
             return (v >= 0 ? "+" : "") + v.ToString("0.0", inv);
         }
 
+        #endregion
+
+        #region Internal Types
+
+        /// <summary>
+        /// Represents a channel name and numeric value pair used during decision making.
+        /// </summary>
         private readonly struct Channel
         {
+            /// <summary>
+            /// Initializes a channel value container.
+            /// </summary>
             public Channel(string name, double value)
             {
                 Name = name;
@@ -358,5 +381,7 @@ namespace Bahtinov_Collimator
             public string Name { get; }
             public double Value { get; }
         }
+
+        #endregion
     }
 }
