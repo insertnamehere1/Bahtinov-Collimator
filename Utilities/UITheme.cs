@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -289,6 +289,9 @@ namespace Bahtinov_Collimator
 
         #region Constructor
 
+        /// <summary>
+        /// Initializes theme dictionaries for group colors, display lines, and error rendering resources.
+        /// </summary>
         static UITheme()
         {
             GroupBoxTextColors = new Dictionary<int, Color>();
@@ -299,37 +302,30 @@ namespace Bahtinov_Collimator
             ErrorTextFonts = new Dictionary<int, Font>();
             ErrorTextBrush = new Dictionary<int, SolidBrush>();
 
-            // Initialize GroupBox font colors
             GroupBoxTextColors[0] = Color.FromArgb(247, 69, 96);
             GroupBoxTextColors[1] = Color.LightGreen;
             GroupBoxTextColors[2] = Color.FromArgb(66, 179, 245);
 
-            // Initialize GroupBox mouse over colors
             GroupBoxBackgroundColors[0] = Color.FromArgb(80, 70, 80);
             GroupBoxBackgroundColors[1] = Color.FromArgb(60, 90, 80);
             GroupBoxBackgroundColors[2] = Color.FromArgb(60, 70, 100);
 
-            // Initialize Display Line Colors
             DisplayLineColors[0] = Color.FromArgb(247, 69, 96);
             DisplayLineColors[1] = Color.LightGreen;
             DisplayLineColors[2] = Color.FromArgb(66, 179, 245);
 
-            // Initialize Display Line Pens
             DisplayLinePens[0] = new Pen(Color.White, 2.0f) { DashStyle = DashStyle.Dash };
             DisplayLinePens[1] = new Pen(Color.White, 2.0f) { DashStyle = DashStyle.Dash };
             DisplayLinePens[2] = new Pen(Color.White, 2.0f) { DashStyle = DashStyle.Dash };
 
-            // Initialize Error Circle Pens
             ErrorCirclePens[0] = new Pen(DisplayLineColors[0], 5.0f);
             ErrorCirclePens[1] = new Pen(DisplayLineColors[1], 5.0f);
             ErrorCirclePens[2] = new Pen(DisplayLineColors[2], 5.0f);
 
-            // Initialize Error Text Fonts
             ErrorTextFonts[0] = new Font("Arial", 16f);
             ErrorTextFonts[1] = new Font("Arial", 16f);
             ErrorTextFonts[2] = new Font("Arial", 16f);
 
-            // Initialize Error Text Brush
             ErrorTextBrush[0] = new SolidBrush(Color.White);
             ErrorTextBrush[1] = new SolidBrush(Color.White);
             ErrorTextBrush[2] = new SolidBrush(Color.White);
@@ -348,7 +344,7 @@ namespace Bahtinov_Collimator
         {
             if (GroupBoxTextColors.ContainsKey(groupId))
                 return GroupBoxTextColors[groupId];
-            return Color.Black; // Default color if not found
+            return Color.Black;
         }
 
         /// <summary>
@@ -360,7 +356,7 @@ namespace Bahtinov_Collimator
         {
             if (GroupBoxBackgroundColors.ContainsKey(groupId))
                 return GroupBoxBackgroundColors[groupId];
-            return Color.Black; // Default color if not found
+            return Color.Black;
         }
 
         /// <summary>
@@ -377,14 +373,13 @@ namespace Bahtinov_Collimator
                 pen.Color = DisplayLineColors[groupId];
                 return pen;
             }
-            return new Pen(Color.White); // Default color if not found
+            return new Pen(Color.White);
         }
 
         /// <summary>
-        /// Gets the pen used for drawing error circles based on the group ID and focus status.
+        /// Gets the pen used for drawing error circles based on the group ID.
         /// </summary>
         /// <param name="groupId">The group ID.</param>
-        /// <param name="insideFocus">Whether the focus is inside or outside.</param>
         /// <returns>The pen for drawing error circles.</returns>
         public static Pen GetErrorCirclePen(int groupId)
         {
@@ -394,7 +389,7 @@ namespace Bahtinov_Collimator
                 pen.DashStyle = DashStyle.Solid;
                 return pen;
             }
-            return new Pen(Color.White); // Default color if not found
+            return new Pen(Color.White);
         }
 
         /// <summary>
@@ -408,7 +403,7 @@ namespace Bahtinov_Collimator
             {
                 return ErrorTextFonts[groupId];
             }
-            return new Font("Arial", 16f); // Default font if not found
+            return new Font("Arial", 16f);
         }
 
         /// <summary>
@@ -422,7 +417,7 @@ namespace Bahtinov_Collimator
             {
                 return ErrorTextBrush[groupId];
             }
-            return new SolidBrush(Color.White); // Default color if not found
+            return new SolidBrush(Color.White);
         }
 
         #endregion
