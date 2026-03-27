@@ -14,8 +14,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Retrieves the dimensions of the window specified by the given handle.
         /// </summary>
-        /// <param name="hWnd">Handle to the window.</param>
-        /// <param name="lpRect">Structure that receives the window coordinates.</param>
         /// <returns>True if the function succeeds; otherwise, false.</returns>
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -24,9 +22,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Captures a bitmap image of the specified window and renders it into the provided device context.
         /// </summary>
-        /// <param name="hwnd">Handle to the window to capture.</param>
-        /// <param name="hdcBlt">Handle to the device context to which the image is copied.</param>
-        /// <param name="nFlags">Flags specifying how to capture the window.</param>
         /// <returns>True if the function succeeds; otherwise, false.</returns>
         [DllImport("user32.dll", SetLastError = true)]
         private static extern bool PrintWindow(IntPtr hwnd, IntPtr hdcBlt, int nFlags);
@@ -34,7 +29,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Retrieves the handle to the window that contains the specified point.
         /// </summary>
-        /// <param name="p">The point in screen coordinates.</param>
         /// <returns>Handle to the window that contains the point.</returns>
         [DllImport("user32.dll", SetLastError = true)]
         private static extern IntPtr WindowFromPoint(Point p);
@@ -80,13 +74,8 @@ namespace Bahtinov_Collimator
 
         #region Constants
 
-        // Constants for PrintWindow function flags
         private const int PW_RENDERFULLCONTENT = 0x2;
-
-        // Threshold for detecting significant movement
         private const int MovementThreshold = 2;
-
-        // GetAncestor flags
         private const uint GA_ROOT = 2;
 
         #endregion
@@ -109,7 +98,7 @@ namespace Bahtinov_Collimator
 
         #region Public Fields
 
-        public static int TrackingType { get; set; } = 0; //0-off, 1-bahtinov, 2-defocus
+        public static int TrackingType { get; set; } = 0;
 
         #endregion
 
@@ -121,11 +110,11 @@ namespace Bahtinov_Collimator
         /// </summary>
         public static void StartImageCapture()
         {
-            StopImageCapture(); // Ensure any existing timer is stopped
+            StopImageCapture();
 
             captureTimer = new Timer
             {
-                Interval = 200 // Capture every 200 ms
+                Interval = 200
             };
             captureTimer.Tick += CaptureTimer_Tick;
             captureTimer.Start();
@@ -147,7 +136,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         public static void ForceImageUpdate()
         {
-            // Forces updated image on next tick
             hasLastHash = false;
         }
 
@@ -155,7 +143,6 @@ namespace Bahtinov_Collimator
         /// Resolves an arbitrary window handle (often a child/overlay) to its top-level root window.
         /// This reduces cases where WindowFromPoint returns a transient child window that is not suitable for capture.
         /// </summary>
-        /// <param name="hwnd">A window handle returned from WindowFromPoint.</param>
         /// <returns>The top-level root window handle, or IntPtr.Zero if invalid.</returns>
         private static IntPtr GetRootWindow(IntPtr hwnd)
         {
@@ -181,7 +168,6 @@ namespace Bahtinov_Collimator
             if (image == null)
                 return;
 
-            // Hash check for duplicate frames
             ulong secondHash = ComputeFrameHash(image);
             bool isSameImage = hasLastHash && lastFrameHash == secondHash;
 
@@ -220,7 +206,6 @@ namespace Bahtinov_Collimator
                 g = Graphics.FromImage(updatedImage);
                 g.Clear(Color.Black);
 
-                // Compute movement offset
                 Point offset = Point.Empty;
 
                 if (TrackingType == 1)        // bahtinov
@@ -262,14 +247,12 @@ namespace Bahtinov_Collimator
                     }
                 }
 
-                // Draw centered image
                 int x = (UITheme.DisplayWindow.X - latestImage.Width) / 2;
                 int y = (UITheme.DisplayWindow.Y - latestImage.Height) / 2;
 
                 g.DrawImage(latestImage, x, y);
                 g.ResetTransform();
 
-                // Only send when next frame is stable
                 if (newImageSend)
                 {
                     ImageReceivedEvent?.Invoke(null, new ImageReceivedEventArgs(updatedImage));
@@ -315,7 +298,6 @@ namespace Bahtinov_Collimator
             double transitionXSum = 0;
             double transitionYSum = 0;
 
-            // Lock the bitmap for faster pixel access
             BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, image.PixelFormat);
             int bytesPerPixel = Image.GetPixelFormatSize(image.PixelFormat) / 8;
             int stride = bitmapData.Stride;
@@ -375,7 +357,6 @@ namespace Bahtinov_Collimator
                 }
             }
 
-            // Unlock the bitmap
             image.UnlockBits(bitmapData);
 
             if (transitionXSum == 0 || transitionYSum == 0)
@@ -395,6 +376,10 @@ namespace Bahtinov_Collimator
             return (r * 0.299 + g * 0.587 + b * 0.114) / 255.0;
         }
 
+        /// <summary>
+        /// Builds a 0-359 degree cosine lookup table.
+        /// </summary>
+        /// <returns>An array containing cosine values for each integer degree angle.</returns>
         private static double[] BuildCosValues()
         {
             double[] values = new double[360];
@@ -407,6 +392,10 @@ namespace Bahtinov_Collimator
             return values;
         }
 
+        /// <summary>
+        /// Builds a 0-359 degree sine lookup table.
+        /// </summary>
+        /// <returns>An array containing sine values for each integer degree angle.</returns>
         private static double[] BuildSinValues()
         {
             double[] values = new double[360];
@@ -419,6 +408,10 @@ namespace Bahtinov_Collimator
             return values;
         }
 
+        /// <summary>
+        /// Computes a compact luminance hash for frame de-duplication.
+        /// </summary>
+        /// <returns>A 64-bit hash for the sampled center region of the bitmap.</returns>
         private static ulong ComputeFrameHash(Bitmap bitmap)
         {
             if (bitmap == null)
@@ -503,7 +496,6 @@ namespace Bahtinov_Collimator
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 g.Clear(Color.Transparent);
 
-                // Create a circle and fill it with the original image
                 using (TextureBrush brush = new TextureBrush(originalImage))
                 {
                     g.FillEllipse(brush, 0, 0, diameter, diameter);
@@ -526,7 +518,6 @@ namespace Bahtinov_Collimator
                 {
                     selectedStarBox = overlay.SelectedArea;
 
-                    // WindowFromPoint can return a child/overlay window, so resolve to a stable root window.
                     IntPtr hit = WindowFromPoint(new Point(
                         selectedStarBox.Left + selectedStarBox.Width / 2,
                         selectedStarBox.Top + selectedStarBox.Height / 2
@@ -542,7 +533,6 @@ namespace Bahtinov_Collimator
 
                     if (GetWindowRect(targetWindowHandle, out Utilities.RECT rect))
                     {
-                        // Adjust the selected area to be relative to the window's coordinates
                         selectedStarBox.Offset(-rect.Left, -rect.Top);
                         return true;
                     }
@@ -558,22 +548,18 @@ namespace Bahtinov_Collimator
         /// </summary>
         private static Bitmap GetImage()
         {
-            // Validate target window handle early
             if (targetWindowHandle == IntPtr.Zero || !IsWindow(targetWindowHandle))
             {
                 ImageLostEventProvider.OnImageLost(UiText.Current.ImageCaptureImageLostMessage, UiText.Current.ImageCaptureGetImageTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return null;
             }
 
-            // If the window is minimized, PrintWindow is often unreliable and may return a stale/blank image.
-            // Treat this as "image lost" so the UI can instruct the user.
             if (IsIconic(targetWindowHandle))
             {
                 ImageLostEventProvider.OnImageLost(UiText.Current.ImageCaptureTargetMinimizedMessage, UiText.Current.ImageCaptureGetImageTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return null;
             }
 
-            // Get the window rectangle
             if (!GetWindowRect(targetWindowHandle, out Utilities.RECT rect))
             {
                 ImageLostEventProvider.OnImageLost(UiText.Current.ImageCaptureImageLostMessage, UiText.Current.ImageCaptureGetImageTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
@@ -583,13 +569,11 @@ namespace Bahtinov_Collimator
             int windowWidth = (int)(rect.Right - rect.Left);
             int windowHeight = (int)(rect.Bottom - rect.Top);
 
-            // Adjust selectedStarBox to be within the bounds of the window
             selectedStarBox.X = Math.Max(selectedStarBox.X, 0);
             selectedStarBox.Y = Math.Max(selectedStarBox.Y, 0);
             selectedStarBox.Width = Math.Min(selectedStarBox.Width, windowWidth - selectedStarBox.X);
             selectedStarBox.Height = Math.Min(selectedStarBox.Height, windowHeight - selectedStarBox.Y);
 
-            // Enforce UITheme display constraints
             if (selectedStarBox.Width > UITheme.DisplayWindow.X || selectedStarBox.Height > UITheme.DisplayWindow.Y)
             {
                 int excessWidth = selectedStarBox.Width - UITheme.DisplayWindow.X;
@@ -601,7 +585,6 @@ namespace Bahtinov_Collimator
                 selectedStarBox.Height -= excessHeight;
             }
 
-            // Ensure the selected rectangle is valid
             if (selectedStarBox.Width <= 0 || selectedStarBox.Height <= 0)
             {
                 ImageLostEventProvider.OnImageLost(UiText.Current.ImageCaptureSelectionTooSmallForGetImageMessage, UiText.Current.ImageCaptureGetImageTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
@@ -632,7 +615,6 @@ namespace Bahtinov_Collimator
         /// Captures an image of the entire window specified by the window handle.
         /// Uses PrintWindow and validates the return value to avoid returning an empty bitmap when capture fails.
         /// </summary>
-        /// <param name="hwnd">Handle to the window to capture.</param>
         /// <returns>A Bitmap object of the captured window image or null if capturing failed.</returns>
         private static Bitmap CaptureImage(IntPtr hwnd)
         {
@@ -663,7 +645,6 @@ namespace Bahtinov_Collimator
                     ok = PrintWindow(hwnd, hdcBitmap, PW_RENDERFULLCONTENT);
                     if (!ok)
                     {
-                        // Some windows respond better without PW_RENDERFULLCONTENT.
                         ok = PrintWindow(hwnd, hdcBitmap, 0);
                     }
                 }
@@ -695,7 +676,7 @@ namespace Bahtinov_Collimator
         /// Finds the centroid of the brightest compact region in a bitmap, robust to
         /// secondary fainter stars.
         /// </summary>
-        /// <param name="bitmap">The source bitmap (any common 24/32bpp format).</param>
+        /// <param name="bitmap">The source bitmap used to locate the brightest region.</param>
         /// <returns>Centroid of the brightest region. Falls back to image center if it cannot compute.</returns>
         public static Point FindBrightestAreaCentroid(Bitmap bitmap)
         {
@@ -748,7 +729,6 @@ namespace Bahtinov_Collimator
                 if (!ReferenceEquals(src, bitmap)) src.Dispose();
             }
 
-            // Quick test: use brightest pixels instead of average to avoid dark backgrounds dominating
             int brightTarget = Math.Max(1, lum.Length / 200); // top 0.5%
             int brightCount = 0;
             int brightSum = 0;
@@ -769,7 +749,6 @@ namespace Bahtinov_Collimator
             if (brightAvg < 5.0)  // all dark
                 return new Point(0, 0);
 
-            // Build integral image
             int W1 = width + 1;
             int H1 = height + 1;
             int[] ii = new int[W1 * H1];
@@ -788,7 +767,6 @@ namespace Bahtinov_Collimator
                 }
             }
 
-            // Sliding window search
             int window = Math.Max(12, Math.Min(width, height) / 8);
             int bestX = width / 2;
             int bestY = height / 2;
@@ -820,7 +798,6 @@ namespace Bahtinov_Collimator
                 }
             }
 
-            // Refine with intensity-weighted centroid around best
             int radius = Math.Max(6, window / 2);
             int xMin = Math.Max(0, bestX - radius);
             int xMax2 = Math.Min(width - 1, bestX + radius);
@@ -848,7 +825,6 @@ namespace Bahtinov_Collimator
             int cx = (int)Math.Round(sumX / sumW);
             int cy = (int)Math.Round(sumY / sumW);
 
-            // Clamp
             if (cx < 0) cx = 0; else if (cx >= width) cx = width - 1;
             if (cy < 0) cy = 0; else if (cy >= height) cy = height - 1;
 
