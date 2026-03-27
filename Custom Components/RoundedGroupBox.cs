@@ -11,6 +11,8 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public partial class RoundedGroupBox : GroupBox
     {
+        #region Appearance Properties
+
         /// <summary>
         /// Radius of the rounded corners in pixels.
         /// </summary>
@@ -26,6 +28,10 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         public int BorderThickness { get; set; } = 2;
 
+        #endregion
+
+        #region Lifecycle
+
         /// <summary>
         /// Initializes the rounded group box and enables double-buffering
         /// and redraw-on-resize for smooth rendering.
@@ -38,6 +44,10 @@ namespace Bahtinov_Collimator.Custom_Components
             // Force the control to redraw itself when resized.
             ResizeRedraw = true;
         }
+
+        #endregion
+
+        #region Painting
 
         /// <summary>
         /// Custom paint routine for drawing the rounded background,
@@ -110,6 +120,10 @@ namespace Bahtinov_Collimator.Custom_Components
                 e.Graphics.DrawString(Text, Font, textBrush, 10, 0);
         }
 
+        #endregion
+
+        #region Geometry Helpers
+
         /// <summary>
         /// Limits radius so quarter-arcs fit; avoids straight segments between arcs.
         /// </summary>
@@ -145,5 +159,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
             return path;
         }
+
+        #endregion
     }
 }

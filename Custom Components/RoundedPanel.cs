@@ -11,6 +11,8 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public partial class RoundedPanel : Panel
     {
+        #region Appearance Properties
+
         /// <summary>
         /// Radius in pixels for the rounded corners.
         /// </summary>
@@ -32,6 +34,10 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         public Color FillColor { get; set; } = Color.Transparent;
 
+        #endregion
+
+        #region Lifecycle
+
         /// <summary>
         /// Enables custom painting, transparency, and double buffering.
         /// </summary>
@@ -49,6 +55,10 @@ namespace Bahtinov_Collimator.Custom_Components
             // Reduces stair-stepping on rounded strokes when combined with custom painting.
             DoubleBuffered = true;
         }
+
+        #endregion
+
+        #region Painting
 
         /// <summary>
         /// Paints the parent’s background *inside* this panel,
@@ -161,6 +171,10 @@ namespace Bahtinov_Collimator.Custom_Components
             base.OnPaint(e);
         }
 
+        #endregion
+
+        #region Geometry Helpers
+
         /// <summary>
         /// Limits radius so quarter-arcs fit; avoids straight segments between arcs.
         /// </summary>
@@ -196,5 +210,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
             return path;
         }
+
+        #endregion
     }
 }

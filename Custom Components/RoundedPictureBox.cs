@@ -22,6 +22,8 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public partial class RoundedPictureBox : PictureBox
     {
+        #region Reflection Keys
+
         /// <summary>
         /// Key used by <see cref="Control"/> for the <see cref="Control.Paint"/> event list
         /// (same reference as <c>Control.EventPaint</c>).
@@ -29,9 +31,17 @@ namespace Bahtinov_Collimator.Custom_Components
         private static readonly object EventPaintKey =
             typeof(Control).GetField("EventPaint", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null);
 
+        #endregion
+
+        #region Fields
+
         private int cornerRadius = 12;
         private Color borderColor = Color.Gray;
         private int borderThickness = 1;
+
+        #endregion
+
+        #region Public Properties
 
         [Category("Appearance")]
         [DefaultValue(12)]
@@ -64,6 +74,13 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
+        #endregion
+
+        #region Lifecycle
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RoundedPictureBox"/> class.
+        /// </summary>
         public RoundedPictureBox()
         {
             // Enable custom painting, double buffering, and no flicker.
@@ -76,6 +93,10 @@ namespace Bahtinov_Collimator.Custom_Components
             InitializeComponent();
             Resize += (s, e) => Invalidate();
         }
+
+        #endregion
+
+        #region Geometry Helpers
 
         /// <summary>
         /// Maximum corner radius so each quarter-circle fits; larger values cause GDI+ to insert
@@ -113,6 +134,10 @@ namespace Bahtinov_Collimator.Custom_Components
 
             return path;
         }
+
+        #endregion
+
+        #region Rendering Helpers
 
         /// <summary>
         /// Maps the image into <paramref name="fillBounds"/> (client coordinates) for the current <see cref="PictureBoxSizeMode"/>.
@@ -167,6 +192,14 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
+        #endregion
+
+        #region Painting
+
+        /// <summary>
+        /// Paints the rounded image fill and border, then raises subscribed paint handlers.
+        /// </summary>
+        /// <param name="e">Paint event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -220,5 +253,7 @@ namespace Bahtinov_Collimator.Custom_Components
             if (EventPaintKey != null)
                 RaisePaintEvent(EventPaintKey, e);
         }
+
+        #endregion
     }
 }

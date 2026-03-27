@@ -10,6 +10,7 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     internal static class MctSecondaryMirrorLineArt
     {
+        #region Settings
         // ═══════════════════════════════════════════════════════════════════════════════
         // SETTINGS — design space (same 50×100 logical units as <see cref="MirrorDrawingComponent"/>)
         // ═══════════════════════════════════════════════════════════════════════════════
@@ -105,6 +106,16 @@ namespace Bahtinov_Collimator.Custom_Components
         // DRAW
         // ═══════════════════════════════════════════════════════════════════════════════
 
+        #endregion
+
+        #region Drawing
+
+        /// <summary>
+        /// Draws the MCT secondary/corrector line art within the provided design-space bounds.
+        /// </summary>
+        /// <param name="graphics">Graphics context used for drawing.</param>
+        /// <param name="bounds">Design-space bounds that constrain the mirror geometry.</param>
+        /// <param name="mirrorOutlineColor">Base outline color used for strokes and tint blending.</param>
         /// <param name="opticalAxisLength">Logical length of the dotted optical axis (from control).</param>
         public static void Draw(Graphics graphics, Rectangle bounds, Color mirrorOutlineColor, int opticalAxisLength)
         {
@@ -282,5 +293,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 graphics.Restore(state);
             }
         }
+
+        #endregion
     }
 }

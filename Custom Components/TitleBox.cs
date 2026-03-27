@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -12,8 +12,14 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public sealed class TitleBox : Control
     {
-        private int _cornerRadius = 10;
-        private Padding _innerPadding = new Padding(10, 6, 10, 6);
+        #region Fields
+
+        private int cornerRadius = 10;
+        private Padding innerPadding = new Padding(10, 6, 10, 6);
+
+        #endregion
+
+        #region Appearance Properties
 
         /// <summary>
         /// Gets or sets the corner radius used for the rounded rectangle border.
@@ -21,10 +27,10 @@ namespace Bahtinov_Collimator.Custom_Components
         [DefaultValue(10)]
         public int CornerRadius
         {
-            get => _cornerRadius;
+            get => cornerRadius;
             set
             {
-                _cornerRadius = Math.Max(0, value);
+                cornerRadius = Math.Max(0, value);
                 Invalidate();
             }
         }
@@ -34,10 +40,10 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         public Padding InnerPadding
         {
-            get => _innerPadding;
+            get => innerPadding;
             set
             {
-                _innerPadding = value;
+                innerPadding = value;
                 Invalidate();
                 PerformLayout();
             }
@@ -58,6 +64,10 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         public Color FillColor { get; set; } = Color.FromArgb(35, 255, 255, 255);
 
+        #endregion
+
+        #region Lifecycle
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TitleBox"/> control with sensible
         /// defaults for dark UI themes and reduced flicker.
@@ -77,6 +87,10 @@ namespace Bahtinov_Collimator.Custom_Components
             TabStop = false;
         }
 
+        #endregion
+
+        #region Layout and Painting
+
         /// <summary>
         /// Returns the preferred size for the control based on its text, font and padding.
         /// This is used so the title box can auto-size to fit the rendered text.
@@ -95,8 +109,8 @@ namespace Bahtinov_Collimator.Custom_Components
                     TextFormatFlags.NoPadding | TextFormatFlags.SingleLine);
 
                 return new Size(
-                    _innerPadding.Left + textSize.Width + _innerPadding.Right,
-                    _innerPadding.Top + textSize.Height + _innerPadding.Bottom);
+                    innerPadding.Left + textSize.Width + innerPadding.Right,
+                    innerPadding.Top + textSize.Height + innerPadding.Bottom);
             }
         }
 
@@ -114,7 +128,7 @@ namespace Bahtinov_Collimator.Custom_Components
             rect.Width -= 1;
             rect.Height -= 1;
 
-            using (var path = RoundedRect(rect, _cornerRadius))
+            using (var path = RoundedRect(rect, cornerRadius))
             using (var fill = new SolidBrush(FillColor))
             using (var pen = new Pen(BorderColor, BorderWidth))
             {
@@ -123,10 +137,10 @@ namespace Bahtinov_Collimator.Custom_Components
             }
 
             Rectangle textRect = new Rectangle(
-                _innerPadding.Left,
-                _innerPadding.Top,
-                Width - _innerPadding.Left - _innerPadding.Right,
-                Height - _innerPadding.Top - _innerPadding.Bottom);
+                innerPadding.Left,
+                innerPadding.Top,
+                Width - innerPadding.Left - innerPadding.Right,
+                Height - innerPadding.Top - innerPadding.Bottom);
 
             TextRenderer.DrawText(
                 e.Graphics,
@@ -136,6 +150,10 @@ namespace Bahtinov_Collimator.Custom_Components
                 ForeColor,
                 TextFormatFlags.NoPadding | TextFormatFlags.SingleLine | TextFormatFlags.VerticalCenter);
         }
+
+        #endregion
+
+        #region Geometry Helpers
 
         /// <summary>
         /// Creates a <see cref="GraphicsPath"/> describing a rounded rectangle suitable for
@@ -160,5 +178,7 @@ namespace Bahtinov_Collimator.Custom_Components
             path.CloseFigure();
             return path;
         }
+
+        #endregion
     }
 }

@@ -10,6 +10,7 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     internal static class SctPrimaryMirrorLineArt
     {
+        #region Settings
         // ═══════════════════════════════════════════════════════════════════════════════
         // SETTINGS — design space (same 50×100 logical units as <see cref="MirrorDrawingComponent"/>)
         // ═══════════════════════════════════════════════════════════════════════════════
@@ -124,8 +125,18 @@ namespace Bahtinov_Collimator.Custom_Components
         // DRAW
         // ═══════════════════════════════════════════════════════════════════════════════
 
-        /// <param name="cornerRadius">Corner radius from control (clamped by available space).</param>
+        #endregion
+
+        #region Drawing
+
+        /// <summary>
+        /// Draws the SCT primary mirror line art within the provided design-space bounds.
+        /// </summary>
+        /// <param name="graphics">Graphics context used for drawing.</param>
+        /// <param name="bounds">Design-space bounds that constrain the mirror geometry.</param>
+        /// <param name="mirrorOutlineColor">Base outline color used for strokes and tint blending.</param>
         /// <param name="opticalAxisLength">Logical length of dotted axis from control.</param>
+        /// <param name="cornerRadius">Corner radius from control (clamped by available space).</param>
         public static void Draw(Graphics graphics, Rectangle bounds, Color mirrorOutlineColor, int opticalAxisLength, int cornerRadius)
         {
             if (bounds.Width <= 0 || bounds.Height <= 0)
@@ -369,5 +380,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 graphics.DrawLine(axisPen, axisStartX, axisY, axisEndX, axisY);
             }
         }
+
+        #endregion
     }
 }

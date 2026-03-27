@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -11,6 +11,8 @@ using System.Windows.Forms;
 /// </summary>
 public class ToggleSwitch : Control
 {
+    #region Fields
+
     private bool isOn;
     private float animation; // 0..1
     private readonly Timer animationTimer;
@@ -19,6 +21,10 @@ public class ToggleSwitch : Control
     private bool isPressed;
 
     private int rotationDegrees;
+
+    #endregion
+
+    #region Public Properties and Events
 
     /// <summary>
     /// Gets or sets the drawing rotation angle in degrees.
@@ -90,6 +96,10 @@ public class ToggleSwitch : Control
     /// </summary>
     public event EventHandler CheckedChanged;
 
+    #endregion
+
+    #region Lifecycle
+
     /// <summary>
     /// Disposes managed resources.
     /// </summary>
@@ -100,6 +110,10 @@ public class ToggleSwitch : Control
 
         base.Dispose(disposing);
     }
+
+    #endregion
+
+    #region Input Handling
 
     /// <summary>
     /// Enables hover visuals when the mouse enters.
@@ -189,6 +203,10 @@ public class ToggleSwitch : Control
             e.Handled = true;
         }
     }
+
+    #endregion
+
+    #region Painting
 
     /// <summary>
     /// Draws the control. Rotation is applied via graphics transforms.
@@ -391,6 +409,15 @@ public class ToggleSwitch : Control
         }
     }
 
+    #endregion
+
+    #region Geometry Helpers
+
+    /// <summary>
+    /// Normalizes an arbitrary angle to the nearest supported toggle orientation.
+    /// </summary>
+    /// <param name="degrees">The input angle in degrees.</param>
+    /// <returns>One of 0, 90, 180, or 270 degrees.</returns>
     private static int NormalizeRotation(int degrees)
     {
         int d = degrees % 360;
@@ -404,9 +431,21 @@ public class ToggleSwitch : Control
         return 270;
     }
 
+    /// <summary>
+    /// Returns a rectangle inflated inward or outward by a uniform amount.
+    /// </summary>
+    /// <param name="r">The source rectangle.</param>
+    /// <param name="by">Amount to offset each edge; positive shrinks, negative expands.</param>
+    /// <returns>The transformed rectangle.</returns>
     private static RectangleF Inflate(RectangleF r, float by)
         => new RectangleF(r.X + by, r.Y + by, r.Width - 2 * by, r.Height - 2 * by);
 
+    /// <summary>
+    /// Builds a rounded rectangle path for the supplied bounds and corner radius.
+    /// </summary>
+    /// <param name="rect">The rectangle to convert into a rounded path.</param>
+    /// <param name="radius">Corner radius in pixels.</param>
+    /// <returns>A closed rounded rectangle path.</returns>
     private static GraphicsPath RoundedRect(RectangleF rect, float radius)
     {
         GraphicsPath path = new GraphicsPath();
@@ -420,4 +459,6 @@ public class ToggleSwitch : Control
 
         return path;
     }
+
+    #endregion
 }

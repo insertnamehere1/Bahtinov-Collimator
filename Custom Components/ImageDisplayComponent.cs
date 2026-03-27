@@ -10,6 +10,10 @@ using Bahtinov_Collimator.Helper;
 
 namespace Bahtinov_Collimator
 {
+    /// <summary>
+    /// Displays the incoming capture frame and overlays defocus circles or Bahtinov line analysis.
+    /// Uses layered bitmaps so overlays can be redrawn efficiently after resize or DPI changes.
+    /// </summary>
     public partial class ImageDisplayComponent : UserControl
     {
         #region Fields
@@ -46,6 +50,9 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Constructor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImageDisplayComponent"/> class.
+        /// </summary>
         public ImageDisplayComponent()
         {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
@@ -179,6 +186,7 @@ namespace Bahtinov_Collimator
 
         #region Update Methods
         /// <summary>
+        /// Updates the cached display frame and defocus overlay geometry, then redraws all layers.
         /// </summary>
         /// <param name="image">The Bitmap image to display.</param>
         /// <param name="innerCentre">The center point of the inner defocus circle.</param>
@@ -406,7 +414,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         /// <param name="g">The <see cref="Graphics"/> object used for drawing the text.</param>
         /// <param name="start">The <see cref="Point"/> specifying the start position where the text will be centered.</param>
-        /// <param name="end">The <see cref="Point"/> specifying the end position of the line (currently not used in this implementation).</param>
         /// <param name="text">The text string to be drawn.</param>
         /// <param name="font">The <see cref="Font"/> used to draw the text.</param>
         /// <param name="brush">The <see cref="Brush"/> used to color the text.</param>
@@ -548,12 +555,19 @@ namespace Bahtinov_Collimator
             layerSize = target;
         }
 
+        /// <summary>
+        /// Updates the cached base image used to rebuild all display layers.
+        /// </summary>
+        /// <param name="image">The source image to clone into cache, or null to clear the cached source.</param>
         private void CacheSourceImage(Bitmap image)
         {
             cachedSourceImage?.Dispose();
             cachedSourceImage = image != null ? new Bitmap(image) : null;
         }
 
+        /// <summary>
+        /// Rebuilds all rendering layers from the currently cached source image and overlay mode.
+        /// </summary>
         private void RedrawFromCache()
         {
             ClearAllLayers();
@@ -593,6 +607,11 @@ namespace Bahtinov_Collimator
             pictureBox1.Invalidate();
         }
 
+        /// <summary>
+        /// Creates a deep clone of Bahtinov overlay data so redraw operations are independent of source object lifetime.
+        /// </summary>
+        /// <param name="data">The source overlay data to clone.</param>
+        /// <returns>A deep cloned data object, or null when input is null.</returns>
         private static BahtinovLineDataEventArgs.BahtinovLineData CloneBahtinovData(BahtinovLineDataEventArgs.BahtinovLineData data)
         {
             if (data == null)
@@ -640,6 +659,10 @@ namespace Bahtinov_Collimator
             return path;
         }
 
+        /// <summary>
+        /// Applies a transform that maps source-image coordinates into the current layer bitmap while preserving aspect ratio.
+        /// </summary>
+        /// <param name="g">Graphics context receiving the transform.</param>
         private void ApplyContentTransform(Graphics g)
         {
             if (g == null)
@@ -671,8 +694,8 @@ namespace Bahtinov_Collimator
         /// </summary>
         /// <param name="start">The initial start point to be adjusted.</param>
         /// <param name="end">The initial end point to be adjusted.</param>
-        /// <param name="center_X">The width of the PictureBox, used to calculate the center.</param>
-        /// <param name="center_Y">The height of the PictureBox, used to calculate the center.</param>
+        /// <param name="center_X">The source width used to compute the center x-coordinate.</param>
+        /// <param name="center_Y">The source height used to compute the center y-coordinate.</param>
         /// <param name="radius">The radius of the circle on which the points should be adjusted.</param>
         /// <returns>
         /// A tuple containing the adjusted <paramref name="start"/> and <paramref name="end"/> points that are repositioned on the circle.
@@ -706,7 +729,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Clears the display in the PictureBox by removing all drawn layers and disposing of the current image.
         /// </summary>
-        /// <remarks>
         public void ClearDisplay()
         {
             if (pictureBox1.InvokeRequired)
@@ -733,6 +755,10 @@ namespace Bahtinov_Collimator
             }
         }
 
+        /// <summary>
+        /// Releases cached graphics resources when the control handle is being destroyed.
+        /// </summary>
+        /// <param name="e">Event data for handle destruction.</param>
         protected override void OnHandleDestroyed(EventArgs e)
         {
             errorFont?.Dispose();

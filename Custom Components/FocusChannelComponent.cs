@@ -58,7 +58,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Initializes a new instance of the <see cref="FocusChannelComponent"/> class.
         /// </summary>
-        /// <param name="groupID">The group ID for the component.</param>
         public FocusChannelComponent()
         {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
@@ -80,6 +79,11 @@ namespace Bahtinov_Collimator
             UpdateMirrorPanelLayout();
         }
 
+        /// <summary>
+        /// Reconfigures this channel for the specified group and mask mode.
+        /// </summary>
+        /// <param name="groupID">Channel index (0 red, 1 green, 2 blue).</param>
+        /// <param name="isTribahtinov">True when Tri-Bahtinov mode is active and mirror visualization should be shown.</param>
         public void ConfigureFocusChannel(int groupID, bool isTribahtinov)
         {
             UnsubscribeToEvents();
@@ -123,6 +127,11 @@ namespace Bahtinov_Collimator
             focusChannelCount++;
         }
 
+        /// <summary>
+        /// Scales a 96-DPI logical pixel value to current monitor device pixels.
+        /// </summary>
+        /// <param name="logicalPixelsAt96">The logical pixel value based on 96 DPI.</param>
+        /// <returns>The DPI-scaled device pixel value rounded away from zero.</returns>
         private int S(int logicalPixelsAt96)
         {
             float dpiScale = DeviceDpi / 96f;

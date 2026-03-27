@@ -11,6 +11,8 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public partial class RoundedButton : Button
     {
+        #region Appearance Properties
+
         /// <summary>
         /// Radius in pixels for the rounded corners.
         /// </summary>
@@ -71,6 +73,10 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         public int BevelThickness { get; set; } = 2;
 
+        #endregion
+
+        #region Interaction State
+
         /// <summary>
         /// True while the mouse is hovering over the button.
         /// </summary>
@@ -80,6 +86,10 @@ namespace Bahtinov_Collimator.Custom_Components
         /// True while the mouse is pressed down on the button.
         /// </summary>
         private bool isPressed;
+
+        #endregion
+
+        #region Lifecycle
 
         /// <summary>
         /// Initializes the rounded button, configures painting styles,
@@ -107,6 +117,10 @@ namespace Bahtinov_Collimator.Custom_Components
             MouseUp += (s, e) => { isPressed = false; Invalidate(); };
         }
 
+        #endregion
+
+        #region Layout Helpers
+
         /// <summary>
         /// Converts 96-DPI design/logical pixel distances to device pixels for the current <see cref="Control.DeviceDpi"/>,
         /// matching <see cref="CornerRadius"/> handling so layout stays consistent when DPI or form scaling changes.
@@ -117,6 +131,9 @@ namespace Bahtinov_Collimator.Custom_Components
             return (int)Math.Round(logicalPixels * dpiScale, MidpointRounding.AwayFromZero);
         }
 
+        #endregion
+
+        #region Painting
         /// <summary>
         /// Custom paint routine that draws the rounded background,
         /// hover/pressed overlay, bevel, and content (image + text).
@@ -179,6 +196,9 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
+        #endregion
+
+        #region Drawing Helpers
         /// <summary>
         /// Draws a bevel around the outside of the rounded button.
         /// The top and right edges use the light color, left and bottom use the dark color.
@@ -421,5 +441,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
             return path;
         }
+
+        #endregion
     }
 }

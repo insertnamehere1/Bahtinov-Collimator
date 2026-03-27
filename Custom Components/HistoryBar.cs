@@ -16,6 +16,8 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public partial class HistoryBar : Control
     {
+        #region Win32 DPI Messages
+
         /// <summary>
         /// Window message sent when the DPI for this window has changed.
         /// </summary>
@@ -30,6 +32,10 @@ namespace Bahtinov_Collimator.Custom_Components
         /// Window message sent to a child window after its parent processes a DPI change.
         /// </summary>
         private const int WM_DPICHANGED_AFTERPARENT = 0x02E3;
+
+        #endregion
+
+        #region Fields
 
         private float minimum = -1.0f;
         private float maximum = 1.0f;
@@ -61,6 +67,10 @@ namespace Bahtinov_Collimator.Custom_Components
         /// Gets the current DPI scale factor relative to the design DPI.
         /// </summary>
         private float DpiScale => DeviceDpi / (float)DesignDpi;
+
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
         /// Gets or sets the minimum value of the scale.
@@ -152,6 +162,10 @@ namespace Bahtinov_Collimator.Custom_Components
         [Description("Base text color for labels and value.")]
         public Color TextColor { get; set; } = Color.White;
 
+        #endregion
+
+        #region Lifecycle
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HistoryBar"/> class.
         /// Sets up double buffering and a sensible default size, scaled for the current DPI.
@@ -170,6 +184,10 @@ namespace Bahtinov_Collimator.Custom_Components
             // Multiply by DpiScale so the default matches the current monitor DPI.
             Size = new Size((int)(300 * DpiScale), GetPreferredHeight());
         }
+
+        #endregion
+
+        #region Sizing and DPI
 
         /// <summary>
         /// Ensures preferred size is also DPI aware when the designer or layout engine asks.
@@ -256,6 +274,10 @@ namespace Bahtinov_Collimator.Custom_Components
 
             Invalidate();
         }
+
+        #endregion
+
+        #region Painting
 
         /// <summary>
         /// Performs custom painting of the bar, labels, zero tick, history markers,
@@ -408,6 +430,10 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
         /// Calculates the minimum height needed to render the marker, ticks, and value text without clipping.
         /// </summary>
@@ -457,5 +483,7 @@ namespace Bahtinov_Collimator.Custom_Components
             value = float.NaN;
             Invalidate();
         }
+
+        #endregion
     }
 }
