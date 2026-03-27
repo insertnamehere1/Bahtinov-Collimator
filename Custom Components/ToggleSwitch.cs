@@ -16,10 +16,8 @@ public class ToggleSwitch : Control
     private bool isOn;
     private float animation; // 0..1
     private readonly Timer animationTimer;
-
     private bool isHover;
     private bool isPressed;
-
     private int rotationDegrees;
 
     #endregion

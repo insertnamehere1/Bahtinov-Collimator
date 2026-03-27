@@ -121,11 +121,16 @@ namespace Bahtinov_Collimator
         #region Display Window
 
         /// <summary>
+        /// Gets the baseline square display size at 96 DPI used for source-space normalization.
+        /// </summary>
+        public static float DisplayWindowReferenceSizeAt96 { get; } = 600f;
+
+        /// <summary>
         /// Gets or sets the size of the display window.
         /// </summary>
         public static Point DisplayWindow => new Point(
-            (int)Math.Round(600f * DpiScaleFactor),
-            (int)Math.Round(600f * DpiScaleFactor)
+            (int)Math.Round(DisplayWindowReferenceSizeAt96 * DpiScaleFactor),
+            (int)Math.Round(DisplayWindowReferenceSizeAt96 * DpiScaleFactor)
         );
 
         /// <summary>

@@ -19,20 +19,14 @@ namespace Bahtinov_Collimator.Custom_Components
         #region Constants and Fields
 
         private const float CompletionThresholdPixels = 0.5f;
-
         private readonly Form1 parent;
-
         private readonly float[] current = new float[3] { float.NaN, float.NaN, float.NaN };
-
         private readonly float[] baseline = new float[3] { 0f, 0f, 0f };
         private bool baselineCaptured;
-
         private bool seenGreen;
         private bool seenBlue;
-
         private readonly Timer aggregationTimer;
         private bool aggregationActive;
-
         private CalibrationState state = CalibrationState.WaitingForFirstValidRead;
 
         private enum CalibrationState

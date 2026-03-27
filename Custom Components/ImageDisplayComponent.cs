@@ -23,6 +23,13 @@ namespace Bahtinov_Collimator
         private Size layerSize = Size.Empty;
         private int sourceWidth = 600;
         private int sourceHeight = 600;
+        private OverlayMode cachedOverlayMode = OverlayMode.None;
+        private Bitmap cachedSourceImage;
+        private PointD cachedInnerCentre;
+        private PointD cachedOuterCentre;
+        private double cachedInnerRadius;
+        private double cachedOuterRadius;
+        private BahtinovLineDataEventArgs.BahtinovLineData cachedBahtinovData;
 
         private enum OverlayMode
         {
@@ -31,13 +38,6 @@ namespace Bahtinov_Collimator
             Bahtinov
         }
 
-        private OverlayMode cachedOverlayMode = OverlayMode.None;
-        private Bitmap cachedSourceImage;
-        private PointD cachedInnerCentre;
-        private PointD cachedOuterCentre;
-        private double cachedInnerRadius;
-        private double cachedOuterRadius;
-        private BahtinovLineDataEventArgs.BahtinovLineData cachedBahtinovData;
         #endregion
 
         #region Constructor
@@ -460,7 +460,7 @@ namespace Bahtinov_Collimator
         /// <returns>Overlay scale ratio derived from the current source image dimensions.</returns>
         private float GetOverlayScale()
         {
-            const float referenceSize = 600f;
+            float referenceSize = Math.Max(1f, UITheme.DisplayWindowReferenceSizeAt96);
             float minSource = Math.Max(1f, Math.Min(sourceWidth, sourceHeight));
             return minSource / referenceSize;
         }

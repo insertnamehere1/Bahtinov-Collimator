@@ -29,7 +29,6 @@ namespace Bahtinov_Collimator
             set => mirrorDrawingComponent1.MirrorType = value;
         }
 
-
         private bool disposed = false; // To detect redundant calls
         private int groupID;
 

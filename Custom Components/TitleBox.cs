@@ -36,20 +36,6 @@ namespace Bahtinov_Collimator.Custom_Components
         }
 
         /// <summary>
-        /// Gets or sets the padding applied between the box border and the title text.
-        /// </summary>
-        public Padding InnerPadding
-        {
-            get => innerPadding;
-            set
-            {
-                innerPadding = value;
-                Invalidate();
-                PerformLayout();
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the border color used to draw the title box outline.
         /// </summary>
         public Color BorderColor { get; set; } = Color.White;
