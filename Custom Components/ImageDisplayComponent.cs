@@ -17,19 +17,10 @@ namespace Bahtinov_Collimator
     public partial class ImageDisplayComponent : UserControl
     {
         #region Fields
-        // List to hold multiple layers of Bitmap images
         readonly private List<Bitmap> layers;
-
-        // Index to track the currently selected group
         private int selectedGroup = 0;
-
-        // scalable font for the displayed error values
         private Font errorFont;
-
-        // Track current layer bitmap size so we can recreate on DPI/resize.
         private Size layerSize = Size.Empty;
-
-        // The coordinate-space of the incoming image/overlay data (typically 600x600).
         private int sourceWidth = 600;
         private int sourceHeight = 600;
 
@@ -74,7 +65,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void SetupSubscriptions()
         {
-            // Subscribe to the ImageReceivedEvent
             FocusChannelComponent.ChannelSelectDataEvent += ChannelSelected;
             BahtinovProcessing.BahtinovLineDrawEvent += OnBahtinovLineReceive;
             ImageLostEventProvider.ImageLostEvent += HandleImageLost;
@@ -99,7 +89,6 @@ namespace Bahtinov_Collimator
         /// scaling settings. It retrieves the current DPI, calculates the appropriate font size by
         /// comparing it to the standard DPI (96), and then applies the scaled font to the form.
         /// </summary>
-        /// <param name="e">Event data for the Load event.</param>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -125,8 +114,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the event when an image is lost. Clears the display.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">Event arguments.</param>
         private void HandleImageLost(object sender, ImageLostEventArgs e)
         {
             ClearDisplay();
@@ -135,8 +122,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the event when a defocus circle is received. Updates the PictureBox with the new image and circle data.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">Event arguments containing the image and circle data.</param>
         private void OnDefocusCirceReceived(object sender, DefocusCircleEventArgs e)
         {
             Bitmap image = new Bitmap(e.Image);
@@ -150,8 +135,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the event when Bahtinov line data is received. Updates the PictureBox with the new image and line data.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">Event arguments containing the image and line data.</param>
         private void OnBahtinovLineReceive(object sender, BahtinovLineDataEventArgs e)
         {
             Bitmap image = new Bitmap(e.Image);
@@ -165,8 +148,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the event when the channel selection changes. Updates the selected group index and refreshes the PictureBox.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">Event arguments containing the channel selection data.</param>
         private void ChannelSelected(object sender, ChannelSelectEventArgs e)
         {
             selectedGroup = 0; // Default value
@@ -188,11 +169,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Updates the cached display frame and defocus overlay geometry, then redraws all layers.
         /// </summary>
-        /// <param name="image">The Bitmap image to display.</param>
-        /// <param name="innerCentre">The center point of the inner defocus circle.</param>
-        /// <param name="innerRadius">The radius of the inner defocus circle.</param>
-        /// <param name="outerCentre">The center point of the outer defocus circle.</param>
-        /// <param name="outerRadius">The radius of the outer defocus circle.</param>
         private void UpdatePictureBox(Bitmap image, PointD innerCentre, double innerRadius, PointD outerCentre, double outerRadius)
         {
             CacheSourceImage(image);
@@ -210,8 +186,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Updates the PictureBox with the provided image and drawing data, including bahtinov line data and error values.
         /// </summary>
-        /// <param name="image">The Bitmap image to display.</param>
-        /// <param name="data">The Bahtinov line information and the bahtinov error values.</param>
         private void UpdatePictureBox(Bitmap image, BahtinovLineDataEventArgs.BahtinovLineData data)
         {
             CacheSourceImage(image);
@@ -233,7 +207,6 @@ namespace Bahtinov_Collimator
         {
             using (var g = Graphics.FromImage(layers[1]))
             {
-                // Make alpha blending predictable and nice-looking.
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 g.CompositingMode = CompositingMode.SourceOver;
                 g.CompositingQuality = CompositingQuality.HighQuality;
@@ -246,7 +219,6 @@ namespace Bahtinov_Collimator
                 float layerCentreY = sourceHeight / 2f;
                 float overlayScale = GetOverlayScale();
 
-                // Convert circle centres into layer pixel coordinates once.
                 var innerPx = new PointF(layerCentreX + (float)innerCentre.X, layerCentreY + (float)innerCentre.Y);
                 var outerPx = new PointF(layerCentreX + (float)outerCentre.X, layerCentreY + (float)outerCentre.Y);
 
@@ -265,11 +237,8 @@ namespace Bahtinov_Collimator
                     DashStyle = System.Drawing.Drawing2D.DashStyle.Dash
                 })
                 {
-                    // Circles (same pens for consistent look)
                     DrawCircle(g, innerDashPen, innerPx, (float)innerRadius);
                     DrawCircle(g, outerDashPen, outerPx, (float)outerRadius);
-
-                    // Crosses (semi-transparent so overlaps blend instead of replace)
                     DrawCross(g, outerPen, outerPx, crossSize);
                     DrawCross(g, innerPen, innerPx, crossSize);
                 }
@@ -286,16 +255,13 @@ namespace Bahtinov_Collimator
         {
             float half = size / 1.5f;
 
-            // Horizontal
             g.DrawLine(pen, centre.X - half, centre.Y, centre.X + half, centre.Y);
-            // Vertical
             g.DrawLine(pen, centre.X, centre.Y - half, centre.X, centre.Y + half);
         }
 
         /// <summary>
         /// Draws the provided image on the first layer of the PictureBox.
         /// </summary>
-        /// <param name="image">The Bitmap image to draw.</param>
         private void DrawImageOnFirstLayer(Bitmap image)
         {
             if (image == null)
@@ -311,7 +277,6 @@ namespace Bahtinov_Collimator
                 g.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-                // Draw the source bitmap scaled to fit inside the component, preserving aspect ratio.
                 ApplyContentTransform(g);
                 g.DrawImage(image, new Rectangle(0, 0, sourceWidth, sourceHeight));
             }
@@ -320,8 +285,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Draws a group of lines on the PictureBox based on the provided line group data.
         /// </summary>
-        /// <param name="group">The group line data for the bahtinov lines.</param>
-        /// <param name="clippingRegion">The clipping circle.</param> 
         private void DrawGroupLines(BahtinovLineDataEventArgs.LineGroup group, GraphicsPath clippingRegion)
         {
             using (var g = Graphics.FromImage(layers[group.GroupId + 1]))
@@ -331,10 +294,7 @@ namespace Bahtinov_Collimator
                 g.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-                // Draw in source coordinates, scaled/centered to fit the current control size.
                 ApplyContentTransform(g);
-                // Clip path is defined in source coordinates; with the transform set above,
-                // GDI+ will apply the same transform to the clip region.
                 g.SetClip(clippingRegion);
 
                 const int alpha = 150;   // 0–255  lower = more transparent, higher = more opaque
@@ -343,7 +303,6 @@ namespace Bahtinov_Collimator
                 {
                     var pen = UITheme.GetDisplayLinePen(group.GroupId, line.LineId);
 
-                    // Modify opacity
                     var c = pen.Color;
                     pen.Color = Color.FromArgb(alpha, c.R, c.G, c.B);
 
@@ -360,14 +319,11 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Draws an error circle and an error line on the provided graphics object.
         /// </summary>
-        /// <param name="g">The <see cref="Graphics"/> object used for drawing.</param>
-        /// <param name="group">An instance of <see cref="BahtinovLineDataEventArgs.LineGroup"/> containing the data for the error circle and line.</param>
         private void DrawErrorCircleAndLine(Graphics g, BahtinovLineDataEventArgs.LineGroup group)
         {
             var errorPen = UITheme.GetErrorCirclePen(group.GroupId);
             float overlayScale = GetOverlayScale();
 
-            // Preserve center position but scale marker geometry with source image dimensions.
             float baseCircleRadius = Math.Max(1f, group.ErrorCircle.Width / 2f);
             float scaledCircleRadius = baseCircleRadius * overlayScale;
             float centerX = group.ErrorCircle.Origin.X + baseCircleRadius;
@@ -386,8 +342,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Draws the error value text on the provided graphics object at a calculated location based on the error line data from the specified line group.
         /// </summary>
-        /// <param name="g">The <see cref="Graphics"/> object used for drawing.</param>
-        /// <param name="group">An instance of <see cref="BahtinovLineDataEventArgs.LineGroup"/> containing the error line data and error circle information.</param>
         private void DrawErrorValueText(Graphics g, BahtinovLineDataEventArgs.LineGroup group)
         {
             var solidBrush = UITheme.GetErrorTextBrush(group.GroupId);
@@ -412,20 +366,10 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Draws a line of text centered at the specified start point on the provided graphics object.
         /// </summary>
-        /// <param name="g">The <see cref="Graphics"/> object used for drawing the text.</param>
-        /// <param name="start">The <see cref="Point"/> specifying the start position where the text will be centered.</param>
-        /// <param name="text">The text string to be drawn.</param>
-        /// <param name="font">The <see cref="Font"/> used to draw the text.</param>
-        /// <param name="brush">The <see cref="Brush"/> used to color the text.</param>
         private void DrawLineWithCenteredText(Graphics g, Point start, string text, Font font, Brush brush)
         {
-            // Measure the size of the text
             SizeF textSize = g.MeasureString(text, font);
-
-            // Calculate the position to center the text at the start point
             PointF textPosition = new PointF(start.X - textSize.Width / 2, start.Y - textSize.Height / 2);
-
-            // Draw the text
             g.DrawString(text, font, brush, textPosition);
         }
         #endregion
@@ -435,7 +379,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Adds a specified number of new layers to the <see cref="layers"/> collection. Each layer is represented as a <see cref="Bitmap"/> with the dimensions of the PictureBox control.
         /// </summary>
-        /// <param name="count">The number of layers to add.</param>
         private void AddNewLayers(int count)
         {
             for (int i = 0; i < count; i++)
@@ -450,8 +393,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the Paint event of the PictureBox control to render the image layers on the control.
         /// </summary>
-        /// <param name="sender">The source of the event, typically the PictureBox control.</param>
-        /// <param name="e">An <see cref="PaintEventArgs"/> that contains information about the paint event, including the <see cref="Graphics"/> object used for drawing.</param>
         private void PictureBoxPaint(object sender, PaintEventArgs e)
         {
             EnsureLayerSizeMatchesPictureBox(forceRecreate: false);
@@ -464,7 +405,6 @@ namespace Bahtinov_Collimator
             if (destRect.Width <= 0 || destRect.Height <= 0)
                 return;
 
-            // Draw scaled so DPI/resize changes scale the content.
             e.Graphics.DrawImage(layers[0], destRect);
 
             if (selectedGroup == 0)
@@ -480,6 +420,9 @@ namespace Bahtinov_Collimator
             }
         }
 
+        /// <summary>
+        /// Rebuilds backing layers when the picture box size changes, then redraws cached content.
+        /// </summary>
         private void PictureBoxResized(object sender, EventArgs e)
         {
             EnsureLayerSizeMatchesPictureBox(forceRecreate: true);
@@ -500,16 +443,21 @@ namespace Bahtinov_Collimator
             }
         }
 
+        /// <summary>
+        /// Updates the reusable error-text font instance used for overlay value rendering.
+        /// </summary>
         private void UpdateErrorFontForCurrentDpi()
         {
-            // Keep a base font around for compatibility; actual error-value drawing scales
-            // from source image dimensions in DrawErrorValueText.
             const float sourcePixelFontSize = 25.0f;
 
             errorFont?.Dispose();
             errorFont = new Font(this.Font.FontFamily, sourcePixelFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
         }
 
+        /// <summary>
+        /// Computes the scale factor used to normalize overlay geometry against the reference source size.
+        /// </summary>
+        /// <returns>Overlay scale ratio derived from the current source image dimensions.</returns>
         private float GetOverlayScale()
         {
             const float referenceSize = 600f;
@@ -517,6 +465,9 @@ namespace Bahtinov_Collimator
             return minSource / referenceSize;
         }
 
+        /// <summary>
+        /// Ensures each bitmap layer matches the current picture box client size.
+        /// </summary>
         private void EnsureLayerSizeMatchesPictureBox(bool forceRecreate)
         {
             Size target = pictureBox1.ClientSize;
@@ -532,8 +483,6 @@ namespace Bahtinov_Collimator
                 return;
             }
 
-            // Recreate each layer bitmap to match the new size.
-            // Rendering is done from cached source data to avoid quality loss from resampling.
             for (int i = 0; i < layers.Count; i++)
             {
                 Bitmap old = layers[i];
@@ -558,7 +507,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Updates the cached base image used to rebuild all display layers.
         /// </summary>
-        /// <param name="image">The source image to clone into cache, or null to clear the cached source.</param>
         private void CacheSourceImage(Bitmap image)
         {
             cachedSourceImage?.Dispose();
@@ -610,7 +558,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Creates a deep clone of Bahtinov overlay data so redraw operations are independent of source object lifetime.
         /// </summary>
-        /// <param name="data">The source overlay data to clone.</param>
         /// <returns>A deep cloned data object, or null when input is null.</returns>
         private static BahtinovLineDataEventArgs.BahtinovLineData CloneBahtinovData(BahtinovLineDataEventArgs.BahtinovLineData data)
         {
@@ -648,9 +595,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Creates a circular clipping region centered at a specified point with a given radius.
         /// </summary>
-        /// <param name="centerX">The x-coordinate of the center of the circle.</param>
-        /// <param name="centerY">The y-coordinate of the center of the circle.</param>
-        /// <param name="radius">The radius of the circle.</param>
         /// <returns>A <see cref="GraphicsPath"/> object representing the circular clipping region.</returns>
         private GraphicsPath CreateCircularClippingRegion(int centerX, int centerY, int radius)
         {
@@ -662,14 +606,11 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Applies a transform that maps source-image coordinates into the current layer bitmap while preserving aspect ratio.
         /// </summary>
-        /// <param name="g">Graphics context receiving the transform.</param>
         private void ApplyContentTransform(Graphics g)
         {
             if (g == null)
                 return;
 
-            // Map the source coordinate space (e.g. 600x600) into the current layer bitmap size,
-            // preserving aspect ratio and centering (letterboxing/pillarboxing as needed).
             var target = layers != null && layers.Count > 0 ? layers[0].Size : pictureBox1.ClientSize;
             if (target.Width <= 0 || target.Height <= 0 || sourceWidth <= 0 || sourceHeight <= 0)
                 return;
@@ -702,24 +643,19 @@ namespace Bahtinov_Collimator
         /// </returns>
         public static (Point start, Point end) AdjustPointsForRadius(Point start, Point end, int center_X, int center_Y, float radius)
         {
-            // Calculate the center of the PictureBox
             int centerX = center_X / 2;
             int centerY = center_Y / 2;
 
-            // Calculate direction vector
             float dx = end.X - start.X;
             float dy = end.Y - start.Y;
             float length = (float)Math.Sqrt(dx * dx + dy * dy);
 
-            // Normalize direction vector
             float unitDx = dx / length;
             float unitDy = dy / length;
 
-            // Calculate the start point on the circle with the given radius
             start.X = (int)(centerX + radius * unitDx);
             start.Y = (int)(centerY + radius * unitDy);
 
-            // Calculate the end point on the circle with the given radius
             end.X = (int)(centerX - radius * unitDx);
             end.Y = (int)(centerY - radius * unitDy);
 
@@ -733,7 +669,6 @@ namespace Bahtinov_Collimator
         {
             if (pictureBox1.InvokeRequired)
             {
-                // If not on the UI thread, use Invoke to marshal the call to the UI thread
                 pictureBox1.Invoke(new Action(ClearDisplay));
             }
             else
@@ -744,11 +679,9 @@ namespace Bahtinov_Collimator
                 cachedBahtinovData = null;
                 cachedOverlayMode = OverlayMode.None;
 
-                // Dispose of the current image if it exists
                 pictureBox1.Image?.Dispose();
                 pictureBox1.Image = null;
 
-                // Force the PictureBox to redraw itself as blank
                 pictureBox1.Invalidate();
                 pictureBox1.Image = Properties.Resources.TBMask_DarkGray;
                 pictureBox1.BackColor = UITheme.DarkBackground;
@@ -758,7 +691,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Releases cached graphics resources when the control handle is being destroyed.
         /// </summary>
-        /// <param name="e">Event data for handle destruction.</param>
         protected override void OnHandleDestroyed(EventArgs e)
         {
             errorFont?.Dispose();

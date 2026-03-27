@@ -22,14 +22,11 @@ namespace Bahtinov_Collimator.Custom_Components
 
         private readonly Form1 parent;
 
-        // Latest measured offsets for (Red, Green, Blue) ids: 0..2
         private readonly float[] current = new float[3] { float.NaN, float.NaN, float.NaN };
 
-        // Baseline offsets captured once we have enough data
         private readonly float[] baseline = new float[3] { 0f, 0f, 0f };
         private bool baselineCaptured;
 
-        // Have we ever seen channels 1/2 update (Tri-Bahtinov indicator)
         private bool seenGreen;
         private bool seenBlue;
 
@@ -63,7 +60,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
             aggregationTimer = new Timer
             {
-                Interval = 500 // half second
+                Interval = 500
             };
 
             aggregationTimer.Tick += AggregationTimer_Tick;
@@ -83,7 +80,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         private void SetupUI()
         {
-            // internationalize text
             var textPack = NextStepText.Current;
             quitButton.Text = textPack.CalibrationQuitButtonText;
             titledRoundedRichTextBox1.TitleText = textPack.CalibrationTitle;
@@ -170,17 +166,14 @@ namespace Bahtinov_Collimator.Custom_Components
             if (id < 0 || id > 2)
                 return;
 
-            // Track whether channels 1/2 ever appear (Tri-Bahtinov detection)
             if (id == 1) seenGreen = true;
             if (id == 2) seenBlue = true;
 
-            // Update current values
             if (!e.FocusData.ClearDisplay)
                 current[id] = (float)e.FocusData.BahtinovOffset;
             else
                 current[id] = float.NaN;
 
-            // Start aggregation window on first received channel
             if (!aggregationActive)
             {
                 aggregationActive = true;
@@ -193,8 +186,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// Called after the aggregation window expires. Advances calibration state once
         /// using whatever channels were received during the window.
         /// </summary>
-        /// <param name="sender">The timer raising the event.</param>
-        /// <param name="e">Event data for the timer tick.</param>
         private void AggregationTimer_Tick(object sender, EventArgs e)
         {
             aggregationTimer.Stop();
@@ -218,7 +209,6 @@ namespace Bahtinov_Collimator.Custom_Components
                 return;
             }
 
-            // If the display is cleared (or we lose required channels), fall back to waiting state.
             if (!HasEnoughDataToBaseline())
             {
                 state = CalibrationState.WaitingForFirstValidRead;
@@ -243,7 +233,6 @@ namespace Bahtinov_Collimator.Custom_Components
 
             if (state == CalibrationState.AskUserToMoveMirror)
             {
-                // As soon as new measurements start changing, we can begin measuring direction.
                 state = CalibrationState.MeasuringDirection;
                 UpdateInstructionText();
             }
@@ -293,7 +282,6 @@ namespace Bahtinov_Collimator.Custom_Components
                 float d1 = current[1] - baseline[1];
                 float d2 = current[2] - baseline[2];
 
-                // All channels must exceed the threshold in magnitude
                 bool allExceeded =
                     Math.Abs(d0) >= threshold &&
                     Math.Abs(d1) >= threshold &&
@@ -302,16 +290,12 @@ namespace Bahtinov_Collimator.Custom_Components
                 if (!allExceeded)
                     return false;
 
-                // All channels must move in the same direction
                 bool allPositive = (d0 > 0f) && (d1 > 0f) && (d2 > 0f);
                 bool allNegative = (d0 < 0f) && (d1 < 0f) && (d2 < 0f);
 
                 if (!allPositive && !allNegative)
                     return false;
 
-                // Rule:
-                // Negative movement = correct direction, calibration complete
-                // Positive movement = wrong direction, sign switch required
                 signSwitch = allPositive;
             }
             else
@@ -333,7 +317,6 @@ namespace Bahtinov_Collimator.Custom_Components
 
             quitButton.Text = NextStepText.Current.CalibrationCloseButtonText;
 
-            // Capture new image to display changed sign.
             ImageCapture.ForceImageUpdate();
 
             return true;
@@ -346,17 +329,14 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Applies bold formatting to the final non-empty line in a rich text box.
         /// </summary>
-        /// <param name="rtb">The target rich text box.</param>
         private static void BoldLastLine(RichTextBox rtb)
         {
             if (rtb == null || rtb.TextLength == 0)
                 return;
 
-            // Save current selection/caret
             int savedStart = rtb.SelectionStart;
             int savedLength = rtb.SelectionLength;
 
-            // Ignore trailing newlines
             int end = rtb.TextLength - 1;
             while (end >= 0 && (rtb.Text[end] == '\n' || rtb.Text[end] == '\r'))
                 end--;
@@ -364,18 +344,15 @@ namespace Bahtinov_Collimator.Custom_Components
             if (end < 0)
                 return;
 
-            // Find start of the last line
             int start = rtb.Text.LastIndexOf('\n', end);
             start = (start == -1) ? 0 : start + 1;
 
             int length = end - start + 1;
 
-            // Bold just that line
             rtb.Select(start, length);
             Font f = rtb.SelectionFont ?? rtb.Font;
             rtb.SelectionFont = new Font(f, f.Style | FontStyle.Bold);
 
-            // Restore selection/caret
             rtb.Select(savedStart, savedLength);
         }
 
@@ -483,8 +460,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Cancels calibration and returns control to the main form.
         /// </summary>
-        /// <param name="sender">The button that initiated cancellation.</param>
-        /// <param name="e">Click event data.</param>
         private void CancelButton_Click(object sender, EventArgs e)
         {
             if (parent != null)

@@ -115,7 +115,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Paints the selected mirror profile scaled to the current client bounds.
         /// </summary>
-        /// <param name="e">Paint event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -124,7 +123,6 @@ namespace Bahtinov_Collimator.Custom_Components
             if (client.Width <= 0 || client.Height <= 0)
                 return;
 
-            // Uniform scale from fixed 50×100 design space — preserves proportions at any control size / DPI.
             float scale = Math.Min(client.Width / (float)DesignWidth, client.Height / (float)DesignHeight);
             float scaledW = DesignWidth * scale;
             float scaledH = DesignHeight * scale;

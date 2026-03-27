@@ -130,7 +130,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Scales a 96-DPI logical pixel value to current monitor device pixels.
         /// </summary>
-        /// <param name="logicalPixelsAt96">The logical pixel value based on 96 DPI.</param>
         /// <returns>The DPI-scaled device pixel value rounded away from zero.</returns>
         private int S(int logicalPixelsAt96)
         {
@@ -189,8 +188,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Custom paint event handler for labels.
         /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The <see cref="PaintEventArgs"/> instance containing the event data.</param>
         private void Label_Paint(object sender, PaintEventArgs e)
         {
             if (sender is Label label && label.Parent is GroupBox parentGroupBox && parentGroupBox.Tag is int groupId)
@@ -198,13 +195,11 @@ namespace Bahtinov_Collimator
                 Color textColor = UITheme.GetGroupBoxTextColor(groupId);
                 TextFormatFlags flags = TextFormatFlags.Default;
 
-                // Check label name to set text format flags
                 if (label.Name == "FocusErrorLabel")
                 {
                     flags = TextFormatFlags.VerticalCenter | TextFormatFlags.Right;
                 }
 
-                // Draw the text with the specified color and format
                 TextRenderer.DrawText(e.Graphics, label.Text, label.Font, label.ClientRectangle, textColor, flags);
             }
         }
@@ -236,7 +231,6 @@ namespace Bahtinov_Collimator
                 }
                 else
                 {
-                    // Idle state: clear bar + history (ResetHistory alone left Value/ErrorOffset stale).
                     offsetBarControl1.ResetValueAndHistory();
                     offsetBarControl1.MarkerColor = Color.Green;
                     ErrorOffset = 0.0;
@@ -257,6 +251,9 @@ namespace Bahtinov_Collimator
             UpdateMirrorPanelLayout();
         }
 
+        /// <summary>
+        /// Updates history-bar size and placement based on current channel mode and DPI.
+        /// </summary>
         private void UpdateHistoryBarLayout()
         {
             if (offsetBarControl1 == null || groupBox1 == null)
@@ -264,12 +261,10 @@ namespace Bahtinov_Collimator
 
             int margin = S(HistoryBarHorizontalMarginAt96);
             int clientW = groupBox1.ClientSize.Width;
-            // Space between left/right margins — never let S()-scaled bar width exceed this (fixes high-DPI blow-up).
             int innerW = Math.Max(0, clientW - 2 * margin);
 
             if (mirrorDrawingComponent1.Visible)
             {
-                // Target width from design (96-DPI logical), then clamp to what actually fits in the group box.
                 int desiredBarW = S(DefaultFocusChannelWidthAt96) - 2 * S(HistoryBarHorizontalMarginAt96);
                 desiredBarW = Math.Max(S(80), desiredBarW);
                 int barW = Math.Min(desiredBarW, innerW);
@@ -280,14 +275,11 @@ namespace Bahtinov_Collimator
             }
             else
             {
-                // Bahtinov-only: bar spans available width between margins.
                 offsetBarControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
                 offsetBarControl1.Left = margin;
-                // Prefer ≥ S(80), but never wider than the space between margins.
                 offsetBarControl1.Width = Math.Min(Math.Max(S(80), innerW), Math.Max(innerW, 1));
             }
 
-            // Center vertically within the group box content area (excludes caption where supported).
             Rectangle content = groupBox1.DisplayRectangle;
             int targetTop = content.Top + ((content.Height - offsetBarControl1.Height) / 2) + S(HISTORYBAR_VERTICAL_POSITION);
             targetTop = Math.Max(content.Top, targetTop);
@@ -295,7 +287,6 @@ namespace Bahtinov_Collimator
             if (offsetBarControl1.Top != targetTop)
                 offsetBarControl1.Top = targetTop;
 
-            // Mirror is added after the bar in the designer and paints on top — keep the bar visible when they overlap.
             offsetBarControl1.BringToFront();
         }
 
@@ -331,8 +322,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the MouseEnter event for the group box.
         /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected void FocusChannelGroupBox_MouseEnter(object sender, EventArgs e)
         {
             groupBox1.BackColor = UITheme.GetGroupBoxBackgroundColor(groupID);
@@ -346,8 +335,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the MouseLeave event for the group box.
         /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void FocusChannelGroupBox_MouseLeave(object sender, EventArgs e)
         {
             groupBox1.BackColor = UITheme.DarkBackground;
@@ -358,15 +345,19 @@ namespace Bahtinov_Collimator
             ChannelSelectDataEvent?.Invoke(null, new ChannelSelectEventArgs(mouseOver, focusChannelCount));
         }
 
-
+        /// <summary>
+        /// Redirects child hover events to the parent group-box enter handler.
+        /// </summary>
         private void ChildMouseEnter(object sender, EventArgs e)
         {
             FocusChannelGroupBox_MouseEnter(sender, e);
         }
 
+        /// <summary>
+        /// Redirects child leave events when the cursor exits the component bounds.
+        /// </summary>
         private void ChildMouseLeave(object sender, EventArgs e)
         {
-            // Optional: track whether the mouse actually left the parent bounds
             if (!ClientRectangle.Contains(PointToClient(Cursor.Position)))
                 FocusChannelGroupBox_MouseLeave(sender, e);
         }
@@ -378,7 +369,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
-        /// <param name="disposing">If set to <c>true</c>, release both managed and unmanaged resources; otherwise, only release unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (!disposed)

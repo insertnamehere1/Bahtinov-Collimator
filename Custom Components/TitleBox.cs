@@ -117,7 +117,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Paints the rounded rectangle box and the title text.
         /// </summary>
-        /// <param name="e">Paint arguments containing the target graphics.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -159,8 +158,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// Creates a <see cref="GraphicsPath"/> describing a rounded rectangle suitable for
         /// drawing or filling with GDI+.
         /// </summary>
-        /// <param name="bounds">The rectangle bounds.</param>
-        /// <param name="radius">The corner radius in pixels.</param>
         /// <returns>A rounded-rectangle graphics path.</returns>
         private static GraphicsPath RoundedRect(Rectangle bounds, int radius)
         {

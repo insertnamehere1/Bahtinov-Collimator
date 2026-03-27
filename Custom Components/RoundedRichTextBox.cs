@@ -277,12 +277,10 @@ namespace SkyCal.Custom_Components
 
             InitializeComponent();
 
-            // Matches RoundedPanel — reduces stair-stepping on rounded strokes.
             DoubleBuffered = true;
 
             CreateInnerControl();
 
-            // Apply initial layout/region
             UpdateLayoutSafe();
             UpdateRegionSafe();
         }
@@ -304,7 +302,6 @@ namespace SkyCal.Custom_Components
                 Text = base.Text ?? string.Empty
             };
 
-            // Caret suppression hooks
             richTextBox.GotFocus += (s, e) => SuppressCaretIfNeeded();
             richTextBox.MouseDown += (s, e) => SuppressCaretIfNeeded();
             richTextBox.TextChanged += (s, e) => SuppressCaretIfNeeded();
@@ -349,7 +346,6 @@ namespace SkyCal.Custom_Components
 
             using (var path = CreateRoundedRectPath(new Rectangle(0, 0, Width, Height), cornerRadius))
             {
-                // Assigning a new Region disposes the old one automatically in WinForms.
                 Region = new Region(path);
             }
         }
@@ -441,9 +437,6 @@ namespace SkyCal.Custom_Components
                 return;
             }
 
-            // Clear window region for this paint. A Region from a GraphicsPath is pixel-snapped;
-            // if left from the previous frame it clips the DC before FillPath/DrawPath and
-            // destroys anti-aliasing (chunky corners).
             Region = null;
 
             try
@@ -464,14 +457,12 @@ namespace SkyCal.Custom_Components
                     Math.Max(0, ch - 2 * t));
                 int innerRadius = Math.Max(0, cornerRadius - t);
 
-                // Background fill
                 using (var fillPath = CreateRoundedRectPath(innerFill, innerRadius))
                 using (var backBrush = new SolidBrush(BackColor))
                 {
                     g.FillPath(backBrush, fillPath);
                 }
 
-                // Title bar fill (rounded only at top corners)
                 if (showTitleBar && titleHeight > 0)
                 {
                     Rectangle titleRect = new Rectangle(

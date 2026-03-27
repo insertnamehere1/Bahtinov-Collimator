@@ -11,9 +11,6 @@ namespace Bahtinov_Collimator.Custom_Components
     internal static class MctSecondaryMirrorLineArt
     {
         #region Settings
-        // ═══════════════════════════════════════════════════════════════════════════════
-        // SETTINGS — design space (same 50×100 logical units as <see cref="MirrorDrawingComponent"/>)
-        // ═══════════════════════════════════════════════════════════════════════════════
 
         /// <summary>Maximum width/height taken from <c>bounds</c> when building the mirror rectangle.</summary>
         private const int DesignWidthMax = 50;
@@ -30,7 +27,6 @@ namespace Bahtinov_Collimator.Custom_Components
 
         private const int MarginRight = 2;
 
-        // --- Corrector plate width ---
         /// <summary>Minimum base value before plate width scaling.</summary>
         private const int PlateBaseWidthMin = 10;
 
@@ -43,7 +39,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>Minimum plate width after scaling.</summary>
         private const int PlateWidthMin = 6;
 
-        // --- Plate side bulge (Bezier depth) ---
         private const int BulgeMin = 2;
 
         private const int BulgeMax = 8;
@@ -51,12 +46,10 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>Bulge ≈ clamp(plateWidth × 2, BulgeMin, BulgeMax).</summary>
         private const int BulgePerPlateWidth = 2;
 
-        // --- Bezier control points: fractional height along plate for front/back curves ---
         private const float PlateBezierYUpper = 0.25f;
 
         private const float PlateBezierYLower = 0.75f;
 
-        // --- Secondary mirror blob ---
         /// <summary>Min diameter; also scales with plate height / SecondaryDiameterHeightDivisor.</summary>
         private const int SecondaryDiameterMin = 8;
 
@@ -78,7 +71,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>Iterations for binary search on cubic Bezier to match Y at stripe top/bottom.</summary>
         private const int BezierSolveIterations = 28;
 
-        // --- Glass plate fill (tinted by mirror outline color) ---
         private static readonly Color GlassDarkBase = Color.FromArgb(85, 190, 190, 190);
 
         private static readonly Color GlassLightBase = Color.FromArgb(55, 235, 235, 235);
@@ -86,7 +78,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>How strongly <see cref="MirrorLineArtTint.TintColor"/> blends outline into glass (0–1).</summary>
         private const float GlassTintStrength = 0.45f;
 
-        // --- Secondary mirror fill ---
         private static readonly Color SecondaryDarkBase = Color.FromArgb(160, 160, 160);
 
         private static readonly Color SecondaryLightBase = Color.FromArgb(220, 220, 220);
@@ -96,15 +87,11 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>Extra X added to gradient end point (right of secondary bounds).</summary>
         private const float SecondaryGradientEndOffsetX = 10f;
 
-        // --- Optical axis (dotted) ---
         /// <summary>Axis starts at <c>mirrorBounds.Left + AxisStartOffsetFromLeft</c>.</summary>
         private const int AxisStartOffsetFromLeft = 20;
 
         private const float AxisPenWidth = 1.5f;
 
-        // ═══════════════════════════════════════════════════════════════════════════════
-        // DRAW
-        // ═══════════════════════════════════════════════════════════════════════════════
 
         #endregion
 

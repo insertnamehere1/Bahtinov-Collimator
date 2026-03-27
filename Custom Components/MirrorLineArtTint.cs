@@ -10,9 +10,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Blends <paramref name="baseColor"/> toward <paramref name="tint"/> by a normalized strength value.
         /// </summary>
-        /// <param name="baseColor">The original color to tint.</param>
-        /// <param name="tint">The target tint color.</param>
-        /// <param name="strength">Blend amount from 0 (no tint) to 1 (full tint).</param>
         /// <returns>A color with preserved alpha and RGB channels blended toward the tint color.</returns>
         internal static Color TintColor(Color baseColor, Color tint, float strength)
         {

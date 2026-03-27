@@ -83,7 +83,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         public RoundedPictureBox()
         {
-            // Enable custom painting, double buffering, and no flicker.
             this.SetStyle(
                 ControlStyles.UserPaint |
                 ControlStyles.AllPaintingInWmPaint |
@@ -199,7 +198,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Paints the rounded image fill and border, then raises subscribed paint handlers.
         /// </summary>
-        /// <param name="e">Paint event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -209,7 +207,6 @@ namespace Bahtinov_Collimator.Custom_Components
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
             g.CompositingQuality = CompositingQuality.HighQuality;
 
-            // Use client size (same coordinate space as paint DC) for parity with other rounded controls.
             Rectangle client = ClientRectangle;
             int cw = client.Width;
             int ch = client.Height;
@@ -217,8 +214,6 @@ namespace Bahtinov_Collimator.Custom_Components
                 return;
 
             int t = borderThickness;
-            // Stroke path: inset by half the pen width so PenAlignment.Center does not draw
-            // outside the client rect (top/left were clipped → looked thinner than bottom/right).
             int strokeInset = t / 2;
             Rectangle strokeBounds = new Rectangle(
                 strokeInset,
@@ -226,9 +221,6 @@ namespace Bahtinov_Collimator.Custom_Components
                 Math.Max(0, cw - t),
                 Math.Max(0, ch - t));
 
-            // One path for image + border so the image follows the same arc as the stroke (full CornerRadius on
-            // strokeBounds). A separate inner path (radius CornerRadius − t) always read as “smaller radius”
-            // than RoundedPanel / TitledRoundedRichTextBox borders for the same property values.
             using (GraphicsPath path = GetRoundPath(strokeBounds, cornerRadius))
             {
                 if (Image != null)
@@ -247,9 +239,6 @@ namespace Bahtinov_Collimator.Custom_Components
                 }
             }
 
-            // Hosts such as ImageDisplayComponent subscribe to Paint and composite layer bitmaps there (they do
-            // not use the Image property for live capture). Overriding OnPaint replaces PictureBox.OnPaint, so
-            // we must raise the Paint event the same way Control.OnPaint would, or those handlers never run.
             if (EventPaintKey != null)
                 RaisePaintEvent(EventPaintKey, e);
         }
