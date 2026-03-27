@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Deployment.Application;
 using System.Drawing;
 using System.Reflection;
@@ -12,10 +12,12 @@ namespace Bahtinov_Collimator
     {
         #region P/Invoke Declarations
 
+        /// <summary>
+        /// Sets a Desktop Window Manager attribute on the dialog window.
+        /// </summary>
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
-        // Constants
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
 
         #endregion
@@ -30,7 +32,6 @@ namespace Bahtinov_Collimator
         {
             InitializeComponent();
 
-            // Internationalize text
             this.Text = string.Format(UiText.Current.AboutDialogTitleFormat, AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
             this.labelVersion.Text = string.Format(UiText.Current.AboutVersionFormat, GetVersion());
@@ -39,7 +40,6 @@ namespace Bahtinov_Collimator
             this.textBoxDescription.Text = UiText.Current.AboutDescription;
             this.okButton.Text = UiText.Current.CommonOk;
 
-            // Set colors for titlebar
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));

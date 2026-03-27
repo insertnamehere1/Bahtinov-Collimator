@@ -6,9 +6,15 @@ using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
+    /// <summary>
+    /// Dialog that renders dynamic guidance content with DPI-aware sizing.
+    /// </summary>
     public sealed partial class NextStepDialog : Form
     {
         #region DLL Imports
+        /// <summary>
+        /// Sets a Desktop Window Manager attribute on the dialog window.
+        /// </summary>
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
         #endregion
@@ -16,12 +22,12 @@ namespace Bahtinov_Collimator
         #region Constants
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
 
-        // These values were originally tuned at 144 DPI.
-        // We normalize them to a 96-DPI baseline, then scale to the current monitor DPI.
         private const int ContentPadding = 26;
         private const int WidthPadding = 90;
 
         #endregion
+
+        #region Layout Fields
 
         private int panelLeftInset;
         private int panelTopInset;
@@ -29,6 +35,14 @@ namespace Bahtinov_Collimator
         private int panelBottomInset;
         private int buttonBottomGap;
 
+        #endregion
+
+        #region DPI Helpers
+
+        /// <summary>
+        /// Scales 96-DPI logical pixels to the current device DPI.
+        /// </summary>
+        /// <returns>The scaled device-pixel value.</returns>
         private int S(int logicalPixelsAt96)
         {
             float dpiScale;
@@ -38,6 +52,10 @@ namespace Bahtinov_Collimator
             }
             return (int)Math.Round(logicalPixelsAt96 * dpiScale, MidpointRounding.AwayFromZero);
         }
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Design-time constructor required by WinForms designer.
@@ -49,6 +67,8 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Initializes and displays the "Next Step" guidance dialog.
         /// </summary>
+        /// <param name="guidance">Guidance model used to populate dialog content.</param>
+        /// <param name="icon">Optional dialog icon.</param>
         public NextStepDialog(NextStepGuidance guidance, Icon icon = null)
         {
             InitializeComponent();
@@ -76,15 +96,24 @@ namespace Bahtinov_Collimator
             Load += (s, e) => SizeFormToContent();
         }
 
+        #endregion
+
+        #region Public API
+
         /// <summary>
         /// Updates the dialog content and resizes the form to fit.
         /// </summary>
+        /// <param name="guidance">Updated guidance model to render.</param>
         public void UpdateGuidance(NextStepGuidance guidance)
         {
             Text = guidance?.DialogTitle ?? "What should I do next?";
             RenderGuidance(guidance);
             BeginInvoke(new Action(SizeFormToContent));
         }
+
+        #endregion
+
+        #region Layout and Sizing
 
         /// <summary>
         /// Sizes the form to fit the current stackLayout content, clamped to screen height.
@@ -95,12 +124,10 @@ namespace Bahtinov_Collimator
             int minClientWidth = S(227);
             int contentPadding = S(ContentPadding);
 
-            // Step 1: measure and apply required width
             int maxScreenWidth = Screen.FromControl(this).WorkingArea.Width - screenEdgeMargin;
             int chromeWidth = panelLeftInset + panelRightInset + SystemInformation.VerticalScrollBarWidth + S(1);
             int newClientWidth = Math.Max(minClientWidth, Math.Min(MeasureRequiredWidth() + chromeWidth, maxScreenWidth));
 
-            // Step 2: update control widths and remeasure heights with new width
             int panelWidth = Math.Max(S(67), newClientWidth - panelLeftInset - panelRightInset);
             int contentWidth = Math.Max(S(67), panelWidth - SystemInformation.VerticalScrollBarWidth - S(1));
             foreach (Control c in stackLayout.Controls)
@@ -112,7 +139,6 @@ namespace Bahtinov_Collimator
 
             stackLayout.PerformLayout();
 
-            // Step 3: measure and apply required height
             int contentHeight = stackLayout.Height;
             int requiredPanelHeight = contentHeight + contentPadding;
             int required = panelTopInset + requiredPanelHeight + panelBottomInset;
@@ -152,6 +178,9 @@ namespace Bahtinov_Collimator
             }
         }
 
+        /// <summary>
+        /// Responds to DPI changes by recalculating dialog sizing and layout.
+        /// </summary>
         protected override void OnDpiChanged(DpiChangedEventArgs e)
         {
             base.OnDpiChanged(e);
@@ -167,11 +196,16 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Calculates the available content width within the scrollPanel panel.
         /// </summary>
+        /// <returns>Available content width in pixels.</returns>
         private int ContentWidth()
         {
             int scrollBar = SystemInformation.VerticalScrollBarWidth;
             return Math.Max(S(67), scrollPanel.ClientSize.Width - scrollBar - S(1));
         }
+
+        #endregion
+
+        #region Content Rendering
 
         /// <summary>
         /// Clears and rebuilds the dialog content from the supplied guidance model.
@@ -217,6 +251,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Creates a fixed-height spacer to visually separate dialog sections.
         /// </summary>
+        /// <returns>A panel that provides vertical spacing.</returns>
         private Control MakeSpacer(int height)
         {
             return new Panel
@@ -231,6 +266,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Creates a word-wrapped label sized to fully display its text.
         /// </summary>
+        /// <returns>A configured label with measured height.</returns>
         private Label MakeLabel(string text, float size, FontStyle style)
         {
             var lbl = new Label
@@ -254,6 +290,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Measures the height required to fully render a label's text.
         /// </summary>
+        /// <returns>Required pixel height.</returns>
         private int MeasureLabelHeight(Label lbl)
         {
             if (lbl == null) return S(16);
@@ -266,6 +303,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Creates a boxed header using a TitleBox control.
         /// </summary>
+        /// <returns>A title-box control for the dialog header.</returns>
         private Control MakeHeaderBox(string header)
         {
             var tb = new TitleBox
@@ -288,6 +326,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Creates a boxed section title using a TitleBox control.
         /// </summary>
+        /// <returns>A title-box control for a section heading.</returns>
         private Control MakeTitleBox(GuidanceSection section)
         {
             var tb = new TitleBox
@@ -323,6 +362,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Creates the body content for a guidance section.
         /// </summary>
+        /// <returns>A read-only rich text box for section body text.</returns>
         private RichTextBox MakeSectionBody(GuidanceSection section)
         {
             var rtb = new RichTextBox
@@ -367,6 +407,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Calculates the rendered height of a RichTextBox based on its current contents.
         /// </summary>
+        /// <returns>Required pixel height for full content visibility.</returns>
         private int GetRichTextHeight(RichTextBox rtb)
         {
             if (rtb == null) return S(16);
@@ -378,6 +419,10 @@ namespace Bahtinov_Collimator
             return Math.Max(S(16), pt.Y + lineHeight + S(4));
         }
 
+        /// <summary>
+        /// Measures the minimum content width needed to display all currently rendered controls.
+        /// </summary>
+        /// <returns>Recommended content width in pixels.</returns>
         private int MeasureRequiredWidth()
         {
             int maxWidth = 0;
@@ -413,5 +458,7 @@ namespace Bahtinov_Collimator
             int widthPadding = S(WidthPadding);
             return Math.Max(minWidth, maxWidth + widthPadding);
         }
+
+        #endregion
     }
 }
