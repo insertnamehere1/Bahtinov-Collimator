@@ -51,7 +51,7 @@ namespace Bahtinov_Collimator
             this.cancelButton.BevelThickness = 4;
             this.cancelButton.CornerRadius = 6;
             this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.cancelButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.cancelButton.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cancelButton.ForeColor = System.Drawing.Color.LightGray;
             this.cancelButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.cancelButton.ImageHeight = 32;
@@ -103,7 +103,7 @@ namespace Bahtinov_Collimator
             this.richTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
             this.richTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.richTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.richTextBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBox.ForeColor = System.Drawing.Color.White;
             this.richTextBox.Location = new System.Drawing.Point(195, 13);
             this.richTextBox.Margin = new System.Windows.Forms.Padding(4);
@@ -123,7 +123,7 @@ namespace Bahtinov_Collimator
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.cancelButton);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(80)))), ((int)(((byte)(90)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

@@ -57,7 +57,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.titledRoundedRichTextBox1.InnerRichTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
             this.titledRoundedRichTextBox1.InnerRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.titledRoundedRichTextBox1.InnerRichTextBox.DetectUrls = false;
-            this.titledRoundedRichTextBox1.InnerRichTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.titledRoundedRichTextBox1.InnerRichTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.titledRoundedRichTextBox1.InnerRichTextBox.ForeColor = System.Drawing.Color.White;
             this.titledRoundedRichTextBox1.InnerRichTextBox.Location = new System.Drawing.Point(13, 37);
             this.titledRoundedRichTextBox1.InnerRichTextBox.Name = "";
@@ -73,7 +73,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.titledRoundedRichTextBox1.Size = new System.Drawing.Size(300, 526);
             this.titledRoundedRichTextBox1.TabIndex = 0;
             this.titledRoundedRichTextBox1.TitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.titledRoundedRichTextBox1.TitleFont = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.titledRoundedRichTextBox1.TitleFont = new System.Drawing.Font("Segoe UI", 14F);
             this.titledRoundedRichTextBox1.TitleForeColor = System.Drawing.Color.White;
             this.titledRoundedRichTextBox1.TitleHeight = 35;
             this.titledRoundedRichTextBox1.TitlePaddingLeft = 90;
@@ -89,7 +89,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.quitButton.CornerRadius = 8;
             this.quitButton.FlatAppearance.BorderSize = 0;
             this.quitButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.quitButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.quitButton.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.quitButton.ForeColor = System.Drawing.Color.LightGray;
             this.quitButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.quitButton.ImageHeight = 32;

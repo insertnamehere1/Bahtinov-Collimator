@@ -88,7 +88,7 @@ namespace Bahtinov_Collimator
             // labelProductName
             // 
             this.labelProductName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelProductName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.labelProductName.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.labelProductName.ForeColor = System.Drawing.Color.White;
             this.labelProductName.Location = new System.Drawing.Point(179, 0);
             this.labelProductName.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
@@ -164,7 +164,7 @@ namespace Bahtinov_Collimator
             this.okButton.CornerRadius = 6;
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.okButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.okButton.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.okButton.ForeColor = System.Drawing.Color.LightGray;
             this.okButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.okButton.ImageHeight = 32;
@@ -190,7 +190,7 @@ namespace Bahtinov_Collimator
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(546, 322);
             this.Controls.Add(this.tableLayoutPanel);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(80)))), ((int)(((byte)(90)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

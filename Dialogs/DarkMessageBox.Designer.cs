@@ -45,7 +45,7 @@ namespace Bahtinov_Collimator
             // messageLabel
             // 
             this.messageLabel.AutoSize = true;
-            this.messageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.messageLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.messageLabel.ForeColor = System.Drawing.Color.White;
             this.messageLabel.Location = new System.Drawing.Point(78, 30);
             this.messageLabel.Name = "messageLabel";
@@ -84,7 +84,7 @@ namespace Bahtinov_Collimator
             this.cancelButton.BevelThickness = 4;
             this.cancelButton.CornerRadius = 6;
             this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.cancelButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.cancelButton.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cancelButton.ForeColor = System.Drawing.Color.LightGray;
             this.cancelButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.cancelButton.ImageHeight = 32;
@@ -110,7 +110,7 @@ namespace Bahtinov_Collimator
             this.okButton.BevelThickness = 4;
             this.okButton.CornerRadius = 6;
             this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.okButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.okButton.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.okButton.ForeColor = System.Drawing.Color.LightGray;
             this.okButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.okButton.ImageHeight = 32;
@@ -136,7 +136,7 @@ namespace Bahtinov_Collimator
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.iconBox);
             this.Controls.Add(this.messageLabel);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DarkMessageBox";

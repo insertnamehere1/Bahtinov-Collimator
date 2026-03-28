@@ -50,7 +50,7 @@ namespace SkyCal
             this.notNowButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.notNowButton.FlatAppearance.BorderSize = 0;
             this.notNowButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.notNowButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.notNowButton.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.notNowButton.ForeColor = System.Drawing.Color.LightGray;
             this.notNowButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.notNowButton.ImageHeight = 32;
@@ -77,7 +77,7 @@ namespace SkyCal
             this.runButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.runButton.FlatAppearance.BorderSize = 0;
             this.runButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.runButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.runButton.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.runButton.ForeColor = System.Drawing.Color.LightGray;
             this.runButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.runButton.ImageHeight = 32;
@@ -96,7 +96,7 @@ namespace SkyCal
             // titleLabel
             // 
             this.titleLabel.AutoSize = true;
-            this.titleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.titleLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.titleLabel.Location = new System.Drawing.Point(14, 11);
             this.titleLabel.Name = "titleLabel";
             this.titleLabel.Size = new System.Drawing.Size(47, 15);
@@ -137,7 +137,7 @@ namespace SkyCal
             this.Controls.Add(this.titleLabel);
             this.Controls.Add(this.notNowButton);
             this.Controls.Add(this.runButton);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;

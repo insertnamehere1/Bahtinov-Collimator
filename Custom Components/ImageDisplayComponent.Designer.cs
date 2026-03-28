@@ -60,6 +60,7 @@ namespace Bahtinov_Collimator
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.pictureBox1);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Name = "ImageDisplayComponent";
             this.Size = new System.Drawing.Size(600, 600);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

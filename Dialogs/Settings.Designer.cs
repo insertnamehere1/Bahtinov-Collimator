@@ -321,7 +321,7 @@ namespace Bahtinov_Collimator
             this.CancelSettingsButton.BevelThickness = 4;
             this.CancelSettingsButton.CornerRadius = 6;
             this.CancelSettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.CancelSettingsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.CancelSettingsButton.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.CancelSettingsButton.ForeColor = System.Drawing.Color.LightGray;
             this.CancelSettingsButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.CancelSettingsButton.ImageHeight = 32;
@@ -347,7 +347,7 @@ namespace Bahtinov_Collimator
             this.okButton.BevelThickness = 4;
             this.okButton.CornerRadius = 6;
             this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.okButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.okButton.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.okButton.ForeColor = System.Drawing.Color.LightGray;
             this.okButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.okButton.ImageHeight = 32;
@@ -379,7 +379,7 @@ namespace Bahtinov_Collimator
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.CancelSettingsButton);
             this.Controls.Add(this.okButton);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(80)))), ((int)(((byte)(90)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

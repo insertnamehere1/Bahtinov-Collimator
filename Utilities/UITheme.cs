@@ -327,9 +327,9 @@ namespace Bahtinov_Collimator
             ErrorCirclePens[1] = new Pen(DisplayLineColors[1], 5.0f);
             ErrorCirclePens[2] = new Pen(DisplayLineColors[2], 5.0f);
 
-            ErrorTextFonts[0] = new Font("Arial", 16f);
-            ErrorTextFonts[1] = new Font("Arial", 16f);
-            ErrorTextFonts[2] = new Font("Arial", 16f);
+            ErrorTextFonts[0] = new Font("Segoe UI", 16f);
+            ErrorTextFonts[1] = new Font("Segoe UI", 16f);
+            ErrorTextFonts[2] = new Font("Segoe UI", 16f);
 
             ErrorTextBrush[0] = new SolidBrush(Color.White);
             ErrorTextBrush[1] = new SolidBrush(Color.White);
@@ -408,7 +408,7 @@ namespace Bahtinov_Collimator
             {
                 return ErrorTextFonts[groupId];
             }
-            return new Font("Arial", 16f);
+            return new Font("Segoe UI", 16f);
         }
 
         /// <summary>

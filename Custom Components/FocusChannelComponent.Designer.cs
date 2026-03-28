@@ -32,7 +32,7 @@ namespace Bahtinov_Collimator
             this.groupBox1.Controls.Add(this.mirrorDrawingComponent1);
             this.groupBox1.CornerRadius = 12;
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
