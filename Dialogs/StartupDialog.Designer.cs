@@ -45,7 +45,7 @@ namespace SkyCal
             this.notNowButton.BackColor = System.Drawing.Color.DimGray;
             this.notNowButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.notNowButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
-            this.notNowButton.BevelThickness = 2;
+            this.notNowButton.BevelThickness = 4;
             this.notNowButton.CornerRadius = 6;
             this.notNowButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.notNowButton.FlatAppearance.BorderSize = 0;
@@ -59,7 +59,7 @@ namespace SkyCal
             this.notNowButton.ImageWidth = 32;
             this.notNowButton.Location = new System.Drawing.Point(388, 161);
             this.notNowButton.Name = "notNowButton";
-            this.notNowButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.notNowButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.notNowButton.Size = new System.Drawing.Size(120, 35);
             this.notNowButton.TabIndex = 1;
             this.notNowButton.Text = "Not Now";
@@ -72,7 +72,7 @@ namespace SkyCal
             this.runButton.BackColor = System.Drawing.Color.DimGray;
             this.runButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.runButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
-            this.runButton.BevelThickness = 2;
+            this.runButton.BevelThickness = 4;
             this.runButton.CornerRadius = 6;
             this.runButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.runButton.FlatAppearance.BorderSize = 0;
@@ -86,7 +86,7 @@ namespace SkyCal
             this.runButton.ImageWidth = 32;
             this.runButton.Location = new System.Drawing.Point(254, 161);
             this.runButton.Name = "runButton";
-            this.runButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.runButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.runButton.Size = new System.Drawing.Size(120, 35);
             this.runButton.TabIndex = 0;
             this.runButton.Text = "Run";
