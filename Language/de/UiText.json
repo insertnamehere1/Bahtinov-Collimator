@@ -28,7 +28,7 @@
   "SettingsTitle": "Einstellungen",
   "SettingsGroupVoiceTitle": "Sprache",
   "SettingsVoiceGuidanceLabel": "Sprachführung",
-  "SettingsVoiceGuidanceDescription": "Sprachführung aktivieren und den Mauszeiger über das Fokusgruppen-Textfeld bewegen, um Sprachhinweise für diesen Kanal zu aktivieren",
+  "SettingsVoiceGuidanceDescription": "Sprachführung aktivieren und den Mauszeiger über das Fokusgruppen-Textfeld bewegen, um Kanal-Sprachhinweise zu aktivieren",
   "SettingsGroupGuidanceTitle": "Leitfaden-Konfiguration",
   "AnalysisModeGroupBox": "Bildaufnahme",
   "SettingsGuidanceNewtonian": "Newton",
