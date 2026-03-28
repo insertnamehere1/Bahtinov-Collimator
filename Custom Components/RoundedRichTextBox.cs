@@ -22,21 +22,21 @@ namespace SkyCal.Custom_Components
     /// </summary>
     public sealed partial class TitledRoundedRichTextBox : UserControl
     {
-        private RichTextBox _richTextBox;
+        private RichTextBox richTextBox;
 
-        private int _cornerRadius = 12;
-        private int _borderThickness = 1;
-        private Color _borderColor = Color.Gray;
+        private int cornerRadius = 12;
+        private int borderThickness = 1;
+        private Color borderColor = Color.Gray;
 
-        private bool _showTitleBar = true;
-        private string _titleText = "Summary";
-        private int _titleHeight = 30;
-        private int _titlePaddingLeft = 10;
-        private bool _showTitleSeparator = true;
+        private bool showTitleBar = true;
+        private string titleText = "Summary";
+        private int titleHeight = 30;
+        private int titlePaddingLeft = 10;
+        private bool showTitleSeparator = true;
 
-        private Color _titleBackColor = Color.FromArgb(245, 245, 245);
-        private Color _titleForeColor = Color.Black;
-        private Font _titleFont;
+        private Color titleBackColor = Color.FromArgb(245, 245, 245);
+        private Color titleForeColor = Color.Black;
+        private Font titleFont;
 
         #region Win32 (Caret suppression)
 
@@ -50,7 +50,7 @@ namespace SkyCal.Custom_Components
         /// </summary>
         private bool IsInnerReady
         {
-            get { return _richTextBox != null && !_richTextBox.IsDisposed; }
+            get { return richTextBox != null && !richTextBox.IsDisposed; }
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace SkyCal.Custom_Components
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public RichTextBox InnerRichTextBox
         {
-            get { return _richTextBox; }
+            get { return richTextBox; }
         }
 
         /// <summary>
@@ -67,11 +67,11 @@ namespace SkyCal.Custom_Components
         /// </summary>
         public override string Text
         {
-            get { return IsInnerReady ? _richTextBox.Text : base.Text; }
+            get { return IsInnerReady ? richTextBox.Text : base.Text; }
             set
             {
                 if (IsInnerReady)
-                    _richTextBox.Text = value;
+                    richTextBox.Text = value;
                 else
                     base.Text = value;
             }
@@ -85,13 +85,13 @@ namespace SkyCal.Custom_Components
         [DefaultValue(false)]
         public bool ReadOnly
         {
-            get { return IsInnerReady && _richTextBox.ReadOnly; }
+            get { return IsInnerReady && richTextBox.ReadOnly; }
             set
             {
                 if (!IsInnerReady)
                     return;
 
-                _richTextBox.ReadOnly = value;
+                richTextBox.ReadOnly = value;
                 SuppressCaretIfNeeded();
             }
         }
@@ -104,10 +104,10 @@ namespace SkyCal.Custom_Components
         [DefaultValue(12)]
         public int CornerRadius
         {
-            get { return _cornerRadius; }
+            get { return cornerRadius; }
             set
             {
-                _cornerRadius = Math.Max(0, value);
+                cornerRadius = Math.Max(0, value);
                 UpdateRegionSafe();
                 Invalidate();
             }
@@ -120,10 +120,10 @@ namespace SkyCal.Custom_Components
         [DefaultValue(1)]
         public int BorderThickness
         {
-            get { return _borderThickness; }
+            get { return borderThickness; }
             set
             {
-                _borderThickness = Math.Max(1, value);
+                borderThickness = Math.Max(1, value);
                 UpdateLayoutSafe();
                 Invalidate();
             }
@@ -135,10 +135,10 @@ namespace SkyCal.Custom_Components
         [Category("Appearance")]
         public Color BorderColor
         {
-            get { return _borderColor; }
+            get { return borderColor; }
             set
             {
-                _borderColor = value;
+                borderColor = value;
                 Invalidate();
             }
         }
@@ -150,10 +150,10 @@ namespace SkyCal.Custom_Components
         [DefaultValue(true)]
         public bool ShowTitleBar
         {
-            get { return _showTitleBar; }
+            get { return showTitleBar; }
             set
             {
-                _showTitleBar = value;
+                showTitleBar = value;
                 UpdateLayoutSafe();
                 Invalidate();
             }
@@ -165,10 +165,10 @@ namespace SkyCal.Custom_Components
         [Category("Title Bar")]
         public string TitleText
         {
-            get { return _titleText; }
+            get { return titleText; }
             set
             {
-                _titleText = value ?? string.Empty;
+                titleText = value ?? string.Empty;
                 Invalidate();
             }
         }
@@ -180,10 +180,10 @@ namespace SkyCal.Custom_Components
         [DefaultValue(30)]
         public int TitleHeight
         {
-            get { return _titleHeight; }
+            get { return titleHeight; }
             set
             {
-                _titleHeight = Math.Max(18, value);
+                titleHeight = Math.Max(18, value);
                 UpdateLayoutSafe();
                 Invalidate();
             }
@@ -196,10 +196,10 @@ namespace SkyCal.Custom_Components
         [DefaultValue(10)]
         public int TitlePaddingLeft
         {
-            get { return _titlePaddingLeft; }
+            get { return titlePaddingLeft; }
             set
             {
-                _titlePaddingLeft = Math.Max(0, value);
+                titlePaddingLeft = Math.Max(0, value);
                 Invalidate();
             }
         }
@@ -210,10 +210,10 @@ namespace SkyCal.Custom_Components
         [Category("Title Bar")]
         public Color TitleBackColor
         {
-            get { return _titleBackColor; }
+            get { return titleBackColor; }
             set
             {
-                _titleBackColor = value;
+                titleBackColor = value;
                 Invalidate();
             }
         }
@@ -224,10 +224,10 @@ namespace SkyCal.Custom_Components
         [Category("Title Bar")]
         public Color TitleForeColor
         {
-            get { return _titleForeColor; }
+            get { return titleForeColor; }
             set
             {
-                _titleForeColor = value;
+                titleForeColor = value;
                 Invalidate();
             }
         }
@@ -239,10 +239,10 @@ namespace SkyCal.Custom_Components
         [DefaultValue(null)]
         public Font TitleFont
         {
-            get { return _titleFont; }
+            get { return titleFont; }
             set
             {
-                _titleFont = value;
+                titleFont = value;
                 Invalidate();
             }
         }
@@ -254,10 +254,10 @@ namespace SkyCal.Custom_Components
         [DefaultValue(true)]
         public bool ShowTitleSeparator
         {
-            get { return _showTitleSeparator; }
+            get { return showTitleSeparator; }
             set
             {
-                _showTitleSeparator = value;
+                showTitleSeparator = value;
                 Invalidate();
             }
         }
@@ -277,12 +277,10 @@ namespace SkyCal.Custom_Components
 
             InitializeComponent();
 
-            // Matches RoundedPanel — reduces stair-stepping on rounded strokes.
             DoubleBuffered = true;
 
             CreateInnerControl();
 
-            // Apply initial layout/region
             UpdateLayoutSafe();
             UpdateRegionSafe();
         }
@@ -292,7 +290,7 @@ namespace SkyCal.Custom_Components
         /// </summary>
         private void CreateInnerControl()
         {
-            _richTextBox = new RichTextBox
+            richTextBox = new RichTextBox
             {
                 BorderStyle = BorderStyle.None,
                 Multiline = true,
@@ -304,13 +302,12 @@ namespace SkyCal.Custom_Components
                 Text = base.Text ?? string.Empty
             };
 
-            // Caret suppression hooks
-            _richTextBox.GotFocus += (s, e) => SuppressCaretIfNeeded();
-            _richTextBox.MouseDown += (s, e) => SuppressCaretIfNeeded();
-            _richTextBox.TextChanged += (s, e) => SuppressCaretIfNeeded();
-            _richTextBox.SelectionChanged += (s, e) => SuppressCaretIfNeeded();
+            richTextBox.GotFocus += (s, e) => SuppressCaretIfNeeded();
+            richTextBox.MouseDown += (s, e) => SuppressCaretIfNeeded();
+            richTextBox.TextChanged += (s, e) => SuppressCaretIfNeeded();
+            richTextBox.SelectionChanged += (s, e) => SuppressCaretIfNeeded();
 
-            Controls.Add(_richTextBox);
+            Controls.Add(richTextBox);
         }
 
         /// <summary>
@@ -322,8 +319,8 @@ namespace SkyCal.Custom_Components
             if (!IsInnerReady)
                 return;
 
-            int inset = _borderThickness;
-            int topBand = _showTitleBar ? _titleHeight : 0;
+            int inset = borderThickness;
+            int topBand = showTitleBar ? titleHeight : 0;
 
             int contentX = inset + Padding.Left;
             int contentY = inset + Padding.Top + topBand;
@@ -331,11 +328,11 @@ namespace SkyCal.Custom_Components
             int contentW = Math.Max(0, Width - (inset * 2) - Padding.Left - Padding.Right);
             int contentH = Math.Max(0, Height - (inset * 2) - Padding.Top - Padding.Bottom - topBand);
 
-            _richTextBox.Location = new Point(contentX, contentY);
-            _richTextBox.Size = new Size(contentW, contentH);
+            richTextBox.Location = new Point(contentX, contentY);
+            richTextBox.Size = new Size(contentW, contentH);
 
-            _richTextBox.BackColor = BackColor;
-            _richTextBox.ForeColor = ForeColor;
+            richTextBox.BackColor = BackColor;
+            richTextBox.ForeColor = ForeColor;
         }
 
         /// <summary>
@@ -347,9 +344,8 @@ namespace SkyCal.Custom_Components
             if (Width < 2 || Height < 2)
                 return;
 
-            using (var path = CreateRoundedRectPath(new Rectangle(0, 0, Width, Height), _cornerRadius))
+            using (var path = CreateRoundedRectPath(new Rectangle(0, 0, Width, Height), cornerRadius))
             {
-                // Assigning a new Region disposes the old one automatically in WinForms.
                 Region = new Region(path);
             }
         }
@@ -362,9 +358,9 @@ namespace SkyCal.Custom_Components
             if (!IsInnerReady)
                 return;
 
-            if (_richTextBox.ReadOnly && _richTextBox.IsHandleCreated)
+            if (richTextBox.ReadOnly && richTextBox.IsHandleCreated)
             {
-                HideCaret(_richTextBox.Handle);
+                HideCaret(richTextBox.Handle);
             }
         }
 
@@ -397,7 +393,7 @@ namespace SkyCal.Custom_Components
             base.OnBackColorChanged(e);
 
             if (IsInnerReady)
-                _richTextBox.BackColor = BackColor;
+                richTextBox.BackColor = BackColor;
 
             Invalidate();
         }
@@ -411,7 +407,7 @@ namespace SkyCal.Custom_Components
             base.OnForeColorChanged(e);
 
             if (IsInnerReady)
-                _richTextBox.ForeColor = ForeColor;
+                richTextBox.ForeColor = ForeColor;
 
             Invalidate();
         }
@@ -441,14 +437,11 @@ namespace SkyCal.Custom_Components
                 return;
             }
 
-            // Clear window region for this paint. A Region from a GraphicsPath is pixel-snapped;
-            // if left from the previous frame it clips the DC before FillPath/DrawPath and
-            // destroys anti-aliasing (chunky corners).
             Region = null;
 
             try
             {
-                int t = _borderThickness;
+                int t = borderThickness;
                 int strokeInset = t / 2;
 
                 Rectangle strokeBounds = new Rectangle(
@@ -462,59 +455,57 @@ namespace SkyCal.Custom_Components
                     t,
                     Math.Max(0, cw - 2 * t),
                     Math.Max(0, ch - 2 * t));
-                int innerRadius = Math.Max(0, _cornerRadius - t);
+                int innerRadius = Math.Max(0, cornerRadius - t);
 
-                // Background fill
                 using (var fillPath = CreateRoundedRectPath(innerFill, innerRadius))
                 using (var backBrush = new SolidBrush(BackColor))
                 {
                     g.FillPath(backBrush, fillPath);
                 }
 
-                // Title bar fill (rounded only at top corners)
-                if (_showTitleBar && _titleHeight > 0)
+                if (showTitleBar && titleHeight > 0)
                 {
                     Rectangle titleRect = new Rectangle(
                         t,
                         t,
                         Math.Max(0, cw - 2 * t),
-                        Math.Max(0, _titleHeight));
+                        Math.Max(0, titleHeight));
 
                     using (var titlePath = CreateTopRoundedRectPath(titleRect, innerRadius))
-                    using (var titleBrush = new SolidBrush(_titleBackColor))
+                    using (var titleBrush = new SolidBrush(titleBackColor))
                     {
                         g.FillPath(titleBrush, titlePath);
                     }
 
-                    if (_showTitleSeparator)
+                    if (showTitleSeparator)
                     {
-                        int y = t + _titleHeight;
-                        using (var sepPen = new Pen(_borderColor, 1f))
+                        int y = t + titleHeight;
+                        using (var sepPen = new Pen(borderColor, 1f))
                         {
                             g.DrawLine(sepPen, t, y, cw - t - 1, y);
                         }
                     }
 
-                    using (var textBrush = new SolidBrush(_titleForeColor))
+                    using (var textBrush = new SolidBrush(titleForeColor))
                     using (var fmt = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
                     {
-                        Font tf = _titleFont ?? new Font(Font, FontStyle.Bold);
+                        Font tf = titleFont ?? new Font(Font, FontStyle.Bold);
 
                         Rectangle textRect = new Rectangle(
                             t,
                             t,
                             Math.Max(0, cw - 2 * t),
-                            _titleHeight);
+                            titleHeight);
 
-                        g.DrawString(_titleText ?? string.Empty, tf, textBrush, textRect, fmt);
+                        g.DrawString(titleText ?? string.Empty, tf, textBrush, textRect, fmt);
 
-                        if (_titleFont == null)
+                        if (titleFont == null)
                             tf.Dispose();
                     }
                 }
 
-                using (var borderPath = CreateRoundedRectPath(strokeBounds, _cornerRadius))
-                using (var pen = new Pen(_borderColor, t))
+                using (var borderPath = CreateRoundedRectPath(strokeBounds, cornerRadius))
+                using (var pen = new Pen(borderColor, t))
                 {
                     pen.Alignment = PenAlignment.Center;
                     g.DrawPath(pen, borderPath);
@@ -522,7 +513,7 @@ namespace SkyCal.Custom_Components
             }
             finally
             {
-                using (GraphicsPath regionPath = CreateRoundedRectPath(new Rectangle(0, 0, cw, ch), _cornerRadius))
+                using (GraphicsPath regionPath = CreateRoundedRectPath(new Rectangle(0, 0, cw, ch), cornerRadius))
                     Region = new Region(regionPath);
             }
         }

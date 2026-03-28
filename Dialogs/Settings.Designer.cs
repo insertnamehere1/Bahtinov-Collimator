@@ -75,11 +75,11 @@ namespace Bahtinov_Collimator
             this.groupBox3.Controls.Add(this.SCTRadioButton);
             this.groupBox3.CornerRadius = 12;
             this.groupBox3.ForeColor = System.Drawing.Color.LightGray;
-            this.groupBox3.Location = new System.Drawing.Point(285, 14);
+            this.groupBox3.Location = new System.Drawing.Point(284, 14);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox3.Size = new System.Drawing.Size(263, 124);
+            this.groupBox3.Size = new System.Drawing.Size(267, 124);
             this.groupBox3.TabIndex = 36;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Guidance Configuration";
@@ -90,7 +90,7 @@ namespace Bahtinov_Collimator
             | System.Windows.Forms.AnchorStyles.Right)));
             this.newtonianRadioButton.AutoSize = true;
             this.newtonianRadioButton.Enabled = false;
-            this.newtonianRadioButton.Location = new System.Drawing.Point(19, 82);
+            this.newtonianRadioButton.Location = new System.Drawing.Point(19, 83);
             this.newtonianRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.newtonianRadioButton.Name = "newtonianRadioButton";
             this.newtonianRadioButton.Size = new System.Drawing.Size(84, 19);
@@ -101,7 +101,7 @@ namespace Bahtinov_Collimator
             // 
             // MakCassRadioButton
             // 
-            this.MakCassRadioButton.Location = new System.Drawing.Point(19, 55);
+            this.MakCassRadioButton.Location = new System.Drawing.Point(19, 56);
             this.MakCassRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MakCassRadioButton.Name = "MakCassRadioButton";
             this.MakCassRadioButton.Size = new System.Drawing.Size(212, 19);
@@ -114,10 +114,10 @@ namespace Bahtinov_Collimator
             // 
             this.SCTRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SCTRadioButton.Location = new System.Drawing.Point(19, 29);
+            this.SCTRadioButton.Location = new System.Drawing.Point(19, 30);
             this.SCTRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.SCTRadioButton.Name = "SCTRadioButton";
-            this.SCTRadioButton.Size = new System.Drawing.Size(229, 19);
+            this.SCTRadioButton.Size = new System.Drawing.Size(233, 19);
             this.SCTRadioButton.TabIndex = 0;
             this.SCTRadioButton.TabStop = true;
             this.SCTRadioButton.Text = "Schmidt–Cassegrain (SCT)";
@@ -131,7 +131,7 @@ namespace Bahtinov_Collimator
             this.minimizeGroupBox.Controls.Add(this.minimizeCheckBox);
             this.minimizeGroupBox.CornerRadius = 12;
             this.minimizeGroupBox.ForeColor = System.Drawing.Color.LightGray;
-            this.minimizeGroupBox.Location = new System.Drawing.Point(284, 278);
+            this.minimizeGroupBox.Location = new System.Drawing.Point(283, 278);
             this.minimizeGroupBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.minimizeGroupBox.Name = "minimizeGroupBox";
             this.minimizeGroupBox.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -142,7 +142,7 @@ namespace Bahtinov_Collimator
             // 
             // minimizeLabel
             // 
-            this.minimizeLabel.Location = new System.Drawing.Point(12, 50);
+            this.minimizeLabel.Location = new System.Drawing.Point(12, 51);
             this.minimizeLabel.Name = "minimizeLabel";
             this.minimizeLabel.Size = new System.Drawing.Size(219, 49);
             this.minimizeLabel.TabIndex = 34;
@@ -151,7 +151,7 @@ namespace Bahtinov_Collimator
             // minimizeCheckBox
             // 
             this.minimizeCheckBox.AutoSize = true;
-            this.minimizeCheckBox.Location = new System.Drawing.Point(22, 26);
+            this.minimizeCheckBox.Location = new System.Drawing.Point(22, 27);
             this.minimizeCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.minimizeCheckBox.Name = "minimizeCheckBox";
             this.minimizeCheckBox.Size = new System.Drawing.Size(191, 19);
@@ -167,7 +167,7 @@ namespace Bahtinov_Collimator
             this.ErrorSignGroupBox.Controls.Add(this.errorSignCheckBox);
             this.ErrorSignGroupBox.CornerRadius = 12;
             this.ErrorSignGroupBox.ForeColor = System.Drawing.Color.LightGray;
-            this.ErrorSignGroupBox.Location = new System.Drawing.Point(13, 148);
+            this.ErrorSignGroupBox.Location = new System.Drawing.Point(12, 148);
             this.ErrorSignGroupBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ErrorSignGroupBox.Name = "ErrorSignGroupBox";
             this.ErrorSignGroupBox.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -178,7 +178,7 @@ namespace Bahtinov_Collimator
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(13, 58);
+            this.label2.Location = new System.Drawing.Point(13, 55);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(235, 57);
             this.label2.TabIndex = 34;
@@ -187,7 +187,7 @@ namespace Bahtinov_Collimator
             // errorSignCheckBox
             // 
             this.errorSignCheckBox.AutoSize = true;
-            this.errorSignCheckBox.Location = new System.Drawing.Point(22, 34);
+            this.errorSignCheckBox.Location = new System.Drawing.Point(22, 31);
             this.errorSignCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.errorSignCheckBox.Name = "errorSignCheckBox";
             this.errorSignCheckBox.Size = new System.Drawing.Size(90, 19);
@@ -203,18 +203,18 @@ namespace Bahtinov_Collimator
             this.keepOnTopGroupBox.Controls.Add(this.onTopCheckBox);
             this.keepOnTopGroupBox.CornerRadius = 12;
             this.keepOnTopGroupBox.ForeColor = System.Drawing.Color.LightGray;
-            this.keepOnTopGroupBox.Location = new System.Drawing.Point(8, 278);
+            this.keepOnTopGroupBox.Location = new System.Drawing.Point(12, 278);
             this.keepOnTopGroupBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.keepOnTopGroupBox.Name = "keepOnTopGroupBox";
             this.keepOnTopGroupBox.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.keepOnTopGroupBox.Size = new System.Drawing.Size(268, 120);
+            this.keepOnTopGroupBox.Size = new System.Drawing.Size(263, 120);
             this.keepOnTopGroupBox.TabIndex = 39;
             this.keepOnTopGroupBox.TabStop = false;
             this.keepOnTopGroupBox.Text = "Keep On Top";
             // 
             // onTopLabel
             // 
-            this.onTopLabel.Location = new System.Drawing.Point(16, 51);
+            this.onTopLabel.Location = new System.Drawing.Point(16, 52);
             this.onTopLabel.Name = "onTopLabel";
             this.onTopLabel.Size = new System.Drawing.Size(221, 61);
             this.onTopLabel.TabIndex = 34;
@@ -223,7 +223,7 @@ namespace Bahtinov_Collimator
             // onTopCheckBox
             // 
             this.onTopCheckBox.AutoSize = true;
-            this.onTopCheckBox.Location = new System.Drawing.Point(27, 27);
+            this.onTopCheckBox.Location = new System.Drawing.Point(27, 28);
             this.onTopCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.onTopCheckBox.Name = "onTopCheckBox";
             this.onTopCheckBox.Size = new System.Drawing.Size(138, 19);
@@ -240,7 +240,7 @@ namespace Bahtinov_Collimator
             this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.CornerRadius = 12;
             this.groupBox4.ForeColor = System.Drawing.Color.LightGray;
-            this.groupBox4.Location = new System.Drawing.Point(284, 147);
+            this.groupBox4.Location = new System.Drawing.Point(283, 147);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -284,7 +284,7 @@ namespace Bahtinov_Collimator
             this.groupBox1.Controls.Add(this.VoiceCheckBox);
             this.groupBox1.CornerRadius = 12;
             this.groupBox1.ForeColor = System.Drawing.Color.LightGray;
-            this.groupBox1.Location = new System.Drawing.Point(13, 14);
+            this.groupBox1.Location = new System.Drawing.Point(12, 14);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -318,20 +318,21 @@ namespace Bahtinov_Collimator
             this.CancelSettingsButton.BackColor = System.Drawing.Color.DimGray;
             this.CancelSettingsButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.CancelSettingsButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
-            this.CancelSettingsButton.BevelThickness = 2;
-            this.CancelSettingsButton.CornerRadius = 8;
+            this.CancelSettingsButton.BevelThickness = 4;
+            this.CancelSettingsButton.CornerRadius = 6;
             this.CancelSettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.CancelSettingsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.CancelSettingsButton.ForeColor = System.Drawing.Color.LightGray;
             this.CancelSettingsButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.CancelSettingsButton.ImageHeight = 32;
             this.CancelSettingsButton.ImageOffsetX = 60;
             this.CancelSettingsButton.ImageOffsetY = 0;
             this.CancelSettingsButton.ImageWidth = 32;
-            this.CancelSettingsButton.Location = new System.Drawing.Point(426, 415);
+            this.CancelSettingsButton.Location = new System.Drawing.Point(424, 415);
             this.CancelSettingsButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.CancelSettingsButton.Name = "CancelSettingsButton";
-            this.CancelSettingsButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.CancelSettingsButton.Size = new System.Drawing.Size(112, 35);
+            this.CancelSettingsButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.CancelSettingsButton.Size = new System.Drawing.Size(120, 35);
             this.CancelSettingsButton.TabIndex = 14;
             this.CancelSettingsButton.Text = "Cancel";
             this.CancelSettingsButton.TextOffsetX = 0;
@@ -343,20 +344,21 @@ namespace Bahtinov_Collimator
             this.okButton.BackColor = System.Drawing.Color.DimGray;
             this.okButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.okButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
-            this.okButton.BevelThickness = 2;
-            this.okButton.CornerRadius = 8;
+            this.okButton.BevelThickness = 4;
+            this.okButton.CornerRadius = 6;
             this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.okButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.okButton.ForeColor = System.Drawing.Color.LightGray;
             this.okButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.okButton.ImageHeight = 32;
             this.okButton.ImageOffsetX = 60;
             this.okButton.ImageOffsetY = 0;
             this.okButton.ImageWidth = 32;
-            this.okButton.Location = new System.Drawing.Point(305, 415);
+            this.okButton.Location = new System.Drawing.Point(290, 415);
             this.okButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.okButton.Name = "okButton";
-            this.okButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.okButton.Size = new System.Drawing.Size(112, 35);
+            this.okButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.okButton.Size = new System.Drawing.Size(120, 35);
             this.okButton.TabIndex = 13;
             this.okButton.Text = "Save";
             this.okButton.TextOffsetX = 0;
@@ -368,7 +370,7 @@ namespace Bahtinov_Collimator
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
-            this.ClientSize = new System.Drawing.Size(566, 468);
+            this.ClientSize = new System.Drawing.Size(563, 468);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.minimizeGroupBox);
             this.Controls.Add(this.ErrorSignGroupBox);

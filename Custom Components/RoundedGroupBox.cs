@@ -11,6 +11,8 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public partial class RoundedGroupBox : GroupBox
     {
+        #region Appearance Properties
+
         /// <summary>
         /// Radius of the rounded corners in pixels.
         /// </summary>
@@ -26,36 +28,36 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         public int BorderThickness { get; set; } = 2;
 
+        #endregion
+
+        #region Lifecycle
+
         /// <summary>
         /// Initializes the rounded group box and enables double-buffering
         /// and redraw-on-resize for smooth rendering.
         /// </summary>
         public RoundedGroupBox()
         {
-            // Reduce flicker when repainting.
             DoubleBuffered = true;
 
-            // Force the control to redraw itself when resized.
             ResizeRedraw = true;
         }
+
+        #endregion
+
+        #region Painting
 
         /// <summary>
         /// Custom paint routine for drawing the rounded background,
         /// border, and title text.
         /// </summary>
-        /// <param name="e">Paint event data, including graphics context.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            // Smooth edges for rounded corners and curved lines.
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            // textHeight is the height of the title text in pixels.
             float textHeight = e.Graphics.MeasureString(Text, Font).Height;
             int y0 = (int)(textHeight / 2);
 
-            // Outer frame of the box body (below title). Same size as the original layout:
-            // width = Width - 1, height = Height - y0 - 1. Using the full client height here
-            // pushed the stroke onto the last scanline and clipped the bottom of the pen.
             int bodyW = Math.Max(0, Width - 1);
             int bodyH = Math.Max(0, Height - y0 - 1);
             Rectangle outerBody = new Rectangle(0, y0, bodyW, bodyH);
@@ -63,14 +65,12 @@ namespace Bahtinov_Collimator.Custom_Components
             int t = BorderThickness;
             int strokeInset = t / 2;
 
-            // Stroke inset so PenAlignment.Center does not clip half the pen on top/left edges.
             Rectangle strokeBounds = new Rectangle(
                 outerBody.X + strokeInset,
                 outerBody.Y + strokeInset,
                 Math.Max(0, outerBody.Width - t),
                 Math.Max(0, outerBody.Height - t));
 
-            // Fill inside the border’s inner edge.
             Rectangle fillBounds = new Rectangle(
                 outerBody.X + t,
                 outerBody.Y + t,
@@ -91,12 +91,8 @@ namespace Bahtinov_Collimator.Custom_Components
                 e.Graphics.DrawPath(pen, strokePath);
             }
 
-            // textSize is the full size of the group box caption text.
             SizeF textSize = e.Graphics.MeasureString(Text, Font);
 
-            // textRect is the rectangle behind the text that we fill
-            // with background color so the border line does not appear
-            // through the text.
             RectangleF textRect = new RectangleF(
                 10,
                 0,
@@ -109,6 +105,10 @@ namespace Bahtinov_Collimator.Custom_Components
             using (SolidBrush textBrush = new SolidBrush(ForeColor))
                 e.Graphics.DrawString(Text, Font, textBrush, 10, 0);
         }
+
+        #endregion
+
+        #region Geometry Helpers
 
         /// <summary>
         /// Limits radius so quarter-arcs fit; avoids straight segments between arcs.
@@ -145,5 +145,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
             return path;
         }
+
+        #endregion
     }
 }

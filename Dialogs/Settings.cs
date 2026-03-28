@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -9,6 +9,9 @@ namespace Bahtinov_Collimator
     {
         #region DLL Imports
 
+        /// <summary>
+        /// Sets a Desktop Window Manager attribute on the dialog window.
+        /// </summary>
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
@@ -20,7 +23,11 @@ namespace Bahtinov_Collimator
 
         #endregion
 
-        #region Variables
+        #region Public State
+
+        /// <summary>
+        /// Gets a value indicating whether changing settings requires capture components to restart.
+        /// </summary>
         public bool RestartCapture { get; private set; }
         
         #endregion
@@ -36,7 +43,6 @@ namespace Bahtinov_Collimator
             ApplyLocalization();
             LoadSettings();
 
-            // Set Title bar color
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
@@ -44,13 +50,11 @@ namespace Bahtinov_Collimator
 
         #endregion
 
-        #region Methods
+        #region Initialization Helpers
 
         /// <summary>
         /// Changes the foreground color of Label controls within a parent control.
         /// </summary>
-        /// <param name="parent">The parent control containing the Label controls.</param>
-        /// <param name="color">The color to set for the labels' foreground.</param>
         private void ChangeLabelColors(Control parent, Color color)
         {
             foreach (Control control in parent.Controls)
@@ -76,6 +80,9 @@ namespace Bahtinov_Collimator
             minimizeCheckBox.Checked = Properties.Settings.Default.Minimize;
         }
 
+        /// <summary>
+        /// Applies localized strings to all text-bearing controls in the settings dialog.
+        /// </summary>
         private void ApplyLocalization()
         {
             var textPack = UiText.Current;
@@ -104,11 +111,13 @@ namespace Bahtinov_Collimator
             minimizeLabel.Text = textPack.SettingsMinimizeLabel;
         }
 
+        #endregion
+
+        #region Event Handlers
+
         /// <summary>
         /// Saves the settings when the OK button is clicked and closes the form.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OkButton_Click(object sender, EventArgs e)
         {
             try
@@ -124,7 +133,6 @@ namespace Bahtinov_Collimator
                 else
                     RestartCapture = false;
 
-                // Parse input values and save them to application settings
                 Properties.Settings.Default.VoiceEnabled = VoiceCheckBox.Checked;
                 Properties.Settings.Default.SignChange = errorSignCheckBox.Checked;
                 Properties.Settings.Default.historyCount = int.Parse(historyMakersTextBox.Text);
@@ -133,31 +141,24 @@ namespace Bahtinov_Collimator
                 Properties.Settings.Default.KeepOnTop = onTopCheckBox.Checked;
                 Properties.Settings.Default.Minimize = minimizeCheckBox.Checked;
 
-                // Save settings
                 Properties.Settings.Default.Save();
 
-                // display new image
                 ImageCapture.ForceImageUpdate();
 
-                // Indicate that the form was closed with OK result
                 this.DialogResult = DialogResult.OK;
             }
             catch
             {
-                // Show warning message if input parsing fails
                 DarkMessageBox.Show(UiText.Current.SettingsInvalidInputMessage, UiText.Current.SettingsInvalidInputTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return;
             }
 
-            // Close the form
             this.Close();
         }
 
         /// <summary>
         /// Closes the form with a Cancel result when the Cancel button is clicked.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void CancelButton_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;

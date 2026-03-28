@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.IO;
-using System.Runtime.ConstrainedExecution;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -14,65 +13,54 @@ namespace Bahtinov_Collimator
     [DataContract]
     public sealed class NextStepTextPack
     {
-        // Dialog / debug
-        [DataMember] public string DialogTitle { get; set; }
-        [DataMember] public string DebugLineFormat { get; set; } // e.g. "Values:  Red {0}   Green {1}   Blue {2}"
+        #region Next Step Text Keys
 
-        // Common section title
+        [DataMember] public string DialogTitle { get; set; }
+        [DataMember] public string DebugLineFormat { get; set; }
+
         [DataMember] public string SectionWhatToDoTitle { get; set; }
 
-        // Capture required
         [DataMember] public string CaptureHeader { get; set; }
         [DataMember] public string CaptureSummary { get; set; }
         [DataMember] public string CaptureBullet1 { get; set; }
         [DataMember] public string CaptureBullet2 { get; set; }
 
-        // Focus only (TB not visible)
         [DataMember] public string FocusOnlyHeader { get; set; }
         [DataMember] public string FocusOnlyNeedsAdjustingSummary { get; set; }
 
-        // Focus to balanced (TB visible but not balanced)
         [DataMember] public string FocusBalancedHeader { get; set; }
         [DataMember] public string FocusBalancedSummary { get; set; }
         [DataMember] public string FocusAllPositiveBullet { get; set; }
         [DataMember] public string FocusAllNegativeBullet { get; set; }
         [DataMember] public string FocusStraddleNotBalancedBullet1 { get; set; }
-        [DataMember] public string FocusStraddleNotBalancedBullet2Format { get; set; } // direction placeholder {0} = IN/OUT
-        [DataMember] public string FocusTargetLineFormat { get; set; } // {0}=mean string, {1}=maxAbs string
+        [DataMember] public string FocusStraddleNotBalancedBullet2Format { get; set; }
+        [DataMember] public string FocusTargetLineFormat { get; set; }
         [DataMember] public string FocusOnlyBeginScrewsBullet { get; set; }
         [DataMember] public string FocusFooterHint { get; set; }
 
-        // Collimation step header/summary
         [DataMember] public string CollimationHeader { get; set; }
         [DataMember] public string CollimationSummary { get; set; }
 
-        // Done (within tolerance)
         [DataMember] public string DoneHeader { get; set; }
         [DataMember] public string DoneSummary { get; set; }
         [DataMember] public string DoneBullet { get; set; }
 
-        // Collimation instruction block
-        [DataMember] public string CollimationPositiveInstructionFormat { get; set; } // {0}=channel name, {1}=value, {2}=screw label
-        [DataMember] public string CollimationNegativeInstructionFormat { get; set; } // {0}=channel name, {1}=value, {2}=screw label
+        [DataMember] public string CollimationPositiveInstructionFormat { get; set; }
+        [DataMember] public string CollimationNegativeInstructionFormat { get; set; }
         [DataMember] public string CollimationAdjustTogetherBullet { get; set; }
         [DataMember] public string CollimationFooterHint { get; set; }
 
-        // Focus direction words
         [DataMember] public string DirectionIn { get; set; }
         [DataMember] public string DirectionOut { get; set; }
 
-        // textual new line
         [DataMember] public string CollimationSpace { get; set; }
 
-        // Screw fallback label
-        [DataMember] public string ScrewFallbackFormat { get; set; } // {0}=group name
+        [DataMember] public string ScrewFallbackFormat { get; set; }
 
-        // Channel names
         [DataMember] public string ChannelRed { get; set; }
         [DataMember] public string ChannelGreen { get; set; }
         [DataMember] public string ChannelBlue { get; set; }
 
-        // Calibration component
         [DataMember] public string CalibrationTitle { get; set; }
         [DataMember] public string CalibrationQuitButtonText { get; set; }
         [DataMember] public string CalibrationCloseButtonText { get; set; }
@@ -90,6 +78,8 @@ namespace Bahtinov_Collimator
         [DataMember] public string CalibrationMovePrompt { get; set; }
         [DataMember] public string CalibrationCompleteHeader { get; set; }
         [DataMember] public string CalibrationCompleteSummary { get; set; }
+
+        #endregion
     }
 
     /// <summary>
@@ -97,7 +87,13 @@ namespace Bahtinov_Collimator
     /// </summary>
     public static class NextStepText
     {
-        private static NextStepTextPack _current;
+        #region Fields
+
+        private static NextStepTextPack current;
+
+        #endregion
+
+        #region Public API
 
         /// <summary>
         /// Current text pack. Must be loaded before SkyCalNextStep runs, otherwise an exception is thrown.
@@ -106,15 +102,16 @@ namespace Bahtinov_Collimator
         {
             get
             {
-                if (_current == null)
+                if (current == null)
                     throw new InvalidOperationException("NextStepText.Current is null. Call NextStepText.LoadFromJson(...) at startup.");
-                return _current;
+                return current;
             }
         }
 
         /// <summary>
         /// Loads a text pack from a JSON file. Throws if file missing or invalid.
         /// </summary>
+        /// <param name="filePath">Full path to the next-step text JSON file.</param>
         public static void LoadFromJson(string filePath)
         {
             if (string.IsNullOrWhiteSpace(filePath))
@@ -131,8 +128,10 @@ namespace Bahtinov_Collimator
                 var obj = ser.ReadObject(ms) as NextStepTextPack
                     ?? throw new SerializationException("Failed to deserialize NextStepTextPack from JSON.");
 
-                _current = obj;
+                current = obj;
             }
         }
+
+        #endregion
     }
 }

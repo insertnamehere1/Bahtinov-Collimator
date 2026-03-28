@@ -1,4 +1,4 @@
-﻿using Bahtinov_Collimator.Helper;
+using Bahtinov_Collimator.Helper;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -144,7 +144,6 @@ namespace Bahtinov_Collimator
         /// <param name="button">The buttons to be displayed in the message box.</param>
         public static void OnImageLost(string message, string title, MessageBoxIcon icon, MessageBoxButtons button)
         {
-            // Invoke the event if there are subscribers
             ImageLostEvent?.Invoke(null, new ImageLostEventArgs(message, title, icon, button));
         }
     }

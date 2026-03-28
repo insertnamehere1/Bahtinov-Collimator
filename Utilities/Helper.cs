@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using System.Deployment.Application;
 
@@ -21,7 +21,6 @@ namespace Bahtinov_Collimator.Helper
 
                     if (info.UpdateAvailable)
                     {
-                        // Ask the user for confirmation before updating
                         DialogResult result = DarkMessageBox.Show(
                             UiText.Current.UpdateAvailableMessage,
                             UiText.Current.UpdateAvailableTitle,
@@ -31,8 +30,7 @@ namespace Bahtinov_Collimator.Helper
 
                         if (result == DialogResult.Yes)
                         {
-                            // Perform the update
-                            bool success = ad.Update(); // Updates the application asynchronously
+                            bool success = ad.Update();
 
                             if (success)
                             {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -11,14 +11,18 @@ using System.Windows.Forms;
 /// </summary>
 public class ToggleSwitch : Control
 {
+    #region Fields
+
     private bool isOn;
     private float animation; // 0..1
     private readonly Timer animationTimer;
-
     private bool isHover;
     private bool isPressed;
-
     private int rotationDegrees;
+
+    #endregion
+
+    #region Public Properties and Events
 
     /// <summary>
     /// Gets or sets the drawing rotation angle in degrees.
@@ -90,6 +94,10 @@ public class ToggleSwitch : Control
     /// </summary>
     public event EventHandler CheckedChanged;
 
+    #endregion
+
+    #region Lifecycle
+
     /// <summary>
     /// Disposes managed resources.
     /// </summary>
@@ -100,6 +108,10 @@ public class ToggleSwitch : Control
 
         base.Dispose(disposing);
     }
+
+    #endregion
+
+    #region Input Handling
 
     /// <summary>
     /// Enables hover visuals when the mouse enters.
@@ -190,6 +202,10 @@ public class ToggleSwitch : Control
         }
     }
 
+    #endregion
+
+    #region Painting
+
     /// <summary>
     /// Draws the control. Rotation is applied via graphics transforms.
     /// </summary>
@@ -199,7 +215,6 @@ public class ToggleSwitch : Control
         g.SmoothingMode = SmoothingMode.AntiAlias;
         g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-        // Apply rotation around control center.
         float drawW = Width;
         float drawH = Height;
 
@@ -208,11 +223,8 @@ public class ToggleSwitch : Control
             g.TranslateTransform(Width / 2f, Height / 2f);
             g.RotateTransform(rotationDegrees);
 
-            // After rotation, translate so the "draw area" starts at (0,0)
-            // for a consistent drawing coordinate system.
             if (rotationDegrees == 90 || rotationDegrees == 270)
             {
-                // Swap width/height in the rotated coordinate system.
                 g.TranslateTransform(-Height / 2f, -Width / 2f);
                 drawW = Height;
                 drawH = Width;
@@ -232,7 +244,6 @@ public class ToggleSwitch : Control
         bool pressed = isPressed && Enabled;
         bool focused = Focused && ShowFocusCues;
 
-        // Darker palette
         Color offBase = Color.FromArgb(200, 198, 194);
         Color offBaseHover = Color.FromArgb(210, 208, 204);
         Color border = Color.FromArgb(120, 120, 120);
@@ -251,7 +262,6 @@ public class ToggleSwitch : Control
             borderHover = border;
         }
 
-        // Outer shadow
         float shadowYOffset = pressed ? 0.7f : 2.0f;
         int shadowAlpha = pressed ? 70 : 120;
 
@@ -265,11 +275,9 @@ public class ToggleSwitch : Control
 
         using (GraphicsPath trackPath = RoundedRect(track, radius))
         {
-            // Track fill
             using (Brush bg = new SolidBrush(hovered ? offBaseHover : offBase))
                 g.FillPath(bg, trackPath);
 
-            // ON fill (grows from the LEFT in the drawing coordinate system)
             if (animation > 0f)
             {
                 float w = track.Width * animation;
@@ -280,7 +288,6 @@ public class ToggleSwitch : Control
                 using (Brush r = new SolidBrush(hovered ? onRedHover : onRed))
                     g.FillRectangle(r, red);
 
-                // Specular highlight on red
                 RectangleF gloss = new RectangleF(red.X, red.Y, red.Width, red.Height * 0.4f);
                 using (Brush glossBrush = new LinearGradientBrush(
                            gloss,
@@ -294,7 +301,6 @@ public class ToggleSwitch : Control
                 g.ResetClip();
             }
 
-            // Inner depth
             RectangleF inner = Inflate(track, -1.6f);
             using (GraphicsPath innerPath = RoundedRect(inner, inner.Height / 2f))
             {
@@ -322,11 +328,9 @@ public class ToggleSwitch : Control
                 g.ResetClip();
             }
 
-            // Border
             using (Pen p = new Pen(hovered ? borderHover : border))
                 g.DrawPath(p, trackPath);
 
-            // Focus ring
             if (focused && Enabled)
             {
                 RectangleF focusRect = Inflate(track, 1.0f);
@@ -338,7 +342,6 @@ public class ToggleSwitch : Control
             }
         }
 
-        // Thumb
         float thumbSize = drawH - 7.2f;
         float thumbX = 3.2f + (drawW - drawH) * animation;
         float thumbY = 3.2f + (pressed ? 0.6f : 0f);
@@ -375,7 +378,6 @@ public class ToggleSwitch : Control
             using (Pen outline = new Pen(Color.FromArgb(120, 120, 120)))
                 g.DrawPath(outline, thumbPath);
 
-            // Groove
             float cx = thumb.X + thumb.Width / 2f;
             float gy1 = thumb.Y + thumb.Height * 0.25f;
             float gy2 = thumb.Bottom - thumb.Height * 0.25f;
@@ -391,22 +393,36 @@ public class ToggleSwitch : Control
         }
     }
 
+    #endregion
+
+    #region Geometry Helpers
+
+    /// <summary>
+    /// Normalizes an arbitrary angle to the nearest supported toggle orientation.
+    /// </summary>
+    /// <returns>One of 0, 90, 180, or 270 degrees.</returns>
     private static int NormalizeRotation(int degrees)
     {
         int d = degrees % 360;
         if (d < 0) d += 360;
 
-        // Snap to nearest of 0/90/180/270 (keeps behavior predictable).
-        // If you prefer "accept any angle", remove this and just return d.
         if (d >= 315 || d < 45) return 0;
         if (d >= 45 && d < 135) return 90;
         if (d >= 135 && d < 225) return 180;
         return 270;
     }
 
+    /// <summary>
+    /// Returns a rectangle inflated inward or outward by a uniform amount.
+    /// </summary>
+    /// <returns>The transformed rectangle.</returns>
     private static RectangleF Inflate(RectangleF r, float by)
         => new RectangleF(r.X + by, r.Y + by, r.Width - 2 * by, r.Height - 2 * by);
 
+    /// <summary>
+    /// Builds a rounded rectangle path for the supplied bounds and corner radius.
+    /// </summary>
+    /// <returns>A closed rounded rectangle path.</returns>
     private static GraphicsPath RoundedRect(RectangleF rect, float radius)
     {
         GraphicsPath path = new GraphicsPath();
@@ -420,4 +436,6 @@ public class ToggleSwitch : Control
 
         return path;
     }
+
+    #endregion
 }

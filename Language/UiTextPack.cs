@@ -14,6 +14,8 @@ namespace Bahtinov_Collimator
     [DataContract]
     public sealed class UiTextPack
     {
+        #region UI Text Keys
+
         [DataMember] public string CommonOk { get; set; }
         [DataMember] public string CommonCancel { get; set; }
         [DataMember] public string CommonYes { get; set; }
@@ -139,6 +141,8 @@ namespace Bahtinov_Collimator
         [DataMember] public string SettingsGroupMinimizeTitle { get; set; }
         [DataMember] public string SettingsMinimizeDescription { get; set; }
         [DataMember] public string SettingsMinimizeLabel { get; set; }
+
+        #endregion
     }
 
     /// <summary>
@@ -146,18 +150,31 @@ namespace Bahtinov_Collimator
     /// </summary>
     public static class UiText
     {
-        private static UiTextPack _current;
+        #region Fields
 
+        private static UiTextPack current;
+
+        #endregion
+
+        #region Public API
+
+        /// <summary>
+        /// Gets the currently loaded UI text pack.
+        /// </summary>
         public static UiTextPack Current
         {
             get
             {
-                if (_current == null)
+                if (current == null)
                     throw new InvalidOperationException("UiText.Current is null. Call UiText.LoadFromJson(...) at startup.");
-                return _current;
+                return current;
             }
         }
 
+        /// <summary>
+        /// Loads and deserializes UI text values from a JSON language pack.
+        /// </summary>
+        /// <param name="filePath">Full path to the UI text JSON file.</param>
         public static void LoadFromJson(string filePath)
         {
             if (string.IsNullOrWhiteSpace(filePath))
@@ -174,8 +191,10 @@ namespace Bahtinov_Collimator
                 var obj = ser.ReadObject(ms) as UiTextPack
                     ?? throw new SerializationException("Failed to deserialize UiTextPack from JSON.");
 
-                _current = obj;
+                current = obj;
             }
         }
+
+        #endregion
     }
 }

@@ -10,16 +10,13 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     internal static class SctPrimaryMirrorLineArt
     {
-        // ═══════════════════════════════════════════════════════════════════════════════
-        // SETTINGS — design space (same 50×100 logical units as <see cref="MirrorDrawingComponent"/>)
-        // ═══════════════════════════════════════════════════════════════════════════════
+        #region Settings
 
         /// <summary>Maximum width/height taken from <c>bounds</c> when building the mirror rectangle.</summary>
         private const int DesignWidthMax = 50;
 
         private const int DesignHeightMax = 100;
 
-        // --- Outer frame / mirror box ---
         /// <summary>Padding: shrink top/bottom of usable drawing area inside mirror bounds.</summary>
         private const int MarginTop = 1;
 
@@ -34,7 +31,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>Front (reflective) edge X offset from <see cref="BackInsetLeft"/> when building geometry.</summary>
         private const int FrontEdgeOffsetFromBack = 10;
 
-        // --- Left-side concave symmetry (was previously a straight vertical edge) ---
         /// <summary>Horizontal bulge for the left mirrored curve (0 = vertical line, sign flips bow direction).</summary>
         /// <remarks>
         /// Positive values bow one way; negative values bow the opposite way.
@@ -48,15 +44,12 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>Vertical bulge multiplier for the left curve when <c>cornerRadius == 0</c>.</summary>
         private const float LeftFlatCurveOffsetYFactor = 5f;
 
-        // --- Rounded-corner outline (when corner radius > 0) ---
         /// <summary>Vertical offset (down) for Bezier control points from top/bottom when using rounded outline.</summary>
         private const int ConcaveBezierOffsetY = 18;
 
-        // --- Flat-corner outline (radius == 0) ---
         /// <summary>Vertical pull for single Bezier from top/bottom edges (smaller = flatter face).</summary>
         private const int FlatFaceBezierOffsetY = 18;
 
-        // --- Baffle tube (rear opening) ---
         /// <summary>Horizontal length of the two baffle rail lines from the back edge.</summary>
         private const int BaffleWallLength = 60;
 
@@ -83,15 +76,12 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </remarks>
         private const int BaffleThroughCutLeftInset = 0;
 
-        // --- Glass body fill (tinted by outline color) ---
-        // Keep alpha identical across the gradient so body opacity is uniform.
         private static readonly Color GlassDarkBase = Color.FromArgb(70, 190, 190, 190);
 
         private static readonly Color GlassLightBase = Color.FromArgb(70, 235, 235, 235);
 
         private const float GlassTintStrength = 1f;
 
-        // --- Reflective coating stroke ---
         private const float CoatingPenThickness = 2f;
 
         private static readonly Color MetalDarkBase = Color.FromArgb(150, 150, 150);
@@ -106,7 +96,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>Inflate baffle cutout when clipping so coating doesn’t leak into the hole.</summary>
         private const int CoatingClipBaffleInflate = 2;
 
-        // --- Baffle rail lines (drawn after body) --
         private static readonly Color BafflePenColor = Color.DarkGray;
 
         private const float BafflePenWidth = 2f;
@@ -114,18 +103,24 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>Inflate tube interior exclusion to avoid anti-aliased fill/metal remnants.</summary>
         private const int BaffleInteriorEraseInflate = 1;
 
-        // --- Optical axis (dotted) ---
         /// <summary>Axis starts at <c>mirrorBounds.Left + AxisStartOffsetFromLeft</c>.</summary>
         private const int AxisStartOffsetFromLeft = 2;
 
         private const float AxisPenWidth = 1.5f;
 
-        // ═══════════════════════════════════════════════════════════════════════════════
-        // DRAW
-        // ═══════════════════════════════════════════════════════════════════════════════
 
-        /// <param name="cornerRadius">Corner radius from control (clamped by available space).</param>
+        #endregion
+
+        #region Drawing
+
+        /// <summary>
+        /// Draws the SCT primary mirror line art within the provided design-space bounds.
+        /// </summary>
+        /// <param name="graphics">Graphics context used for drawing.</param>
+        /// <param name="bounds">Design-space bounds that constrain the mirror geometry.</param>
+        /// <param name="mirrorOutlineColor">Base outline color used for strokes and tint blending.</param>
         /// <param name="opticalAxisLength">Logical length of dotted axis from control.</param>
+        /// <param name="cornerRadius">Corner radius from control (clamped by available space).</param>
         public static void Draw(Graphics graphics, Rectangle bounds, Color mirrorOutlineColor, int opticalAxisLength, int cornerRadius)
         {
             if (bounds.Width <= 0 || bounds.Height <= 0)
@@ -144,8 +139,6 @@ namespace Bahtinov_Collimator.Custom_Components
             int frontEdgeX = backX + FrontEdgeOffsetFromBack;
             int baffleBackX = mirrorBounds.Left + BaffleBackInsetLeft;
 
-            // Compute left curve control X as a mirrored version of the right curve control point.
-            // Baseline mirror across the midpoint between left endpoint (backX) and right endpoint (concaveDepthX).
             float leftCurveCtrlXBase = backX + concaveDepthX - frontEdgeX;
             float leftCurveCtrlX = backX + (leftCurveCtrlXBase - backX) * LeftCurveControlXFactor;
 
@@ -206,7 +199,6 @@ namespace Bahtinov_Collimator.Custom_Components
                     outlinePath.AddArc(concaveDepthX - d, bottomY - d, d, d, 0f, 90f);
                     outlinePath.AddLine(concaveDepthX - radius, bottomY, backX + radius, bottomY);
                     outlinePath.AddArc(backX, bottomY - d, d, d, 90f, 90f);
-                    // Replace the straight left vertical edge with a mirrored Bezier curve.
                     float leftOffsetY = ConcaveBezierOffsetY * LeftConcaveCurveOffsetYFactor;
                     float maxRoundedOffset = ((bottomY - radius) - (topY + radius)) * 0.45f;
                     if (leftOffsetY > maxRoundedOffset)
@@ -222,8 +214,6 @@ namespace Bahtinov_Collimator.Custom_Components
 
                     outlinePath.AddBezier(
                         backX, bottomY - radius,
-                        // Swap control point Y order so the left curve bows in the same
-                        // "direction" as the right concave surface.
                         leftCurveCtrlX, leftCtrlTopY,
                         leftCurveCtrlX, leftCtrlBottomY,
                         backX, topY + radius);
@@ -238,7 +228,6 @@ namespace Bahtinov_Collimator.Custom_Components
                         frontEdgeX, bottomY - FlatFaceBezierOffsetY,
                         concaveDepthX, bottomY);
                     outlinePath.AddLine(concaveDepthX, bottomY, backX, bottomY);
-                    // Replace the straight left vertical edge with a mirrored Bezier curve.
                     float leftOffsetY = FlatFaceBezierOffsetY * LeftFlatCurveOffsetYFactor;
                     float maxFlatOffset = (bottomY - topY) * 0.45f;
                     if (leftOffsetY > maxFlatOffset)
@@ -254,8 +243,6 @@ namespace Bahtinov_Collimator.Custom_Components
 
                     outlinePath.AddBezier(
                         backX, bottomY,
-                        // Swap control point Y order so the left curve bows in the same
-                        // "direction" as the right concave surface.
                         leftCurveCtrlX, leftCtrlTopY,
                         leftCurveCtrlX, leftCtrlBottomY,
                         backX, topY);
@@ -273,11 +260,7 @@ namespace Bahtinov_Collimator.Custom_Components
                     glassLightTinted))
                 using (Region glassRegion = new Region(outlinePath))
                 {
-                    // Exclude the through-cut explicitly so it never "adds back" fill
-                    // when the rectangle extends outside the mirror silhouette.
                     glassRegion.Exclude(baffleCutoutThrough);
-                    // Also exclude the rear square baffle opening so the entire baffle box
-                    // has no glass fill even when the through-cut width is narrower.
                     glassRegion.Exclude(baffleCutout);
                     Rectangle glassEraseTube = baffleTubeInterior;
                     glassEraseTube.Inflate(BaffleInteriorEraseInflate, BaffleInteriorEraseInflate);
@@ -369,5 +352,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 graphics.DrawLine(axisPen, axisStartX, axisY, axisEndX, axisY);
             }
         }
+
+        #endregion
     }
 }

@@ -16,6 +16,8 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public partial class HistoryBar : Control
     {
+        #region Win32 DPI Messages
+
         /// <summary>
         /// Window message sent when the DPI for this window has changed.
         /// </summary>
@@ -30,6 +32,10 @@ namespace Bahtinov_Collimator.Custom_Components
         /// Window message sent to a child window after its parent processes a DPI change.
         /// </summary>
         private const int WM_DPICHANGED_AFTERPARENT = 0x02E3;
+
+        #endregion
+
+        #region Fields
 
         private float minimum = -1.0f;
         private float maximum = 1.0f;
@@ -61,6 +67,10 @@ namespace Bahtinov_Collimator.Custom_Components
         /// Gets the current DPI scale factor relative to the design DPI.
         /// </summary>
         private float DpiScale => DeviceDpi / (float)DesignDpi;
+
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
         /// Gets or sets the minimum value of the scale.
@@ -111,7 +121,6 @@ namespace Bahtinov_Collimator.Custom_Components
             {
                 historyCapacity = Properties.Settings.Default.historyCount;
 
-                // Only record history if the existing value is valid
                 if (!float.IsNaN(this.value))
                 {
                     AddToHistory(this.value);
@@ -152,6 +161,10 @@ namespace Bahtinov_Collimator.Custom_Components
         [Description("Base text color for labels and value.")]
         public Color TextColor { get; set; } = Color.White;
 
+        #endregion
+
+        #region Lifecycle
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HistoryBar"/> class.
         /// Sets up double buffering and a sensible default size, scaled for the current DPI.
@@ -166,10 +179,12 @@ namespace Bahtinov_Collimator.Custom_Components
 
             DoubleBuffered = true;
 
-            // Base design size is 300x80 at 96 DPI.
-            // Multiply by DpiScale so the default matches the current monitor DPI.
             Size = new Size((int)(300 * DpiScale), GetPreferredHeight());
         }
+
+        #endregion
+
+        #region Sizing and DPI
 
         /// <summary>
         /// Ensures preferred size is also DPI aware when the designer or layout engine asks.
@@ -187,7 +202,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Adds a value to the history list, keeping only the last N entries.
         /// </summary>
-        /// <param name="oldValue">The previous value to store for history rendering.</param>
         private void AddToHistory(float oldValue)
         {
             valueHistory.Enqueue(oldValue);
@@ -199,7 +213,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Captures the initial DPI once the underlying window handle is created.
         /// </summary>
-        /// <param name="e">Event data.</param>
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
@@ -210,7 +223,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Updates layout when the control is reparented (which can occur during DPI transitions).
         /// </summary>
-        /// <param name="e">Event data.</param>
         protected override void OnParentChanged(EventArgs e)
         {
             base.OnParentChanged(e);
@@ -220,7 +232,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Intercepts DPI-change related window messages and refreshes layout when the DPI changes.
         /// </summary>
-        /// <param name="m">The Windows message.</param>
         protected override void WndProc(ref Message m)
         {
             int oldDpi = lastKnownDpi;
@@ -250,19 +261,21 @@ namespace Bahtinov_Collimator.Custom_Components
 
             int preferredHeight = GetPreferredHeight();
 
-            // Avoid fighting layout managers/anchoring by only growing if needed.
             if (Height < preferredHeight)
                 Height = preferredHeight;
 
             Invalidate();
         }
 
+        #endregion
+
+        #region Painting
+
         /// <summary>
         /// Performs custom painting of the bar, labels, zero tick, history markers,
         /// the current marker, and the numeric value above the marker.
         /// Layout and stroke sizes are scaled according to the current DPI.
         /// </summary>
-        /// <param name="e">Paint event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -272,7 +285,6 @@ namespace Bahtinov_Collimator.Custom_Components
 
             float scale = DpiScale;
 
-            // Base design values at 96 DPI
             float designLeftPad = 10f;     // space for minimum label
             float designRightPad = 10f;    // space for maximum label
             float designZeroTickUp = 15f;
@@ -284,7 +296,6 @@ namespace Bahtinov_Collimator.Custom_Components
             float designAlertOutlineThickness = 1f;
             float designValueGap = 2f;
 
-            // Scaled values
             int margin = 0;
             int left = margin + (int)(designLeftPad * scale);
             int right = Width - margin - (int)(designRightPad * scale);
@@ -299,8 +310,6 @@ namespace Bahtinov_Collimator.Custom_Components
             float alertOutlineThickness = designAlertOutlineThickness * scale;
             float valueGap = designValueGap * scale;
 
-            // Vertically center the whole drawing block within whatever Height the layout gives us.
-            // This prevents "drifting" when the container scales the control differently at 100/150/300%.
             float textHeight = Font.Height;
             float aboveCenter = textHeight + valueGap + markerRadius;
             float belowCenter = Math.Max(zeroTickDown, historyRadius);
@@ -309,17 +318,14 @@ namespace Bahtinov_Collimator.Custom_Components
             float top = Math.Max(padding, (Height - contentHeight) / 2f);
             float centerY = top + aboveCenter;
 
-            // Draw main bar line
             using (var barPen = new Pen(BarColor, barThickness))
             {
                 g.DrawLine(barPen, left, centerY, right, centerY);
             }
 
-            // Draw zero tick
             float range = maximum - minimum;
             if (Math.Abs(range) < float.Epsilon)
             {
-                // Avoid division by zero, nothing meaningful to draw
                 return;
             }
 
@@ -331,14 +337,12 @@ namespace Bahtinov_Collimator.Custom_Components
                 g.DrawLine(zeroPen, zeroX, centerY - zeroTickUp, zeroX, centerY + zeroTickDown);
             }
 
-            // Draw end ticks
             using (var tickPen = new Pen(ZeroTickColor, zeroThickness))
             {
                 g.DrawLine(tickPen, left, centerY - zeroTickUp / 4, left, centerY + zeroTickDown / 4);
                 g.DrawLine(tickPen, right, centerY - zeroTickUp / 4, right, centerY + zeroTickDown / 4);
             }
 
-            // Draw history markers (semi opaque, smaller, behind current marker)
             Color historyColor = Color.FromArgb(128, Color.White);
             using (var historyBrush = new SolidBrush(historyColor))
             {
@@ -361,7 +365,6 @@ namespace Bahtinov_Collimator.Custom_Components
                 }
             }
 
-            // Clamp the current marker position to the bar range
             float clampedValue = Math.Max(minimum, Math.Min(maximum, (float.IsNaN(value))?0.0f:value));
             float t = (clampedValue - minimum) / range;
             float markerX = left + t * (right - left);
@@ -372,13 +375,11 @@ namespace Bahtinov_Collimator.Custom_Components
                 markerRadius * 2,
                 markerRadius * 2);
 
-            // Draw current marker
             using (var markerBrush = new SolidBrush(MarkerColor))
             {
                 g.FillEllipse(markerBrush, markerRect);
             }
 
-            // Draw numeric value above marker
             string valueStr = (float.IsNaN(value) ? 0.0f : value).ToString("0.0");
             SizeF valSize = g.MeasureString(valueStr, Font);
 
@@ -408,6 +409,10 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
         /// Calculates the minimum height needed to render the marker, ticks, and value text without clipping.
         /// </summary>
@@ -419,10 +424,8 @@ namespace Bahtinov_Collimator.Custom_Components
             const float designZeroTickDown = 12f;
             const float designValueGap = 2f;
 
-            // Content above bar centre: value text + gap + marker radius
             float aboveCenter = Font.Height + (designValueGap + designMarkerRadius) * scale;
  
-            // Content below bar centre: whichever is taller — zero tick or marker
             float belowCenter = Math.Max(designZeroTickDown, designMarkerRadius) * scale;
 
             return (int)(aboveCenter + belowCenter) + (int)(4 * scale); // 2px padding each side
@@ -431,7 +434,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Updates the preferred height when the font changes, since text height affects layout.
         /// </summary>
-        /// <param name="e">Event data.</param>
         protected override void OnFontChanged(EventArgs e)
         {
             base.OnFontChanged(e);
@@ -457,5 +459,7 @@ namespace Bahtinov_Collimator.Custom_Components
             value = float.NaN;
             Invalidate();
         }
+
+        #endregion
     }
 }

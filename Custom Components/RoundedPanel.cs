@@ -11,6 +11,8 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public partial class RoundedPanel : Panel
     {
+        #region Appearance Properties
+
         /// <summary>
         /// Radius in pixels for the rounded corners.
         /// </summary>
@@ -32,6 +34,10 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         public Color FillColor { get; set; } = Color.Transparent;
 
+        #endregion
+
+        #region Lifecycle
+
         /// <summary>
         /// Enables custom painting, transparency, and double buffering.
         /// </summary>
@@ -46,9 +52,12 @@ namespace Bahtinov_Collimator.Custom_Components
                 true);
 
             InitializeComponent();
-            // Reduces stair-stepping on rounded strokes when combined with custom painting.
             DoubleBuffered = true;
         }
+
+        #endregion
+
+        #region Painting
 
         /// <summary>
         /// Paints the parent’s background *inside* this panel,
@@ -56,36 +65,26 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         protected override void OnPaintBackground(PaintEventArgs e)
         {
-            // If we have a parent, paint the parent's background into our surface.
             if (Parent != null)
             {
-                // Save current graphics state so we can restore after translation.
                 var state = e.Graphics.Save();
 
-                // Translate drawing so the parent's background aligns correctly.
                 e.Graphics.TranslateTransform(-Left, -Top);
 
-                // Rectangle covering parent area—used for painting background.
                 Rectangle parentRect = new Rectangle(
                     Parent.ClientRectangle.Location,
                     Parent.ClientRectangle.Size);
 
-                // Create a temporary paint event for the parent.
                 using (var pe = new PaintEventArgs(e.Graphics, parentRect))
                 {
-                    // Ask parent to paint its *background* into this panel.
                     this.InvokePaintBackground(Parent, pe);
-
-                    // Ask parent to paint its *foreground* (controls etc.).
                     this.InvokePaint(Parent, pe);
                 }
 
-                // Restore original graphics transform.
                 e.Graphics.Restore(state);
             }
             else
             {
-                // Default fallback if no parent exists.
                 base.OnPaintBackground(e);
             }
         }
@@ -93,7 +92,6 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Draws the rounded border, optional fill, and sets the rounded clipping region.
         /// </summary>
-        /// <param name="e">Paint event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -110,10 +108,6 @@ namespace Bahtinov_Collimator.Custom_Components
                 return;
             }
 
-            // Clear window region for this paint. A Region from a GraphicsPath is pixel-snapped;
-            // if left from the previous frame it clips the DC before FillPath/DrawPath and
-            // destroys anti-aliasing (chunky corners). RoundedPictureBox avoids this by not using
-            // Control.Region for painting. We restore the HRGN after drawing for child hit-testing.
             Region = null;
 
             try
@@ -121,14 +115,12 @@ namespace Bahtinov_Collimator.Custom_Components
                 int t = BorderThickness;
                 int strokeInset = t / 2;
 
-                // Stroke path inset so PenAlignment.Center is not clipped on top/left.
                 Rectangle strokeBounds = new Rectangle(
                     strokeInset,
                     strokeInset,
                     Math.Max(0, cw - t),
                     Math.Max(0, ch - t));
 
-                // Fill inside the border’s inner edge.
                 Rectangle fillBounds = new Rectangle(
                     t,
                     t,
@@ -160,6 +152,10 @@ namespace Bahtinov_Collimator.Custom_Components
 
             base.OnPaint(e);
         }
+
+        #endregion
+
+        #region Geometry Helpers
 
         /// <summary>
         /// Limits radius so quarter-arcs fit; avoids straight segments between arcs.
@@ -196,5 +192,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
             return path;
         }
+
+        #endregion
     }
 }

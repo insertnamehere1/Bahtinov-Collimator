@@ -17,15 +17,28 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public partial class MirrorDrawingComponent : Control
     {
+        #region Constants
+
         /// <summary>Authoring size for mirror geometry (96-DPI logical units). Drawing is scaled uniformly to <see cref="ClientRectangle"/>.</summary>
         private const int DesignWidth = 100;
         private const int DesignHeight = 100;
+
+        #endregion
+
+        #region Fields
 
         private int cornerRadius = 1;
         private int opticalAxisLength = 100;
         private Color mirrorOutlineColor = Color.DimGray;
         private MirrorType mirrorType = MirrorType.SctPrimary;
 
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MirrorDrawingComponent"/> class.
+        /// </summary>
         public MirrorDrawingComponent()
         {
             InitializeComponent();
@@ -39,6 +52,13 @@ namespace Bahtinov_Collimator.Custom_Components
             BackColor = Color.FromArgb(32, 32, 32);
         }
 
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// Gets or sets which mirror profile is rendered by the control.
+        /// </summary>
         public MirrorType MirrorType
         {
             get => mirrorType;
@@ -49,6 +69,9 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
+        /// <summary>
+        /// Gets or sets the corner radius used by the SCT profile geometry.
+        /// </summary>
         public int CornerRadius
         {
             get => cornerRadius;
@@ -59,6 +82,9 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
+        /// <summary>
+        /// Gets or sets the length, in logical design units, of the dotted optical axis.
+        /// </summary>
         public int OpticalAxisLength
         {
             get => opticalAxisLength;
@@ -69,6 +95,9 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
+        /// <summary>
+        /// Gets or sets the outline color used for the active mirror profile.
+        /// </summary>
         public Color MirrorOutlineColor
         {
             get => mirrorOutlineColor;
@@ -79,6 +108,13 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
+        #endregion
+
+        #region Painting
+
+        /// <summary>
+        /// Paints the selected mirror profile scaled to the current client bounds.
+        /// </summary>
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -87,7 +123,6 @@ namespace Bahtinov_Collimator.Custom_Components
             if (client.Width <= 0 || client.Height <= 0)
                 return;
 
-            // Uniform scale from fixed 50×100 design space — preserves proportions at any control size / DPI.
             float scale = Math.Min(client.Width / (float)DesignWidth, client.Height / (float)DesignHeight);
             float scaledW = DesignWidth * scale;
             float scaledH = DesignHeight * scale;
@@ -123,12 +158,18 @@ namespace Bahtinov_Collimator.Custom_Components
             }
         }
 
+        #endregion
+
+        #region DPI
+
         /// <inheritdoc />
         protected override void OnDpiChangedAfterParent(EventArgs e)
         {
             base.OnDpiChangedAfterParent(e);
             Invalidate();
         }
+
+        #endregion
 
     }
 }

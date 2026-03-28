@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.Eventing.Reader;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -67,7 +66,7 @@ namespace Bahtinov_Collimator
 
         #endregion
 
-        #region Methods
+        #region Public Methods
 
         /// <summary>
         /// Validates the Bahtinov mask lines by checking the angular differences 
@@ -87,13 +86,11 @@ namespace Bahtinov_Collimator
                 float line2 = lineAngles[1];
                 float line3 = lineAngles[2];
 
-                // Existing tolerances (your current checks)
                 bool withinExpectedSpacing =
                     CheckAngleBetween(line1, line3, 22.0f, 65.0f) &&
                     CheckAngleBetween(line1, line2, 11.0f, 35.0f) &&
                     CheckAngleBetween(line2, line3, 11.0f, 35.0f);
 
-                // New symmetry check: (line1->line2) matches (line2->line3) within 3 degrees
                 bool symmetric =
                     CheckAdjacentSpacingSymmetry(line1, line2, line3, 3.5);
 
@@ -107,13 +104,11 @@ namespace Bahtinov_Collimator
                     float line2 = lineAngles[i + 1];
                     float line3 = lineAngles[i + 2];
 
-                    // Existing tolerances (your current checks per group)
                     bool withinExpectedSpacing =
                         CheckAngleBetween(line1, line3, 12.0f, 25.0f) &&
                         CheckAngleBetween(line1, line2, 6.0f, 12.0f) &&
                         CheckAngleBetween(line2, line3, 6.0f, 12.0f);
 
-                    // New symmetry check per 3-line group
                     bool symmetric =
                         CheckAdjacentSpacingSymmetry(line1, line2, line3, 3.0);
 
@@ -148,10 +143,7 @@ namespace Bahtinov_Collimator
         {
             double diff = Math.Abs(aRad - bRad);
 
-            // Normalize modulo PI (line orientation periodicity)
             diff %= Math.PI;
-
-            // After modulo, diff is in [0, PI). Keep as-is.
             return diff;
         }
 
@@ -190,7 +182,7 @@ namespace Bahtinov_Collimator
             if (CheckAngleBetween(LineAngles[1], LineAngles[4], 55.0f, 65.0f) &&
                 CheckAngleBetween(lineAngles[4], lineAngles[7], 55.0f, 65.0f))
             {
-                return; // Tribahtinov mask detected
+                return;
             }
 
             lineAngles = new float[3];
@@ -211,16 +203,19 @@ namespace Bahtinov_Collimator
             if (CheckAngleDifference(LineAngles[0], LineAngles[1], 35.0f) &&
                 CheckAngleDifference(LineAngles[1], LineAngles[2], 35.0f))
             {
-                return; // Valid Bahtinov image detected
+                return;
             }
             else
             {
-                // Clear all data to signify failure to identify Bahtinov lines
                 LineAngles = new float[0];
                 LineIndex = new float[0];
                 LineValue = new float[0];
             }
         }
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Arranges angles for a Tribahtinov pattern.
@@ -265,7 +260,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Reverses the angle at a specified index.
         /// </summary>
-        /// <param name="index">The index of the angle to reverse.</param>
         private void ReverseAngle(int index)
         {
             float newAngle = lineAngles[index] - (float)Math.PI;
@@ -276,7 +270,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Creates a copy of the current <see cref="BahtinovData"/> instance.
         /// </summary>
-        /// <param name="size">The size of the copy.</param>
         /// <returns>A new <see cref="BahtinovData"/> instance that is a copy of the current one.</returns>
         private BahtinovData Copy(int size)
         {
@@ -349,7 +342,6 @@ namespace Bahtinov_Collimator
                 {
                     if (lineAngles[j] > lineAngles[j + 1])
                     {
-                        // Swap elements
                         (lineAngles[j], lineAngles[j + 1]) = (lineAngles[j + 1], lineAngles[j]);
                         (lineIndex[j], lineIndex[j + 1]) = (lineIndex[j + 1], lineIndex[j]);
                         (lineValue[j], lineValue[j + 1]) = (lineValue[j + 1], lineValue[j]);
@@ -357,7 +349,6 @@ namespace Bahtinov_Collimator
                     }
                 }
 
-                // If no elements were swapped, the arrays are already sorted
                 if (!swapped)
                     break;
             }

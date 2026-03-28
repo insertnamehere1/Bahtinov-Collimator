@@ -37,20 +37,15 @@ namespace Bahtinov_Collimator
     internal class BahtinovProcessing
     {
         #region Delegates
-        // Focus Data Listener
         public delegate void FocusDataEventHandler(object sender, FocusDataEventArgs e);
         public static event FocusDataEventHandler FocusDataEvent;
 
-        // LineDrawing Event Listener
         public delegate void BahtinovLineDrawEventHandler(object sender, BahtinovLineDataEventArgs e);
         public static event BahtinovLineDrawEventHandler BahtinovLineDrawEvent;
         #endregion
 
         #region Private Fields
-        // to be checked for relevance
         private const float ErrorMarkerScalingValue = 20.0f;
-
-        // retain last error value
         private float lastFocusErrorValue = 0.0f;
 
        

@@ -6,10 +6,16 @@ using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
+    /// <summary>
+    /// Dark-themed message box wrapper that supports standard icon and button combinations.
+    /// </summary>
     public partial class DarkMessageBox : Form
     {
         #region DLL Imports
 
+        /// <summary>
+        /// Sets a Desktop Window Manager attribute on the dialog window.
+        /// </summary>
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
@@ -55,7 +61,6 @@ namespace Bahtinov_Collimator
             ConfigureButtons(buttons);
             AutoSizeControls();
 
-            // Set Color of Title bar to match the dark theme
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
@@ -63,12 +68,11 @@ namespace Bahtinov_Collimator
 
         #endregion
 
-        #region Methods
+        #region Instance Methods
 
         /// <summary>
         /// Configures the visibility and text of the buttons based on the specified button options.
         /// </summary>
-        /// <param name="buttons">The buttons to display in the message box.</param>
         private void ConfigureButtons(MessageBoxButtons buttons)
         {
             okButton.Visible = false;
@@ -103,7 +107,6 @@ namespace Bahtinov_Collimator
                     break;
 
                 default:
-                    // Keep a safe fallback rather than showing no buttons.
                     okButton.Visible = true;
                     okButton.Text = UiText.Current.CommonOk;
                     break;
@@ -115,8 +118,6 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void AutoSizeControls()
         {
-            // The form is already `AutoScaleMode.Dpi`; we only need to ensure any *manual*
-            // padding/spacing stays proportional and doesn't truncate at 125%/150% DPI.
             float dpiScale = DeviceDpi / 96f;
 
             int S(int logicalPixels)
@@ -130,7 +131,6 @@ namespace Bahtinov_Collimator
             messageLabel.MaximumSize = new Size(S(650), 0);
             messageLabel.PerformLayout();
 
-            // Ensure autosized label has a final size before we measure.
             PerformLayout();
 
             int horizontalPadding = S(24);
@@ -142,24 +142,19 @@ namespace Bahtinov_Collimator
             int contentTop = Math.Min(iconBox.Top, messageLabel.Top);
             int contentBottom = Math.Max(iconBox.Bottom, messageLabel.Bottom);
 
-            // If the message is long, the label will wrap (via MaximumSize) and its Right edge will be reliable.
             int desiredClientWidth = (contentRight - contentLeft) + (horizontalPadding * 2);
 
-            // Ensure there's enough width for the button panel's content.
-            // The controls inside `panel1` are already DPI-scaled by WinForms.
             int desiredClientWidthForButtons = (okButton.Visible ? okButton.Width : 0)
                 + (cancelButton.Visible ? cancelButton.Width : 0)
                 + S(48); // side padding + button gap allowance
 
             int finalClientWidth = Math.Max(desiredClientWidth, desiredClientWidthForButtons);
 
-            // Height: content + spacing + bottom panel.
             int contentHeight = (contentBottom - contentTop);
             int finalClientHeight = verticalPadding + contentHeight + bottomPanelTopSpacing + panel1.Height;
 
             ClientSize = new Size(finalClientWidth, finalClientHeight);
 
-            // Stretch the bottom panel across the form and pin it to the bottom.
             panel1.Location = new Point(0, ClientSize.Height - panel1.Height);
             panel1.Width = ClientSize.Width;
 
@@ -169,8 +164,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the click event for the OK button. Sets the user response to OK and closes the message box.
         /// </summary>
-        /// <param name="sender">The source of the event, typically the OK button.</param>
-        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
         private void OkButton_Click(object sender, EventArgs e)
         {
             UserResponse = DialogResult.OK;
@@ -181,8 +174,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the click event for the Cancel button. Sets the user response to Cancel and closes the message box.
         /// </summary>
-        /// <param name="sender">The source of the event, typically the Cancel button.</param>
-        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
         private void CancelButton_Click(object sender, EventArgs e)
         {
             UserResponse = DialogResult.Cancel;
@@ -216,7 +207,6 @@ namespace Bahtinov_Collimator
             }
             else
             {
-                // Fallback if there are no open forms
                 return ShowCustomMessageBoxInternal(message, title, icon, buttons, owner);
             }
         }
@@ -224,17 +214,11 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Creates and displays the custom message box within the specified owner's bounds.
         /// </summary>
-        /// <param name="message">The message to display in the message box.</param>
-        /// <param name="title">The title of the message box.</param>
-        /// <param name="icon">The icon to display in the message box.</param>
-        /// <param name="buttons">The buttons to display in the message box.</param>
-        /// <param name="owner">The owner form of the message box.</param>
         /// <returns>The <see cref="DialogResult"/> indicating the user's response.</returns>
         private static DialogResult ShowCustomMessageBoxInternal(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons, Form owner)
         {
             using (DarkMessageBox customMessageBox = new DarkMessageBox(message, title, buttons, icon))
             {
-                // Position the message box within the owner's bounds
                 Rectangle ownerRect = owner.Bounds;
                 int x = ownerRect.Left + (ownerRect.Width - customMessageBox.Width) / 2;
                 int y = ownerRect.Top + (ownerRect.Height - customMessageBox.Height) / 2;
@@ -242,7 +226,6 @@ namespace Bahtinov_Collimator
                 customMessageBox.StartPosition = FormStartPosition.Manual;
                 customMessageBox.Location = new Point(x, y);
 
-                // Return the DialogResult directly
                 return customMessageBox.ShowDialog(owner);
             }
         }
@@ -250,20 +233,17 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the Load event of the form.
         /// </summary>
-        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            // Centering logic now handled in ShowCustomMessageBoxInternal
         }
 
         /// <summary>
         /// Draws the specified icon in the iconBox control.
         /// </summary>
-        /// <param name="icon">The icon to display.</param>
         private void DrawIconInPictureBox(MessageBoxIcon icon)
         {
-            int iconSize = 32; // Adjust the size if needed
+            int iconSize = 32;
             Bitmap bitmap = new Bitmap(iconSize, iconSize);
 
             using (Graphics g = Graphics.FromImage(bitmap))
@@ -280,8 +260,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Retrieves the icon associated with the specified MessageBoxIcon and resizes it.
         /// </summary>
-        /// <param name="messageBoxIcon">The MessageBoxIcon to retrieve.</param>
-        /// <param name="size">The size of the icon.</param>
         /// <returns>The resized icon.</returns>
         private Icon GetIcon(MessageBoxIcon messageBoxIcon, int size)
         {

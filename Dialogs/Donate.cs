@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Net;
@@ -10,10 +10,16 @@ using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
+    /// <summary>
+    /// Dialog that opens the donation flow and falls back to offline instructions when needed.
+    /// </summary>
     public partial class Donate : Form
     {
         #region DLL Imports
 
+        /// <summary>
+        /// Sets a Desktop Window Manager attribute on the dialog window.
+        /// </summary>
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
@@ -27,12 +33,14 @@ namespace Bahtinov_Collimator
 
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Donate"/> dialog.
+        /// </summary>
         public Donate()
         {
             InitializeComponent();
             ApplyLocalization();
 
-            // Set Title Bar color
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
@@ -40,8 +48,11 @@ namespace Bahtinov_Collimator
 
         #endregion
 
-        #region Methods
+        #region Lifecycle and Layout
 
+        /// <summary>
+        /// Loads the dialog, checks connectivity, and launches or falls back from the online donation flow.
+        /// </summary>
         protected override async void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -70,24 +81,23 @@ namespace Bahtinov_Collimator
             BeginInvoke(new Action(ResizeFormToContent));
         }
 
+        /// <summary>
+        /// Resizes the form to match the rendered rich-text content height.
+        /// </summary>
         private void ResizeFormToContent()
         {
             if (!IsHandleCreated || richTextBox.TextLength == 0) return;
 
-            // Remove bottom anchor so form resize does not trigger anchor resizing of richTextBox
             AnchorStyles savedAnchor = richTextBox.Anchor;
             richTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
-            // Temporarily expand richTextBox so all content is rendered and measurable
             int savedHeight = richTextBox.Height;
             richTextBox.Height = 32000;
 
-            // Find where the last character sits
             Point lastPos = richTextBox.GetPositionFromCharIndex(richTextBox.TextLength - 1);
             int lineHeight = TextRenderer.MeasureText("W", richTextBox.Font).Height;
             int contentHeight = lastPos.Y + lineHeight + 8;
 
-            // Apply the new height and adjust the form by the same delta
             int diff = contentHeight - savedHeight;
             richTextBox.Height = contentHeight;
             Height += diff;
@@ -95,6 +105,14 @@ namespace Bahtinov_Collimator
             richTextBox.Anchor = savedAnchor;
         }
 
+        #endregion
+
+        #region Donation Flow Helpers
+
+        /// <summary>
+        /// Composes the PayPal donation URL with localized metadata.
+        /// </summary>
+        /// <returns>A complete PayPal donation URL string.</returns>
         private string GenerateDonationUrl()
         {
             var textPack = UiText.Current;
@@ -117,11 +135,18 @@ namespace Bahtinov_Collimator
                    "&bn=PP-DonationsBF";
         }
 
+        /// <summary>
+        /// Handles the close button click by closing the dialog.
+        /// </summary>
         private void Button2_Click(object sender, EventArgs e)
         {
             Close();
         }
 
+        /// <summary>
+        /// Tests whether internet connectivity is available for opening the donation endpoint.
+        /// </summary>
+        /// <returns>True when internet access appears available; otherwise false.</returns>
         private static async Task<bool> HasInternetAccessAsync()
         {
             if (!NetworkInterface.GetIsNetworkAvailable())
@@ -156,6 +181,9 @@ namespace Bahtinov_Collimator
             }
         }
 
+        /// <summary>
+        /// Displays offline donation instructions when the online flow is unavailable.
+        /// </summary>
         private void ShowOfflineDonationText()
         {
             string githubLink = "https://insertnamehere1.github.io/Bahtinov-Collimator/";
@@ -163,6 +191,9 @@ namespace Bahtinov_Collimator
             BeginInvoke(new Action(ResizeFormToContent));
         }
 
+        /// <summary>
+        /// Applies localized text for controls in the donation dialog.
+        /// </summary>
         private void ApplyLocalization()
         {
             var textPack = UiText.Current;

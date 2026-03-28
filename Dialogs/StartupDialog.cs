@@ -17,6 +17,9 @@ namespace SkyCal
 
         #region DLL Imports
 
+        /// <summary>
+        /// Sets a Desktop Window Manager attribute on the dialog window.
+        /// </summary>
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
@@ -28,6 +31,8 @@ namespace SkyCal
 
         #endregion
 
+        #region Constructor
+
         /// <summary>
         /// Creates the startup calibration prompt dialog.
         /// </summary>
@@ -36,11 +41,14 @@ namespace SkyCal
             InitializeComponent();
             UISetup();
 
-            // Setup dark mode title bar
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
         }
+
+        #endregion
+
+        #region Public Properties
 
         /// <summary>
         /// True if the user ticked "Do not show again".
@@ -50,8 +58,12 @@ namespace SkyCal
             get { return dontShowAgainCheckBox != null && dontShowAgainCheckBox.Checked; }
         }
 
+        #endregion
+
+        #region UI Setup
+
         /// <summary>
-        /// Builds the dialog UI.
+        /// Applies initial layout and localized text for all controls in the dialog.
         /// </summary>
         private void UISetup()
         {
@@ -64,5 +76,7 @@ namespace SkyCal
             dontShowAgainCheckBox.Text = UiText.Current.StartupDialogDontShowAgain;
             notNowButton.Text = UiText.Current.StartupDialogNotNowButton;
         }
+
+        #endregion
     }
 }

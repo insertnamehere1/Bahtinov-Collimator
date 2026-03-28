@@ -46,10 +46,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Sets an attribute for a window using the Desktop Window Manager (DWM) API.
         /// </summary>
-        /// <param name="hwnd">A handle to the window for which the attribute is being set.</param>
-        /// <param name="attr">The attribute to be set, represented by an integer value.</param>
-        /// <param name="attrValue">The value to set for the specified attribute. This is passed by reference to allow modification by the external function.</param>
-        /// <param name="attrSize">The size of the attribute value in bytes.</param>
         /// <returns>An integer value indicating the result of the operation. A non-zero value indicates failure, while zero indicates success.</returns>
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
@@ -208,6 +204,9 @@ namespace Bahtinov_Collimator
 
         #region Configure Form
 
+        /// <summary>
+        /// Scales a 96-DPI logical pixel value to the current form DPI.
+        /// </summary>
         private int S(int logicalPixelsAt96)
         {
             float dpiScale = DeviceDpi / 96f;
@@ -276,9 +275,6 @@ namespace Bahtinov_Collimator
         /// at this point avoids focus and z-order issues that can occur if modal
         /// dialogs are displayed earlier in the application startup sequence.
         /// </summary>
-        /// <param name="e">
-        /// Event data associated with the form being shown.
-        /// </param>
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
@@ -338,6 +334,9 @@ namespace Bahtinov_Collimator
             SetWindowTitleWithVersion();
         }
 
+        /// <summary>
+        /// Applies localized UI strings from the active language pack to form controls and menu items.
+        /// </summary>
         private void ApplyLocalization()
         {
             var textPack = UiText.Current;
@@ -403,9 +402,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Recursively sets the background and foreground colors for all items in a menu strip.
         /// </summary>
-        /// <param name="items">The collection of <see cref="ToolStripItem"/>s to update.</param>
-        /// <param name="backColor">The background color to apply to the menu items.</param>
-        /// <param name="foreColor">The foreground (text) color to apply to the menu items.</param>
         private void SetMenuItemsColor(ToolStripItemCollection items, Color backColor, Color foreColor)
         {
             foreach (ToolStripMenuItem item in items)
@@ -534,8 +530,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Processes and displays the received image on a background thread.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data containing the received image.</param>
         private void OnImageReceived(object sender, ImageReceivedEventArgs e)
         {
             // Run the processing on a background thread
@@ -631,8 +625,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the click event for the Quit menu item, closing the form.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
         private void QuitToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             Close();
@@ -641,8 +633,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Activates the form when the mouse enters the menu strip area.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
         private void MenuStrip1_MouseEnter(object sender, EventArgs e)
         {
             Activate();
@@ -651,8 +641,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the click event for the About menu item, showing the About dialog.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
         private void AboutToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             AboutBox aboutBox = new AboutBox();
@@ -664,8 +652,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the click event for the Donate menu item, showing the Donate dialog.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
         private void PleaseDonateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Donate donate = new Donate();
@@ -677,8 +663,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the click event for the Help menu item, displaying a help message.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -702,8 +686,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the click event for the Check for Updates menu item, initiating an update check.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
         private void CheckForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             InstallUpdateSyncWithInfo();
@@ -712,8 +694,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Activates the form when the mouse enters the form area.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
         private void Form1_MouseEnter(object sender, EventArgs e)
         {
             this.Activate();
@@ -726,7 +706,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Processes the provided image and displays it based on whether it's a Bahtinov mask or a defocus star.
         /// </summary>
-        /// <param name="original">The original bitmap image to process.</param>
         private void ProcessAndDisplay(Bitmap original)
         {
             Bitmap image = new Bitmap(original);
@@ -756,7 +735,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Displays the image if it is identified as a defocus star.
         /// </summary>
-        /// <param name="image">The bitmap image to display.</param>
         private void RunDefocusStarDisplay(Bitmap image)
         {
             defocusStarProcessing.DisplayDefocusImage(image);
@@ -765,7 +743,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Runs the Bahtinov display process, including finding and displaying Bahtinov lines.
         /// </summary>
-        /// <param name="image">The bitmap image to process.</param>
         private void RunBahtinovDisplay(Bitmap image)
         {
             try
@@ -820,7 +797,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Updates the focus group UI based on the number of Bahtinov lines detected.
         /// </summary>
-        /// <param name="numberOfLines">The number of Bahtinov lines detected.</param>
         private void UpdateFocusGroup(int numberOfLines)
         {
             if (InvokeRequired)
@@ -848,6 +824,9 @@ namespace Bahtinov_Collimator
             }
         }
 
+        /// <summary>
+        /// Expands focus channel controls to the widened layout width for calibrated Tri-Bahtinov mode.
+        /// </summary>
         private void IncreaseFocusChannelSize()
         {
             if (InvokeRequired)
@@ -869,6 +848,9 @@ namespace Bahtinov_Collimator
             }
         }
 
+        /// <summary>
+        /// Restores focus channel controls to the default designer width.
+        /// </summary>
         private void DecreaseFocusChannelSize()
         {
             if (InvokeRequired)
@@ -919,7 +901,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Positions a dialog form inside the main window, centering it within the main window's bounds.
         /// </summary>
-        /// <param name="dialog">The dialog form to position.</param>
         private void PositionDialogInsideMainWindow(Form dialog)
         {
             // Get the main window's rectangle
@@ -946,11 +927,17 @@ namespace Bahtinov_Collimator
         /// </summary>
         private sealed class CustomToolStripRenderer : ToolStripProfessionalRenderer
         {
+            /// <summary>
+            /// Initializes a renderer with the custom dark color table.
+            /// </summary>
             public CustomToolStripRenderer() : base(new DarkColorTable())
             {
                 RoundedEdges = false; // avoids odd light corners
             }
 
+            /// <summary>
+            /// Draws the border around dropdown toolstrip surfaces.
+            /// </summary>
             protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
             {
                 // This draws the border around the whole dropdown
@@ -964,6 +951,9 @@ namespace Bahtinov_Collimator
                 }
             }
 
+            /// <summary>
+            /// Paints menu item backgrounds for dropdown and top-level menu states.
+            /// </summary>
             protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
             {
                 bool isDropDownItem = e.ToolStrip is ToolStripDropDown;
@@ -1001,6 +991,9 @@ namespace Bahtinov_Collimator
                 }
             }
 
+            /// <summary>
+            /// Applies themed text colors for rendered menu items.
+            /// </summary>
             protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
             {
                 e.TextColor = (e.Item.Text == UiText.Current.MenuSupportSkyCal)
@@ -1025,6 +1018,11 @@ namespace Bahtinov_Collimator
 
         #endregion
 
+        #region Guidance and Calibration
+
+        /// <summary>
+        /// Builds current guidance context and opens the next-step dialog.
+        /// </summary>
         private void WhatDoIDoNextToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Reload the correct JSON based on current MCT/SCT setting
@@ -1071,8 +1069,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the click event for the Settings menu item, showing the Settings dialog and loading updated settings if dialog result is OK.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event data.</param>
         private void GeneralSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Settings Dialog
@@ -1097,11 +1093,17 @@ namespace Bahtinov_Collimator
             }
         }
 
+        /// <summary>
+        /// Opens the focus calibration workflow from the settings menu action.
+        /// </summary>
         private void FocusCalibrationToolStripMenuItem_Click(object sender, EventArgs e)
         { 
             StartCalibration();
         }
 
+        /// <summary>
+        /// Creates and displays the calibration component anchored to the right side of the form.
+        /// </summary>
         private void StartCalibration()
         {
             if (calibrationComponent != null)
@@ -1120,6 +1122,9 @@ namespace Bahtinov_Collimator
             ApplyMainWorkspaceLayout();
         }
 
+        /// <summary>
+        /// Stops and disposes the active calibration component, then reapplies workspace layout.
+        /// </summary>
         public void StopCalibration()
         {
             if (calibrationComponent == null)
@@ -1148,9 +1153,6 @@ namespace Bahtinov_Collimator
         /// If the user chooses to proceed, the Settings Calibration workflow is
         /// launched using the application's existing calibration entry point.
         /// </summary>
-        /// <param name="owner">
-        /// The window that will own the modal dialog, typically the main application form.
-        /// </param>
         private void ShowStartupCalibrationPromptIfNeeded(IWin32Window owner)
         {
 #pragma warning disable CS0162
@@ -1184,24 +1186,34 @@ namespace Bahtinov_Collimator
             }
         }
 
+        /// <summary>
+        /// Switches analysis mode to Bahtinov when the Bahtinov label is clicked.
+        /// </summary>
         private void BahtinovLabel_Click(object sender, EventArgs e)
         {
             toggleSwitch1.IsOn = false;
         }
 
+        /// <summary>
+        /// Switches analysis mode to Defocus when the Defocus label is clicked.
+        /// </summary>
         private void DefocusLabel_Click(object sender, EventArgs e)
         {
             toggleSwitch1.IsOn = true;
         }
 
-        // Minimize the window
+        /// <summary>
+        /// Minimizes the main window when minimize-on-capture is enabled in settings.
+        /// </summary>
         public void MinimizeWindow()
         {
             if(Properties.Settings.Default.Minimize == true)
                 this.WindowState = FormWindowState.Minimized;
         }
 
-        // Restore from minimized
+        /// <summary>
+        /// Restores the main window from minimized state and activates it.
+        /// </summary>
         public void RestoreWindow()
         {
             if (this.WindowState == FormWindowState.Minimized)
@@ -1211,5 +1223,7 @@ namespace Bahtinov_Collimator
                 this.Activate();     // Optional: give it focus
             }
         }
+
+        #endregion
     }
 }
