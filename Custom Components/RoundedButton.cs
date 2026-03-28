@@ -111,7 +111,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// Converts 96-DPI design/logical pixel distances to device pixels for the current <see cref="Control.DeviceDpi"/>,
         /// matching <see cref="CornerRadius"/> handling so layout stays consistent when DPI or form scaling changes.
         /// </summary>
-        private int ScaleLogicalPixels(int logicalPixels)
+        private int S(int logicalPixels)
         {
             float dpiScale = DeviceDpi / 96f;
             return (int)Math.Round(logicalPixels * dpiScale, MidpointRounding.AwayFromZero);
@@ -140,7 +140,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 return;
             }
 
-            int scaledRadius = ScaleLogicalPixels(CornerRadius);
+            int scaledRadius = S(CornerRadius);
             // Prevent arcs larger than the rect; avoids odd geometry at small sizes.
             int maxRadius = Math.Max(0, Math.Min(rect.Width, rect.Height) / 2);
             scaledRadius = Math.Max(0, Math.Min(scaledRadius, maxRadius));
@@ -235,14 +235,14 @@ namespace Bahtinov_Collimator.Custom_Components
             int offset = isPressed ? 1 : 0;
 
             // contentRect is the area inside the bevel, slightly inset (matches scaled corner/bevel in device pixels).
-            int contentInset = ScaleLogicalPixels(4);
+            int contentInset = S(4);
             Rectangle contentRect = Rectangle.Inflate(bounds, -contentInset, -contentInset);
 
-            int imgW = Math.Max(1, ScaleLogicalPixels(ImageWidth));
-            int imgH = Math.Max(1, ScaleLogicalPixels(ImageHeight));
-            int imgOffX = ScaleLogicalPixels(ImageOffsetX);
-            int imgOffY = ScaleLogicalPixels(ImageOffsetY);
-            int textOffX = ScaleLogicalPixels(TextOffsetX);
+            int imgW = Math.Max(1, S(ImageWidth));
+            int imgH = Math.Max(1, S(ImageHeight));
+            int imgOffX = S(ImageOffsetX);
+            int imgOffY = S(ImageOffsetY);
+            int textOffX = S(TextOffsetX);
 
             // 1) Draw image, positioned using ImageAlign and user offsets.
             if (Image != null)

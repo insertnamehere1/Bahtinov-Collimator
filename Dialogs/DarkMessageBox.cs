@@ -119,7 +119,7 @@ namespace Bahtinov_Collimator
             // padding/spacing stays proportional and doesn't truncate at 125%/150% DPI.
             float dpiScale = DeviceDpi / 96f;
 
-            int ScaleLogicalPixels(int logicalPixels)
+            int S(int logicalPixels)
             {
                 return (int)Math.Round(logicalPixels * dpiScale, MidpointRounding.AwayFromZero);
             }
@@ -127,15 +127,15 @@ namespace Bahtinov_Collimator
             SuspendLayout();
 
             messageLabel.AutoSize = true;
-            messageLabel.MaximumSize = new Size(ScaleLogicalPixels(650), 0);
+            messageLabel.MaximumSize = new Size(S(650), 0);
             messageLabel.PerformLayout();
 
             // Ensure autosized label has a final size before we measure.
             PerformLayout();
 
-            int horizontalPadding = ScaleLogicalPixels(24);
-            int verticalPadding = ScaleLogicalPixels(20);
-            int bottomPanelTopSpacing = ScaleLogicalPixels(18);
+            int horizontalPadding = S(24);
+            int verticalPadding = S(20);
+            int bottomPanelTopSpacing = S(18);
 
             int contentLeft = Math.Min(iconBox.Left, messageLabel.Left);
             int contentRight = Math.Max(iconBox.Right, messageLabel.Right);
@@ -149,7 +149,7 @@ namespace Bahtinov_Collimator
             // The controls inside `panel1` are already DPI-scaled by WinForms.
             int desiredClientWidthForButtons = (okButton.Visible ? okButton.Width : 0)
                 + (cancelButton.Visible ? cancelButton.Width : 0)
-                + ScaleLogicalPixels(48); // side padding + button gap allowance
+                + S(48); // side padding + button gap allowance
 
             int finalClientWidth = Math.Max(desiredClientWidth, desiredClientWidthForButtons);
 
