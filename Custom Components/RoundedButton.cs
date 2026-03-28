@@ -224,7 +224,7 @@ namespace Bahtinov_Collimator.Custom_Components
         {
             int offset = isPressed ? 1 : 0;
 
-            int contentInset = ScaleLogicalPixels(4);
+            int contentInset = S(4);
             Rectangle contentRect = Rectangle.Inflate(bounds, -contentInset, -contentInset);
 
             int imgW = Math.Max(1, S(ImageWidth));
