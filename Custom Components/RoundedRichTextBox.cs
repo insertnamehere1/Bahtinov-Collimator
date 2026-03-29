@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
 
 namespace SkyCal.Custom_Components
@@ -38,10 +39,54 @@ namespace SkyCal.Custom_Components
         private Color titleForeColor = Color.Black;
         private Font titleFont;
 
-        #region Win32 (Caret suppression)
+        #region Win32 (Caret suppression + scrollbar chrome)
 
         [DllImport("user32.dll")]
         private static extern bool HideCaret(IntPtr hWnd);
+
+        /// <summary>Applies dark-style scrollbar / edit chrome (Windows 10 2004+); no-op on failure.</summary>
+        [DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
+        private static extern int SetWindowTheme(IntPtr hwnd, string pszSubAppName, string pszSubIdList);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+
+        [DllImport("user32.dll")]
+        private static extern bool EnumChildWindows(IntPtr hWndParent, EnumChildProc lpEnumFunc, IntPtr lParam);
+
+        private delegate bool EnumChildProc(IntPtr hWnd, IntPtr lParam);
+
+        /// <summary>Keep delegate alive for native callback lifetime.</summary>
+        private static readonly EnumChildProc ScrollBarThemeEnumCallback = ThemeScrollBarChildrenCallback;
+
+        private static bool ThemeScrollBarChildrenCallback(IntPtr hWnd, IntPtr lParam)
+        {
+            var sb = new StringBuilder(256);
+            if (GetClassName(hWnd, sb, sb.Capacity) > 0 && sb.ToString() == "ScrollBar")
+                SetWindowTheme(hWnd, "DarkMode_Explorer", null);
+            return true;
+        }
+
+        /// <summary>
+        /// RichEdit scrollbars are sometimes separate HWNDs; theme the control and enumerate children.
+        /// Re-run after layout/text changes because the vertical scrollbar may be created later.
+        /// </summary>
+        private static void ApplyDarkScrollBarTheme(RichTextBox rtb)
+        {
+            if (rtb == null || !rtb.IsHandleCreated)
+                return;
+
+            IntPtr h = rtb.Handle;
+            try
+            {
+                SetWindowTheme(h, "DarkMode_Explorer", null);
+                EnumChildWindows(h, ScrollBarThemeEnumCallback, IntPtr.Zero);
+            }
+            catch
+            {
+                // Best-effort; OS may not support DarkMode_Explorer.
+            }
+        }
 
         #endregion
 
@@ -304,8 +349,28 @@ namespace SkyCal.Custom_Components
 
             richTextBox.GotFocus += (s, e) => SuppressCaretIfNeeded();
             richTextBox.MouseDown += (s, e) => SuppressCaretIfNeeded();
-            richTextBox.TextChanged += (s, e) => SuppressCaretIfNeeded();
+            richTextBox.TextChanged += (s, e) =>
+            {
+                SuppressCaretIfNeeded();
+                if (!richTextBox.IsDisposed)
+                    ApplyDarkScrollBarTheme(richTextBox);
+            };
             richTextBox.SelectionChanged += (s, e) => SuppressCaretIfNeeded();
+            richTextBox.SizeChanged += (s, e) =>
+            {
+                if (!richTextBox.IsDisposed)
+                    ApplyDarkScrollBarTheme(richTextBox);
+            };
+            richTextBox.HandleCreated += (s, e) =>
+            {
+                if (!richTextBox.IsHandleCreated)
+                    return;
+                richTextBox.BeginInvoke(new Action(() =>
+                {
+                    if (!richTextBox.IsDisposed)
+                        ApplyDarkScrollBarTheme(richTextBox);
+                }));
+            };
 
             Controls.Add(richTextBox);
         }

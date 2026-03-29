@@ -96,7 +96,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.quitButton.ImageOffsetX = 60;
             this.quitButton.ImageOffsetY = 0;
             this.quitButton.ImageWidth = 32;
-            this.quitButton.Location = new System.Drawing.Point(75, 562);
+            this.quitButton.Location = new System.Drawing.Point(60, 562);
             this.quitButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.quitButton.Name = "quitButton";
             this.quitButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
