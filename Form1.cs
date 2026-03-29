@@ -87,6 +87,18 @@ namespace Bahtinov_Collimator
         /// </summary>
         private const int GapImageToCalibrationAt96 = 8;
 
+        /// <summary>
+        /// Horizontal offset from <see cref="RoundedStartButton"/>.Left to <see cref="toggleSwitch1"/>.Left (96 DPI).
+        /// Matches designer: button 18, switch 36.
+        /// </summary>
+        private const int AnalysisToggleSwitchLeftOffsetFromButtonLeftAt96 = 18;
+
+        /// <summary>
+        /// Horizontal offset from <see cref="RoundedStartButton"/>.Left to Bahtinov/Defocus labels (96 DPI).
+        /// Matches designer: button 18, labels 68.
+        /// </summary>
+        private const int AnalysisModeLabelsLeftOffsetFromButtonLeftAt96 = 50;
+
         /// Sets testing mode for Calibration 
         private const bool TEST_MODE = true;
 
@@ -268,6 +280,37 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
+        /// Keeps the bottom-left analysis <see cref="analysisGroupBox"/> the same width as the focus channel
+        /// column when Tri-Bahtinov mode widens or narrows those controls, centers
+        /// <see cref="RoundedStartButton"/> horizontally (size unchanged), and moves the mode switch and
+        /// labels by the same delta so their layout relative to the button is unchanged.
+        /// </summary>
+        private void SyncAnalysisGroupBoxWidthToFocusColumn()
+        {
+            if (analysisGroupBox == null || groupBoxRed == null)
+                return;
+
+            int w = groupBoxRed.Width;
+            analysisGroupBox.Size = new Size(w, analysisGroupBox.Height);
+
+            if (RoundedStartButton == null)
+                return;
+
+            int buttonX = Math.Max(0, (analysisGroupBox.ClientSize.Width - RoundedStartButton.Width) / 2);
+            RoundedStartButton.Location = new Point(buttonX, RoundedStartButton.Location.Y);
+
+            int toggleX = buttonX + S(AnalysisToggleSwitchLeftOffsetFromButtonLeftAt96);
+            int labelsX = buttonX + S(AnalysisModeLabelsLeftOffsetFromButtonLeftAt96);
+
+            if (toggleSwitch1 != null)
+                toggleSwitch1.Location = new Point(toggleX, toggleSwitch1.Location.Y);
+            if (bahtinovLabel != null)
+                bahtinovLabel.Location = new Point(labelsX, bahtinovLabel.Location.Y);
+            if (defocusLabel != null)
+                defocusLabel.Location = new Point(labelsX, defocusLabel.Location.Y);
+        }
+
+        /// <summary>
         /// Invoked when the main form is first shown to the user.
         ///
         /// This override is used to display the optional startup calibration prompt
@@ -278,6 +321,7 @@ namespace Bahtinov_Collimator
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
+            SyncAnalysisGroupBoxWidthToFocusColumn();
             ApplyMainWorkspaceLayout();
             ShowStartupCalibrationPromptIfNeeded(this);
         }
@@ -288,6 +332,7 @@ namespace Bahtinov_Collimator
         protected override void OnDpiChanged(DpiChangedEventArgs e)
         {
             base.OnDpiChanged(e);
+            SyncAnalysisGroupBoxWidthToFocusColumn();
             ApplyMainWorkspaceLayout();
         }
 
@@ -844,7 +889,9 @@ namespace Bahtinov_Collimator
                     groupBoxGreen.Size = new Size(maxWidth, groupBoxGreen.Size.Height);
                     groupBoxBlue.Size = new Size(maxWidth, groupBoxBlue.Size.Height);
                 }
-                    ApplyMainWorkspaceLayout();
+
+                SyncAnalysisGroupBoxWidthToFocusColumn();
+                ApplyMainWorkspaceLayout();
             }
         }
 
@@ -871,6 +918,7 @@ namespace Bahtinov_Collimator
                     groupBoxBlue.Size = new Size(defaultWidth, groupBoxBlue.Size.Height);
                 }
 
+                SyncAnalysisGroupBoxWidthToFocusColumn();
                 ApplyMainWorkspaceLayout();
             }
         }
