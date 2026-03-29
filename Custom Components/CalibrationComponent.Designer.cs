@@ -70,9 +70,10 @@ namespace Bahtinov_Collimator.Custom_Components
             this.titledRoundedRichTextBox1.Name = "titledRoundedRichTextBox1";
             this.titledRoundedRichTextBox1.Padding = new System.Windows.Forms.Padding(11, 0, 11, 12);
             this.titledRoundedRichTextBox1.ReadOnly = true;
+            this.titledRoundedRichTextBox1.ShowTitleSeparator = false;
             this.titledRoundedRichTextBox1.Size = new System.Drawing.Size(300, 526);
             this.titledRoundedRichTextBox1.TabIndex = 0;
-            this.titledRoundedRichTextBox1.TitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.titledRoundedRichTextBox1.TitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.titledRoundedRichTextBox1.TitleFont = new System.Drawing.Font("Segoe UI", 14F);
             this.titledRoundedRichTextBox1.TitleForeColor = System.Drawing.Color.White;
             this.titledRoundedRichTextBox1.TitleHeight = 35;
@@ -96,7 +97,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.quitButton.ImageOffsetX = 60;
             this.quitButton.ImageOffsetY = 0;
             this.quitButton.ImageWidth = 32;
-            this.quitButton.Location = new System.Drawing.Point(60, 562);
+            this.quitButton.Location = new System.Drawing.Point(55, 562);
             this.quitButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.quitButton.Name = "quitButton";
             this.quitButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
