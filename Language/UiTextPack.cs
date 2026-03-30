@@ -45,6 +45,9 @@ namespace Bahtinov_Collimator
         [DataMember] public string SettingsGroupVoiceTitle { get; set; }
         [DataMember] public string SettingsVoiceGuidanceLabel { get; set; }
         [DataMember] public string SettingsVoiceGuidanceDescription { get; set; }
+        [DataMember] public string VoiceEnabledAnnouncement { get; set; }
+        [DataMember] public string VoiceDisabledAnnouncement { get; set; }
+        [DataMember] public string VoiceChannelAnnouncementFormat { get; set; }
         [DataMember] public string SettingsGroupGuidanceTitle { get; set; }
         [DataMember] public string SettingsGuidanceNewtonian { get; set; }
         [DataMember] public string SettingsGuidanceMakCass { get; set; }

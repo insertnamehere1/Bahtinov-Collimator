@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Speech.Synthesis;
 using System.Windows.Forms;
+
+using Bahtinov_Collimator;
 
 namespace Bahtinov_Collimator.Voice
 {
@@ -34,7 +38,7 @@ namespace Bahtinov_Collimator.Voice
             synthesizer = new SpeechSynthesizer();
             messageQueue = new Queue<(string, int)>();
             synthesizer.SpeakCompleted += Synthesizer_SpeakCompleted;
-            synthesizer.SelectVoice("Microsoft Zira Desktop");
+            ApplyVoiceForCurrentLanguage();
 
             BahtinovProcessing.FocusDataEvent += FocusDataEvent;
             FocusChannelComponent.ChannelSelectDataEvent += ChannelSelected;
@@ -45,6 +49,55 @@ namespace Bahtinov_Collimator.Voice
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Selects an installed speech voice that matches <see cref="LanguageLoader.CurrentLanguageCode"/> (e.g. German for the de pack).
+        /// </summary>
+        private void ApplyVoiceForCurrentLanguage()
+        {
+            string code = LanguageLoader.CurrentLanguageCode ?? LanguageLoader.DefaultLanguageCode;
+            CultureInfo culture;
+            try
+            {
+                culture = CultureInfo.GetCultureInfo(code);
+            }
+            catch (CultureNotFoundException)
+            {
+                culture = CultureInfo.GetCultureInfo(LanguageLoader.DefaultLanguageCode);
+            }
+
+            try
+            {
+                synthesizer.SelectVoiceByHints(VoiceGender.NotSet, VoiceAge.NotSet, 0, culture);
+                return;
+            }
+            catch (InvalidOperationException)
+            {
+            }
+
+            string twoLetter = culture.TwoLetterISOLanguageName;
+            foreach (InstalledVoice installed in synthesizer.GetInstalledVoices())
+            {
+                if (!installed.Enabled)
+                    continue;
+                if (string.Equals(installed.VoiceInfo.Culture.TwoLetterISOLanguageName, twoLetter, StringComparison.OrdinalIgnoreCase))
+                {
+                    synthesizer.SelectVoice(installed.VoiceInfo.Name);
+                    return;
+                }
+            }
+
+            try
+            {
+                synthesizer.SelectVoice("Microsoft Zira Desktop");
+            }
+            catch (InvalidOperationException)
+            {
+                InstalledVoice first = synthesizer.GetInstalledVoices().FirstOrDefault(v => v.Enabled);
+                if (first != null)
+                    synthesizer.SelectVoice(first.VoiceInfo.Name);
+            }
+        }
 
         /// <summary>
         /// Handles the focus data event by updating the error values for the specified group. 
@@ -74,7 +127,7 @@ namespace Bahtinov_Collimator.Voice
 
                     if (!lastPlayedValues.ContainsKey(channelPlaying) || lastPlayedValues[channelPlaying] != currentValue)
                     {
-                        Play(RemoveLeading0(currentValue), 2);
+                        Play(FormatFocusValueForSpeech(currentValue), 2);
                         Console.WriteLine(currentValue.ToString("F1"));
 
                         lastPlayedValues[channelPlaying] = currentValue;
@@ -96,32 +149,46 @@ namespace Bahtinov_Collimator.Voice
                 if (e.ChannelSelected[i] && i < errorValues.Count)
                 {
                     channelPlaying = i;
-                    Play("Channel " + (i + 1), 2);
-                    Play(RemoveLeading0(errorValues[i]), 2);
+                    Play(string.Format(GetUiCulture(), UiText.Current.VoiceChannelAnnouncementFormat ?? "Channel {0}", i + 1), 2);
+                    Play(FormatFocusValueForSpeech(errorValues[i]), 2);
                     break;
                 }
             }
         }
 
         /// <summary>
-        /// Converts a double value to a string and removes the leading zero 
-        /// if the value is between -1 and 1 (exclusive).
+        /// Formats a focus offset for speech using the UI language’s decimal separator and drops a redundant leading zero (e.g. 0.3 → .3).
         /// </summary>
-        /// <returns>A string representation of the double value without a leading zero 
-        /// if the value is between -1 and 1 (exclusive), otherwise the standard formatted string.</returns>
-        private string RemoveLeading0(double value)
+        private string FormatFocusValueForSpeech(double value)
         {
-            string result = value.ToString("F1");
+            CultureInfo culture = GetUiCulture();
+            string dec = culture.NumberFormat.NumberDecimalSeparator;
+            string result = value.ToString("F1", culture);
 
             if (value > -1 && value < 1)
             {
-                if (result.StartsWith("0."))
+                string zeroPrefix = "0" + dec;
+                string negZeroPrefix = "-0" + dec;
+                if (result.StartsWith(zeroPrefix, StringComparison.Ordinal))
                     result = result.Substring(1);
-                else if (result.StartsWith("-0."))
+                else if (result.StartsWith(negZeroPrefix, StringComparison.Ordinal))
                     result = "-" + result.Substring(2);
             }
 
             return result;
+        }
+
+        private static CultureInfo GetUiCulture()
+        {
+            string code = LanguageLoader.CurrentLanguageCode ?? LanguageLoader.DefaultLanguageCode;
+            try
+            {
+                return CultureInfo.GetCultureInfo(code);
+            }
+            catch (CultureNotFoundException)
+            {
+                return CultureInfo.GetCultureInfo(LanguageLoader.DefaultLanguageCode);
+            }
         }
 
         /// <summary>
@@ -132,9 +199,9 @@ namespace Bahtinov_Collimator.Voice
             voiceEnabled = Properties.Settings.Default.VoiceEnabled;
 
             if (voiceEnabled)
-                Play("Voice Enabled", 0);
+                Play(UiText.Current.VoiceEnabledAnnouncement ?? "Voice enabled", 0);
             else
-                Play("Voice Disabled", 0);
+                Play(UiText.Current.VoiceDisabledAnnouncement ?? "Voice disabled", 0);
         }
 
         /// <summary>
