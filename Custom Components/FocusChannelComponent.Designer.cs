@@ -47,12 +47,17 @@ namespace Bahtinov_Collimator
             this.offsetBarControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.offsetBarControl1.BarColor = System.Drawing.Color.Gray;
+            this.offsetBarControl1.DesignBarThickness = 3F;
+            this.offsetBarControl1.DesignZeroTickDown = 10F;
+            this.offsetBarControl1.DesignZeroTickUp = 10F;
             this.offsetBarControl1.Enabled = false;
+            this.offsetBarControl1.HistoryMarkerColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.offsetBarControl1.Location = new System.Drawing.Point(6, 15);
-            this.offsetBarControl1.MarkerColor = System.Drawing.Color.Green;
+            this.offsetBarControl1.MarkerColor = UITheme.ErrorBarMarkerColorInRange;
             this.offsetBarControl1.Maximum = 2F;
             this.offsetBarControl1.Minimum = -2F;
             this.offsetBarControl1.Name = "offsetBarControl1";
+            this.offsetBarControl1.OutOfRangeColor = System.Drawing.Color.OrangeRed;
             this.offsetBarControl1.Size = new System.Drawing.Size(240, 41);
             this.offsetBarControl1.TabIndex = 8;
             this.offsetBarControl1.Text = "offsetBarControl1";

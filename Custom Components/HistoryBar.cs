@@ -68,6 +68,27 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         private float DpiScale => DeviceDpi / (float)DesignDpi;
 
+        /// <summary>
+        /// Logical pixels at 96 DPI; scaled at runtime via <see cref="DpiScale"/>.
+        /// </summary>
+        private float designLeftPadding = 10f;
+        private float designRightPadding = 10f;
+        private float designZeroTickUp = 10f;
+        private float designZeroTickDown = 10f;
+        private float designHistoryMarkerRadius = 8f;
+        private float designMarkerRadius = 7f;
+        private float designBarThickness = 3f;
+        private float designZeroTickThickness = 2f;
+        private float designAlertOutlineThickness = 1f;
+        private float designValueTextGap = 2f;
+        private float designAlertOutlineInset = 3f;
+        private int horizontalMargin;
+        private float designContentPadding = 2f;
+        private float designVerticalEdgePadding = 2f;
+        private int preferredWidthDesign = 300;
+        private Color historyMarkerColor = Color.FromArgb(128, Color.White);
+        private Color outOfRangeColor = Color.OrangeRed;
+
         #endregion
 
         #region Public Properties
@@ -143,7 +164,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         [Category("Appearance")]
         [Description("Color of the marker (the circular pointer).")]
-        public Color MarkerColor { get; set; } = Color.Green;
+        public Color MarkerColor { get; set; } = UITheme.ErrorBarMarkerColorInRange;
 
         /// <summary>
         /// Gets or sets the color of the zero tick mark in the center of the bar.
@@ -161,9 +182,286 @@ namespace Bahtinov_Collimator.Custom_Components
         [Description("Base text color for labels and value.")]
         public Color TextColor { get; set; } = Color.White;
 
+        /// <summary>
+        /// Horizontal space reserved at the left for the minimum label (logical px at 96 DPI).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Left inset for the minimum label, in logical pixels at 96 DPI.")]
+        [DefaultValue(10f)]
+        public float DesignLeftPadding
+        {
+            get => designLeftPadding;
+            set
+            {
+                designLeftPadding = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Horizontal space reserved at the right for the maximum label (logical px at 96 DPI).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Right inset for the maximum label, in logical pixels at 96 DPI.")]
+        [DefaultValue(10f)]
+        public float DesignRightPadding
+        {
+            get => designRightPadding;
+            set
+            {
+                designRightPadding = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Length of the center zero tick above the bar (logical px at 96 DPI).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Zero tick length upward from the bar, in logical pixels at 96 DPI.")]
+        [DefaultValue(15f)]
+        public float DesignZeroTickUp
+        {
+            get => designZeroTickUp;
+            set
+            {
+                designZeroTickUp = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Length of the center zero tick below the bar (logical px at 96 DPI).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Zero tick length downward from the bar, in logical pixels at 96 DPI.")]
+        [DefaultValue(15f)]
+        public float DesignZeroTickDown
+        {
+            get => designZeroTickDown;
+            set
+            {
+                designZeroTickDown = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Radius of each history marker circle (logical px at 96 DPI).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Radius of semi-transparent history markers, in logical pixels at 96 DPI.")]
+        [DefaultValue(8f)]
+        public float DesignHistoryMarkerRadius
+        {
+            get => designHistoryMarkerRadius;
+            set
+            {
+                designHistoryMarkerRadius = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Radius of the current-value marker (logical px at 96 DPI).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Radius of the main value marker, in logical pixels at 96 DPI.")]
+        [DefaultValue(7f)]
+        public float DesignMarkerRadius
+        {
+            get => designMarkerRadius;
+            set
+            {
+                designMarkerRadius = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Stroke width of the horizontal bar (logical px at 96 DPI).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Thickness of the main horizontal line, in logical pixels at 96 DPI.")]
+        [DefaultValue(2f)]
+        public float DesignBarThickness
+        {
+            get => designBarThickness;
+            set
+            {
+                designBarThickness = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Stroke width of tick lines (logical px at 96 DPI).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Thickness of zero and end tick lines, in logical pixels at 96 DPI.")]
+        [DefaultValue(2f)]
+        public float DesignZeroTickThickness
+        {
+            get => designZeroTickThickness;
+            set
+            {
+                designZeroTickThickness = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Stroke width of the out-of-range alert ellipse (logical px at 96 DPI).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Thickness of the alert outline when value is out of range, in logical pixels at 96 DPI.")]
+        [DefaultValue(1f)]
+        public float DesignAlertOutlineThickness
+        {
+            get => designAlertOutlineThickness;
+            set
+            {
+                designAlertOutlineThickness = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gap between the value text and the marker (logical px at 96 DPI).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Space between the numeric label and the marker, in logical pixels at 96 DPI.")]
+        [DefaultValue(2f)]
+        public float DesignValueTextGap
+        {
+            get => designValueTextGap;
+            set
+            {
+                designValueTextGap = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Inset of the out-of-range alert ellipse beyond the marker (logical px at 96 DPI).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Extra padding for the out-of-range ellipse beyond the marker bounds, in logical pixels at 96 DPI.")]
+        [DefaultValue(3f)]
+        public float DesignAlertOutlineInset
+        {
+            get => designAlertOutlineInset;
+            set
+            {
+                designAlertOutlineInset = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Extra horizontal margin inside the control client area (logical px, scaled at runtime).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Additional horizontal margin inside the client area (device-independent).")]
+        [DefaultValue(0)]
+        public int HorizontalMargin
+        {
+            get => horizontalMargin;
+            set
+            {
+                horizontalMargin = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Minimum vertical padding used when centering content (logical px at 96 DPI).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Minimum vertical padding when centering the bar in the client area, in logical pixels at 96 DPI.")]
+        [DefaultValue(2f)]
+        public float DesignContentPadding
+        {
+            get => designContentPadding;
+            set
+            {
+                designContentPadding = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Vertical padding included in minimum height, per top and bottom edge (logical px at 96 DPI).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Padding added to preferred height (each of top and bottom), in logical pixels at 96 DPI.")]
+        [DefaultValue(2f)]
+        public float DesignVerticalEdgePadding
+        {
+            get => designVerticalEdgePadding;
+            set
+            {
+                designVerticalEdgePadding = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Default preferred width used by the control and <see cref="GetPreferredSize"/> (logical px at 96 DPI).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Preferred width in logical pixels at 96 DPI (used for default size and GetPreferredSize width).")]
+        [DefaultValue(300)]
+        public int PreferredWidthDesign
+        {
+            get => preferredWidthDesign;
+            set
+            {
+                preferredWidthDesign = value;
+                OnLayoutMetricsChanged();
+            }
+        }
+
+        /// <summary>
+        /// Color used for history marker circles (include alpha in the color).
+        /// </summary>
+        [Category("Layout")]
+        [Description("Fill color for past value markers (set alpha for transparency).")]
+        public Color HistoryMarkerColor
+        {
+            get => historyMarkerColor;
+            set
+            {
+                historyMarkerColor = value;
+                Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Color for out-of-range value text and alert ellipse outline.
+        /// </summary>
+        [Category("Layout")]
+        [Description("Color for out-of-range value text and alert outline.")]
+        public Color OutOfRangeColor
+        {
+            get => outOfRangeColor;
+            set
+            {
+                outOfRangeColor = value;
+                Invalidate();
+            }
+        }
+
         #endregion
 
         #region Lifecycle
+
+        private void OnLayoutMetricsChanged()
+        {
+            if (IsHandleCreated)
+                Size = new Size(Width, GetPreferredHeight());
+            Invalidate();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HistoryBar"/> class.
@@ -179,7 +477,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
             DoubleBuffered = true;
 
-            Size = new Size((int)(300 * DpiScale), GetPreferredHeight());
+            Size = new Size((int)(preferredWidthDesign * DpiScale), GetPreferredHeight());
         }
 
         #endregion
@@ -195,8 +493,8 @@ namespace Bahtinov_Collimator.Custom_Components
         {
             var scale = DpiScale;
             return new Size(
-                (int)(300 * scale),
-                (int)(60 * scale));
+                (int)(preferredWidthDesign * scale),
+                GetPreferredHeight());
         }
 
         /// <summary>
@@ -285,36 +583,25 @@ namespace Bahtinov_Collimator.Custom_Components
 
             float scale = DpiScale;
 
-            float designLeftPad = 10f;     // space for minimum label
-            float designRightPad = 10f;    // space for maximum label
-            float designZeroTickUp = 15f;
-            float designZeroTickDown = 15f;
-            float designHistoryRadius = 8f;
-            float designMarkerRadius = 7f;
-            float designBarThickness = 2f;
-            float designZeroThickness = 2f;
-            float designAlertOutlineThickness = 1f;
-            float designValueGap = 2f;
-
-            int margin = 0;
-            int left = margin + (int)(designLeftPad * scale);
-            int right = Width - margin - (int)(designRightPad * scale);
+            int margin = horizontalMargin;
+            int left = margin + (int)(designLeftPadding * scale);
+            int right = Width - margin - (int)(designRightPadding * scale);
 
             float zeroTickUp = designZeroTickUp * scale;
             float zeroTickDown = designZeroTickDown * scale;
-            float historyRadius = designHistoryRadius * scale;
+            float historyRadius = designHistoryMarkerRadius * scale;
             float markerRadius = designMarkerRadius * scale;
 
             float barThickness = designBarThickness * scale;
-            float zeroThickness = designZeroThickness * scale;
+            float zeroThickness = designZeroTickThickness * scale;
             float alertOutlineThickness = designAlertOutlineThickness * scale;
-            float valueGap = designValueGap * scale;
+            float valueGap = designValueTextGap * scale;
 
             float textHeight = Font.Height;
             float aboveCenter = textHeight + valueGap + markerRadius;
             float belowCenter = Math.Max(zeroTickDown, historyRadius);
             float contentHeight = aboveCenter + belowCenter;
-            float padding = 2f * scale;
+            float padding = designContentPadding * scale;
             float top = Math.Max(padding, (Height - contentHeight) / 2f);
             float centerY = top + aboveCenter;
 
@@ -343,8 +630,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 g.DrawLine(tickPen, right, centerY - zeroTickUp / 4, right, centerY + zeroTickDown / 4);
             }
 
-            Color historyColor = Color.FromArgb(128, Color.White);
-            using (var historyBrush = new SolidBrush(historyColor))
+            using (var historyBrush = new SolidBrush(historyMarkerColor))
             {
                 foreach (float histValue in valueHistory)
                 {
@@ -384,17 +670,18 @@ namespace Bahtinov_Collimator.Custom_Components
             SizeF valSize = g.MeasureString(valueStr, Font);
 
             bool outOfRange = value < minimum || value > maximum;
-            Color valueTextColor = outOfRange ? Color.OrangeRed : TextColor;
+            Color valueTextColor = outOfRange ? outOfRangeColor : TextColor;
 
             if (outOfRange)
             {
-                using (var alertPen = new Pen(Color.OrangeRed, alertOutlineThickness))
+                float inset = designAlertOutlineInset * scale;
+                using (var alertPen = new Pen(outOfRangeColor, alertOutlineThickness))
                 {
                     g.DrawEllipse(alertPen,
-                        markerRect.X - 3 * scale,
-                        markerRect.Y - 3 * scale,
-                        markerRect.Width + 6 * scale,
-                        markerRect.Height + 6 * scale);
+                        markerRect.X - inset,
+                        markerRect.Y - inset,
+                        markerRect.Width + 2 * inset,
+                        markerRect.Height + 2 * inset);
                 }
             }
 
@@ -420,15 +707,15 @@ namespace Bahtinov_Collimator.Custom_Components
         private int GetPreferredHeight()
         {
             float scale = DpiScale;
-            const float designMarkerRadius = 7f;
-            const float designZeroTickDown = 12f;
-            const float designValueGap = 2f;
 
-            float aboveCenter = Font.Height + (designValueGap + designMarkerRadius) * scale;
- 
-            float belowCenter = Math.Max(designZeroTickDown, designMarkerRadius) * scale;
+            float aboveCenter = Font.Height + (designValueTextGap + designMarkerRadius) * scale;
 
-            return (int)(aboveCenter + belowCenter) + (int)(4 * scale); // 2px padding each side
+            float zeroDown = designZeroTickDown * scale;
+            float historyR = designHistoryMarkerRadius * scale;
+            float belowCenter = Math.Max(zeroDown, historyR);
+
+            return (int)Math.Ceiling(
+                aboveCenter + belowCenter + 2f * designVerticalEdgePadding * scale);
         }
 
         /// <summary>

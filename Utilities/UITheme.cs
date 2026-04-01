@@ -231,12 +231,8 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the Error Marker color for the Error Bar when the marker is in the valid range.
         /// </summary>
-        public static Color ErrorBarMarkerColorInRange { get; } = Color.Green;
-
-        /// <summary>
-        /// Gets the Error Marker color for the Error Bar when the marker is outside the valid range.
-        /// </summary>
-        public static Color ErrorBarMarkerColorOutOfRange { get; } = Color.OrangeRed;
+   //     public static Color ErrorBarMarkerColorInRange { get; } = Color.MediumSeaGreen;
+        public static Color ErrorBarMarkerColorInRange { get; } = Color.OrangeRed;
 
         /// <summary>
         /// Gets the Error Marker History dot color for the Error Bar.

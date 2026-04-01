@@ -231,7 +231,7 @@ namespace Bahtinov_Collimator
                 else
                 {
                     offsetBarControl1.ResetValueAndHistory();
-                    offsetBarControl1.MarkerColor = Color.Green;
+                    offsetBarControl1.MarkerColor = UITheme.ErrorBarMarkerColorInRange;
                     ErrorOffset = 0.0;
                 }
             }
