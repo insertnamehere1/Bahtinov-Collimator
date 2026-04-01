@@ -9,7 +9,7 @@ namespace Bahtinov_Collimator
     {
         #region Constants
 
-        private const int HISTORYBAR_VERTICAL_POSITION = -10;
+        private const int HISTORYBAR_VERTICAL_POSITION = -13;
 
         #endregion
 

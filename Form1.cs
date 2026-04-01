@@ -100,7 +100,7 @@ namespace Bahtinov_Collimator
         private const int AnalysisModeLabelsLeftOffsetFromButtonLeftAt96 = 30;
 
         /// Sets testing mode for Calibration 
-        private const bool TEST_MODE = true;
+        private const bool TEST_MODE = false;
 
         #endregion
 
