@@ -91,13 +91,13 @@ namespace Bahtinov_Collimator
         /// Horizontal offset from <see cref="RoundedStartButton"/>.Left to <see cref="toggleSwitch1"/>.Left (96 DPI).
         /// Matches designer: button 18, switch 36.
         /// </summary>
-        private const int AnalysisToggleSwitchLeftOffsetFromButtonLeftAt96 = 18;
+        private const int AnalysisToggleSwitchLeftOffsetFromButtonLeftAt96 = 5;
 
         /// <summary>
         /// Horizontal offset from <see cref="RoundedStartButton"/>.Left to Bahtinov/Defocus labels (96 DPI).
         /// Matches designer: button 18, labels 68.
         /// </summary>
-        private const int AnalysisModeLabelsLeftOffsetFromButtonLeftAt96 = 50;
+        private const int AnalysisModeLabelsLeftOffsetFromButtonLeftAt96 = 30;
 
         /// Sets testing mode for Calibration 
         private const bool TEST_MODE = true;

@@ -208,9 +208,9 @@ namespace Bahtinov_Collimator
             this.analysisGroupBox.CornerRadius = 12;
             this.analysisGroupBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.analysisGroupBox.Location = new System.Drawing.Point(9, 348);
-            this.analysisGroupBox.Margin = new System.Windows.Forms.Padding(32, 32, 32, 32);
+            this.analysisGroupBox.Margin = new System.Windows.Forms.Padding(32);
             this.analysisGroupBox.Name = "analysisGroupBox";
-            this.analysisGroupBox.Padding = new System.Windows.Forms.Padding(32, 32, 32, 32);
+            this.analysisGroupBox.Padding = new System.Windows.Forms.Padding(32);
             this.analysisGroupBox.Size = new System.Drawing.Size(185, 131);
             this.analysisGroupBox.TabIndex = 28;
             this.analysisGroupBox.TabStop = false;
@@ -234,7 +234,7 @@ namespace Bahtinov_Collimator
             this.RoundedStartButton.ImageOffsetY = 0;
             this.RoundedStartButton.ImageWidth = 32;
             this.RoundedStartButton.Location = new System.Drawing.Point(12, 77);
-            this.RoundedStartButton.Margin = new System.Windows.Forms.Padding(32, 32, 32, 32);
+            this.RoundedStartButton.Margin = new System.Windows.Forms.Padding(32);
             this.RoundedStartButton.Name = "RoundedStartButton";
             this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.RoundedStartButton.Size = new System.Drawing.Size(161, 42);
@@ -249,8 +249,8 @@ namespace Bahtinov_Collimator
             // 
             this.toggleSwitch1.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.toggleSwitch1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.toggleSwitch1.Location = new System.Drawing.Point(24, 25);
-            this.toggleSwitch1.Margin = new System.Windows.Forms.Padding(32, 32, 32, 32);
+            this.toggleSwitch1.Location = new System.Drawing.Point(14, 25);
+            this.toggleSwitch1.Margin = new System.Windows.Forms.Padding(32);
             this.toggleSwitch1.Name = "toggleSwitch1";
             this.toggleSwitch1.RotationDegrees = 90;
             this.toggleSwitch1.Size = new System.Drawing.Size(20, 40);
@@ -261,7 +261,7 @@ namespace Bahtinov_Collimator
             // 
             this.bahtinovLabel.AutoSize = true;
             this.bahtinovLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bahtinovLabel.Location = new System.Drawing.Point(45, 25);
+            this.bahtinovLabel.Location = new System.Drawing.Point(36, 26);
             this.bahtinovLabel.Margin = new System.Windows.Forms.Padding(14, 0, 14, 0);
             this.bahtinovLabel.Name = "bahtinovLabel";
             this.bahtinovLabel.Size = new System.Drawing.Size(54, 15);
@@ -273,7 +273,7 @@ namespace Bahtinov_Collimator
             // 
             this.defocusLabel.AutoSize = true;
             this.defocusLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.defocusLabel.Location = new System.Drawing.Point(45, 49);
+            this.defocusLabel.Location = new System.Drawing.Point(36, 48);
             this.defocusLabel.Margin = new System.Windows.Forms.Padding(14, 0, 14, 0);
             this.defocusLabel.Name = "defocusLabel";
             this.defocusLabel.Size = new System.Drawing.Size(50, 15);
