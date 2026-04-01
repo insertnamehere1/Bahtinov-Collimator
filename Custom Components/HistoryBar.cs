@@ -627,8 +627,8 @@ namespace Bahtinov_Collimator.Custom_Components
 
             using (var tickPen = new Pen(ZeroTickColor, zeroThickness))
             {
-                g.DrawLine(tickPen, left, centerY - zeroTickUp / 4, left, centerY + zeroTickDown / 4);
-                g.DrawLine(tickPen, right, centerY - zeroTickUp / 4, right, centerY + zeroTickDown / 4);
+                g.DrawLine(tickPen, left, centerY - zeroTickUp / 2, left, centerY + zeroTickDown / 2);
+                g.DrawLine(tickPen, right, centerY - zeroTickUp / 2, right, centerY + zeroTickDown / 2);
             }
 
             using (var historyBrush = new SolidBrush(historyMarkerColor))
