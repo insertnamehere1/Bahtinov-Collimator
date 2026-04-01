@@ -1,4 +1,5 @@
 using System;
+using Bahtinov_Collimator;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
@@ -71,16 +72,16 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>Iterations for binary search on cubic Bezier to match Y at stripe top/bottom.</summary>
         private const int BezierSolveIterations = 28;
 
-        private static readonly Color GlassDarkBase = Color.FromArgb(85, 190, 190, 190);
+        private static readonly Color GlassDarkBase = UITheme.MirrorMctGlassDarkBase;
 
-        private static readonly Color GlassLightBase = Color.FromArgb(55, 235, 235, 235);
+        private static readonly Color GlassLightBase = UITheme.MirrorMctGlassLightBase;
 
         /// <summary>How strongly <see cref="MirrorLineArtTint.TintColor"/> blends outline into glass (0–1).</summary>
         private const float GlassTintStrength = 0.45f;
 
-        private static readonly Color SecondaryDarkBase = Color.FromArgb(160, 160, 160);
+        private static readonly Color SecondaryDarkBase = UITheme.MirrorMctSecondaryDarkBase;
 
-        private static readonly Color SecondaryLightBase = Color.FromArgb(220, 220, 220);
+        private static readonly Color SecondaryLightBase = UITheme.MirrorMctSecondaryLightBase;
 
         private const float SecondaryTintStrength = 0.10f;
 

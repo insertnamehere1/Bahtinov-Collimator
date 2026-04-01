@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Bahtinov_Collimator;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -86,8 +87,8 @@ namespace Bahtinov_Collimator.Custom_Components
         private float designContentPadding = 2f;
         private float designVerticalEdgePadding = 2f;
         private int preferredWidthDesign = 300;
-        private Color historyMarkerColor = Color.FromArgb(128, Color.White);
-        private Color outOfRangeColor = Color.OrangeRed;
+        private Color historyMarkerColor = UITheme.ErrorBarHistoryColor;
+        private Color outOfRangeColor = UITheme.ErrorBarMarkerColorInRange;
 
         #endregion
 
@@ -157,7 +158,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         [Category("Appearance")]
         [Description("Color of the main bar line.")]
-        public Color BarColor { get; set; } = Color.Gray;
+        public Color BarColor { get; set; } = UITheme.ErrorBarColor;
 
         /// <summary>
         /// Gets or sets the color of the marker (the circular pointer).
@@ -171,7 +172,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         [Category("Appearance")]
         [Description("Color of the zero tick mark.")]
-        public Color ZeroTickColor { get; set; } = Color.DarkGray;
+        public Color ZeroTickColor { get; set; } = UITheme.ZeroTickColor;
 
         /// <summary>
         /// Gets or sets the base color used for text (labels and value).
@@ -180,7 +181,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         [Category("Appearance")]
         [Description("Base text color for labels and value.")]
-        public Color TextColor { get; set; } = Color.White;
+        public Color TextColor { get; set; } = UITheme.ErrorBarTextColor;
 
         /// <summary>
         /// Horizontal space reserved at the left for the minimum label (logical px at 96 DPI).

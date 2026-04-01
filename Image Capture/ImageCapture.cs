@@ -204,7 +204,7 @@ namespace Bahtinov_Collimator
                 updatedImage = new Bitmap(UITheme.DisplayWindow.X, UITheme.DisplayWindow.Y);
 
                 g = Graphics.FromImage(updatedImage);
-                g.Clear(Color.Black);
+                g.Clear(UITheme.DisplayBackgroundColor);
 
                 Point offset = Point.Empty;
 
@@ -494,7 +494,7 @@ namespace Bahtinov_Collimator
             using (Graphics g = Graphics.FromImage(circularImage))
             {
                 g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.Clear(Color.Transparent);
+                g.Clear(UITheme.Transparent);
 
                 using (TextureBrush brush = new TextureBrush(originalImage))
                 {

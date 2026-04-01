@@ -1,3 +1,4 @@
+using Bahtinov_Collimator;
 using Bahtinov_Collimator.Custom_Components;
 using SkyCal.Custom_Components;
 using System.Drawing;
@@ -46,19 +47,19 @@ namespace Bahtinov_Collimator.Custom_Components
             this.titledRoundedRichTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.titledRoundedRichTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
-            this.titledRoundedRichTextBox1.BorderColor = System.Drawing.Color.Gray;
+            this.titledRoundedRichTextBox1.BackColor = UITheme.DarkBackground;
+            this.titledRoundedRichTextBox1.BorderColor = UITheme.BorderDefaultGray;
             this.titledRoundedRichTextBox1.BorderThickness = 2;
             this.titledRoundedRichTextBox1.CornerRadius = 8;
-            this.titledRoundedRichTextBox1.ForeColor = System.Drawing.Color.White;
+            this.titledRoundedRichTextBox1.ForeColor = UITheme.White;
             // 
             // 
             // 
-            this.titledRoundedRichTextBox1.InnerRichTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
+            this.titledRoundedRichTextBox1.InnerRichTextBox.BackColor = UITheme.DarkBackground;
             this.titledRoundedRichTextBox1.InnerRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.titledRoundedRichTextBox1.InnerRichTextBox.DetectUrls = false;
             this.titledRoundedRichTextBox1.InnerRichTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.titledRoundedRichTextBox1.InnerRichTextBox.ForeColor = System.Drawing.Color.White;
+            this.titledRoundedRichTextBox1.InnerRichTextBox.ForeColor = UITheme.White;
             this.titledRoundedRichTextBox1.InnerRichTextBox.Location = new System.Drawing.Point(13, 37);
             this.titledRoundedRichTextBox1.InnerRichTextBox.Name = "";
             this.titledRoundedRichTextBox1.InnerRichTextBox.ReadOnly = true;
@@ -73,9 +74,9 @@ namespace Bahtinov_Collimator.Custom_Components
             this.titledRoundedRichTextBox1.ShowTitleSeparator = false;
             this.titledRoundedRichTextBox1.Size = new System.Drawing.Size(300, 526);
             this.titledRoundedRichTextBox1.TabIndex = 0;
-            this.titledRoundedRichTextBox1.TitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.titledRoundedRichTextBox1.TitleBackColor = UITheme.CalibrationTitleBarBack;
             this.titledRoundedRichTextBox1.TitleFont = new System.Drawing.Font("Segoe UI", 14F);
-            this.titledRoundedRichTextBox1.TitleForeColor = System.Drawing.Color.White;
+            this.titledRoundedRichTextBox1.TitleForeColor = UITheme.White;
             this.titledRoundedRichTextBox1.TitleHeight = 35;
             this.titledRoundedRichTextBox1.TitlePaddingLeft = 90;
             this.titledRoundedRichTextBox1.TitleText = "Summary";
@@ -83,16 +84,16 @@ namespace Bahtinov_Collimator.Custom_Components
             // quitButton
             // 
             this.quitButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.quitButton.BackColor = System.Drawing.Color.DimGray;
-            this.quitButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
-            this.quitButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.quitButton.BackColor = UITheme.ButtonDarkBackground;
+            this.quitButton.BevelDark = UITheme.RoundedButtonBevelDark;
+            this.quitButton.BevelLight = UITheme.RoundedButtonBevelLight;
             this.quitButton.BevelThickness = 4;
             this.quitButton.CornerRadius = 8;
             this.quitButton.FlatAppearance.BorderSize = 0;
             this.quitButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.quitButton.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.quitButton.ForeColor = System.Drawing.Color.LightGray;
-            this.quitButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.quitButton.ForeColor = UITheme.ButtonDarkForeground;
+            this.quitButton.HoverOverlay = UITheme.RoundedButtonHoverOverlay;
             this.quitButton.ImageHeight = 32;
             this.quitButton.ImageOffsetX = 60;
             this.quitButton.ImageOffsetY = 0;
@@ -100,7 +101,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.quitButton.Location = new System.Drawing.Point(55, 562);
             this.quitButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.quitButton.Name = "quitButton";
-            this.quitButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.quitButton.PressedOverlay = UITheme.RoundedButtonPressedOverlayOnBlack;
             this.quitButton.Size = new System.Drawing.Size(161, 42);
             this.quitButton.TabIndex = 1;
             this.quitButton.Text = "Quit";
@@ -112,10 +113,10 @@ namespace Bahtinov_Collimator.Custom_Components
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
+            this.BackColor = UITheme.DarkBackground;
             this.Controls.Add(this.titledRoundedRichTextBox1);
             this.Controls.Add(this.quitButton);
-            this.ForeColor = System.Drawing.Color.White;
+            this.ForeColor = UITheme.White;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "CalibrationComponent";
             this.Size = new System.Drawing.Size(308, 624);

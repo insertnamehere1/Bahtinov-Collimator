@@ -226,8 +226,8 @@ namespace Bahtinov_Collimator
                 float crossSize = 20f * overlayScale;  // overall width/height of cross
                 const int crossAlpha = 200;   // 0..255. Lower = more blending.
 
-                using (var innerPen = new Pen(Color.FromArgb(crossAlpha, UITheme.DefocusInnerCircleColor), penWidth))
-                using (var outerPen = new Pen(Color.FromArgb(crossAlpha, UITheme.DefocusOuterCircleColor), penWidth))
+                using (var innerPen = new Pen(UITheme.WithAlpha(UITheme.DefocusInnerCircleColor, crossAlpha), penWidth))
+                using (var outerPen = new Pen(UITheme.WithAlpha(UITheme.DefocusOuterCircleColor, crossAlpha), penWidth))
                 using (var outerDashPen = new Pen(UITheme.DefocusOuterCircleColor, penWidth)
                 {
                     DashStyle = System.Drawing.Drawing2D.DashStyle.Dash
@@ -304,7 +304,7 @@ namespace Bahtinov_Collimator
                     var pen = UITheme.GetDisplayLinePen(group.GroupId, line.LineId);
 
                     var c = pen.Color;
-                    pen.Color = Color.FromArgb(alpha, c.R, c.G, c.B);
+                    pen.Color = UITheme.WithAlpha(c, alpha);
 
                     g.DrawLine(pen, line.Start, line.End);
                 }
@@ -438,7 +438,7 @@ namespace Bahtinov_Collimator
             {
                 using (var g = Graphics.FromImage(layer))
                 {
-                    g.Clear(Color.Transparent);
+                    g.Clear(UITheme.Transparent);
                 }
             }
         }

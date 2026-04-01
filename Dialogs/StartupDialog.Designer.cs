@@ -42,24 +42,24 @@ namespace SkyCal
             // notNowButton
             // 
             this.notNowButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.notNowButton.BackColor = System.Drawing.Color.DimGray;
-            this.notNowButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
-            this.notNowButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.notNowButton.BackColor = UITheme.ButtonDarkBackground;
+            this.notNowButton.BevelDark = UITheme.RoundedButtonBevelDark;
+            this.notNowButton.BevelLight = UITheme.RoundedButtonBevelLight;
             this.notNowButton.BevelThickness = 4;
             this.notNowButton.CornerRadius = 6;
             this.notNowButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.notNowButton.FlatAppearance.BorderSize = 0;
             this.notNowButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.notNowButton.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.notNowButton.ForeColor = System.Drawing.Color.LightGray;
-            this.notNowButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.notNowButton.ForeColor = UITheme.ButtonDarkForeground;
+            this.notNowButton.HoverOverlay = UITheme.RoundedButtonHoverOverlay;
             this.notNowButton.ImageHeight = 32;
             this.notNowButton.ImageOffsetX = 60;
             this.notNowButton.ImageOffsetY = 0;
             this.notNowButton.ImageWidth = 32;
             this.notNowButton.Location = new System.Drawing.Point(388, 161);
             this.notNowButton.Name = "notNowButton";
-            this.notNowButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.notNowButton.PressedOverlay = UITheme.RoundedButtonPressedOverlay;
             this.notNowButton.Size = new System.Drawing.Size(120, 35);
             this.notNowButton.TabIndex = 1;
             this.notNowButton.Text = "Not Now";
@@ -69,24 +69,24 @@ namespace SkyCal
             // runButton
             // 
             this.runButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.runButton.BackColor = System.Drawing.Color.DimGray;
-            this.runButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
-            this.runButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.runButton.BackColor = UITheme.ButtonDarkBackground;
+            this.runButton.BevelDark = UITheme.RoundedButtonBevelDark;
+            this.runButton.BevelLight = UITheme.RoundedButtonBevelLight;
             this.runButton.BevelThickness = 4;
             this.runButton.CornerRadius = 6;
             this.runButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.runButton.FlatAppearance.BorderSize = 0;
             this.runButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.runButton.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.runButton.ForeColor = System.Drawing.Color.LightGray;
-            this.runButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.runButton.ForeColor = UITheme.ButtonDarkForeground;
+            this.runButton.HoverOverlay = UITheme.RoundedButtonHoverOverlay;
             this.runButton.ImageHeight = 32;
             this.runButton.ImageOffsetX = 60;
             this.runButton.ImageOffsetY = 0;
             this.runButton.ImageWidth = 32;
             this.runButton.Location = new System.Drawing.Point(254, 161);
             this.runButton.Name = "runButton";
-            this.runButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.runButton.PressedOverlay = UITheme.RoundedButtonPressedOverlay;
             this.runButton.Size = new System.Drawing.Size(120, 35);
             this.runButton.TabIndex = 0;
             this.runButton.Text = "Run";
@@ -129,7 +129,7 @@ namespace SkyCal
             this.AcceptButton = this.runButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
+            this.BackColor = UITheme.DarkBackground;
             this.CancelButton = this.notNowButton;
             this.ClientSize = new System.Drawing.Size(525, 212);
             this.Controls.Add(this.dontShowAgainCheckBox);
@@ -138,7 +138,7 @@ namespace SkyCal
             this.Controls.Add(this.notNowButton);
             this.Controls.Add(this.runButton);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.ForeColor = System.Drawing.Color.White;
+            this.ForeColor = UITheme.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

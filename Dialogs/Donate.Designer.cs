@@ -45,15 +45,15 @@ namespace Bahtinov_Collimator
             // cancelButton
             // 
             this.cancelButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.cancelButton.BackColor = System.Drawing.Color.DimGray;
-            this.cancelButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
-            this.cancelButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.cancelButton.BackColor = UITheme.ButtonDarkBackground;
+            this.cancelButton.BevelDark = UITheme.RoundedButtonBevelDark;
+            this.cancelButton.BevelLight = UITheme.RoundedButtonBevelLight;
             this.cancelButton.BevelThickness = 4;
             this.cancelButton.CornerRadius = 6;
             this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.cancelButton.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.cancelButton.ForeColor = System.Drawing.Color.LightGray;
-            this.cancelButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.cancelButton.ForeColor = UITheme.ButtonDarkForeground;
+            this.cancelButton.HoverOverlay = UITheme.RoundedButtonHoverOverlay;
             this.cancelButton.ImageHeight = 32;
             this.cancelButton.ImageOffsetX = 60;
             this.cancelButton.ImageOffsetY = 0;
@@ -61,7 +61,7 @@ namespace Bahtinov_Collimator
             this.cancelButton.Location = new System.Drawing.Point(401, 266);
             this.cancelButton.Margin = new System.Windows.Forms.Padding(4);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.cancelButton.PressedOverlay = UITheme.RoundedButtonPressedOverlay;
             this.cancelButton.Size = new System.Drawing.Size(120, 35);
             this.cancelButton.TabIndex = 2;
             this.cancelButton.Text = "Close";
@@ -73,7 +73,7 @@ namespace Bahtinov_Collimator
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.pictureBox1.BackColor = System.Drawing.Color.LightGray;
+            this.pictureBox1.BackColor = UITheme.DonatePictureBackground;
             this.pictureBox1.Image = global::Bahtinov_Collimator.Properties.Resources.SkyCal_logo;
             this.pictureBox1.Location = new System.Drawing.Point(0, 1);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
@@ -85,7 +85,7 @@ namespace Bahtinov_Collimator
             // 
             // pictureBox2
             // 
-            this.pictureBox2.BackColor = System.Drawing.Color.LightGray;
+            this.pictureBox2.BackColor = UITheme.DonatePictureBackground;
             this.pictureBox2.Image = global::Bahtinov_Collimator.Properties.Resources.paypal;
             this.pictureBox2.Location = new System.Drawing.Point(17, 13);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(4);
@@ -100,11 +100,11 @@ namespace Bahtinov_Collimator
             this.richTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
+            this.richTextBox.BackColor = UITheme.DarkBackground;
             this.richTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBox.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.richTextBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.richTextBox.ForeColor = System.Drawing.Color.White;
+            this.richTextBox.ForeColor = UITheme.White;
             this.richTextBox.Location = new System.Drawing.Point(195, 13);
             this.richTextBox.Margin = new System.Windows.Forms.Padding(4);
             this.richTextBox.Name = "richTextBox";
@@ -117,14 +117,14 @@ namespace Bahtinov_Collimator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
+            this.BackColor = UITheme.DarkBackground;
             this.ClientSize = new System.Drawing.Size(734, 328);
             this.Controls.Add(this.richTextBox);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.cancelButton);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(80)))), ((int)(((byte)(90)))));
+            this.ForeColor = UITheme.DarkForeground;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);

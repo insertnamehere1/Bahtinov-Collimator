@@ -1019,7 +1019,7 @@ namespace Bahtinov_Collimator
                         using (var hi = new SolidBrush(UITheme.MenuHighlightBackground))
                             e.Graphics.FillRectangle(hi, rect);
 
-                        using (var pen = new Pen(Color.Black))
+                        using (var pen = new Pen(UITheme.Black))
                         {
                             rect.Width -= 1;
                             rect.Height -= 1;

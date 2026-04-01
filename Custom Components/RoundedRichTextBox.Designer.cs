@@ -1,3 +1,4 @@
+using Bahtinov_Collimator;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -36,8 +37,8 @@ namespace SkyCal.Custom_Components
 
             this.SuspendLayout();
             this.AutoScaleMode = AutoScaleMode.Dpi;
-            this.BackColor = Color.White;
-            this.ForeColor = Color.Black;
+            this.BackColor = UITheme.White;
+            this.ForeColor = UITheme.TextBoxForeground;
             this.Name = "TitledRoundedRichTextBox";
             this.Padding = new Padding(10);
 

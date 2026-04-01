@@ -1,3 +1,4 @@
+using Bahtinov_Collimator;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -36,7 +37,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.SuspendLayout();
 
             // Allow fully transparent backgrounds so the form shows behind.
-            this.BackColor = Color.Transparent;
+            this.BackColor = UITheme.Transparent;
             this.Name = "RoundedPanel";
 
             this.ResumeLayout(false);

@@ -26,7 +26,7 @@ namespace Bahtinov_Collimator
             // 
             // groupBox1
             // 
-            this.groupBox1.BorderColor = System.Drawing.Color.Gray;
+            this.groupBox1.BorderColor = UITheme.BorderDefaultGray;
             this.groupBox1.BorderThickness = 2;
             this.groupBox1.Controls.Add(this.offsetBarControl1);
             this.groupBox1.Controls.Add(this.mirrorDrawingComponent1);
@@ -46,31 +46,31 @@ namespace Bahtinov_Collimator
             // 
             this.offsetBarControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.offsetBarControl1.BarColor = System.Drawing.Color.Gray;
+            this.offsetBarControl1.BarColor = UITheme.ErrorBarColor;
             this.offsetBarControl1.DesignBarThickness = 3F;
             this.offsetBarControl1.DesignZeroTickDown = 10F;
             this.offsetBarControl1.DesignZeroTickUp = 10F;
             this.offsetBarControl1.Enabled = false;
-            this.offsetBarControl1.HistoryMarkerColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.offsetBarControl1.HistoryMarkerColor = UITheme.ErrorBarHistoryColor;
             this.offsetBarControl1.Location = new System.Drawing.Point(6, 15);
             this.offsetBarControl1.MarkerColor = UITheme.ErrorBarMarkerColorInRange;
             this.offsetBarControl1.Maximum = 2F;
             this.offsetBarControl1.Minimum = -2F;
             this.offsetBarControl1.Name = "offsetBarControl1";
-            this.offsetBarControl1.OutOfRangeColor = System.Drawing.Color.OrangeRed;
+            this.offsetBarControl1.OutOfRangeColor = UITheme.ErrorBarMarkerColorInRange;
             this.offsetBarControl1.Size = new System.Drawing.Size(240, 41);
             this.offsetBarControl1.TabIndex = 8;
             this.offsetBarControl1.Text = "offsetBarControl1";
-            this.offsetBarControl1.TextColor = System.Drawing.Color.White;
+            this.offsetBarControl1.TextColor = UITheme.ErrorBarTextColor;
             this.offsetBarControl1.Value = float.NaN;
-            this.offsetBarControl1.ZeroTickColor = System.Drawing.Color.LightGray;
+            this.offsetBarControl1.ZeroTickColor = UITheme.OffsetBarZeroTickLight;
             // 
             // mirrorDrawingComponent1
             // 
-            this.mirrorDrawingComponent1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.mirrorDrawingComponent1.BackColor = UITheme.MirrorViewBackground;
             this.mirrorDrawingComponent1.CornerRadius = 1;
             this.mirrorDrawingComponent1.Location = new System.Drawing.Point(12, 24);
-            this.mirrorDrawingComponent1.MirrorOutlineColor = System.Drawing.Color.DimGray;
+            this.mirrorDrawingComponent1.MirrorOutlineColor = UITheme.MirrorOutline;
             this.mirrorDrawingComponent1.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
             this.mirrorDrawingComponent1.Name = "mirrorDrawingComponent1";
             this.mirrorDrawingComponent1.OpticalAxisLength = 100;
@@ -82,7 +82,7 @@ namespace Bahtinov_Collimator
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox1);
             this.DoubleBuffered = true;
-            this.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.ForeColor = UITheme.FocusChannelCaptionForeground;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "FocusChannelComponent";
             this.Size = new System.Drawing.Size(255, 155);

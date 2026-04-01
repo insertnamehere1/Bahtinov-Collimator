@@ -1,4 +1,5 @@
 using System;
+using Bahtinov_Collimator;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -29,7 +30,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
         private int cornerRadius = 1;
         private int opticalAxisLength = 100;
-        private Color mirrorOutlineColor = Color.DimGray;
+        private Color mirrorOutlineColor = UITheme.MirrorOutline;
         private MirrorType mirrorType = MirrorType.SctPrimary;
 
         #endregion
@@ -49,7 +50,7 @@ namespace Bahtinov_Collimator.Custom_Components
                      ControlStyles.ResizeRedraw, true);
 
             Size = new Size(100, 100);
-            BackColor = Color.FromArgb(32, 32, 32);
+            BackColor = UITheme.MirrorViewBackground;
         }
 
         #endregion

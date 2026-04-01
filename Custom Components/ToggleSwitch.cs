@@ -1,4 +1,5 @@
 using System;
+using Bahtinov_Collimator;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -245,21 +246,21 @@ public class ToggleSwitch : Control
         bool pressed = isPressed && Enabled;
         bool focused = Focused && ShowFocusCues;
 
-        Color offBase = Color.FromArgb(200, 198, 194);
-        Color offBaseHover = Color.FromArgb(210, 208, 204);
-        Color border = Color.FromArgb(120, 120, 120);
-        Color borderHover = Color.FromArgb(100, 100, 100);
+        Color offBase = UITheme.ToggleSwitchOffBase;
+        Color offBaseHover = UITheme.ToggleSwitchOffBaseHover;
+        Color border = UITheme.ToggleSwitchBorder;
+        Color borderHover = UITheme.ToggleSwitchBorderHover;
 
-        Color onRed = Color.FromArgb(180, 45, 45);
-        Color onRedHover = Color.FromArgb(195, 55, 55);
+        Color onRed = UITheme.ToggleSwitchOnRed;
+        Color onRedHover = UITheme.ToggleSwitchOnRedHover;
 
         if (!Enabled)
         {
-            offBase = Color.FromArgb(215, 215, 215);
+            offBase = UITheme.ToggleSwitchDisabledOffBase;
             offBaseHover = offBase;
-            onRed = Color.FromArgb(190, 190, 190);
+            onRed = UITheme.ToggleSwitchDisabledOn;
             onRedHover = onRed;
-            border = Color.FromArgb(180, 180, 180);
+            border = UITheme.ToggleSwitchDisabledBorder;
             borderHover = border;
         }
 
@@ -269,7 +270,7 @@ public class ToggleSwitch : Control
         using (GraphicsPath shadowPath = RoundedRect(
                    new RectangleF(track.X, track.Y + shadowYOffset, track.Width, track.Height),
                    radius))
-        using (Brush trackShadow = new SolidBrush(Color.FromArgb(shadowAlpha, 0, 0, 0)))
+        using (Brush trackShadow = new SolidBrush(UITheme.WithAlpha(UITheme.Black, shadowAlpha)))
         {
             g.FillPath(trackShadow, shadowPath);
         }
@@ -289,8 +290,8 @@ public class ToggleSwitch : Control
                 RectangleF gloss = new RectangleF(track.X, track.Y, track.Width, track.Height * 0.4f);
                 using (Brush glossBrush = new LinearGradientBrush(
                            gloss,
-                           Color.FromArgb(Enabled ? 120 : 50, Color.White),
-                           Color.FromArgb(0, Color.White),
+                           UITheme.WithAlpha(UITheme.White, Enabled ? 120 : 50),
+                           UITheme.WithAlpha(UITheme.White, 0),
                            LinearGradientMode.Vertical))
                 {
                     g.FillRectangle(glossBrush, gloss);
@@ -306,7 +307,7 @@ public class ToggleSwitch : Control
             {
                 RectangleF focusRect = Inflate(track, 1.0f);
                 using (GraphicsPath focusPath = RoundedRect(focusRect, focusRect.Height / 2f))
-                using (Pen focusPen = new Pen(Color.FromArgb(120, 90, 140, 255), 1.6f))
+                using (Pen focusPen = new Pen(UITheme.ToggleSwitchFocusRing, 1.6f))
                 {
                     g.DrawPath(focusPen, focusPath);
                 }
@@ -325,10 +326,10 @@ public class ToggleSwitch : Control
             float sx = pressed ? 1.2f : 1.8f;
             float sy = pressed ? 1.5f : 2.2f;
 
-            using (Brush sh = new SolidBrush(Color.FromArgb(thumbShadowAlpha, 0, 0, 0)))
+            using (Brush sh = new SolidBrush(UITheme.WithAlpha(UITheme.Black, thumbShadowAlpha)))
                 g.FillEllipse(sh, thumb.X + sx, thumb.Y + sy, thumb.Width, thumb.Height);
 
-            using (Brush fill = new SolidBrush(Color.White))
+            using (Brush fill = new SolidBrush(UITheme.White))
                 g.FillPath(fill, thumbPath);
 
             RectangleF innerThumb = Inflate(thumb, -1.2f);
@@ -337,8 +338,8 @@ public class ToggleSwitch : Control
                 g.SetClip(innerThumbPath);
                 using (Brush glow = new LinearGradientBrush(
                            innerThumb,
-                           Color.FromArgb(110, Color.White),
-                           Color.FromArgb(0, Color.White),
+                           UITheme.WithAlpha(UITheme.White, 110),
+                           UITheme.WithAlpha(UITheme.White, 0),
                            LinearGradientMode.Vertical))
                 {
                     g.FillRectangle(glow, innerThumb);
@@ -346,7 +347,7 @@ public class ToggleSwitch : Control
                 g.ResetClip();
             }
 
-            using (Pen outline = new Pen(Color.FromArgb(120, 120, 120)))
+            using (Pen outline = new Pen(UITheme.ToggleSwitchThumbOutline))
                 g.DrawPath(outline, thumbPath);
 
             float cx = thumb.X + thumb.Width / 2f;
@@ -354,7 +355,7 @@ public class ToggleSwitch : Control
             float gy2 = thumb.Bottom - thumb.Height * 0.25f;
 
             g.SetClip(thumbPath);
-            using (Pen groove = new Pen(Color.Black, 1.8f))
+            using (Pen groove = new Pen(UITheme.Black, 1.8f))
             {
                 groove.StartCap = LineCap.Round;
                 groove.EndCap = LineCap.Round;
@@ -430,7 +431,7 @@ public class ToggleSwitch : Control
                     float u = (x + 0.5f) / texW;
                     float t = SmoothStep(lo, hi, u);
                     float amountOn = 1f - t;
-                    bmp.SetPixel(x, 0, LerpRgb(offCol, onCol, amountOn));
+                    bmp.SetPixel(x, 0, UITheme.LerpRgb(offCol, onCol, amountOn));
                 }
             }
 
@@ -462,17 +463,6 @@ public class ToggleSwitch : Control
         if (x >= edge1) return 1f;
         float t = (x - edge0) / (edge1 - edge0);
         return t * t * (3f - 2f * t);
-    }
-
-    private static Color LerpRgb(Color a, Color b, float k)
-    {
-        if (k < 0f) k = 0f;
-        else if (k > 1f) k = 1f;
-        return Color.FromArgb(
-            (int)(a.A + (b.A - a.A) * k + 0.5f),
-            (int)(a.R + (b.R - a.R) * k + 0.5f),
-            (int)(a.G + (b.G - a.G) * k + 0.5f),
-            (int)(a.B + (b.B - a.B) * k + 0.5f));
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
 using System;
+using Bahtinov_Collimator;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -21,7 +22,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Color of the outer border.
         /// </summary>
-        public Color BorderColor { get; set; } = Color.Gray;
+        public Color BorderColor { get; set; } = UITheme.BorderDefaultGray;
 
         /// <summary>
         /// Thickness of the border line in pixels.
@@ -32,7 +33,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// Background fill color inside the panel.
         /// Use Transparent to keep the control see-through.
         /// </summary>
-        public Color FillColor { get; set; } = Color.Transparent;
+        public Color FillColor { get; set; } = UITheme.Transparent;
 
         #endregion
 

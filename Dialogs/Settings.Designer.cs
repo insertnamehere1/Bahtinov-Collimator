@@ -68,13 +68,13 @@ namespace Bahtinov_Collimator
             // 
             // groupBox3
             // 
-            this.groupBox3.BorderColor = System.Drawing.Color.Gray;
+            this.groupBox3.BorderColor = UITheme.BorderDefaultGray;
             this.groupBox3.BorderThickness = 2;
             this.groupBox3.Controls.Add(this.newtonianRadioButton);
             this.groupBox3.Controls.Add(this.MakCassRadioButton);
             this.groupBox3.Controls.Add(this.SCTRadioButton);
             this.groupBox3.CornerRadius = 12;
-            this.groupBox3.ForeColor = System.Drawing.Color.LightGray;
+            this.groupBox3.ForeColor = UITheme.MenuDarkForeground;
             this.groupBox3.Location = new System.Drawing.Point(284, 14);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox3.Name = "groupBox3";
@@ -125,12 +125,12 @@ namespace Bahtinov_Collimator
             // 
             // minimizeGroupBox
             // 
-            this.minimizeGroupBox.BorderColor = System.Drawing.Color.Gray;
+            this.minimizeGroupBox.BorderColor = UITheme.BorderDefaultGray;
             this.minimizeGroupBox.BorderThickness = 2;
             this.minimizeGroupBox.Controls.Add(this.minimizeLabel);
             this.minimizeGroupBox.Controls.Add(this.minimizeCheckBox);
             this.minimizeGroupBox.CornerRadius = 12;
-            this.minimizeGroupBox.ForeColor = System.Drawing.Color.LightGray;
+            this.minimizeGroupBox.ForeColor = UITheme.MenuDarkForeground;
             this.minimizeGroupBox.Location = new System.Drawing.Point(283, 278);
             this.minimizeGroupBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.minimizeGroupBox.Name = "minimizeGroupBox";
@@ -161,12 +161,12 @@ namespace Bahtinov_Collimator
             // 
             // ErrorSignGroupBox
             // 
-            this.ErrorSignGroupBox.BorderColor = System.Drawing.Color.Gray;
+            this.ErrorSignGroupBox.BorderColor = UITheme.BorderDefaultGray;
             this.ErrorSignGroupBox.BorderThickness = 2;
             this.ErrorSignGroupBox.Controls.Add(this.label2);
             this.ErrorSignGroupBox.Controls.Add(this.errorSignCheckBox);
             this.ErrorSignGroupBox.CornerRadius = 12;
-            this.ErrorSignGroupBox.ForeColor = System.Drawing.Color.LightGray;
+            this.ErrorSignGroupBox.ForeColor = UITheme.MenuDarkForeground;
             this.ErrorSignGroupBox.Location = new System.Drawing.Point(12, 148);
             this.ErrorSignGroupBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ErrorSignGroupBox.Name = "ErrorSignGroupBox";
@@ -197,12 +197,12 @@ namespace Bahtinov_Collimator
             // 
             // keepOnTopGroupBox
             // 
-            this.keepOnTopGroupBox.BorderColor = System.Drawing.Color.Gray;
+            this.keepOnTopGroupBox.BorderColor = UITheme.BorderDefaultGray;
             this.keepOnTopGroupBox.BorderThickness = 2;
             this.keepOnTopGroupBox.Controls.Add(this.onTopLabel);
             this.keepOnTopGroupBox.Controls.Add(this.onTopCheckBox);
             this.keepOnTopGroupBox.CornerRadius = 12;
-            this.keepOnTopGroupBox.ForeColor = System.Drawing.Color.LightGray;
+            this.keepOnTopGroupBox.ForeColor = UITheme.MenuDarkForeground;
             this.keepOnTopGroupBox.Location = new System.Drawing.Point(12, 278);
             this.keepOnTopGroupBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.keepOnTopGroupBox.Name = "keepOnTopGroupBox";
@@ -233,13 +233,13 @@ namespace Bahtinov_Collimator
             // 
             // groupBox4
             // 
-            this.groupBox4.BorderColor = System.Drawing.Color.Gray;
+            this.groupBox4.BorderColor = UITheme.BorderDefaultGray;
             this.groupBox4.BorderThickness = 2;
             this.groupBox4.Controls.Add(this.label3);
             this.groupBox4.Controls.Add(this.historyMakersTextBox);
             this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.CornerRadius = 12;
-            this.groupBox4.ForeColor = System.Drawing.Color.LightGray;
+            this.groupBox4.ForeColor = UITheme.MenuDarkForeground;
             this.groupBox4.Location = new System.Drawing.Point(283, 147);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox4.Name = "groupBox4";
@@ -278,12 +278,12 @@ namespace Bahtinov_Collimator
             // 
             // groupBox1
             // 
-            this.groupBox1.BorderColor = System.Drawing.Color.Gray;
+            this.groupBox1.BorderColor = UITheme.BorderDefaultGray;
             this.groupBox1.BorderThickness = 2;
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.VoiceCheckBox);
             this.groupBox1.CornerRadius = 12;
-            this.groupBox1.ForeColor = System.Drawing.Color.LightGray;
+            this.groupBox1.ForeColor = UITheme.MenuDarkForeground;
             this.groupBox1.Location = new System.Drawing.Point(12, 14);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
@@ -315,15 +315,15 @@ namespace Bahtinov_Collimator
             // 
             // CancelSettingsButton
             // 
-            this.CancelSettingsButton.BackColor = System.Drawing.Color.DimGray;
-            this.CancelSettingsButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
-            this.CancelSettingsButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.CancelSettingsButton.BackColor = UITheme.ButtonDarkBackground;
+            this.CancelSettingsButton.BevelDark = UITheme.RoundedButtonBevelDark;
+            this.CancelSettingsButton.BevelLight = UITheme.RoundedButtonBevelLight;
             this.CancelSettingsButton.BevelThickness = 4;
             this.CancelSettingsButton.CornerRadius = 6;
             this.CancelSettingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.CancelSettingsButton.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.CancelSettingsButton.ForeColor = System.Drawing.Color.LightGray;
-            this.CancelSettingsButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.CancelSettingsButton.ForeColor = UITheme.MenuDarkForeground;
+            this.CancelSettingsButton.HoverOverlay = UITheme.RoundedButtonHoverOverlay;
             this.CancelSettingsButton.ImageHeight = 32;
             this.CancelSettingsButton.ImageOffsetX = 60;
             this.CancelSettingsButton.ImageOffsetY = 0;
@@ -331,7 +331,7 @@ namespace Bahtinov_Collimator
             this.CancelSettingsButton.Location = new System.Drawing.Point(424, 415);
             this.CancelSettingsButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.CancelSettingsButton.Name = "CancelSettingsButton";
-            this.CancelSettingsButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.CancelSettingsButton.PressedOverlay = UITheme.RoundedButtonPressedOverlay;
             this.CancelSettingsButton.Size = new System.Drawing.Size(120, 35);
             this.CancelSettingsButton.TabIndex = 14;
             this.CancelSettingsButton.Text = "Cancel";
@@ -341,15 +341,15 @@ namespace Bahtinov_Collimator
             // 
             // okButton
             // 
-            this.okButton.BackColor = System.Drawing.Color.DimGray;
-            this.okButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
-            this.okButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.okButton.BackColor = UITheme.ButtonDarkBackground;
+            this.okButton.BevelDark = UITheme.RoundedButtonBevelDark;
+            this.okButton.BevelLight = UITheme.RoundedButtonBevelLight;
             this.okButton.BevelThickness = 4;
             this.okButton.CornerRadius = 6;
             this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.okButton.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.okButton.ForeColor = System.Drawing.Color.LightGray;
-            this.okButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.okButton.ForeColor = UITheme.MenuDarkForeground;
+            this.okButton.HoverOverlay = UITheme.RoundedButtonHoverOverlay;
             this.okButton.ImageHeight = 32;
             this.okButton.ImageOffsetX = 60;
             this.okButton.ImageOffsetY = 0;
@@ -357,7 +357,7 @@ namespace Bahtinov_Collimator
             this.okButton.Location = new System.Drawing.Point(290, 415);
             this.okButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.okButton.Name = "okButton";
-            this.okButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.okButton.PressedOverlay = UITheme.RoundedButtonPressedOverlay;
             this.okButton.Size = new System.Drawing.Size(120, 35);
             this.okButton.TabIndex = 13;
             this.okButton.Text = "Save";
@@ -369,7 +369,7 @@ namespace Bahtinov_Collimator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
+            this.BackColor = UITheme.DarkBackground;
             this.ClientSize = new System.Drawing.Size(563, 468);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.minimizeGroupBox);
@@ -380,7 +380,7 @@ namespace Bahtinov_Collimator
             this.Controls.Add(this.CancelSettingsButton);
             this.Controls.Add(this.okButton);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(80)))), ((int)(((byte)(90)))));
+            this.ForeColor = UITheme.DarkForeground;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);

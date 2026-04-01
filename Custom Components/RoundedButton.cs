@@ -1,4 +1,5 @@
 using System;
+using Bahtinov_Collimator;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -33,12 +34,12 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Semi-transparent overlay color when the mouse is over the button.
         /// </summary>
-        public Color HoverOverlay { get; set; } = Color.FromArgb(40, Color.White);
+        public Color HoverOverlay { get; set; } = UITheme.RoundedButtonHoverOverlay;
 
         /// <summary>
         /// Semi-transparent overlay color when the button is pressed.
         /// </summary>
-        public Color PressedOverlay { get; set; } = Color.FromArgb(60, Color.Black);
+        public Color PressedOverlay { get; set; } = UITheme.RoundedButtonPressedOverlay;
 
         /// <summary>
         /// Extra horizontal offset in 96-DPI logical pixels applied to the image position.
@@ -61,12 +62,12 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Bevel highlight color that is drawn on the top and right edges.
         /// </summary>
-        public Color BevelLight { get; set; } = Color.FromArgb(220, 255, 255, 255);
+        public Color BevelLight { get; set; } = UITheme.RoundedButtonBevelLight;
 
         /// <summary>
         /// Bevel shadow color that is drawn on the left and bottom edges.
         /// </summary>
-        public Color BevelDark { get; set; } = Color.FromArgb(180, 0, 0, 0);
+        public Color BevelDark { get; set; } = UITheme.RoundedButtonBevelDark;
 
         /// <summary>
         /// Thickness of the bevel line in pixels.

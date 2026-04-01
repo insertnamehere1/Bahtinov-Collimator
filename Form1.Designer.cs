@@ -160,7 +160,7 @@ namespace Bahtinov_Collimator
             // 
             // groupBoxBlue
             // 
-            this.groupBoxBlue.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.groupBoxBlue.ForeColor = UITheme.FocusChannelCaptionForeground;
             this.groupBoxBlue.Location = new System.Drawing.Point(9, 239);
             this.groupBoxBlue.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxBlue.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
@@ -170,7 +170,7 @@ namespace Bahtinov_Collimator
             // 
             // groupBoxGreen
             // 
-            this.groupBoxGreen.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.groupBoxGreen.ForeColor = UITheme.FocusChannelCaptionForeground;
             this.groupBoxGreen.Location = new System.Drawing.Point(9, 131);
             this.groupBoxGreen.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxGreen.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
@@ -180,7 +180,7 @@ namespace Bahtinov_Collimator
             // 
             // groupBoxRed
             // 
-            this.groupBoxRed.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.groupBoxRed.ForeColor = UITheme.FocusChannelCaptionForeground;
             this.groupBoxRed.Location = new System.Drawing.Point(9, 22);
             this.groupBoxRed.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxRed.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
@@ -199,7 +199,7 @@ namespace Bahtinov_Collimator
             // 
             // analysisGroupBox
             // 
-            this.analysisGroupBox.BorderColor = System.Drawing.Color.Gray;
+            this.analysisGroupBox.BorderColor = UITheme.BorderDefaultGray;
             this.analysisGroupBox.BorderThickness = 2;
             this.analysisGroupBox.Controls.Add(this.RoundedStartButton);
             this.analysisGroupBox.Controls.Add(this.toggleSwitch1);
@@ -218,16 +218,16 @@ namespace Bahtinov_Collimator
             // 
             // RoundedStartButton
             // 
-            this.RoundedStartButton.BackColor = System.Drawing.Color.Gray;
-            this.RoundedStartButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
-            this.RoundedStartButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.RoundedStartButton.BackColor = UITheme.RoundedButtonDesignerBackGray;
+            this.RoundedStartButton.BevelDark = UITheme.RoundedButtonBevelDark;
+            this.RoundedStartButton.BevelLight = UITheme.RoundedButtonBevelLight;
             this.RoundedStartButton.BevelThickness = 4;
             this.RoundedStartButton.CornerRadius = 8;
             this.RoundedStartButton.FlatAppearance.BorderSize = 0;
             this.RoundedStartButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RoundedStartButton.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.RoundedStartButton.ForeColor = System.Drawing.Color.White;
-            this.RoundedStartButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.RoundedStartButton.ForeColor = UITheme.White;
+            this.RoundedStartButton.HoverOverlay = UITheme.RoundedButtonHoverOverlay;
             this.RoundedStartButton.Image = ((System.Drawing.Image)(resources.GetObject("RoundedStartButton.Image")));
             this.RoundedStartButton.ImageHeight = 32;
             this.RoundedStartButton.ImageOffsetX = -57;
@@ -236,7 +236,7 @@ namespace Bahtinov_Collimator
             this.RoundedStartButton.Location = new System.Drawing.Point(12, 77);
             this.RoundedStartButton.Margin = new System.Windows.Forms.Padding(32);
             this.RoundedStartButton.Name = "RoundedStartButton";
-            this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.RoundedStartButton.PressedOverlay = UITheme.RoundedButtonPressedOverlay;
             this.RoundedStartButton.Size = new System.Drawing.Size(161, 42);
             this.RoundedStartButton.TabIndex = 25;
             this.RoundedStartButton.Text = "Select Star";
@@ -247,7 +247,7 @@ namespace Bahtinov_Collimator
             // 
             // toggleSwitch1
             // 
-            this.toggleSwitch1.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.toggleSwitch1.BackColor = UITheme.ToggleSwitchDesignerBack;
             this.toggleSwitch1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.toggleSwitch1.Location = new System.Drawing.Point(14, 25);
             this.toggleSwitch1.Margin = new System.Windows.Forms.Padding(32);

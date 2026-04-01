@@ -1,4 +1,5 @@
 using System;
+using Bahtinov_Collimator;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -27,7 +28,7 @@ namespace SkyCal.Custom_Components
 
         private int cornerRadius = 12;
         private int borderThickness = 1;
-        private Color borderColor = Color.Gray;
+        private Color borderColor = UITheme.BorderDefaultGray;
 
         private bool showTitleBar = true;
         private string titleText = "Summary";
@@ -35,8 +36,8 @@ namespace SkyCal.Custom_Components
         private int titlePaddingLeft = 10;
         private bool showTitleSeparator = true;
 
-        private Color titleBackColor = Color.FromArgb(245, 245, 245);
-        private Color titleForeColor = Color.Black;
+        private Color titleBackColor = UITheme.RoundedRichTextTitleBack;
+        private Color titleForeColor = UITheme.TextBoxForeground;
         private Font titleFont;
 
         #region Win32 (Caret suppression + scrollbar chrome)

@@ -1,4 +1,5 @@
 using System;
+using Bahtinov_Collimator;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
@@ -76,17 +77,17 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </remarks>
         private const int BaffleThroughCutLeftInset = 0;
 
-        private static readonly Color GlassDarkBase = Color.FromArgb(70, 190, 190, 190);
+        private static readonly Color GlassDarkBase = UITheme.MirrorSctGlassDarkBase;
 
-        private static readonly Color GlassLightBase = Color.FromArgb(70, 235, 235, 235);
+        private static readonly Color GlassLightBase = UITheme.MirrorSctGlassLightBase;
 
         private const float GlassTintStrength = 1f;
 
         private const float CoatingPenThickness = 2f;
 
-        private static readonly Color MetalDarkBase = Color.FromArgb(150, 150, 150);
+        private static readonly Color MetalDarkBase = UITheme.MirrorSctMetalDarkBase;
 
-        private static readonly Color MetalLightBase = Color.FromArgb(230, 230, 230);
+        private static readonly Color MetalLightBase = UITheme.MirrorSctMetalLightBase;
 
         private const float MetalTintStrength = 0.10f;
 
@@ -96,7 +97,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>Inflate baffle cutout when clipping so coating doesn’t leak into the hole.</summary>
         private const int CoatingClipBaffleInflate = 2;
 
-        private static readonly Color BafflePenColor = Color.DarkGray;
+        private static readonly Color BafflePenColor = UITheme.MirrorSctBafflePen;
 
         private const float BafflePenWidth = 2f;
 

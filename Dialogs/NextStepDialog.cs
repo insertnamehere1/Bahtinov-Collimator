@@ -81,7 +81,7 @@ namespace Bahtinov_Collimator
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
 
             BackColor = UITheme.DarkBackground;
-            ForeColor = Color.White;
+            ForeColor = UITheme.White;
             AcceptButton = okButton;
 
             panelLeftInset = scrollPanel.Left;
@@ -274,7 +274,7 @@ namespace Bahtinov_Collimator
                 AutoSize = false,
                 Text = text ?? "",
                 Font = new Font("Segoe UI", size, style),
-                ForeColor = Color.White,
+                ForeColor = UITheme.White,
                 BackColor = UITheme.DarkBackground,
                 Width = ContentWidth(),
                 Margin = new Padding(
@@ -313,9 +313,9 @@ namespace Bahtinov_Collimator
                 Width = ContentWidth(),
                 Margin = new Padding(0, S(6), 0, S(4)),
                 BorderColor = UITheme.ButtonDarkForeground,
-                FillColor = Color.FromArgb(35, 255, 255, 255),
+                FillColor = UITheme.TitleBoxGlassFill,
                 CornerRadius = 8,
-                ForeColor = Color.White,
+                ForeColor = UITheme.White,
                 BackColor = UITheme.DarkBackground,
                 Font = new Font("Segoe UI", UITheme.NextStepTitleFontSize, FontStyle.Bold)
             };
@@ -335,21 +335,21 @@ namespace Bahtinov_Collimator
                 AutoSize = true,
                 Margin = new Padding(0, S(6), 0, S(4)),
                 BorderColor = UITheme.ButtonDarkForeground,
-                FillColor = Color.FromArgb(35, 255, 255, 255),
+                FillColor = UITheme.TitleBoxGlassFill,
                 CornerRadius = 8,
-                ForeColor = Color.White,
+                ForeColor = UITheme.White,
                 BackColor = UITheme.DarkBackground
             };
 
             if (section.IsSafetyNote)
             {
                 tb.Font = new Font("Segoe UI", UITheme.NextStepFontSize, FontStyle.Bold | FontStyle.Italic);
-                tb.FillColor = Color.FromArgb(45, 255, 200, 0);
+                tb.FillColor = UITheme.NextStepTitleHighlight;
             }
             else if (section.EmphasizeTitle)
             {
                 tb.Font = new Font("Segoe UI", UITheme.NextStepTitleFontSize, FontStyle.Bold);
-                tb.FillColor = Color.FromArgb(40, 255, 255, 255);
+                tb.FillColor = UITheme.NextStepTitleFillNeutral;
             }
             else
             {
@@ -371,7 +371,7 @@ namespace Bahtinov_Collimator
                 BorderStyle = BorderStyle.None,
                 ScrollBars = RichTextBoxScrollBars.None,
                 BackColor = UITheme.DarkBackground,
-                ForeColor = Color.White,
+                ForeColor = UITheme.White,
                 Font = new Font("Segoe UI", UITheme.NextStepFontSize),
                 Width = ContentWidth(),
                 Margin = Padding.Empty,

@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
+using Bahtinov_Collimator;
+
 namespace Bahtinov_Collimator.Custom_Components
 {
     /// <summary>
@@ -21,7 +23,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Color of the rounded border.
         /// </summary>
-        public Color BorderColor { get; set; } = Color.Gray;
+        public Color BorderColor { get; set; } = UITheme.BorderDefaultGray;
 
         /// <summary>
         /// Thickness (in pixels) of the border line.

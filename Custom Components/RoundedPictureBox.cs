@@ -5,6 +5,8 @@ using System.Drawing.Drawing2D;
 using System.Reflection;
 using System.Windows.Forms;
 
+using Bahtinov_Collimator;
+
 namespace Bahtinov_Collimator.Custom_Components
 {
     /// <summary>
@@ -36,7 +38,7 @@ namespace Bahtinov_Collimator.Custom_Components
         #region Fields
 
         private int cornerRadius = 12;
-        private Color borderColor = Color.Gray;
+        private Color borderColor = UITheme.BorderDefaultGray;
         private int borderThickness = 1;
 
         #endregion

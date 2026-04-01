@@ -1,4 +1,5 @@
 using System;
+using Bahtinov_Collimator;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -38,7 +39,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Gets or sets the border color used to draw the title box outline.
         /// </summary>
-        public Color BorderColor { get; set; } = Color.White;
+        public Color BorderColor { get; set; } = UITheme.TitleBoxBorder;
 
         /// <summary>
         /// Gets or sets the border width used to draw the title box outline.
@@ -48,7 +49,7 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Gets or sets the fill color used to paint the title box background.
         /// </summary>
-        public Color FillColor { get; set; } = Color.FromArgb(35, 255, 255, 255);
+        public Color FillColor { get; set; } = UITheme.TitleBoxGlassFill;
 
         #endregion
 
@@ -68,7 +69,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 true);
 
             Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
-            ForeColor = Color.White;
+            ForeColor = UITheme.White;
             BackColor = UITheme.DarkBackground;
             TabStop = false;
         }

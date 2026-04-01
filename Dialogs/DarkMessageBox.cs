@@ -248,7 +248,7 @@ namespace Bahtinov_Collimator
 
             using (Graphics g = Graphics.FromImage(bitmap))
             {
-                g.Clear(Color.Transparent);
+                g.Clear(UITheme.Transparent);
 
                 Icon iconImage = GetIcon(icon, iconSize);
                 g.DrawIcon(iconImage, new Rectangle(0, 0, iconSize, iconSize));

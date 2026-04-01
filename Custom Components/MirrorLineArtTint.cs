@@ -1,3 +1,4 @@
+using Bahtinov_Collimator;
 using System.Drawing;
 
 namespace Bahtinov_Collimator.Custom_Components
@@ -19,7 +20,7 @@ namespace Bahtinov_Collimator.Custom_Components
             int g = (int)(baseColor.G + (tint.G - baseColor.G) * strength);
             int b = (int)(baseColor.B + (tint.B - baseColor.B) * strength);
 
-            return Color.FromArgb(baseColor.A, r, g, b);
+            return UITheme.FromArgb(baseColor.A, r, g, b);
         }
 
         #endregion

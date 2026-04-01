@@ -41,8 +41,8 @@ namespace Bahtinov_Collimator
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.BorderColor = System.Drawing.Color.Gray;
+            this.pictureBox1.BackColor = UITheme.Transparent;
+            this.pictureBox1.BorderColor = UITheme.BorderDefaultGray;
             this.pictureBox1.BorderThickness = 2;
             this.pictureBox1.CornerRadius = 8;
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;

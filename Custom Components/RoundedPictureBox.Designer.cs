@@ -1,3 +1,4 @@
+using Bahtinov_Collimator;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -37,7 +38,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.SuspendLayout();
 
             // Transparent background so parent visuals show through.
-            this.BackColor = Color.Transparent;
+            this.BackColor = UITheme.Transparent;
 
             // Default scaling for images.
             this.SizeMode = PictureBoxSizeMode.Zoom;

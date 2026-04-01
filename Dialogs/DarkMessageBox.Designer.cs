@@ -46,7 +46,7 @@ namespace Bahtinov_Collimator
             // 
             this.messageLabel.AutoSize = true;
             this.messageLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.messageLabel.ForeColor = System.Drawing.Color.White;
+            this.messageLabel.ForeColor = UITheme.White;
             this.messageLabel.Location = new System.Drawing.Point(78, 30);
             this.messageLabel.Name = "messageLabel";
             this.messageLabel.Size = new System.Drawing.Size(46, 17);
@@ -67,7 +67,7 @@ namespace Bahtinov_Collimator
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(35)))));
+            this.panel1.BackColor = UITheme.MessageBoxPanelBackground;
             this.panel1.Controls.Add(this.cancelButton);
             this.panel1.Controls.Add(this.okButton);
             this.panel1.Location = new System.Drawing.Point(5, 196);
@@ -78,22 +78,22 @@ namespace Bahtinov_Collimator
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.BackColor = System.Drawing.Color.DimGray;
-            this.cancelButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
-            this.cancelButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.cancelButton.BackColor = UITheme.ButtonDarkBackground;
+            this.cancelButton.BevelDark = UITheme.RoundedButtonBevelDark;
+            this.cancelButton.BevelLight = UITheme.RoundedButtonBevelLight;
             this.cancelButton.BevelThickness = 4;
             this.cancelButton.CornerRadius = 6;
             this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.cancelButton.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.cancelButton.ForeColor = System.Drawing.Color.LightGray;
-            this.cancelButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.cancelButton.ForeColor = UITheme.ButtonDarkForeground;
+            this.cancelButton.HoverOverlay = UITheme.RoundedButtonHoverOverlay;
             this.cancelButton.ImageHeight = 32;
             this.cancelButton.ImageOffsetX = 60;
             this.cancelButton.ImageOffsetY = 0;
             this.cancelButton.ImageWidth = 32;
             this.cancelButton.Location = new System.Drawing.Point(314, 7);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.cancelButton.PressedOverlay = UITheme.RoundedButtonPressedOverlay;
             this.cancelButton.Size = new System.Drawing.Size(82, 30);
             this.cancelButton.TabIndex = 2;
             this.cancelButton.Text = "Cancel";
@@ -104,22 +104,22 @@ namespace Bahtinov_Collimator
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.BackColor = System.Drawing.Color.DimGray;
-            this.okButton.BevelDark = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
-            this.okButton.BevelLight = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.okButton.BackColor = UITheme.ButtonDarkBackground;
+            this.okButton.BevelDark = UITheme.RoundedButtonBevelDark;
+            this.okButton.BevelLight = UITheme.RoundedButtonBevelLight;
             this.okButton.BevelThickness = 4;
             this.okButton.CornerRadius = 6;
             this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.okButton.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.okButton.ForeColor = System.Drawing.Color.LightGray;
-            this.okButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.okButton.ForeColor = UITheme.ButtonDarkForeground;
+            this.okButton.HoverOverlay = UITheme.RoundedButtonHoverOverlay;
             this.okButton.ImageHeight = 32;
             this.okButton.ImageOffsetX = 60;
             this.okButton.ImageOffsetY = 0;
             this.okButton.ImageWidth = 32;
             this.okButton.Location = new System.Drawing.Point(410, 7);
             this.okButton.Name = "okButton";
-            this.okButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.okButton.PressedOverlay = UITheme.RoundedButtonPressedOverlay;
             this.okButton.Size = new System.Drawing.Size(82, 30);
             this.okButton.TabIndex = 1;
             this.okButton.Text = "OK";
@@ -131,7 +131,7 @@ namespace Bahtinov_Collimator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
+            this.BackColor = UITheme.DarkBackground;
             this.ClientSize = new System.Drawing.Size(472, 273);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.iconBox);
