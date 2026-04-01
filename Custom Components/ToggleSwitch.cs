@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 /// <summary>
@@ -273,22 +274,19 @@ public class ToggleSwitch : Control
             g.FillPath(trackShadow, shadowPath);
         }
 
+        Color onCol = hovered ? onRedHover : onRed;
+        Color offCol = hovered ? offBaseHover : offBase;
+
         using (GraphicsPath trackPath = RoundedRect(track, radius))
         {
-            using (Brush bg = new SolidBrush(hovered ? offBaseHover : offBase))
-                g.FillPath(bg, trackPath);
+            // Always the same texture path so the last animated frame matches snapped 0/1 (no solid-vs-texture pop).
+            FillTrackWithHorizontalBlendTexture(g, trackPath, track, animation, onCol, offCol);
 
-            if (animation > 0f)
+            if (animation > 1e-5f)
             {
-                float w = track.Width * animation;
-                RectangleF red = new RectangleF(track.X, track.Top, w, track.Height);
-
                 g.SetClip(trackPath);
 
-                using (Brush r = new SolidBrush(hovered ? onRedHover : onRed))
-                    g.FillRectangle(r, red);
-
-                RectangleF gloss = new RectangleF(red.X, red.Y, red.Width, red.Height * 0.4f);
+                RectangleF gloss = new RectangleF(track.X, track.Y, track.Width, track.Height * 0.4f);
                 using (Brush glossBrush = new LinearGradientBrush(
                            gloss,
                            Color.FromArgb(Enabled ? 120 : 50, Color.White),
@@ -296,33 +294,6 @@ public class ToggleSwitch : Control
                            LinearGradientMode.Vertical))
                 {
                     g.FillRectangle(glossBrush, gloss);
-                }
-
-                g.ResetClip();
-            }
-
-            RectangleF inner = Inflate(track, -1.6f);
-            using (GraphicsPath innerPath = RoundedRect(inner, inner.Height / 2f))
-            {
-                g.SetClip(innerPath);
-
-                using (Brush topGlow = new LinearGradientBrush(
-                           inner,
-                           Color.FromArgb(60, Color.White),
-                           Color.FromArgb(0, Color.White),
-                           LinearGradientMode.Vertical))
-                {
-                    g.FillRectangle(topGlow, inner);
-                }
-
-                RectangleF bottom = new RectangleF(inner.X, inner.Bottom - inner.Height * 0.5f, inner.Width, inner.Height * 0.5f);
-                using (Brush bottomShade = new LinearGradientBrush(
-                           bottom,
-                           Color.FromArgb(0, Color.Black),
-                           Color.FromArgb(90, Color.Black),
-                           LinearGradientMode.Vertical))
-                {
-                    g.FillRectangle(bottomShade, bottom);
                 }
 
                 g.ResetClip();
@@ -410,6 +381,98 @@ public class ToggleSwitch : Control
         if (d >= 45 && d < 135) return 90;
         if (d >= 135 && d < 225) return 180;
         return 270;
+    }
+
+    /// <summary>
+    /// Fills the track with a single horizontal red→gray blend (no stacked rectangles).
+    /// Uses a 1D texture scaled so the transition stays smooth without a hard vertical edge.
+    /// </summary>
+    private static void FillTrackWithHorizontalBlendTexture(
+        Graphics g,
+        GraphicsPath trackPath,
+        RectangleF track,
+        float animation,
+        Color onCol,
+        Color offCol)
+    {
+        const int texW = 512;
+        float a = animation;
+        if (a < 0f) a = 0f;
+        else if (a > 1f) a = 1f;
+
+        using (Bitmap bmp = new Bitmap(texW, 1, PixelFormat.Format32bppArgb))
+        {
+            if (a <= 0f)
+            {
+                for (int x = 0; x < texW; x++)
+                    bmp.SetPixel(x, 0, offCol);
+            }
+            else if (a >= 1f)
+            {
+                for (int x = 0; x < texW; x++)
+                    bmp.SetPixel(x, 0, onCol);
+            }
+            else
+            {
+                // Blend width shrinks near 0/1 so the ramp does not smear across the whole pill.
+                float halfNorm = Math.Max(0.05f, Math.Min(a, 1f - a) * 0.35f);
+                halfNorm = Math.Max(halfNorm, 3f / texW);
+
+                float lo = a - halfNorm;
+                float hi = a + halfNorm;
+                if (lo < 0f) lo = 0f;
+                if (hi > 1f) hi = 1f;
+                if (lo >= hi)
+                    hi = Math.Min(1f, lo + 1f / texW);
+
+                for (int x = 0; x < texW; x++)
+                {
+                    float u = (x + 0.5f) / texW;
+                    float t = SmoothStep(lo, hi, u);
+                    float amountOn = 1f - t;
+                    bmp.SetPixel(x, 0, LerpRgb(offCol, onCol, amountOn));
+                }
+            }
+
+            using (TextureBrush tb = new TextureBrush(bmp, WrapMode.Clamp))
+            {
+                tb.TranslateTransform(track.X, track.Y);
+                tb.ScaleTransform(track.Width / texW, track.Height);
+
+                InterpolationMode savedI = g.InterpolationMode;
+                PixelOffsetMode savedP = g.PixelOffsetMode;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.PixelOffsetMode = PixelOffsetMode.Half;
+                try
+                {
+                    g.FillPath(tb, trackPath);
+                }
+                finally
+                {
+                    g.InterpolationMode = savedI;
+                    g.PixelOffsetMode = savedP;
+                }
+            }
+        }
+    }
+
+    private static float SmoothStep(float edge0, float edge1, float x)
+    {
+        if (x <= edge0) return 0f;
+        if (x >= edge1) return 1f;
+        float t = (x - edge0) / (edge1 - edge0);
+        return t * t * (3f - 2f * t);
+    }
+
+    private static Color LerpRgb(Color a, Color b, float k)
+    {
+        if (k < 0f) k = 0f;
+        else if (k > 1f) k = 1f;
+        return Color.FromArgb(
+            (int)(a.A + (b.A - a.A) * k + 0.5f),
+            (int)(a.R + (b.R - a.R) * k + 0.5f),
+            (int)(a.G + (b.G - a.G) * k + 0.5f),
+            (int)(a.B + (b.B - a.B) * k + 0.5f));
     }
 
     /// <summary>
