@@ -301,8 +301,8 @@ namespace Bahtinov_Collimator
                 // ------------------------------------------------------------
                 float[,] starArray2D = new float[width, height];
 
-                float cx = (width - 1) * 0.5f;
-                float cy = (height - 1) * 0.5f;
+                float cx = (width + 1) * 0.5f;
+                float cy = (height + 1) * 0.5f;
                 float minDim = Math.Min(width, height);
                 float coreRadius = CORE_RADIUS_FRACTION * minDim;
                 float coreFeather = CORE_FEATHER_FRACTION * minDim;
@@ -382,9 +382,9 @@ namespace Bahtinov_Collimator
                     float sin = (float)Math.Sin(currentRadians);
                     float cos = (float)Math.Cos(currentRadians);
 
-                    // Rotate around center
-                    float cxf = (width - 1) * 0.5f;
-                    float cyf = (height - 1) * 0.5f;
+                    // Rotate around center (same as FindBrightestLines)
+                    float cxf = (width + 1) * 0.5f;
+                    float cyf = (height + 1) * 0.5f;
 
                     for (int y = topEdge; y < bottomEdge; y++)
                     {
@@ -616,21 +616,13 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Enhances the accuracy of line detection in a star image by performing subpixel interpolation.
-        /// 
-        /// The method performs the following steps:
-        /// 1. Initializes the bounding box and scales it according to the DPI settings.
-        /// 2. Reads and processes the image pixel data into a 2D array.
-        /// 3. For each line specified in the <paramref name="bahtinovLines"/> object, applies rotation and interpolation to find the subpixel-accurate position and value of the line.
-        /// 4. Updates the provided <paramref name="bahtinovLines"/> object with the refined line indices and values.
-        /// 
-        /// Returns the updated <see cref="BahtinovData"/> object containing the subpixel-accurate line indices and values.
-        /// 
+        /// Refines line positions using the same green-channel sqrt model as <see cref="FindBrightestLines"/>,
+        /// 3-tap row smoothing, parabolic subpixel peak fit on the 1D profile, with symmetry-based fallback.
+        /// </summary>
         /// <param name="starImage">The bitmap image of the star to be analyzed.</param>
         /// <param name="lineCount">The number of lines to detect and refine.</param>
         /// <param name="bahtinovLines">The <see cref="BahtinovData"/> object containing initial line data to be refined.</param>
         /// <returns>The updated <see cref="BahtinovData"/> object with refined line indices and values.</returns>
-        /// </summary>
         public BahtinovData FindSubpixelLines(Bitmap starImage, int lineCount, BahtinovData bahtinovLines)
         {
             // Define the full rectangle of the image.
@@ -665,27 +657,18 @@ namespace Bahtinov_Collimator
             float divisionFactor = 3f / byte.MaxValue;
 
             float[,] starArray2D = new float[width, height];
-            float pixelValueTotal = 0f;
-            float pixelsCounted = 0f;
 
-            // Process the pixels in the bounding box and populate starArray2D.
+            // Green channel + sqrt, matching FindBrightestLines for consistent geometry vs angle pass.
             for (int x = leftEdge; x < rightEdge; ++x)
             {
                 for (int y = topEdge; y < bottomEdge; ++y)
                 {
                     int pixelIndex = y * stride + x * bytesPerPixel;
-                    if (pixelIndex < 0 || pixelIndex + 2 >= starImageArray.Length)
+                    if (pixelIndex < 0 || pixelIndex + 1 >= starImageArray.Length)
                         continue;
 
-                    // Common WinForms formats are BGR/BGRA in memory.
-                    byte blueValue = starImageArray[pixelIndex];
                     byte greenValue = starImageArray[pixelIndex + 1];
-                    byte redValue = starImageArray[pixelIndex + 2];
-
-                    float pixelValue = (redValue + greenValue + blueValue) * divisionFactor;
-                    starArray2D[x, y] = (float)Math.Sqrt(pixelValue);
-                    pixelValueTotal += starArray2D[x, y];
-                    ++pixelsCounted;
+                    starArray2D[x, y] = (float)Math.Sqrt(greenValue * divisionFactor);
                 }
             }
 
@@ -745,20 +728,30 @@ namespace Bahtinov_Collimator
                     rowTotals[y] = rowTotal / (rightEdge - leftEdge);
                 }
 
+                // Same 3-tap smoothing as FindBrightestLines before peak search
+                float[] smoothedTotals = new float[height];
+                for (int y = topEdge; y < bottomEdge; ++y)
+                {
+                    smoothedTotals[y] = rowTotals[y];
+                    if (y > topEdge && y < bottomEdge - 1)
+                        smoothedTotals[y] = (rowTotals[y - 1] + rowTotals[y] + rowTotals[y + 1]) / 3f;
+                }
+
                 float largestValueForThisRotation = -1f;
-                float lineNumberOfLargestValue = -1f;
+                int yPeak = topEdge;
 
                 for (int y = topEdge; y < bottomEdge; ++y)
                 {
-                    if (rowTotals[y] > largestValueForThisRotation)
+                    if (smoothedTotals[y] > largestValueForThisRotation)
                     {
-                        largestValueForThisRotation = rowTotals[y];
-                        lineNumberOfLargestValue = y;
+                        largestValueForThisRotation = smoothedTotals[y];
+                        yPeak = y;
                     }
                 }
 
-                int yPeak = (int)lineNumberOfLargestValue;
-                float centerY = FindSymmetryCenter(rowTotals, yPeak, topEdge, bottomEdge);
+                float centerY = TryRefinePeakSubpixelParabola(smoothedTotals, yPeak, topEdge, bottomEdge, out float parabolicY)
+                    ? parabolicY
+                    : FindSymmetryCenter(smoothedTotals, yPeak, topEdge, bottomEdge);
                 subpixelLineNumbers[index1] = centerY;
 
                 brightestLineValues[index1] = largestValueForThisRotation;
@@ -769,6 +762,37 @@ namespace Bahtinov_Collimator
                 bahtinovLines.LineIndex[index] = subpixelLineNumbers[index];
             }
             return bahtinovLines;
+        }
+
+        /// <summary>
+        /// Subpixel peak via parabolic fit to three samples around the integer maximum.
+        /// Returns false if the fit is unreliable (edge index, flat peak, or wrong curvature).
+        /// </summary>
+        private static bool TryRefinePeakSubpixelParabola(
+            float[] profile,
+            int peak,
+            int yMin,
+            int yMax,
+            out float centerY)
+        {
+            centerY = peak;
+            if (peak <= yMin || peak >= yMax - 1)
+                return false;
+
+            double a = profile[peak - 1];
+            double b = profile[peak];
+            double c = profile[peak + 1];
+            double denom = a - 2.0 * b + c;
+            if (Math.Abs(denom) < 1e-12 || denom > 0.0)
+                return false;
+
+            double delta = 0.5 * (a - c) / denom;
+            if (double.IsNaN(delta) || double.IsInfinity(delta))
+                return false;
+
+            delta = Math.Max(-0.5, Math.Min(0.5, delta));
+            centerY = (float)(peak + delta);
+            return true;
         }
 
         /// <summary>
@@ -1091,7 +1115,7 @@ namespace Bahtinov_Collimator
                 errorSign *= (Properties.Settings.Default.SignChange ? -1f : 1f);
 
                 double errorDistanceD = Math.Sqrt(dxErr * dxErr + dyErr * dyErr);
-                double bahtinovOffset = errorSign * Math.Floor(errorDistanceD * 10.0) / 10.0;
+                double bahtinovOffset = errorSign * Math.Round(errorDistanceD, 1, MidpointRounding.AwayFromZero);
                 float bahtinovAngle = Math.Abs((bahtinovLines.LineAngles[2] - bahtinovLines.LineAngles[0]) / 2.0f);
 
                 FocusData fd = new FocusData

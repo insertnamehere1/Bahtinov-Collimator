@@ -60,7 +60,6 @@ namespace Bahtinov_Collimator
             // menuStrip1
             // 
             this.menuStrip1.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
@@ -70,8 +69,8 @@ namespace Bahtinov_Collimator
             this.whatDoIDoNextToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 21);
-            this.menuStrip1.Size = new System.Drawing.Size(1326, 80);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 14);
+            this.menuStrip1.Size = new System.Drawing.Size(584, 37);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.MouseEnter += new System.EventHandler(this.MenuStrip1_MouseEnter);
@@ -81,13 +80,13 @@ namespace Bahtinov_Collimator
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.quitToolStripMenuItem2});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(58, 59);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(41, 23);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // quitToolStripMenuItem2
             // 
             this.quitToolStripMenuItem2.Name = "quitToolStripMenuItem2";
-            this.quitToolStripMenuItem2.Size = new System.Drawing.Size(152, 36);
+            this.quitToolStripMenuItem2.Size = new System.Drawing.Size(105, 24);
             this.quitToolStripMenuItem2.Text = "Quit";
             this.quitToolStripMenuItem2.Click += new System.EventHandler(this.QuitToolStripMenuItem2_Click);
             // 
@@ -97,20 +96,20 @@ namespace Bahtinov_Collimator
             this.generalSettingsToolStripMenuItem,
             this.focusCalibrationToolStripMenuItem});
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(79, 59);
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(56, 23);
             this.settingsToolStripMenuItem1.Text = "Setup";
             // 
             // generalSettingsToolStripMenuItem
             // 
             this.generalSettingsToolStripMenuItem.Name = "generalSettingsToolStripMenuItem";
-            this.generalSettingsToolStripMenuItem.Size = new System.Drawing.Size(210, 36);
+            this.generalSettingsToolStripMenuItem.Size = new System.Drawing.Size(144, 24);
             this.generalSettingsToolStripMenuItem.Text = "Settings";
             this.generalSettingsToolStripMenuItem.Click += new System.EventHandler(this.GeneralSettingsToolStripMenuItem_Click);
             // 
             // focusCalibrationToolStripMenuItem
             // 
             this.focusCalibrationToolStripMenuItem.Name = "focusCalibrationToolStripMenuItem";
-            this.focusCalibrationToolStripMenuItem.Size = new System.Drawing.Size(210, 36);
+            this.focusCalibrationToolStripMenuItem.Size = new System.Drawing.Size(144, 24);
             this.focusCalibrationToolStripMenuItem.Text = "Calibration";
             this.focusCalibrationToolStripMenuItem.Click += new System.EventHandler(this.FocusCalibrationToolStripMenuItem_Click);
             // 
@@ -121,80 +120,81 @@ namespace Bahtinov_Collimator
             this.checkForUpdatesToolStripMenuItem,
             this.aboutToolStripMenuItem2});
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(69, 59);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(49, 23);
             this.aboutToolStripMenuItem.Text = "Help";
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(274, 36);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(191, 24);
             this.helpToolStripMenuItem.Text = "User Manual";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.HelpToolStripMenuItem_Click);
             // 
             // checkForUpdatesToolStripMenuItem
             // 
             this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(274, 36);
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(191, 24);
             this.checkForUpdatesToolStripMenuItem.Text = "Check for Updates";
             this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.CheckForUpdatesToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem2
             // 
             this.aboutToolStripMenuItem2.Name = "aboutToolStripMenuItem2";
-            this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(274, 36);
+            this.aboutToolStripMenuItem2.Size = new System.Drawing.Size(191, 24);
             this.aboutToolStripMenuItem2.Text = "About";
             this.aboutToolStripMenuItem2.Click += new System.EventHandler(this.AboutToolStripMenuItem2_Click);
             // 
             // pleaseDonateToolStripMenuItem
             // 
             this.pleaseDonateToolStripMenuItem.Name = "pleaseDonateToolStripMenuItem";
-            this.pleaseDonateToolStripMenuItem.Size = new System.Drawing.Size(163, 59);
+            this.pleaseDonateToolStripMenuItem.Size = new System.Drawing.Size(114, 23);
             this.pleaseDonateToolStripMenuItem.Text = "Support SkyCal";
             this.pleaseDonateToolStripMenuItem.Click += new System.EventHandler(this.PleaseDonateToolStripMenuItem_Click);
             // 
             // whatDoIDoNextToolStripMenuItem
             // 
             this.whatDoIDoNextToolStripMenuItem.Name = "whatDoIDoNextToolStripMenuItem";
-            this.whatDoIDoNextToolStripMenuItem.Size = new System.Drawing.Size(238, 59);
+            this.whatDoIDoNextToolStripMenuItem.Size = new System.Drawing.Size(168, 23);
             this.whatDoIDoNextToolStripMenuItem.Text = "What Should I Do Next?";
             this.whatDoIDoNextToolStripMenuItem.Click += new System.EventHandler(this.WhatDoIDoNextToolStripMenuItem_Click);
             // 
             // groupBoxBlue
             // 
             this.groupBoxBlue.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.groupBoxBlue.Location = new System.Drawing.Point(14, 358);
-            this.groupBoxBlue.Margin = new System.Windows.Forms.Padding(32, 21, 32, 21);
+            this.groupBoxBlue.Location = new System.Drawing.Point(9, 239);
+            this.groupBoxBlue.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxBlue.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
             this.groupBoxBlue.Name = "groupBoxBlue";
-            this.groupBoxBlue.Size = new System.Drawing.Size(278, 158);
+            this.groupBoxBlue.Size = new System.Drawing.Size(185, 105);
             this.groupBoxBlue.TabIndex = 36;
             // 
             // groupBoxGreen
             // 
             this.groupBoxGreen.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.groupBoxGreen.Location = new System.Drawing.Point(14, 196);
-            this.groupBoxGreen.Margin = new System.Windows.Forms.Padding(32, 21, 32, 21);
+            this.groupBoxGreen.Location = new System.Drawing.Point(9, 131);
+            this.groupBoxGreen.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxGreen.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
             this.groupBoxGreen.Name = "groupBoxGreen";
-            this.groupBoxGreen.Size = new System.Drawing.Size(278, 158);
+            this.groupBoxGreen.Size = new System.Drawing.Size(185, 105);
             this.groupBoxGreen.TabIndex = 35;
             // 
             // groupBoxRed
             // 
             this.groupBoxRed.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.groupBoxRed.Location = new System.Drawing.Point(14, 33);
-            this.groupBoxRed.Margin = new System.Windows.Forms.Padding(32, 21, 32, 21);
+            this.groupBoxRed.Location = new System.Drawing.Point(9, 22);
+            this.groupBoxRed.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.groupBoxRed.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
             this.groupBoxRed.Name = "groupBoxRed";
-            this.groupBoxRed.Size = new System.Drawing.Size(278, 158);
+            this.groupBoxRed.Size = new System.Drawing.Size(185, 105);
             this.groupBoxRed.TabIndex = 34;
             // 
             // imageDisplayComponent1
             // 
-            this.imageDisplayComponent1.Location = new System.Drawing.Point(303, 45);
-            this.imageDisplayComponent1.Margin = new System.Windows.Forms.Padding(32, 21, 32, 21);
+            this.imageDisplayComponent1.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.imageDisplayComponent1.Location = new System.Drawing.Point(202, 30);
+            this.imageDisplayComponent1.Margin = new System.Windows.Forms.Padding(21, 14, 21, 14);
             this.imageDisplayComponent1.Name = "imageDisplayComponent1";
-            this.imageDisplayComponent1.Size = new System.Drawing.Size(675, 675);
+            this.imageDisplayComponent1.Size = new System.Drawing.Size(450, 450);
             this.imageDisplayComponent1.TabIndex = 29;
             // 
             // analysisGroupBox
@@ -207,11 +207,11 @@ namespace Bahtinov_Collimator
             this.analysisGroupBox.Controls.Add(this.defocusLabel);
             this.analysisGroupBox.CornerRadius = 12;
             this.analysisGroupBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.analysisGroupBox.Location = new System.Drawing.Point(14, 522);
-            this.analysisGroupBox.Margin = new System.Windows.Forms.Padding(48, 48, 48, 48);
+            this.analysisGroupBox.Location = new System.Drawing.Point(9, 348);
+            this.analysisGroupBox.Margin = new System.Windows.Forms.Padding(32, 32, 32, 32);
             this.analysisGroupBox.Name = "analysisGroupBox";
-            this.analysisGroupBox.Padding = new System.Windows.Forms.Padding(48, 48, 48, 48);
-            this.analysisGroupBox.Size = new System.Drawing.Size(278, 196);
+            this.analysisGroupBox.Padding = new System.Windows.Forms.Padding(32, 32, 32, 32);
+            this.analysisGroupBox.Size = new System.Drawing.Size(185, 131);
             this.analysisGroupBox.TabIndex = 28;
             this.analysisGroupBox.TabStop = false;
             this.analysisGroupBox.Text = "roundedGroupBox1";
@@ -233,11 +233,11 @@ namespace Bahtinov_Collimator
             this.RoundedStartButton.ImageOffsetX = -57;
             this.RoundedStartButton.ImageOffsetY = 0;
             this.RoundedStartButton.ImageWidth = 32;
-            this.RoundedStartButton.Location = new System.Drawing.Point(18, 116);
-            this.RoundedStartButton.Margin = new System.Windows.Forms.Padding(48, 48, 48, 48);
+            this.RoundedStartButton.Location = new System.Drawing.Point(12, 77);
+            this.RoundedStartButton.Margin = new System.Windows.Forms.Padding(32, 32, 32, 32);
             this.RoundedStartButton.Name = "RoundedStartButton";
             this.RoundedStartButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.RoundedStartButton.Size = new System.Drawing.Size(242, 63);
+            this.RoundedStartButton.Size = new System.Drawing.Size(161, 42);
             this.RoundedStartButton.TabIndex = 25;
             this.RoundedStartButton.Text = "Select Star";
             this.RoundedStartButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -249,11 +249,11 @@ namespace Bahtinov_Collimator
             // 
             this.toggleSwitch1.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.toggleSwitch1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.toggleSwitch1.Location = new System.Drawing.Point(36, 38);
-            this.toggleSwitch1.Margin = new System.Windows.Forms.Padding(48, 48, 48, 48);
+            this.toggleSwitch1.Location = new System.Drawing.Point(24, 25);
+            this.toggleSwitch1.Margin = new System.Windows.Forms.Padding(32, 32, 32, 32);
             this.toggleSwitch1.Name = "toggleSwitch1";
             this.toggleSwitch1.RotationDegrees = 90;
-            this.toggleSwitch1.Size = new System.Drawing.Size(30, 60);
+            this.toggleSwitch1.Size = new System.Drawing.Size(20, 40);
             this.toggleSwitch1.TabIndex = 26;
             this.toggleSwitch1.Text = "toggleSwitch1";
             // 
@@ -261,10 +261,10 @@ namespace Bahtinov_Collimator
             // 
             this.bahtinovLabel.AutoSize = true;
             this.bahtinovLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bahtinovLabel.Location = new System.Drawing.Point(68, 38);
-            this.bahtinovLabel.Margin = new System.Windows.Forms.Padding(21, 0, 21, 0);
+            this.bahtinovLabel.Location = new System.Drawing.Point(45, 25);
+            this.bahtinovLabel.Margin = new System.Windows.Forms.Padding(14, 0, 14, 0);
             this.bahtinovLabel.Name = "bahtinovLabel";
-            this.bahtinovLabel.Size = new System.Drawing.Size(80, 22);
+            this.bahtinovLabel.Size = new System.Drawing.Size(54, 15);
             this.bahtinovLabel.TabIndex = 22;
             this.bahtinovLabel.Text = "Bahtinov";
             this.bahtinovLabel.Click += new System.EventHandler(this.BahtinovLabel_Click);
@@ -273,33 +273,33 @@ namespace Bahtinov_Collimator
             // 
             this.defocusLabel.AutoSize = true;
             this.defocusLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.defocusLabel.Location = new System.Drawing.Point(68, 70);
-            this.defocusLabel.Margin = new System.Windows.Forms.Padding(21, 0, 21, 0);
+            this.defocusLabel.Location = new System.Drawing.Point(45, 49);
+            this.defocusLabel.Margin = new System.Windows.Forms.Padding(14, 0, 14, 0);
             this.defocusLabel.Name = "defocusLabel";
-            this.defocusLabel.Size = new System.Drawing.Size(76, 22);
+            this.defocusLabel.Size = new System.Drawing.Size(50, 15);
             this.defocusLabel.TabIndex = 23;
             this.defocusLabel.Text = "Defocus";
             this.defocusLabel.Click += new System.EventHandler(this.DefocusLabel_Click);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(988, 730);
-            this.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.ClientSize = new System.Drawing.Size(659, 487);
             this.Controls.Add(this.groupBoxBlue);
             this.Controls.Add(this.groupBoxGreen);
             this.Controls.Add(this.groupBoxRed);
             this.Controls.Add(this.imageDisplayComponent1);
             this.Controls.Add(this.analysisGroupBox);
             this.Controls.Add(this.menuStrip1);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(60, 60, 60, 60);
+            this.Margin = new System.Windows.Forms.Padding(40, 40, 40, 40);
             this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Padding = new System.Windows.Forms.Padding(0, 0, 112, 112);
+            this.Padding = new System.Windows.Forms.Padding(0, 0, 75, 75);
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "SkyCal - Focus and Collimation Tool";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
