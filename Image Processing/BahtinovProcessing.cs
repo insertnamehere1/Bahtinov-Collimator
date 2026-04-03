@@ -967,6 +967,8 @@ namespace Bahtinov_Collimator
             float starImage_X_Centre = (float)(width + 1.0) / 2.0f;
             float starImage_Y_Centre = (float)(height + 1.0) / 2.0f;
             float yOffset = 0.0f;
+            // Empirical +1px Y nudge so overlays align with the captured image (legacy height−Y screen mapping).
+            const float BahtinovOverlayScreenYOffset = 1f;
 
             // Choose a small epsilon relative to image size for robust parallel checks
             double eps = Math.Max(width, height) * 1e-12; // very strict, yet safe for 500x500
@@ -1015,8 +1017,8 @@ namespace Bahtinov_Collimator
 
                     // Add to group for drawing (screen coordinates with Y flipped as you had)
                     var bahtinovLine = new BahtinovLineDataEventArgs.Line(
-                        new Point((int)Math.Round(lineStart_X), (int)Math.Round(height - lineStart_Y + yOffset)),
-                        new Point((int)Math.Round(lineEnd_X), (int)Math.Round(height - lineEnd_Y + yOffset)),
+                        new Point((int)Math.Round(lineStart_X), (int)Math.Round(height - lineStart_Y + yOffset + BahtinovOverlayScreenYOffset)),
+                        new Point((int)Math.Round(lineEnd_X), (int)Math.Round(height - lineEnd_Y + yOffset + BahtinovOverlayScreenYOffset)),
                         index
                     );
                     lineGroup.AddLine(bahtinovLine);
@@ -1143,7 +1145,7 @@ namespace Bahtinov_Collimator
 
                 int circleRadius = UITheme.ErrorCircleRadius;
                 int circle_x = (int)(errorMarker_X - circleRadius);
-                int circle_y = (int)(height - errorMarker_Y - circleRadius + yOffset);
+                int circle_y = (int)(height - errorMarker_Y - circleRadius + yOffset + BahtinovOverlayScreenYOffset);
                 int circle_width = circleRadius * 2;
                 int circle_height = circleRadius * 2;
                 string errorValue = bahtinovOffset.ToString("F1");
@@ -1168,9 +1170,9 @@ namespace Bahtinov_Collimator
                 float rotatedY2 = (float)(lineX2 * Math.Sin(-bahtinovLines.LineAngles[1]) + lineY2 * Math.Cos(-bahtinovLines.LineAngles[1]));
 
                 rotatedX1 += errorMarker_X;
-                rotatedY1 += height - errorMarker_Y;
+                rotatedY1 += height - errorMarker_Y + BahtinovOverlayScreenYOffset;
                 rotatedX2 += errorMarker_X;
-                rotatedY2 += height - errorMarker_Y;
+                rotatedY2 += height - errorMarker_Y + BahtinovOverlayScreenYOffset;
 
                 lineGroup.ErrorLine = new BahtinovLineDataEventArgs.ErrorLine(
                     new Point((int)rotatedX1, (int)rotatedY1),
