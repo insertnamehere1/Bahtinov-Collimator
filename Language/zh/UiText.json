@@ -51,9 +51,10 @@
   "SettingsMinimizeDescription": "选星时最小化",
   "SettingsMinimizeLabel": "选择恒星图像时最小化 SkyCal",
 
-  "FocusGroupRed": "红色组",
-  "FocusGroupGreen": "绿色组",
-  "FocusGroupBlue": "蓝色组",
+  "FocusGroupRed": "红色误差",
+  "FocusGroupGreen": "绿色误差",
+  "FocusGroupBlue": "蓝色误差",
+  "FocusErrorGroupBox": "对焦误差",
   "FocusLabelFarAway": "太远",
   "FocusLabelClose": "接近",
   "FocusLabelOk": "OK",

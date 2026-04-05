@@ -51,9 +51,10 @@
   "SettingsMinimizeDescription": "星の選択中に最小化",
   "SettingsMinimizeLabel": "星の画像を選択中に SkyCal を最小化",
 
-  "FocusGroupRed": "赤グループ",
-  "FocusGroupGreen": "緑グループ",
-  "FocusGroupBlue": "青グループ",
+  "FocusGroupRed": "赤の誤差",
+  "FocusGroupGreen": "緑の誤差",
+  "FocusGroupBlue": "青の誤差",
+  "FocusErrorGroupBox": "フォーカス誤差",
   "FocusLabelFarAway": "遠すぎる",
   "FocusLabelClose": "近い",
   "FocusLabelOk": "OK",

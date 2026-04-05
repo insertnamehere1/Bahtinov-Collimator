@@ -83,7 +83,8 @@ namespace Bahtinov_Collimator
         /// </summary>
         /// <param name="groupID">Channel index (0 red, 1 green, 2 blue).</param>
         /// <param name="isTribahtinov">True when Tri-Bahtinov mode is active and mirror visualization should be shown.</param>
-        public void ConfigureFocusChannel(int groupID, bool isTribahtinov)
+        /// <param name="soloRedChannel">When true and <paramref name="groupID"/> is red, the group title shows the single-channel focus label.</param>
+        public void ConfigureFocusChannel(int groupID, bool isTribahtinov, bool soloRedChannel = false)
         {
             UnsubscribeToEvents();
 
@@ -95,7 +96,9 @@ namespace Bahtinov_Collimator
             switch (groupID)
             {
                 case 0:
-                    groupBox1.Text = UiText.Current.FocusGroupRed;
+                    groupBox1.Text = soloRedChannel
+                        ? (UiText.Current.FocusErrorGroupBox ?? UiText.Current.FocusGroupRed)
+                        : UiText.Current.FocusGroupRed;
                     break;
                 case 1:
                     groupBox1.Text = UiText.Current.FocusGroupGreen;

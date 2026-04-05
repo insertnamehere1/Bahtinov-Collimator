@@ -66,6 +66,8 @@ namespace Bahtinov_Collimator
         [DataMember] public string FocusGroupRed { get; set; }
         [DataMember] public string FocusGroupGreen { get; set; }
         [DataMember] public string FocusGroupBlue { get; set; }
+        /// <summary>Title for the red focus channel when green/blue channels are hidden (single-channel Bahtinov).</summary>
+        [DataMember] public string FocusErrorGroupBox { get; set; }
         [DataMember] public string FocusLabelFarAway { get; set; }
         [DataMember] public string FocusLabelClose { get; set; }
         [DataMember] public string FocusLabelOk { get; set; }

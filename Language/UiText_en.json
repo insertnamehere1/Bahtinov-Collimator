@@ -44,9 +44,9 @@
   "SettingsInvalidInputMessage": "Invalid input, try again",
   "SettingsInvalidInputTitle": "Warning",
 
-  "FocusGroupRed": "Red Group",
-  "FocusGroupGreen": "Green Group",
-  "FocusGroupBlue": "Blue Group",
+  "FocusGroupRed": "Red Error",
+  "FocusGroupGreen": "Green Error",
+  "FocusGroupBlue": "Blue Error",
   "FocusLabelFarAway": "Far Away",
   "FocusLabelClose": "Close",
   "FocusLabelOk": "OK",

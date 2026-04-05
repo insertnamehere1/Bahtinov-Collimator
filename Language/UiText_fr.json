@@ -44,9 +44,9 @@
   "SettingsInvalidInputMessage": "Entrée invalide, réessayez",
   "SettingsInvalidInputTitle": "Avertissement",
 
-  "FocusGroupRed": "Groupe rouge",
-  "FocusGroupGreen": "Groupe vert",
-  "FocusGroupBlue": "Groupe bleu",
+  "FocusGroupRed": "Erreur rouge",
+  "FocusGroupGreen": "Erreur verte",
+  "FocusGroupBlue": "Erreur bleue",
   "FocusLabelFarAway": "Trop loin",
   "FocusLabelClose": "Proche",
   "FocusLabelOk": "OK",

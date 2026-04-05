@@ -51,9 +51,10 @@
   "SettingsMinimizeDescription": "Minimize while Selecting Star",
   "SettingsMinimizeLabel": "Minimize SkyCal while selecting a star image",
 
-  "FocusGroupRed": "Red Group",
-  "FocusGroupGreen": "Green Group",
-  "FocusGroupBlue": "Blue Group",
+  "FocusGroupRed": "Red Error",
+  "FocusGroupGreen": "Green Error",
+  "FocusGroupBlue": "Blue Error",
+  "FocusErrorGroupBox": "Focus Error",
   "FocusLabelFarAway": "Far Away",
   "FocusLabelClose": "Close",
   "FocusLabelOk": "OK",

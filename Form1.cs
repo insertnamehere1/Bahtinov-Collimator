@@ -340,13 +340,13 @@ namespace Bahtinov_Collimator
         /// Initializes and configures the red focus channel component.
         /// Removes any existing red focus channel component before creating a new one.
         /// </summary>
-        private void InitializeRedFocusBox()
+        private void InitializeRedFocusBox(bool soloRedChannel = true)
         {
             bool isCalibrated = Properties.Settings.Default.CalibrationCompleted;
             bool isTriBahtinov = (bahtinovLineData?.LineValue.Length == 9);
             bool isWidened = isCalibrated && isTriBahtinov;
             groupBoxRed.Visible = true;
-            groupBoxRed.ConfigureFocusChannel(0, isWidened);
+            groupBoxRed.ConfigureFocusChannel(0, isWidened, soloRedChannel);
             groupBoxGreen.Visible = false;
             groupBoxBlue.Visible = false;
         }
@@ -857,7 +857,7 @@ namespace Bahtinov_Collimator
 
                 if (numberOfLines == 9)
                 {
-                    InitializeRedFocusBox();
+                    InitializeRedFocusBox(soloRedChannel: false);
                     InitializeGreenFocusBox();
                     InitializeBlueFocusBox();
 

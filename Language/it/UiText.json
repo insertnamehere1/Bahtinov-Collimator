@@ -51,9 +51,10 @@
   "SettingsMinimizeDescription": "Minimizza alla selezione stella",
   "SettingsMinimizeLabel": "Riduci SkyCal a icona durante la selezione di un'immagine stellare",
 
-  "FocusGroupRed": "Gruppo rosso",
-  "FocusGroupGreen": "Gruppo verde",
-  "FocusGroupBlue": "Gruppo blu",
+  "FocusGroupRed": "Errore rosso",
+  "FocusGroupGreen": "Errore verde",
+  "FocusGroupBlue": "Errore blu",
+  "FocusErrorGroupBox": "Errore di messa a fuoco",
   "FocusLabelFarAway": "Troppo lontano",
   "FocusLabelClose": "Vicino",
   "FocusLabelOk": "OK",
