@@ -97,6 +97,7 @@
   "ImageCaptureSelectionTooSmallForGetImageMessage": "L'area di selezione è troppo piccola.",
   "ImageCaptureUnableCaptureMessage": "Impossibile acquisire l'immagine",
   "ImageCaptureFailedMessage": "Acquisizione immagine fallita",
+  "ImageCaptureSelectionOverlayInstructions": "Clicca e trascina dal centro della stella verso l'esterno finché il cerchio racchiude la stella e le punte Bahtinov, poi rilascia.",
 
   "BahtinovLineDetectionFailedMessage": "Rilevamento delle linee Bahtinov fallito",
   "BahtinovLineDetectionFailedTitle": "Rilevamento linee Bahtinov",

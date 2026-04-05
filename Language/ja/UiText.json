@@ -97,6 +97,7 @@
   "ImageCaptureSelectionTooSmallForGetImageMessage": "選択エリアが小さすぎます。",
   "ImageCaptureUnableCaptureMessage": "画像をキャプチャできません",
   "ImageCaptureFailedMessage": "画像キャプチャに失敗しました",
+  "ImageCaptureSelectionOverlayInstructions": "星の中心から外側へドラッグし、円が星とバフティノフのスパイクを囲むまで広げ、マウスを離します。",
 
   "BahtinovLineDetectionFailedMessage": "バフティノフラインの検出に失敗しました",
   "BahtinovLineDetectionFailedTitle": "RunBahtinovDisplay",

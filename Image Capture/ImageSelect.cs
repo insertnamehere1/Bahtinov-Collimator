@@ -7,11 +7,15 @@ namespace Bahtinov_Collimator
 {
     public class ImageSelect : Form
     {
+        private const int InstructionOuterPad = 20;
+        private const int InstructionInnerPad = 18;
+
         #region Private Fields
 
         private bool selectingArea;
         private Point startPoint;
         private Rectangle _lastSelectionInvalidateBounds;
+        private Rectangle _instructionPanelBounds;
         public Rectangle SelectedArea { get; private set; }
 
         #endregion
@@ -26,6 +30,48 @@ namespace Bahtinov_Collimator
         {
             InitializeForm();
             RegisterEventHandlers();
+        }
+
+        #endregion
+
+        #region Layout
+
+        /// <summary>
+        /// Top-left instruction panel size (for invalidation so it stays visible during partial repaints).
+        /// </summary>
+        private void UpdateInstructionPanelBounds()
+        {
+            int maxPanelW = Math.Min(800, Math.Max(120, ClientSize.Width - 2 * InstructionOuterPad));
+            int maxTextWidth = Math.Max(40, maxPanelW - 2 * InstructionInnerPad);
+            string text = UiText.Current.ImageCaptureSelectionOverlayInstructions;
+            TextFormatFlags measureFlags = TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding;
+            Size textSize = TextRenderer.MeasureText(
+                text,
+                Font,
+                new Size(maxTextWidth, int.MaxValue),
+                measureFlags);
+
+            int panelW = textSize.Width + 2 * InstructionInnerPad;
+            int panelH = textSize.Height + 2 * InstructionInnerPad;
+            int capW = Math.Max(1, ClientSize.Width - 2 * InstructionOuterPad);
+            int capH = Math.Max(1, ClientSize.Height - 2 * InstructionOuterPad);
+            panelW = Math.Min(panelW, capW);
+            panelH = Math.Min(panelH, capH);
+
+            _instructionPanelBounds = new Rectangle(InstructionOuterPad, InstructionOuterPad, panelW, panelH);
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            UpdateInstructionPanelBounds();
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            UpdateInstructionPanelBounds();
+            Invalidate();
         }
 
         #endregion
@@ -45,6 +91,7 @@ namespace Bahtinov_Collimator
             TopMost = true;
             ShowInTaskbar = false;
             DoubleBuffered = true;
+            Font = new Font("Segoe UI", 12.5f, FontStyle.Regular, GraphicsUnit.Point);
         }
 
         /// <summary>
@@ -82,6 +129,8 @@ namespace Bahtinov_Collimator
                 Rectangle invalidateRect = _lastSelectionInvalidateBounds.IsEmpty
                     ? newBounds
                     : Rectangle.Union(_lastSelectionInvalidateBounds, newBounds);
+                if (!_instructionPanelBounds.IsEmpty)
+                    invalidateRect = Rectangle.Union(invalidateRect, _instructionPanelBounds);
                 Invalidate(invalidateRect);
                 _lastSelectionInvalidateBounds = newBounds;
             }
@@ -118,12 +167,49 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Handles the Paint event. Draws the current selection area on the form.
+        /// Handles the Paint event: dim overlay, selection circle while dragging, then instructions on top
+        /// so the semi-transparent circle does not cover the help panel.
         /// </summary>
         private void ScreenSelect_Paint(object sender, PaintEventArgs e)
         {
+            e.Graphics.Clear(BackColor);
             if (selectingArea)
                 DrawSelection(e.Graphics);
+            DrawInstructionPanel(e.Graphics);
+        }
+
+        /// <summary>
+        /// Draws localized instructions in the top-left corner with a white border around the text area.
+        /// </summary>
+        private void DrawInstructionPanel(Graphics graphics)
+        {
+            if (_instructionPanelBounds.Width <= 0 || _instructionPanelBounds.Height <= 0)
+                return;
+
+            string text = UiText.Current.ImageCaptureSelectionOverlayInstructions;
+            var textRect = new Rectangle(
+                _instructionPanelBounds.X + InstructionInnerPad,
+                _instructionPanelBounds.Y + InstructionInnerPad,
+                _instructionPanelBounds.Width - 2 * InstructionInnerPad,
+                _instructionPanelBounds.Height - 2 * InstructionInnerPad);
+
+            using (var surround = new Pen(UITheme.White, 2))
+            {
+                graphics.DrawRectangle(
+                    surround,
+                    _instructionPanelBounds.X,
+                    _instructionPanelBounds.Y,
+                    _instructionPanelBounds.Width - 1,
+                    _instructionPanelBounds.Height - 1);
+            }
+
+            TextRenderer.DrawText(
+                graphics,
+                text,
+                Font,
+                textRect,
+                UITheme.MenuStripForeground,
+                TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl | TextFormatFlags.Top | TextFormatFlags.NoPadding);
         }
 
         /// <summary>
@@ -131,16 +217,15 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void DrawSelection(Graphics graphics)
         {
-            using (var brush = new SolidBrush(UITheme.SelectionCircleFill))
+            graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            graphics.PixelOffsetMode = PixelOffsetMode.Half;
+            if (SelectedArea.Width > 0 && SelectedArea.Height > 0)
             {
-                graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                graphics.PixelOffsetMode = PixelOffsetMode.Half;
-                graphics.Clear(BackColor);
-                if (SelectedArea.Width > 0 && SelectedArea.Height > 0)
+                using (var brush = new SolidBrush(UITheme.SelectionCircleFill))
                 {
                     graphics.FillEllipse(brush, SelectedArea);
-                    DrawSelectionStrokeGradient(graphics, SelectedArea);
                 }
+                DrawSelectionStrokeGradient(graphics, SelectedArea);
             }
         }
 

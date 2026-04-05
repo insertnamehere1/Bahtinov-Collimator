@@ -109,6 +109,7 @@ namespace Bahtinov_Collimator
         [DataMember] public string ImageCaptureSelectionTooSmallForGetImageMessage { get; set; }
         [DataMember] public string ImageCaptureUnableCaptureMessage { get; set; }
         [DataMember] public string ImageCaptureFailedMessage { get; set; }
+        [DataMember] public string ImageCaptureSelectionOverlayInstructions { get; set; }
 
         [DataMember] public string BahtinovLineDetectionFailedMessage { get; set; }
         [DataMember] public string BahtinovLineDetectionFailedTitle { get; set; }

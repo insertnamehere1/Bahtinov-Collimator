@@ -97,6 +97,7 @@
   "ImageCaptureSelectionTooSmallForGetImageMessage": "选择区域太小。",
   "ImageCaptureUnableCaptureMessage": "无法捕获图像",
   "ImageCaptureFailedMessage": "图像捕获失败",
+  "ImageCaptureSelectionOverlayInstructions": "从星点中心向外拖动，直到圆圈包含星体与巴夫廷诺夫尖峰，然后释放鼠标。",
 
   "BahtinovLineDetectionFailedMessage": "Bahtinov 线检测失败",
   "BahtinovLineDetectionFailedTitle": "Bahtinov 线检测",

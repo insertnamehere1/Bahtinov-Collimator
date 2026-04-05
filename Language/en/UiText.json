@@ -97,6 +97,7 @@
   "ImageCaptureSelectionTooSmallForGetImageMessage": "The selection area is too small.",
   "ImageCaptureUnableCaptureMessage": "Unable to capture image",
   "ImageCaptureFailedMessage": "Image capture failed",
+  "ImageCaptureSelectionOverlayInstructions": "Click and drag from the star's centre outward until the circle encloses the star and the Bahtinov spikes, then release.",
 
   "BahtinovLineDetectionFailedMessage": "Failed Bahtinov line detection",
   "BahtinovLineDetectionFailedTitle": "RunBahtinovDisplay",

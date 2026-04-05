@@ -89,6 +89,7 @@
   "ImageCaptureSelectionTooSmallForGetImageMessage": "La zone de sélection est trop petite.",
   "ImageCaptureUnableCaptureMessage": "Impossible de capturer l'image",
   "ImageCaptureFailedMessage": "Échec de la capture d'image",
+  "ImageCaptureSelectionOverlayInstructions": "Cliquez et faites glisser depuis le centre de l'étoile vers l'extérieur jusqu'à ce que le cercle englobe l'étoile et les pointes de Bahtinov, puis relâchez.",
 
   "BahtinovLineDetectionFailedMessage": "Échec de la détection des lignes Bahtinov",
   "BahtinovLineDetectionFailedTitle": "RunBahtinovDisplay",

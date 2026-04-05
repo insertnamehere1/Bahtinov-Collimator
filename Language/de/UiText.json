@@ -97,6 +97,7 @@
   "ImageCaptureSelectionTooSmallForGetImageMessage": "Auswahlbereich ist zu klein.",
   "ImageCaptureUnableCaptureMessage": "Bild konnte nicht erfasst werden",
   "ImageCaptureFailedMessage": "Bildaufnahme fehlgeschlagen",
+  "ImageCaptureSelectionOverlayInstructions": "Klicken und vom Sternzentrum nach außen ziehen, bis der Kreis den Stern und die Bahtinov-Spikes einschließt, dann loslassen.",
 
   "BahtinovLineDetectionFailedMessage": "Bahtinov-Linienerkennung fehlgeschlagen",
   "BahtinovLineDetectionFailedTitle": "Bahtinov-Linienerkennung",
