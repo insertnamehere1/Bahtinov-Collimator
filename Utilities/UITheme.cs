@@ -250,19 +250,14 @@ namespace Bahtinov_Collimator
         public static float SelectionBackgroundTransparency { get; } = 0.7f;
 
         /// <summary>
-        /// Gets the fill color for selection circles.
-        /// </summary>
-        public static Color SelectionCircleInfill { get; } = Color.FromArgb(247, 69, 96);
-
-        /// <summary>
-        /// Gets the border color for selection circles.
+        /// Gets the outline color for selection circles (unfilled ring).
         /// </summary>
         public static Color SelectionCircleBoarder { get; } = Color.Red;
 
         /// <summary>
-        /// Gets the border width for selection circles.
+        /// Gets the stroke width in pixels for the selection circle outline.
         /// </summary>
-        public static int SelectionBoarderWidth { get; } = 3;
+        public static int SelectionBoarderWidth { get; } = 10;
 
         #endregion
 

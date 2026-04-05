@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
@@ -10,6 +11,7 @@ namespace Bahtinov_Collimator
 
         private bool selectingArea;
         private Point startPoint;
+        private Rectangle _lastSelectionInvalidateBounds;
         public Rectangle SelectedArea { get; private set; }
 
         #endregion
@@ -42,6 +44,7 @@ namespace Bahtinov_Collimator
             Opacity = UITheme.SelectionBackgroundTransparency;
             TopMost = true;
             ShowInTaskbar = false;
+            DoubleBuffered = true;
         }
 
         /// <summary>
@@ -62,6 +65,7 @@ namespace Bahtinov_Collimator
         {
             selectingArea = true;
             startPoint = e.Location;
+            _lastSelectionInvalidateBounds = Rectangle.Empty;
         }
 
         /// <summary>
@@ -72,7 +76,14 @@ namespace Bahtinov_Collimator
             if (selectingArea)
             {
                 UpdateSelectedArea(e.Location);
-                Invalidate();
+                Rectangle newBounds = GetSelectionInvalidateBounds(SelectedArea);
+                if (newBounds.IsEmpty)
+                    return;
+                Rectangle invalidateRect = _lastSelectionInvalidateBounds.IsEmpty
+                    ? newBounds
+                    : Rectangle.Union(_lastSelectionInvalidateBounds, newBounds);
+                Invalidate(invalidateRect);
+                _lastSelectionInvalidateBounds = newBounds;
             }
         }
 
@@ -84,6 +95,16 @@ namespace Bahtinov_Collimator
         {
             int radius = (int)Math.Sqrt(Math.Pow(currentPoint.X - startPoint.X, 2) + Math.Pow(currentPoint.Y - startPoint.Y, 2));
             SelectedArea = new Rectangle(startPoint.X - radius, startPoint.Y - radius, radius * 2, radius * 2);
+        }
+
+        private static Rectangle GetSelectionInvalidateBounds(Rectangle selectedArea)
+        {
+            if (selectedArea.Width <= 0 || selectedArea.Height <= 0)
+                return Rectangle.Empty;
+            int pad = (int)Math.Ceiling(UITheme.SelectionBoarderWidth / 2f) + 3;
+            Rectangle r = selectedArea;
+            r.Inflate(pad, pad);
+            return r;
         }
 
         /// <summary>
@@ -106,19 +127,16 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Draws the current selection area as an ellipse on the form.
+        /// Draws the current selection as an unfilled circle (stroke only) on the form.
         /// </summary>
         private void DrawSelection(Graphics graphics)
         {
-            using (var brush = new SolidBrush(UITheme.SelectionCircleInfill))
             using (var pen = new Pen(UITheme.SelectionCircleBoarder, UITheme.SelectionBoarderWidth))
             {
+                graphics.SmoothingMode = SmoothingMode.AntiAlias;
                 graphics.Clear(BackColor);
                 if (SelectedArea.Width > 0 && SelectedArea.Height > 0)
-                {
-                    graphics.FillEllipse(brush, SelectedArea);
                     graphics.DrawEllipse(pen, SelectedArea);
-                }
             }
         }
 
