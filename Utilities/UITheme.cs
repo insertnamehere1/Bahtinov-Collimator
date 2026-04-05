@@ -250,7 +250,12 @@ namespace Bahtinov_Collimator
         public static float SelectionBackgroundTransparency { get; } = 0.7f;
 
         /// <summary>
-        /// Gets the outline color for selection circles (unfilled ring).
+        /// Gets the fill color for the selection circle interior (red with alpha; alpha controls transparency).
+        /// </summary>
+        public static Color SelectionCircleFill { get; } = Color.FromArgb(90, 255, 0, 0);
+
+        /// <summary>
+        /// Gets the outline color for selection circles.
         /// </summary>
         public static Color SelectionCircleBoarder { get; } = Color.Red;
 
@@ -258,6 +263,11 @@ namespace Bahtinov_Collimator
         /// Gets the stroke width in pixels for the selection circle outline.
         /// </summary>
         public static int SelectionBoarderWidth { get; } = 10;
+
+        /// <summary>
+        /// Number of concentric bands used to draw the stroke gradient (inner transparent to outer opaque).
+        /// </summary>
+        public static int SelectionCircleStrokeGradientSteps { get; } = 32;
 
         #endregion
 

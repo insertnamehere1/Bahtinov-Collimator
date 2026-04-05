@@ -127,16 +127,51 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Draws the current selection as an unfilled circle (stroke only) on the form.
+        /// Draws the selection circle with a semi-transparent fill and a radial stroke gradient (transparent inside the band, solid at the outer edge).
         /// </summary>
         private void DrawSelection(Graphics graphics)
         {
-            using (var pen = new Pen(UITheme.SelectionCircleBoarder, UITheme.SelectionBoarderWidth))
+            using (var brush = new SolidBrush(UITheme.SelectionCircleFill))
             {
                 graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                graphics.PixelOffsetMode = PixelOffsetMode.Half;
                 graphics.Clear(BackColor);
                 if (SelectedArea.Width > 0 && SelectedArea.Height > 0)
-                    graphics.DrawEllipse(pen, SelectedArea);
+                {
+                    graphics.FillEllipse(brush, SelectedArea);
+                    DrawSelectionStrokeGradient(graphics, SelectedArea);
+                }
+            }
+        }
+
+        private static void DrawSelectionStrokeGradient(Graphics graphics, Rectangle bounds)
+        {
+            Color border = UITheme.SelectionCircleBoarder;
+            float halfStroke = UITheme.SelectionBoarderWidth / 2f;
+            float cx = bounds.X + bounds.Width / 2f;
+            float cy = bounds.Y + bounds.Height / 2f;
+            float w = bounds.Width;
+            float h = bounds.Height;
+
+            float innerW = Math.Max(0.5f, w - 2f * halfStroke);
+            float innerH = Math.Max(0.5f, h - 2f * halfStroke);
+            float outerW = w + 2f * halfStroke;
+            float outerH = h + 2f * halfStroke;
+
+            int steps = Math.Max(2, UITheme.SelectionCircleStrokeGradientSteps);
+            float penWidth = Math.Max(1f, UITheme.SelectionBoarderWidth / (float)steps);
+
+            for (int i = 0; i < steps; i++)
+            {
+                float u = (i + 0.5f) / steps;
+                float tw = innerW + (outerW - innerW) * u;
+                float th = innerH + (outerH - innerH) * u;
+                int alpha = (int)(255 * u);
+                using (var pen = new Pen(Color.FromArgb(alpha, border.R, border.G, border.B), penWidth))
+                {
+                    var rect = new RectangleF(cx - tw / 2f, cy - th / 2f, tw, th);
+                    graphics.DrawEllipse(pen, rect);
+                }
             }
         }
 
