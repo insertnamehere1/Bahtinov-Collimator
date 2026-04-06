@@ -267,7 +267,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Number of concentric bands used to draw the stroke gradient (inner transparent to outer opaque).
         /// </summary>
-        public static int SelectionCircleStrokeGradientSteps { get; } = 32;
+        public static int SelectionCircleStrokeGradientSteps { get; } = 20;
 
         #endregion
 

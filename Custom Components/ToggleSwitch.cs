@@ -138,23 +138,24 @@ public class ToggleSwitch : Control
     }
 
     /// <summary>
-    /// Shows pressed feedback and focuses the control.
+    /// Toggles on left mouse down, shows pressed feedback, and focuses the control.
     /// </summary>
     protected override void OnMouseDown(MouseEventArgs e)
     {
         base.OnMouseDown(e);
         if (!Enabled) return;
 
-        if (e.Button == MouseButtons.Left)
+        if (e.Button == MouseButtons.Left && ClientRectangle.Contains(e.Location))
         {
             isPressed = true;
             Focus();
+            IsOn = !IsOn;
             Invalidate();
         }
     }
 
     /// <summary>
-    /// Toggles on mouse release when released inside the control bounds.
+    /// Clears pressed feedback on mouse release.
     /// </summary>
     protected override void OnMouseUp(MouseEventArgs e)
     {
@@ -164,11 +165,7 @@ public class ToggleSwitch : Control
         if (isPressed && e.Button == MouseButtons.Left)
         {
             isPressed = false;
-
-            if (ClientRectangle.Contains(e.Location))
-                IsOn = !IsOn;
-            else
-                Invalidate();
+            Invalidate();
         }
     }
 
