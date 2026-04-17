@@ -57,8 +57,14 @@ namespace Bahtinov_Collimator
             messageLabel.Text = message;
             okButton.Text = UiText.Current.CommonOk;
             cancelButton.Text = UiText.Current.CommonCancel;
-            DrawIconInPictureBox(icon); 
+            DrawIconInPictureBox(icon);
             ConfigureButtons(buttons);
+            // Initial baseline (96-DPI) sizing. This gives our DPI-aware
+            // ShowDialog helper a reasonable starting Size to predict the
+            // owner-centered target position. AutoSizeControls is re-run in
+            // OnShown once the dialog has landed on its final monitor so the
+            // panel1 docking is correct even after the cross-monitor DPI
+            // scale.
             AutoSizeControls();
 
             var color = UITheme.DarkBackground;
@@ -235,6 +241,36 @@ namespace Bahtinov_Collimator
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+        }
+
+        /// <summary>
+        /// Finalizes the layout and owner-centered position once the dialog
+        /// has been moved onto the owner's monitor and WinForms has applied
+        /// per-monitor DPI scaling. <see cref="DpiAwareDialog.ShowDialogDpiAware"/>
+        /// has already run its <c>Shown</c> handler by the time we call
+        /// <c>base.OnShown</c>, so at this point <c>DeviceDpi</c> reflects the
+        /// final monitor and <see cref="AutoSizeControls"/> produces pixel
+        /// sizes that actually match what the user will see.
+        /// </summary>
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            AutoSizeControls();
+
+            // Re-center on the owner using the now-final (scaled) size. The
+            // helper's pre-computed center was based on a predicted size; the
+            // final size after AutoSizeControls can differ (it's content-sized
+            // based on the message text), so without this the dialog ends up
+            // visibly off-center on the owner.
+            Form ownerForm = this.Owner;
+            if (ownerForm != null && ownerForm.IsHandleCreated)
+            {
+                Rectangle ob = ownerForm.Bounds;
+                int x = ob.Left + (ob.Width - this.Width) / 2;
+                int y = ob.Top + (ob.Height - this.Height) / 2;
+                this.Location = new Point(x, y);
+            }
         }
 
         /// <summary>

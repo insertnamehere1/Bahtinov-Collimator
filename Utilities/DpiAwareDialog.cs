@@ -88,7 +88,18 @@ namespace Bahtinov_Collimator
                         dialog.Location = recentered;
                 }
 
-                dialog.Opacity = 1d;
+                // Defer restoring Opacity until after the rest of OnShown
+                // (including any override's post-base code, e.g.
+                // DarkMessageBox.OnShown calling AutoSizeControls to finalize
+                // its button-panel layout at the destination-monitor DPI) has
+                // finished. BeginInvoke posts to the message queue, so the
+                // action runs after the current Shown-event/OnShown stack
+                // unwinds, avoiding a visible flash of stale layout.
+                dialog.BeginInvoke((Action)(() =>
+                {
+                    if (!dialog.IsDisposed)
+                        dialog.Opacity = 1d;
+                }));
             };
             dialog.Shown += shownHandler;
 
