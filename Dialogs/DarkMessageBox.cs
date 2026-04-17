@@ -219,14 +219,13 @@ namespace Bahtinov_Collimator
         {
             using (DarkMessageBox customMessageBox = new DarkMessageBox(message, title, buttons, icon))
             {
-                Rectangle ownerRect = owner.Bounds;
-                int x = ownerRect.Left + (ownerRect.Width - customMessageBox.Width) / 2;
-                int y = ownerRect.Top + (ownerRect.Height - customMessageBox.Height) / 2;
-
-                customMessageBox.StartPosition = FormStartPosition.Manual;
-                customMessageBox.Location = new Point(x, y);
-
-                return customMessageBox.ShowDialog(owner);
+                // Let the DPI-aware helper do the centering. Computing an
+                // owner-centered location up front is wrong in multi-DPI
+                // setups because the dialog's Width/Height here are still
+                // at the designer 96-DPI baseline and will grow once the
+                // dialog crosses onto the owner's higher-DPI monitor.
+                customMessageBox.StartPosition = FormStartPosition.CenterParent;
+                return customMessageBox.ShowDialogDpiAware(owner);
             }
         }
 

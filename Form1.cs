@@ -54,6 +54,20 @@ namespace Bahtinov_Collimator
         [DllImport("user32.dll")]
         private static extern uint GetDpiForWindow(IntPtr hwnd);
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+
+        private const int WM_DPICHANGED = 0x02E0;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT
+        {
+            public int left;
+            public int top;
+            public int right;
+            public int bottom;
+        }
+
         #endregion
 
         #region Constants
@@ -160,6 +174,15 @@ namespace Bahtinov_Collimator
         /// </summary>
         private bool screenCaptureRunningFlag = false;
 
+        /// <summary>
+        /// Target position to move the form to after it first becomes visible
+        /// (see <see cref="RestoreWindowPosition"/>). Moving an invisible window
+        /// across a DPI boundary does not refresh the HWND's DC DPI context,
+        /// so we defer the move to OnShown where the form is Windows-visible
+        /// (kept invisible to the user via Opacity).
+        /// </summary>
+        private Point? _pendingMoveTarget;
+
         #endregion
 
         #region Constructors
@@ -173,6 +196,16 @@ namespace Bahtinov_Collimator
 
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
+
+            // Keep the form visually invisible on first show. We need Windows
+            // to treat it as a visible window when we move it to the saved
+            // (potentially high-DPI) monitor so the HWND's DC DPI context
+            // actually refreshes - an INVISIBLE move doesn't refresh the DC,
+            // which leaves 10pt fonts rendering at 13px on a 168-DPI display
+            // ("fonts too small"). By running the move while Opacity == 0,
+            // the window is visible to Windows but not the user; after the
+            // move completes we restore Opacity to 1 in OnShown.
+            this.Opacity = 0d;
 
             // Initialize the form's components.
             InitializeComponent();
@@ -435,6 +468,26 @@ namespace Bahtinov_Collimator
         {
             base.OnShown(e);
 
+            // If we deferred moving the form to a saved (potentially
+            // different-DPI) position, do it now. At this point the form is
+            // Windows-visible (though user-invisible thanks to Opacity == 0
+            // set in the constructor), so crossing into a higher-DPI monitor
+            // here refreshes the HWND's DC DPI context, fires WM_DPICHANGED,
+            // and lets WinForms scale both controls AND fonts correctly for
+            // the first paint. As a belt-and-braces, if WinForms' DeviceDpi
+            // still doesn't match the monitor after the move, synthesize
+            // WM_DPICHANGED ourselves.
+            if (_pendingMoveTarget.HasValue)
+            {
+                Location = _pendingMoveTarget.Value;
+                _pendingMoveTarget = null;
+                SynthesizeDpiChangedIfNeeded();
+            }
+
+            // Now make the form actually visible to the user.
+            if (Opacity < 1d)
+                Opacity = 1d;
+
             SyncAnalysisGroupBoxWidthToFocusColumn();
             ApplyMainWorkspaceLayout();
 
@@ -634,10 +687,64 @@ namespace Bahtinov_Collimator
             if (target == null)
                 return; // first run or invalid saved pos - keep primary default
 
-            // Move to the saved position. If it's on a different-DPI monitor,
-            // Windows fires WM_DPICHANGED and WinForms rescales the form via
-            // its normal AutoScaleMode.Dpi path.
-            this.Location = target.Value;
+            // Defer the move to OnShown instead of doing it here. Moving an
+            // INVISIBLE top-level window across a DPI boundary does not
+            // refresh the HWND's device context DPI - WinForms may scale
+            // control sizes (via WM_DPICHANGED or our synthesize), but the
+            // DC stays at the original 96 DPI for the first paint, so 10pt
+            // fonts render at 13px on a 168-DPI display ("fonts too small").
+            // Doing the move after the form has been shown (while still
+            // user-invisible via Opacity = 0) causes Windows to refresh the
+            // DC DPI, fire WM_DPICHANGED naturally, and paint fonts at the
+            // correct size. See OnShown.
+            _pendingMoveTarget = target;
+        }
+
+        /// <summary>
+        /// If the form's cached DPI does not match the DPI of the monitor its
+        /// HWND is currently on, post a WM_DPICHANGED message to the form so
+        /// WinForms' built-in handler rescales controls, fonts, and bounds.
+        /// No-op when DPIs already match. Retained as a defensive fallback.
+        /// </summary>
+        private void SynthesizeDpiChangedIfNeeded()
+        {
+            if (!IsHandleCreated) return;
+
+            int monitorDpi;
+            try
+            {
+                monitorDpi = (int)GetDpiForWindow(Handle);
+            }
+            catch (DllNotFoundException) { return; }
+            catch (EntryPointNotFoundException) { return; }
+
+            int formDpi = DeviceDpi > 0 ? DeviceDpi : 96;
+            if (monitorDpi <= 0 || monitorDpi == formDpi)
+                return;
+
+            // Suggested new bounds: same top-left, size scaled by DPI ratio.
+            float factor = (float)monitorDpi / formDpi;
+            Rectangle b = Bounds;
+            RECT suggested = new RECT
+            {
+                left = b.Left,
+                top = b.Top,
+                right = b.Left + (int)Math.Round(b.Width * factor),
+                bottom = b.Top + (int)Math.Round(b.Height * factor)
+            };
+
+            IntPtr pRect = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(RECT)));
+            try
+            {
+                Marshal.StructureToPtr(suggested, pRect, false);
+                // wParam: HIWORD = Y DPI, LOWORD = X DPI (both == monitorDpi).
+                IntPtr wParam = (IntPtr)((monitorDpi << 16) | (monitorDpi & 0xFFFF));
+                SendMessage(Handle, WM_DPICHANGED, wParam, pRect);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(pRect);
+            }
         }
 
         #endregion
@@ -835,9 +942,9 @@ namespace Bahtinov_Collimator
         private void AboutToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             AboutBox aboutBox = new AboutBox();
-            PositionDialogInsideMainWindow(aboutBox);
+            aboutBox.StartPosition = FormStartPosition.CenterParent;
             aboutBox.TopMost = this.TopMost;
-            aboutBox.ShowDialog(this);
+            aboutBox.ShowDialogDpiAware(this);
         }
 
         /// <summary>
@@ -846,9 +953,9 @@ namespace Bahtinov_Collimator
         private void PleaseDonateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Donate donate = new Donate();
-            PositionDialogInsideMainWindow(donate);
+            donate.StartPosition = FormStartPosition.CenterParent;
             donate.TopMost = this.TopMost;
-            donate.ShowDialog(this);
+            donate.ShowDialogDpiAware(this);
         }
 
         /// <summary>
@@ -1249,7 +1356,7 @@ namespace Bahtinov_Collimator
                 using (var dlg = new NextStepDialog(guidance, this.Icon))
                 {
                     dlg.TopMost = this.TopMost;
-                    dlg.ShowDialog(this);
+                    dlg.ShowDialogDpiAware(this);
                 }
                 // enable "what should i do next" menu item if we have been calibrated
                 menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted;
@@ -1267,9 +1374,9 @@ namespace Bahtinov_Collimator
         {
             // Settings Dialog
             Settings settingsDialog = new Settings();
-            PositionDialogInsideMainWindow(settingsDialog);
+            settingsDialog.StartPosition = FormStartPosition.CenterParent;
             settingsDialog.TopMost = this.TopMost;
-            DialogResult result = settingsDialog.ShowDialog(this);
+            DialogResult result = settingsDialog.ShowDialogDpiAware(this);
 
             if (result == DialogResult.OK)
             {
@@ -1365,7 +1472,7 @@ namespace Bahtinov_Collimator
             using (var dlg = new SkyCal.StartupDialog())
             {
                 dlg.TopMost = this.TopMost;
-                DialogResult result = dlg.ShowDialog(owner);
+                DialogResult result = dlg.ShowDialogDpiAware(owner);
 
                 if (dlg.DontShowAgain)
                 {
