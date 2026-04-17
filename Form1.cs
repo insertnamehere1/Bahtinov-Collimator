@@ -50,6 +50,10 @@ namespace Bahtinov_Collimator
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
+        /// <summary>Queries the DPI of the monitor hosting the given window.</summary>
+        [DllImport("user32.dll")]
+        private static extern uint GetDpiForWindow(IntPtr hwnd);
+
         #endregion
 
         #region Constants
@@ -172,6 +176,7 @@ namespace Bahtinov_Collimator
 
             // Initialize the form's components.
             InitializeComponent();
+
             imageDisplayComponent1.ClearDisplay(); 
             RestoreWindowPosition();
             ApplyLocalization();
@@ -310,19 +315,129 @@ namespace Bahtinov_Collimator
                 defocusLabel.Location = new Point(labelsX, defocusLabel.Location.Y);
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            // Safety net: if the process ended up running in PerMonitor v1
+            // (so WinForms' AutoScaleMode.Dpi did not fire because DeviceDpi
+            // is stuck at 96 despite being on a higher-DPI monitor), manually
+            // apply the correct scale. When PerMonitorV2 is active this is a
+            // no-op because GetDpiForWindow will equal DeviceDpi.
+            ApplyInitialDpiScaleIfNeeded();
+        }
+
+        private bool initialDpiScaleApplied;
+
         /// <summary>
-        /// Invoked when the main form is first shown to the user.
-        ///
-        /// This override is used to display the optional startup calibration prompt
-        /// after the main window has been created and activated. Showing the dialog
-        /// at this point avoids focus and z-order issues that can occur if modal
-        /// dialogs are displayed earlier in the application startup sequence.
+        /// If the monitor hosting this form reports a different DPI than
+        /// <see cref="Control.DeviceDpi"/>, applies a one-shot
+        /// <see cref="Control.Scale(SizeF)"/> plus font resize so controls and
+        /// text render at the correct physical size. Safe no-op when DPI
+        /// already matches.
         /// </summary>
+        private void ApplyInitialDpiScaleIfNeeded()
+        {
+            if (initialDpiScaleApplied) return;
+            initialDpiScaleApplied = true;
+
+            if (!IsHandleCreated) return;
+
+            int monitorDpi;
+            try
+            {
+                monitorDpi = (int)GetDpiForWindow(Handle);
+            }
+            catch (DllNotFoundException) { return; }
+            catch (EntryPointNotFoundException) { return; }
+
+            int formDpi = DeviceDpi > 0 ? DeviceDpi : 96;
+            if (monitorDpi <= 0 || Math.Abs(monitorDpi - formDpi) <= 1)
+            {
+                UITheme.DeviceDpi = formDpi;
+                return;
+            }
+
+            float factor = (float)monitorDpi / formDpi;
+
+            SuspendLayout();
+            try
+            {
+                // Scale control sizes and positions (does not touch Font).
+                Scale(new SizeF(factor, factor));
+
+                // Recursively scale every Font in the tree: controls (most of
+                // which have a designer-set explicit Font that does NOT inherit
+                // from the form) and ToolStrip / ToolStripItems (which live in
+                // a parallel hierarchy that Control.Controls doesn't expose).
+                ScaleFontsRecursive(this, factor);
+            }
+            finally
+            {
+                ResumeLayout(true);
+            }
+
+            UITheme.DeviceDpi = monitorDpi;
+        }
+
+        /// <summary>
+        /// Recursively multiplies every control and ToolStripItem Font size by
+        /// <paramref name="factor"/>. Ambient-font controls are still touched
+        /// explicitly because we cannot reliably tell which are ambient in all
+        /// framework versions; setting Font to a new instance at the same
+        /// effective size for ambient children is harmless.
+        /// </summary>
+        private static void ScaleFontsRecursive(Control control, float factor)
+        {
+            Font f = control.Font;
+            if (f != null)
+            {
+                control.Font = new Font(
+                    f.FontFamily,
+                    f.Size * factor,
+                    f.Style,
+                    f.Unit,
+                    f.GdiCharSet,
+                    f.GdiVerticalFont);
+            }
+
+            if (control is ToolStrip strip)
+            {
+                foreach (ToolStripItem item in strip.Items)
+                    ScaleToolStripItemFont(item, factor);
+            }
+
+            foreach (Control child in control.Controls)
+                ScaleFontsRecursive(child, factor);
+        }
+
+        private static void ScaleToolStripItemFont(ToolStripItem item, float factor)
+        {
+            Font f = item.Font;
+            if (f != null)
+            {
+                item.Font = new Font(
+                    f.FontFamily,
+                    f.Size * factor,
+                    f.Style,
+                    f.Unit,
+                    f.GdiCharSet,
+                    f.GdiVerticalFont);
+            }
+            if (item is ToolStripDropDownItem dd)
+            {
+                foreach (ToolStripItem child in dd.DropDownItems)
+                    ScaleToolStripItemFont(child, factor);
+            }
+        }
+
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
+
             SyncAnalysisGroupBoxWidthToFocusColumn();
             ApplyMainWorkspaceLayout();
+
             ShowStartupCalibrationPromptIfNeeded(this);
         }
 
@@ -332,6 +447,7 @@ namespace Bahtinov_Collimator
         protected override void OnDpiChanged(DpiChangedEventArgs e)
         {
             base.OnDpiChanged(e);
+
             SyncAnalysisGroupBoxWidthToFocusColumn();
             ApplyMainWorkspaceLayout();
         }
@@ -477,21 +593,51 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void RestoreWindowPosition()
         {
+            // Determine where we ultimately want the window to appear.
             int x = Properties.Settings.Default.MainWindowX;
             int y = Properties.Settings.Default.MainWindowY;
 
-            if (x == -1 && y == -1)
-                return;
-
-            // Ensure the top-left corner of the window is still visible on a screen.
-            Point savedLocation = new Point(x, y);
-            bool isOnScreen = Screen.AllScreens.Any(s => s.WorkingArea.Contains(savedLocation));
-
-            if (isOnScreen)
+            Point? target = null;
+            if (!(x == -1 && y == -1))
             {
-                this.StartPosition = FormStartPosition.Manual;
-                this.Location = savedLocation;
+                Point savedLocation = new Point(x, y);
+                if (Screen.AllScreens.Any(s => s.WorkingArea.Contains(savedLocation)))
+                    target = savedLocation;
             }
+
+            // ALWAYS force handle creation on the primary monitor first, then
+            // (if necessary) move to the final position. This sidesteps a
+            // .NET Framework WinForms quirk where a top-level form whose
+            // handle is created directly on a non-primary (different-DPI)
+            // monitor gets stuck with Form.DeviceDpi == 96 even though the
+            // underlying HWND and child controls are at the real monitor DPI
+            // - a hybrid state that breaks every layout calculation downstream.
+            //
+            // Creating the handle on the primary monitor and THEN moving to
+            // the final position causes Windows to fire WM_DPICHANGED on the
+            // monitor crossing, which drives WinForms' built-in AutoScaleMode.Dpi
+            // path and rescales the form cleanly. The window is still invisible
+            // during this dance, so there is no visible flash.
+            Screen primary = Screen.PrimaryScreen;
+            Point primaryStart = new Point(
+                primary.WorkingArea.Left + 50,
+                primary.WorkingArea.Top + 50);
+
+            this.StartPosition = FormStartPosition.Manual;
+            this.Location = primaryStart;
+
+            // Force handle creation NOW at primaryStart. Accessing Handle
+            // triggers CreateHandle with the current Location. Form is still
+            // invisible at this point.
+            var _ = this.Handle;
+
+            if (target == null)
+                return; // first run or invalid saved pos - keep primary default
+
+            // Move to the saved position. If it's on a different-DPI monitor,
+            // Windows fires WM_DPICHANGED and WinForms rescales the form via
+            // its normal AutoScaleMode.Dpi path.
+            this.Location = target.Value;
         }
 
         #endregion
