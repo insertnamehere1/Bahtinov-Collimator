@@ -51,6 +51,34 @@ namespace Bahtinov_Collimator
         #region Lifecycle and Layout
 
         /// <summary>
+        /// Runs after <see cref="DpiAwareDialog.ShowDialogDpiAware"/> has
+        /// moved the dialog to the owner's monitor and WinForms has finished
+        /// per-monitor DPI scaling. Explicitly re-applies the left-column
+        /// layout so the <c>pictureBox1</c> SkyCal logo is guaranteed to fill
+        /// the full designed vertical extent and so <c>pictureBox2</c> (the
+        /// PayPal icon overlaid at the top of <c>pictureBox1</c>) is visibly
+        /// above it in the z-order. On high-DPI secondary monitors the
+        /// designer's mixed anchors + BeginInit/EndInit resource-loading
+        /// sequence sometimes leaves pictureBox1 mis-sized at zero or near-
+        /// zero height, which manifested as the logo simply not being drawn.
+        /// Setting Bounds here forces a known-good layout at the final DPI.
+        /// </summary>
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            // Keep the existing (DPI-scaled) widths, but pin pictureBox1 to
+            // the full height of the client area so the logo is always drawn
+            // at its full designed size regardless of monitor DPI.
+            int pb1Width = pictureBox1.Width;
+            pictureBox1.Bounds = new Rectangle(0, 1, pb1Width, Math.Max(1, ClientSize.Height - 1));
+
+            // Ensure the PayPal icon stays in front of the SkyCal logo so it
+            // isn't hidden when we resize pictureBox1 above.
+            pictureBox2.BringToFront();
+        }
+
+        /// <summary>
         /// Loads the dialog, checks connectivity, and launches or falls back from the online donation flow.
         /// </summary>
         protected override async void OnLoad(EventArgs e)
@@ -82,7 +110,15 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Resizes the form to match the rendered rich-text content height.
+        /// Resizes the form so the rich-text content fits without scrolling.
+        /// The form is only allowed to GROW - never shrink below its
+        /// designer/DPI-scaled size - so the left-side images
+        /// (<c>pictureBox1</c>, which is anchored Top|Bottom|Left) always have
+        /// the full designed vertical space and don't end up squashed at the
+        /// top of the dialog. This matters especially on high-DPI secondary
+        /// monitors where the text box is proportionally wider, the text
+        /// wraps into fewer lines, and the measured content height is much
+        /// smaller than the baseline richTextBox height.
         /// </summary>
         private void ResizeFormToContent()
         {
@@ -95,12 +131,30 @@ namespace Bahtinov_Collimator
             richTextBox.Height = 32000;
 
             Point lastPos = richTextBox.GetPositionFromCharIndex(richTextBox.TextLength - 1);
-            int lineHeight = TextRenderer.MeasureText("W", richTextBox.Font).Height;
-            int contentHeight = lastPos.Y + lineHeight + 8;
 
+            // Measure using the richTextBox's own device context so the line
+            // height is in the SAME DPI space as lastPos.Y. The parameterless
+            // TextRenderer.MeasureText overload falls back to a 96-DPI screen
+            // DC, which would mix coordinate spaces on a per-monitor-DPI
+            // display and under-report contentHeight on e.g. 168-DPI monitors.
+            int lineHeight;
+            using (Graphics g = richTextBox.CreateGraphics())
+            {
+                lineHeight = TextRenderer.MeasureText(g, "W", richTextBox.Font).Height;
+            }
+
+            int contentHeight = lastPos.Y + lineHeight + 8;
             int diff = contentHeight - savedHeight;
-            richTextBox.Height = contentHeight;
-            Height += diff;
+
+            if (diff > 0)
+            {
+                richTextBox.Height = contentHeight;
+                Height += diff;
+            }
+            else
+            {
+                richTextBox.Height = savedHeight;
+            }
 
             richTextBox.Anchor = savedAnchor;
         }
