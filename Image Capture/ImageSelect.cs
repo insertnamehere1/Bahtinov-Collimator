@@ -38,10 +38,15 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Top-left instruction panel size (for invalidation so it stays visible during partial repaints).
+        /// Anchored to the primary monitor so it is visible even when the form spans a multi-monitor virtual desktop.
         /// </summary>
         private void UpdateInstructionPanelBounds()
         {
-            int maxPanelW = Math.Min(800, Math.Max(120, ClientSize.Width - 2 * InstructionOuterPad));
+            Rectangle primaryBounds = Screen.PrimaryScreen.Bounds;
+            int panelAreaW = Math.Max(1, primaryBounds.Width - 2 * InstructionOuterPad);
+            int panelAreaH = Math.Max(1, primaryBounds.Height - 2 * InstructionOuterPad);
+
+            int maxPanelW = Math.Min(800, Math.Max(120, panelAreaW));
             int maxTextWidth = Math.Max(40, maxPanelW - 2 * InstructionInnerPad);
             string text = UiText.Current.ImageCaptureSelectionOverlayInstructions;
             TextFormatFlags measureFlags = TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding;
@@ -53,12 +58,21 @@ namespace Bahtinov_Collimator
 
             int panelW = textSize.Width + 2 * InstructionInnerPad;
             int panelH = textSize.Height + 2 * InstructionInnerPad;
-            int capW = Math.Max(1, ClientSize.Width - 2 * InstructionOuterPad);
-            int capH = Math.Max(1, ClientSize.Height - 2 * InstructionOuterPad);
-            panelW = Math.Min(panelW, capW);
-            panelH = Math.Min(panelH, capH);
+            panelW = Math.Min(panelW, panelAreaW);
+            panelH = Math.Min(panelH, panelAreaH);
 
-            _instructionPanelBounds = new Rectangle(InstructionOuterPad, InstructionOuterPad, panelW, panelH);
+            // Convert primary-monitor screen coords into this form's client coords.
+            // Because the form is borderless and positioned at the virtual-screen origin,
+            // client (0,0) == virtual-screen top-left, so the offset is just the primary monitor's
+            // position relative to the virtual screen.
+            int clientOffsetX = primaryBounds.X - Bounds.X;
+            int clientOffsetY = primaryBounds.Y - Bounds.Y;
+
+            _instructionPanelBounds = new Rectangle(
+                clientOffsetX + InstructionOuterPad,
+                clientOffsetY + InstructionOuterPad,
+                panelW,
+                panelH);
         }
 
         protected override void OnResize(EventArgs e)
@@ -80,12 +94,14 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Configures the form's properties to make it suitable for screen area selection.
-        /// Sets the form to be borderless, maximized, semi-transparent, and always on top.
+        /// The form is borderless, semi-transparent, always on top, and spans the entire
+        /// virtual desktop so the user can select a star on any connected monitor.
         /// </summary>
         private void InitializeForm()
         {
             FormBorderStyle = FormBorderStyle.None;
-            WindowState = FormWindowState.Maximized;
+            StartPosition = FormStartPosition.Manual;
+            Bounds = SystemInformation.VirtualScreen;
             BackColor = UITheme.SelectionBackground;
             Opacity = UITheme.SelectionBackgroundTransparency;
             TopMost = true;

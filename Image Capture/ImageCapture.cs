@@ -516,7 +516,10 @@ namespace Bahtinov_Collimator
             {
                 if (overlay.ShowDialog() == DialogResult.OK)
                 {
-                    selectedStarBox = overlay.SelectedArea;
+                    // The overlay spans the entire virtual desktop, so SelectedArea is in
+                    // the overlay's client coordinates. Convert to absolute screen coordinates
+                    // so WindowFromPoint / GetWindowRect work correctly across multiple monitors.
+                    selectedStarBox = overlay.RectangleToScreen(overlay.SelectedArea);
 
                     IntPtr hit = WindowFromPoint(new Point(
                         selectedStarBox.Left + selectedStarBox.Width / 2,
