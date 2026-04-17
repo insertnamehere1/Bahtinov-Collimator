@@ -172,14 +172,14 @@ namespace Bahtinov_Collimator.Custom_Components
         //   CalibrationComponent.Size = (308, 624)
         //   titledRoundedRichTextBox1 at (4, 22, 300, 526), Anchor T|B|L|R
         //     => distances: left=4, top=22, right=4, bottom=76
-        //   quitButton at (55, 562, 161, 42), Anchor Bottom|Right
-        //     => right distance=92, bottom distance=20, size=(161, 42)
+        //   quitButton designer size (161, 42), bottom distance=20. Horizontally
+        //     centered by LayoutInnerControls (the designer's X=55 was slightly
+        //     right of centre; the off-centre offset became visible when scaled up).
         private const int TitledLeftAt96 = 4;
         private const int TitledTopAt96 = 22;
         private const int TitledRightDistAt96 = 4;
         private const int TitledBottomDistAt96 = 76;
 
-        private const int QuitRightDistAt96 = 92;
         private const int QuitBottomDistAt96 = 20;
         private const int QuitWidthAt96 = 161;
         private const int QuitHeightAt96 = 42;
@@ -207,12 +207,11 @@ namespace Bahtinov_Collimator.Custom_Components
             int titledWidth = Math.Max(0, Width - titledLeft - titledRightDist);
             int titledHeight = Math.Max(0, Height - titledTop - titledBottomDist);
 
-            int quitRightDist = ScaleByDpi(QuitRightDistAt96);
             int quitBottomDist = ScaleByDpi(QuitBottomDistAt96);
             int quitWidth = ScaleByDpi(QuitWidthAt96);
             int quitHeight = ScaleByDpi(QuitHeightAt96);
 
-            int quitX = Math.Max(0, Width - quitRightDist - quitWidth);
+            int quitX = Math.Max(0, (Width - quitWidth) / 2);
             int quitY = Math.Max(0, Height - quitBottomDist - quitHeight);
 
             titledRoundedRichTextBox1.SetBounds(titledLeft, titledTop, titledWidth, titledHeight);
