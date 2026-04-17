@@ -89,7 +89,6 @@ namespace Bahtinov_Collimator
             // 
             this.newtonianRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.newtonianRadioButton.AutoSize = true;
             this.newtonianRadioButton.Enabled = false;
             this.newtonianRadioButton.Location = new System.Drawing.Point(19, 83);
             this.newtonianRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -102,7 +101,6 @@ namespace Bahtinov_Collimator
             // 
             // MakCassRadioButton
             // 
-            this.MakCassRadioButton.AutoSize = true;
             this.MakCassRadioButton.Location = new System.Drawing.Point(19, 56);
             this.MakCassRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MakCassRadioButton.Name = "MakCassRadioButton";
@@ -117,7 +115,6 @@ namespace Bahtinov_Collimator
             // 
             this.SCTRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SCTRadioButton.AutoSize = true;
             this.SCTRadioButton.Location = new System.Drawing.Point(19, 30);
             this.SCTRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.SCTRadioButton.Name = "SCTRadioButton";
@@ -148,7 +145,7 @@ namespace Bahtinov_Collimator
             // minimizeLabel
             // 
             this.minimizeLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.minimizeLabel.Location = new System.Drawing.Point(12, 49);
+            this.minimizeLabel.Location = new System.Drawing.Point(12, 51);
             this.minimizeLabel.Name = "minimizeLabel";
             this.minimizeLabel.Size = new System.Drawing.Size(219, 49);
             this.minimizeLabel.TabIndex = 34;
@@ -156,8 +153,7 @@ namespace Bahtinov_Collimator
             // 
             // minimizeCheckBox
             // 
-            this.minimizeCheckBox.AutoSize = true;
-            this.minimizeCheckBox.Location = new System.Drawing.Point(22, 23);
+            this.minimizeCheckBox.Location = new System.Drawing.Point(20, 25);
             this.minimizeCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.minimizeCheckBox.Name = "minimizeCheckBox";
             this.minimizeCheckBox.Size = new System.Drawing.Size(209, 23);
@@ -186,7 +182,7 @@ namespace Bahtinov_Collimator
             // label2
             // 
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.label2.Location = new System.Drawing.Point(13, 53);
+            this.label2.Location = new System.Drawing.Point(13, 52);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(235, 57);
             this.label2.TabIndex = 34;
@@ -194,8 +190,7 @@ namespace Bahtinov_Collimator
             // 
             // errorSignCheckBox
             // 
-            this.errorSignCheckBox.AutoSize = true;
-            this.errorSignCheckBox.Location = new System.Drawing.Point(22, 26);
+            this.errorSignCheckBox.Location = new System.Drawing.Point(27, 26);
             this.errorSignCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.errorSignCheckBox.Name = "errorSignCheckBox";
             this.errorSignCheckBox.Size = new System.Drawing.Size(97, 23);
@@ -232,7 +227,6 @@ namespace Bahtinov_Collimator
             // 
             // onTopCheckBox
             // 
-            this.onTopCheckBox.AutoSize = true;
             this.onTopCheckBox.Location = new System.Drawing.Point(27, 25);
             this.onTopCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.onTopCheckBox.Name = "onTopCheckBox";
@@ -275,14 +269,13 @@ namespace Bahtinov_Collimator
             this.historyMakersTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.historyMakersTextBox.MaxLength = 20;
             this.historyMakersTextBox.Name = "historyMakersTextBox";
-            this.historyMakersTextBox.Size = new System.Drawing.Size(31, 25);
+            this.historyMakersTextBox.Size = new System.Drawing.Size(25, 25);
             this.historyMakersTextBox.TabIndex = 1;
             this.historyMakersTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(57, 29);
+            this.label1.Location = new System.Drawing.Point(53, 29);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(102, 19);
             this.label1.TabIndex = 0;
@@ -309,7 +302,7 @@ namespace Bahtinov_Collimator
             // label5
             // 
             this.label5.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.label5.Location = new System.Drawing.Point(13, 53);
+            this.label5.Location = new System.Drawing.Point(13, 51);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(225, 67);
             this.label5.TabIndex = 34;
@@ -318,8 +311,7 @@ namespace Bahtinov_Collimator
             // 
             // VoiceCheckBox
             // 
-            this.VoiceCheckBox.AutoSize = true;
-            this.VoiceCheckBox.Location = new System.Drawing.Point(22, 26);
+            this.VoiceCheckBox.Location = new System.Drawing.Point(27, 25);
             this.VoiceCheckBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.VoiceCheckBox.Name = "VoiceCheckBox";
             this.VoiceCheckBox.Size = new System.Drawing.Size(121, 23);
@@ -404,17 +396,12 @@ namespace Bahtinov_Collimator
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Settings";
             this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.minimizeGroupBox.ResumeLayout(false);
-            this.minimizeGroupBox.PerformLayout();
             this.ErrorSignGroupBox.ResumeLayout(false);
-            this.ErrorSignGroupBox.PerformLayout();
             this.keepOnTopGroupBox.ResumeLayout(false);
-            this.keepOnTopGroupBox.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
