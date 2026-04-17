@@ -111,8 +111,14 @@ namespace Bahtinov_Collimator.Custom_Components
             // 
             // CalibrationComponent
             // 
+            // AutoScaleMode is deliberately None: Form1 explicitly drives this control's
+            // Size and Location at every DPI change / resize via
+            // <see cref="Form1.RepositionCalibrationComponent"/>. Leaving Dpi-based auto-scale
+            // on caused PerformAutoScale to re-scale the control every time its bounds were
+            // touched, compounding factors (bottom edge pinned to designer height 624 while
+            // Top was pushed negative — see debug log from 175% monitor).
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = UITheme.DarkBackground;
             this.Controls.Add(this.titledRoundedRichTextBox1);
             this.Controls.Add(this.quitButton);

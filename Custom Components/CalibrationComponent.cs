@@ -50,6 +50,13 @@ namespace Bahtinov_Collimator.Custom_Components
         {
             InitializeComponent();
 
+            // The designer assigns Anchor = T|B|L|R and Bottom|Right to these two children,
+            // but we drive their bounds manually from OnResize (see LayoutInnerControls).
+            // Pin Anchor to Top|Left so WinForms' default layout engine leaves their Size
+            // and Location alone and does not race our manual layout during DPI changes.
+            titledRoundedRichTextBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            quitButton.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+
             this.parent = parent;
 
             aggregationTimer = new Timer
@@ -62,6 +69,7 @@ namespace Bahtinov_Collimator.Custom_Components
             SetupUI();
             SubscribeToEvents();
             ResetCalibration();
+            LayoutInnerControls();
         }
 
         #endregion
@@ -86,6 +94,138 @@ namespace Bahtinov_Collimator.Custom_Components
         {
             BahtinovProcessing.FocusDataEvent += FocusDataEvent;
         }
+
+        /// <summary>
+        /// Re-applies instruction text and UI strings after the hosting monitor's DPI changes.
+        /// WinForms scales the base RichTextBox font for the new DPI, but the inline
+        /// <see cref="RichTextBox.SelectionFont"/> values (bold runs), selection bullets, indents,
+        /// and alignments were captured at the previous DPI and would otherwise render with
+        /// mismatched metrics — which visually manifests as the calibration text collapsing
+        /// or disappearing. Regenerating the content here keeps all runs at the current DPI.
+        /// </summary>
+        /// <param name="e">The DPI-changed event data.</param>
+        protected override void OnDpiChangedAfterParent(EventArgs e)
+        {
+            base.OnDpiChangedAfterParent(e);
+
+            SetupUI();
+
+            if (state == CalibrationState.Complete)
+                quitButton.Text = NextStepText.Current.CalibrationCloseButtonText;
+
+            UpdateInstructionText();
+
+            // Ensure sibling focus-channel group boxes on the parent form are not left behind
+            // the calibration panel after the form rescales.
+            if (parent != null && !parent.IsDisposed)
+                parent.BeginInvoke(new Action(parent.RefreshFocusChannelsAfterDpiChange));
+        }
+
+        /// <summary>
+        /// Prevents the framework's DPI scaling pass from mutating our outer bounds.
+        ///
+        /// WinForms' <see cref="Form.OnDpiChanged(DpiChangedEventArgs)"/> base implementation
+        /// walks the control tree and unconditionally calls <see cref="Control.ScaleControl"/>
+        /// on every child (independent of <see cref="Control.AutoScaleMode"/>). For this
+        /// dynamically-positioned panel that produced a visible mid-DPI-change flicker: after
+        /// <see cref="Form1.RepositionCalibrationComponent"/> had set the correct bounds,
+        /// WinForms' subsequent Scale pass shrank or grew the panel by the inverse factor
+        /// (<c>oldDpi/newDpi</c>) until the final explicit reposition at the end of
+        /// <see cref="Form1.OnDpiChanged(DpiChangedEventArgs)"/> corrected it.
+        ///
+        /// We skip scaling *our own* Size/Location here. Child scaling is additionally
+        /// suppressed via <see cref="ScaleChildren"/>.
+        /// </summary>
+        protected override void ScaleControl(SizeF factor, BoundsSpecified specified)
+        {
+            base.ScaleControl(factor, BoundsSpecified.None);
+        }
+
+        /// <summary>
+        /// Skip recursive DPI scaling of this control's children. See
+        /// <see cref="OnResize"/> for how child bounds are instead computed explicitly.
+        /// </summary>
+        protected override bool ScaleChildren
+        {
+            get { return false; }
+        }
+
+        #region Child layout (replaces Anchor)
+        //
+        // Why this is done by hand instead of using Anchor:
+        //
+        // Originally the two children (titledRoundedRichTextBox1, quitButton) relied on
+        // WinForms Anchor to track the parent's size. That works fine for ordinary resizes
+        // (form drag, Tri-Bahtinov mode switching) but breaks on a monitor-to-monitor DPI
+        // change: during Form1.base.OnDpiChanged, WinForms opens a LayoutTransaction that
+        // swallows the PerformLayout triggered by Form1.RepositionCalibrationComponent's
+        // SuspendLayout/ResumeLayout, and the Scale pass that runs inside the transaction
+        // then marks the children's layout as "up-to-date" so the deferred PerformLayout at
+        // the end of the transaction does nothing. The result was the outer CalibrationComponent
+        // growing from 350x454 (96 DPI) to 613x846 (168 DPI) but the children staying at their
+        // 96-DPI size, leaving a large empty band inside the panel.
+        //
+        // Doing the layout explicitly in OnResize sidesteps all of that — every SetBounds on
+        // the CalibrationComponent calls back in here, directly.
+
+        // Design-time layout at 96 DPI (from CalibrationComponent.Designer.cs):
+        //   CalibrationComponent.Size = (308, 624)
+        //   titledRoundedRichTextBox1 at (4, 22, 300, 526), Anchor T|B|L|R
+        //     => distances: left=4, top=22, right=4, bottom=76
+        //   quitButton at (55, 562, 161, 42), Anchor Bottom|Right
+        //     => right distance=92, bottom distance=20, size=(161, 42)
+        private const int TitledLeftAt96 = 4;
+        private const int TitledTopAt96 = 22;
+        private const int TitledRightDistAt96 = 4;
+        private const int TitledBottomDistAt96 = 76;
+
+        private const int QuitRightDistAt96 = 92;
+        private const int QuitBottomDistAt96 = 20;
+        private const int QuitWidthAt96 = 161;
+        private const int QuitHeightAt96 = 42;
+
+        private int ScaleByDpi(int logicalPixels)
+        {
+            return (int)Math.Round(logicalPixels * (DeviceDpi / 96f), MidpointRounding.AwayFromZero);
+        }
+
+        /// <summary>
+        /// Recomputes bounds for the two inner controls based on the current outer size and
+        /// the current DPI, replacing the Anchor-based layout that WinForms does not apply
+        /// reliably inside a DPI-change LayoutTransaction.
+        /// </summary>
+        private void LayoutInnerControls()
+        {
+            if (titledRoundedRichTextBox1 == null || quitButton == null)
+                return;
+
+            int titledLeft = ScaleByDpi(TitledLeftAt96);
+            int titledTop = ScaleByDpi(TitledTopAt96);
+            int titledRightDist = ScaleByDpi(TitledRightDistAt96);
+            int titledBottomDist = ScaleByDpi(TitledBottomDistAt96);
+
+            int titledWidth = Math.Max(0, Width - titledLeft - titledRightDist);
+            int titledHeight = Math.Max(0, Height - titledTop - titledBottomDist);
+
+            int quitRightDist = ScaleByDpi(QuitRightDistAt96);
+            int quitBottomDist = ScaleByDpi(QuitBottomDistAt96);
+            int quitWidth = ScaleByDpi(QuitWidthAt96);
+            int quitHeight = ScaleByDpi(QuitHeightAt96);
+
+            int quitX = Math.Max(0, Width - quitRightDist - quitWidth);
+            int quitY = Math.Max(0, Height - quitBottomDist - quitHeight);
+
+            titledRoundedRichTextBox1.SetBounds(titledLeft, titledTop, titledWidth, titledHeight);
+            quitButton.SetBounds(quitX, quitY, quitWidth, quitHeight);
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            LayoutInnerControls();
+        }
+
+        #endregion
 
         /// <summary>
         /// Unsubscribes from events to avoid leaks when closing the component.

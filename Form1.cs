@@ -503,6 +503,92 @@ namespace Bahtinov_Collimator
 
             SyncAnalysisGroupBoxWidthToFocusColumn();
             ApplyMainWorkspaceLayout();
+            RepositionCalibrationComponent();
+            RefreshFocusChannelsAfterDpiChange();
+        }
+
+        /// <summary>
+        /// Re-applies the calibration component's size and location using the current DPI.
+        ///
+        /// Historical note: this control used to be anchored Top|Bottom|Right and relied on
+        /// <see cref="Control.AutoScaleMode"/>=Dpi. On a monitor-to-monitor DPI change
+        /// (verified with logging at 96->168), WinForms re-ran PerformAutoScale every time
+        /// the bounds were touched, compounding scale factors — the bottom edge stayed pinned
+        /// to the designer height 624 while Top was pushed negative (e.g. Y=-1792, H=2416).
+        /// The mixed Top|Bottom|Right anchor (no Left) then moved X on top of that.
+        ///
+        /// Fix: <see cref="CalibrationComponent"/> is now <see cref="AutoScaleMode.None"/>
+        /// and <see cref="AnchorStyles.None"/>, so Form1 is the single authority for its
+        /// bounds. We use <see cref="Control.SetBounds(int,int,int,int)"/> inside a
+        /// <see cref="Control.SuspendLayout"/> / <see cref="Control.ResumeLayout(bool)"/>
+        /// block so size and location change atomically and no intermediate layout pass
+        /// can see a half-updated state.
+        /// </summary>
+        private void RepositionCalibrationComponent()
+        {
+            if (calibrationComponent == null || calibrationComponent.IsDisposed)
+                return;
+
+            int calWidth = S(UITheme.CalibrateFrameWidth);
+            int topOffset = S(8);
+            int rightGap = S(6);
+
+            int newX = ClientSize.Width - calWidth - rightGap;
+            int newY = topOffset;
+            int newHeight = Math.Max(0, ClientSize.Height - topOffset);
+
+            calibrationComponent.SuspendLayout();
+            try
+            {
+                calibrationComponent.SetBounds(newX, newY, calWidth, newHeight);
+            }
+            finally
+            {
+                calibrationComponent.ResumeLayout(true);
+            }
+        }
+
+        /// <summary>
+        /// The calibration panel has no anchor (see <see cref="RepositionCalibrationComponent"/>),
+        /// so when the user resizes the form we manually keep it glued to the right edge.
+        /// </summary>
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+
+            if (calibrationComponent != null && !calibrationComponent.IsDisposed)
+                RepositionCalibrationComponent();
+        }
+
+        /// <summary>
+        /// After a DPI change the focus channel group boxes can end up hidden behind the
+        /// <see cref="calibrationComponent"/> (which is always BringToFront'd) or be left
+        /// without an up-to-date internal layout. This restores their z-order so they remain
+        /// visible alongside calibration, and forces a redraw so the inner history bar and
+        /// mirror drawings are present.
+        /// </summary>
+        public void RefreshFocusChannelsAfterDpiChange()
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(RefreshFocusChannelsAfterDpiChange));
+                return;
+            }
+
+            FocusChannelComponent[] channels = { groupBoxRed, groupBoxGreen, groupBoxBlue };
+            foreach (var channel in channels)
+            {
+                if (channel == null)
+                    continue;
+
+                if (channel.Visible)
+                    channel.BringToFront();
+
+                channel.Invalidate(true);
+            }
+
+            if (imageDisplayComponent1 != null)
+                imageDisplayComponent1.Invalidate(true);
         }
 
         /// <summary>
@@ -1410,16 +1496,23 @@ namespace Bahtinov_Collimator
             if (calibrationComponent != null)
                 return;
 
+            // Anchor must be Top | Left (not None). AnchorStyles.None in WinForms means
+            // "float with the center of the parent" — each parent resize shifts X by half the
+            // parent-width delta, producing a visible jump on DPI changes and form resizes.
+            // RepositionCalibrationComponent is the sole authority for this panel's bounds.
+            //
+            // The panel is created invisible to suppress a brief flash at (0,0) between
+            // Controls.Add and the first reposition.
             calibrationComponent = new CalibrationComponent(this)
-            { 
-                Width = S(UITheme.CalibrateFrameWidth),
-                Height = this.ClientSize.Height,
-                Location = new Point(this.ClientSize.Width - S(UITheme.CalibrateFrameWidth) - S(6), S(8)),
-                Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right
+            {
+                Anchor = AnchorStyles.Top | AnchorStyles.Left,
+                Visible = false
             };
 
             this.Controls.Add(calibrationComponent);
+            RepositionCalibrationComponent();
             calibrationComponent.BringToFront();
+            calibrationComponent.Visible = true;
             ApplyMainWorkspaceLayout();
         }
 
