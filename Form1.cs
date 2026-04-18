@@ -33,6 +33,7 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Bahtinov_Collimator.BahtinovLineDataEventArgs;
@@ -173,6 +174,13 @@ namespace Bahtinov_Collimator
         /// Indicates whether the screen capture process is currently running.
         /// </summary>
         private bool screenCaptureRunningFlag = false;
+
+        /// <summary>
+        /// Single-flight gate for <see cref="ProcessAndDisplay"/>. 0 = idle, 1 = a frame is being
+        /// processed. New frames that arrive while processing is in flight are dropped so heavy
+        /// Bahtinov work cannot pile up behind the 10 ms capture timer during tracking.
+        /// </summary>
+        private int processingFrameFlag;
 
         /// <summary>
         /// Target position to move the form to after it first becomes visible
@@ -913,11 +921,29 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Processes and displays the received image on a background thread.
+        /// If a previous frame is still being processed, this frame is dropped (disposed) so that
+        /// expensive Bahtinov work does not queue up behind the capture timer. Latest-arriving
+        /// frames are intentionally preferred over a backlog of stale ones.
         /// </summary>
         private void OnImageReceived(object sender, ImageReceivedEventArgs e)
         {
-            // Run the processing on a background thread
-            Task.Run(() => ProcessAndDisplay(e.Image));
+            if (Interlocked.CompareExchange(ref processingFrameFlag, 1, 0) != 0)
+            {
+                e.Image?.Dispose();
+                return;
+            }
+
+            Task.Run(() =>
+            {
+                try
+                {
+                    ProcessAndDisplay(e.Image);
+                }
+                finally
+                {
+                    Interlocked.Exchange(ref processingFrameFlag, 0);
+                }
+            });
         }
 
         /// <summary>
@@ -1089,31 +1115,31 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Processes the provided image and displays it based on whether it's a Bahtinov mask or a defocus star.
+        /// Takes ownership of <paramref name="original"/> and disposes it on exit. Downstream consumers
+        /// (event handlers) borrow the bitmap for the duration of their synchronous handler and must
+        /// make their own copy if they need to retain it.
         /// </summary>
         private void ProcessAndDisplay(Bitmap original)
         {
-            Bitmap image = new Bitmap(original);
+            if (original == null)
+                return;
 
-            // Determine image type if first pass is not completed
-            if (!firstPassCompleted)
+            try
             {
-                if (Properties.Settings.Default.DefocusSwitch)
+                if (!firstPassCompleted)
                 {
-                    // This is a defocus star
-                    imageType = 2;
+                    imageType = Properties.Settings.Default.DefocusSwitch ? 2 : 1;
                 }
-                else
-                {
-                    // This is a Bahtinov image
-                    imageType = 1;
-                }
-            }
 
-            // Run the appropriate display method based on the image type
-            if (imageType == 1)
-                RunBahtinovDisplay(image);
-            else if (imageType == 2)
-                RunDefocusStarDisplay(image);
+                if (imageType == 1)
+                    RunBahtinovDisplay(original);
+                else if (imageType == 2)
+                    RunDefocusStarDisplay(original);
+            }
+            finally
+            {
+                original.Dispose();
+            }
         }
 
         /// <summary>

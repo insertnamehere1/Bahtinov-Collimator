@@ -48,7 +48,31 @@ namespace Bahtinov_Collimator
         private const float ErrorMarkerScalingValue = 20.0f;
         private float lastFocusErrorValue = 0.0f;
 
-       
+
+        #endregion
+
+        #region Nested Types
+
+        /// <summary>
+        /// Per-worker-thread scratch buffers reused across <see cref="Parallel.For"/> iterations in
+        /// <see cref="FindBrightestLines"/>, <see cref="FindFaintLines"/>, and <see cref="FindSubpixelLines"/>.
+        /// Allocating once per thread (instead of once per angle/line) avoids ~180 large
+        /// <c>float[width,height]</c> allocations per call and the associated GC pressure.
+        /// </summary>
+        private sealed class AngleScanWorkspace
+        {
+            public float[,] RotatedImage { get; }
+            public float[] RowTotals { get; }
+            public float[] SmoothedTotals { get; }
+
+            public AngleScanWorkspace(int width, int height)
+            {
+                RotatedImage = new float[width, height];
+                RowTotals = new float[height];
+                SmoothedTotals = new float[height];
+            }
+        }
+
         #endregion
 
         #region Public Fields
@@ -137,84 +161,99 @@ namespace Bahtinov_Collimator
             float[] lineNumbersOfBrightestLines = new float[DEGREES180];
             float[] valuesOfBrightestLines = new float[DEGREES180];
 
-            Parallel.For(0, DEGREES180, index1 =>
-            {
-                float[,] rotatedImage = new float[width, height];
-                float currentRadians = RADIANS_PER_DEGREE * index1;
-                float sin_CurrentRadians = (float)Math.Sin(currentRadians);
-                float cos_CurrentRadians = (float)Math.Cos(currentRadians);
-
-                for (int x = leftEdge; x < rightEdge; ++x)
+            // Per-thread workspace: one float[,] per worker thread (not per iteration) so we avoid
+            // allocating 180 large 2D arrays (~180 x width x height x 4 bytes) per call.
+            Parallel.For(
+                0,
+                DEGREES180,
+                () => new AngleScanWorkspace(width, height),
+                (index1, state, workspace) =>
                 {
-                    for (int y = topEdge; y < bottomEdge; ++y)
-                    {
-                        float X_DistanceFromCentre = x - starImage_X_Centre;
-                        float Y_DistanceFromCentre = y - starImage_Y_Centre;
+                    float[,] rotatedImage = workspace.RotatedImage;
+                    float[] rowTotals = workspace.RowTotals;
+                    float[] smoothedTotals = workspace.SmoothedTotals;
 
-                        float rotatedXDistance = starImage_X_Centre + X_DistanceFromCentre * cos_CurrentRadians + Y_DistanceFromCentre * sin_CurrentRadians;
-                        float rotatedYDistance = starImage_Y_Centre - X_DistanceFromCentre * sin_CurrentRadians + Y_DistanceFromCentre * cos_CurrentRadians;
+                    // Clear only the region we will read from to avoid stale values from previous angle
+                    // (pixels where the rotated source falls outside bounds are left untouched by the
+                    // writes below).
+                    Array.Clear(rotatedImage, 0, rotatedImage.Length);
 
-                        int rotatedXRoundedDown = (int)rotatedXDistance;
-                        int rotatedXRoundedUp = rotatedXRoundedDown + 1;
-                        int rotatedYRoundedDown = (int)rotatedYDistance;
-                        int rotatedYRoundedUp = rotatedYRoundedDown + 1;
+                    float currentRadians = RADIANS_PER_DEGREE * index1;
+                    float sin_CurrentRadians = (float)Math.Sin(currentRadians);
+                    float cos_CurrentRadians = (float)Math.Cos(currentRadians);
 
-                        if (rotatedXRoundedDown >= leftEdge && rotatedXRoundedUp < rightEdge &&
-                            rotatedYRoundedDown >= topEdge && rotatedYRoundedUp < bottomEdge)
-                        {
-                            float rotatedXFraction = rotatedXDistance - rotatedXRoundedDown;
-                            float rotatedYFraction = rotatedYDistance - rotatedYRoundedDown;
-
-                            float oneMinusRotatedXFraction = 1.0f - rotatedXFraction;
-                            float oneMinusRotatedYFraction = 1.0f - rotatedYFraction;
-                            float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
-                            float value2 = starArray2D[rotatedXRoundedUp, rotatedYRoundedDown];
-                            float value3 = starArray2D[rotatedXRoundedUp, rotatedYRoundedUp];
-                            float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedUp];
-
-                            rotatedImage[x, y] = value1 * oneMinusRotatedXFraction * oneMinusRotatedYFraction +
-                                                 value2 * rotatedXFraction * oneMinusRotatedYFraction +
-                                                 value3 * rotatedXFraction * rotatedYFraction +
-                                                 value4 * oneMinusRotatedXFraction * rotatedYFraction;
-                        }
-                    }
-                }
-
-                float[] rowTotals = new float[height];
-                for (int y = topEdge; y < bottomEdge; ++y)
-                {
-                    float rowTotal = 0;
                     for (int x = leftEdge; x < rightEdge; ++x)
                     {
-                        rowTotal += rotatedImage[x, y];
-                    }
-                    rowTotals[y] = rowTotal / (rightEdge - leftEdge);
-                }
+                        for (int y = topEdge; y < bottomEdge; ++y)
+                        {
+                            float X_DistanceFromCentre = x - starImage_X_Centre;
+                            float Y_DistanceFromCentre = y - starImage_Y_Centre;
 
-                float[] smoothedTotals = new float[height];
-                for (int y = topEdge; y < bottomEdge; ++y)
-                {
-                    smoothedTotals[y] = rowTotals[y];
-                    if (y > topEdge && y < bottomEdge - 1)
+                            float rotatedXDistance = starImage_X_Centre + X_DistanceFromCentre * cos_CurrentRadians + Y_DistanceFromCentre * sin_CurrentRadians;
+                            float rotatedYDistance = starImage_Y_Centre - X_DistanceFromCentre * sin_CurrentRadians + Y_DistanceFromCentre * cos_CurrentRadians;
+
+                            int rotatedXRoundedDown = (int)rotatedXDistance;
+                            int rotatedXRoundedUp = rotatedXRoundedDown + 1;
+                            int rotatedYRoundedDown = (int)rotatedYDistance;
+                            int rotatedYRoundedUp = rotatedYRoundedDown + 1;
+
+                            if (rotatedXRoundedDown >= leftEdge && rotatedXRoundedUp < rightEdge &&
+                                rotatedYRoundedDown >= topEdge && rotatedYRoundedUp < bottomEdge)
+                            {
+                                float rotatedXFraction = rotatedXDistance - rotatedXRoundedDown;
+                                float rotatedYFraction = rotatedYDistance - rotatedYRoundedDown;
+
+                                float oneMinusRotatedXFraction = 1.0f - rotatedXFraction;
+                                float oneMinusRotatedYFraction = 1.0f - rotatedYFraction;
+                                float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
+                                float value2 = starArray2D[rotatedXRoundedUp, rotatedYRoundedDown];
+                                float value3 = starArray2D[rotatedXRoundedUp, rotatedYRoundedUp];
+                                float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedUp];
+
+                                rotatedImage[x, y] = value1 * oneMinusRotatedXFraction * oneMinusRotatedYFraction +
+                                                     value2 * rotatedXFraction * oneMinusRotatedYFraction +
+                                                     value3 * rotatedXFraction * rotatedYFraction +
+                                                     value4 * oneMinusRotatedXFraction * rotatedYFraction;
+                            }
+                        }
+                    }
+
+                    for (int y = topEdge; y < bottomEdge; ++y)
                     {
-                        smoothedTotals[y] = (rowTotals[y - 1] + rowTotals[y] + rowTotals[y + 1]) / 3;
+                        float rowTotal = 0;
+                        for (int x = leftEdge; x < rightEdge; ++x)
+                        {
+                            rowTotal += rotatedImage[x, y];
+                        }
+                        rowTotals[y] = rowTotal / (rightEdge - leftEdge);
                     }
-                }
 
-                float largestValue = -1f;
-                float lineNumber = -1f;
-                for (int y = topEdge; y < bottomEdge; ++y)
-                {
-                    if (smoothedTotals[y] > largestValue)
+                    for (int y = topEdge; y < bottomEdge; ++y)
                     {
-                        largestValue = smoothedTotals[y];
-                        lineNumber = y;
+                        smoothedTotals[y] = rowTotals[y];
+                        if (y > topEdge && y < bottomEdge - 1)
+                        {
+                            smoothedTotals[y] = (rowTotals[y - 1] + rowTotals[y] + rowTotals[y + 1]) / 3;
+                        }
                     }
-                }
 
-                lineNumbersOfBrightestLines[index1] = lineNumber;
-                valuesOfBrightestLines[index1] = largestValue;
-            });
+                    float largestValue = -1f;
+                    float lineNumber = -1f;
+                    for (int y = topEdge; y < bottomEdge; ++y)
+                    {
+                        if (smoothedTotals[y] > largestValue)
+                        {
+                            largestValue = smoothedTotals[y];
+                            lineNumber = y;
+                        }
+                    }
+
+                    lineNumbersOfBrightestLines[index1] = lineNumber;
+                    valuesOfBrightestLines[index1] = largestValue;
+
+                    return workspace;
+                },
+                _ => { /* nothing to dispose; arrays are GCed when thread-local goes out of scope */ });
 
             for (int i = 0; i < LINES; ++i)
             {
@@ -373,114 +412,123 @@ namespace Bahtinov_Collimator
                 float[] lineNumbersOfBrightestLines = new float[DEGREES180];
                 float[] valuesOfBrightestLines = new float[DEGREES180];
 
-                Parallel.For(0, DEGREES180, angleIndex =>
-                {
-                    // Rotate (bilinear) into rotatedImage
-                    float[,] rotatedImage = new float[width, height];
-
-                    float currentRadians = RADIANS_PER_DEGREE * angleIndex;
-                    float sin = (float)Math.Sin(currentRadians);
-                    float cos = (float)Math.Cos(currentRadians);
-
-                    // Rotate around center (same as FindBrightestLines)
-                    float cxf = (width + 1) * 0.5f;
-                    float cyf = (height + 1) * 0.5f;
-
-                    for (int y = topEdge; y < bottomEdge; y++)
+                // Per-thread workspace: one large rotated buffer per worker thread (not per angle).
+                Parallel.For(
+                    0,
+                    DEGREES180,
+                    () => new AngleScanWorkspace(width, height),
+                    (angleIndex, state, workspace) =>
                     {
-                        float yy = y - cyf;
-                        for (int x = leftEdge; x < rightEdge; x++)
-                        {
-                            float xx = x - cxf;
+                        float[,] rotatedImage = workspace.RotatedImage;
+                        float[] rowTotals = workspace.RowTotals;
 
-                            // Inverse rotation to sample source
-                            float srcXf = (xx * cos + yy * sin) + cxf;
-                            float srcYf = (-xx * sin + yy * cos) + cyf;
+                        // Clear stale values from the previous angle processed by this thread.
+                        Array.Clear(rotatedImage, 0, rotatedImage.Length);
 
-                            int srcX0 = (int)srcXf;
-                            int srcY0 = (int)srcYf;
+                        float currentRadians = RADIANS_PER_DEGREE * angleIndex;
+                        float sin = (float)Math.Sin(currentRadians);
+                        float cos = (float)Math.Cos(currentRadians);
 
-                            if (srcX0 >= 0 && srcX0 < width - 1 && srcY0 >= 0 && srcY0 < height - 1)
-                            {
-                                float fx = srcXf - srcX0;
-                                float fy = srcYf - srcY0;
-                                float oneMinusFx = 1f - fx;
-                                float oneMinusFy = 1f - fy;
+                        // Rotate around center (same as FindBrightestLines)
+                        float cxf = (width + 1) * 0.5f;
+                        float cyf = (height + 1) * 0.5f;
 
-                                float v1 = starArray2D[srcX0, srcY0];
-                                float v2 = starArray2D[srcX0 + 1, srcY0];
-                                float v3 = starArray2D[srcX0, srcY0 + 1];
-                                float v4 = starArray2D[srcX0 + 1, srcY0 + 1];
-
-                                rotatedImage[x, y] =
-                                    v1 * oneMinusFx * oneMinusFy +
-                                    v2 * fx * oneMinusFy +
-                                    v3 * oneMinusFx * fy +
-                                    v4 * fx * fy;
-                            }
-                        }
-                    }
-
-                    // Build 1D profile: mean brightness per row
-                    float[] rowTotals = new float[height];
-                    int rowWidth = Math.Max(1, rightEdge - leftEdge);
-
-                    for (int y = topEdge; y < bottomEdge; y++)
-                    {
-                        float sum = 0f;
-                        for (int x = leftEdge; x < rightEdge; x++)
-                            sum += rotatedImage[x, y];
-
-                        rowTotals[y] = sum / rowWidth;
-                    }
-
-                    // Smooth the profile (Gaussian-ish 5 tap) to reduce noise
-                    float[] smoothed = Smooth1D5(rowTotals, topEdge, bottomEdge);
-
-                    // Compute local mean/std quickly using prefix sums, then z-score
-                    float[] z = ComputeLocalZScore(smoothed, topEdge, bottomEdge, LOCAL_STATS_WINDOW, EPS_STD);
-
-                    // Pick strongest local maximum by z-score (faint but distinct spikes win here)
-                    float bestScore = -1f;
-                    int bestY = -1;
-
-                    for (int y = topEdge + 2; y < bottomEdge - 2; y++)
-                    {
-                        float s = z[y];
-                        if (s <= 0f)
-                            continue;
-
-                        // Enforce a peak (helps ignore ramps/plateaus)
-                        if (smoothed[y] >= smoothed[y - 1] && smoothed[y] >= smoothed[y + 1])
-                        {
-                            if (s > bestScore)
-                            {
-                                bestScore = s;
-                                bestY = y;
-                            }
-                        }
-                    }
-
-                    // Fallback if nothing qualified (very low contrast)
-                    if (bestY < 0)
-                    {
-                        float largest = -1f;
-                        int ly = topEdge;
                         for (int y = topEdge; y < bottomEdge; y++)
                         {
-                            if (smoothed[y] > largest)
+                            float yy = y - cyf;
+                            for (int x = leftEdge; x < rightEdge; x++)
                             {
-                                largest = smoothed[y];
-                                ly = y;
+                                float xx = x - cxf;
+
+                                // Inverse rotation to sample source
+                                float srcXf = (xx * cos + yy * sin) + cxf;
+                                float srcYf = (-xx * sin + yy * cos) + cyf;
+
+                                int srcX0 = (int)srcXf;
+                                int srcY0 = (int)srcYf;
+
+                                if (srcX0 >= 0 && srcX0 < width - 1 && srcY0 >= 0 && srcY0 < height - 1)
+                                {
+                                    float fx = srcXf - srcX0;
+                                    float fy = srcYf - srcY0;
+                                    float oneMinusFx = 1f - fx;
+                                    float oneMinusFy = 1f - fy;
+
+                                    float v1 = starArray2D[srcX0, srcY0];
+                                    float v2 = starArray2D[srcX0 + 1, srcY0];
+                                    float v3 = starArray2D[srcX0, srcY0 + 1];
+                                    float v4 = starArray2D[srcX0 + 1, srcY0 + 1];
+
+                                    rotatedImage[x, y] =
+                                        v1 * oneMinusFx * oneMinusFy +
+                                        v2 * fx * oneMinusFy +
+                                        v3 * oneMinusFx * fy +
+                                        v4 * fx * fy;
+                                }
                             }
                         }
-                        bestY = ly;
-                        bestScore = largest;
-                    }
 
-                    lineNumbersOfBrightestLines[angleIndex] = bestY;
-                    valuesOfBrightestLines[angleIndex] = bestScore;
-                });
+                        int rowWidth = Math.Max(1, rightEdge - leftEdge);
+
+                        for (int y = topEdge; y < bottomEdge; y++)
+                        {
+                            float sum = 0f;
+                            for (int x = leftEdge; x < rightEdge; x++)
+                                sum += rotatedImage[x, y];
+
+                            rowTotals[y] = sum / rowWidth;
+                        }
+
+                        // Smooth the profile (Gaussian-ish 5 tap) to reduce noise
+                        float[] smoothed = Smooth1D5(rowTotals, topEdge, bottomEdge);
+
+                        // Compute local mean/std quickly using prefix sums, then z-score
+                        float[] z = ComputeLocalZScore(smoothed, topEdge, bottomEdge, LOCAL_STATS_WINDOW, EPS_STD);
+
+                        // Pick strongest local maximum by z-score (faint but distinct spikes win here)
+                        float bestScore = -1f;
+                        int bestY = -1;
+
+                        for (int y = topEdge + 2; y < bottomEdge - 2; y++)
+                        {
+                            float s = z[y];
+                            if (s <= 0f)
+                                continue;
+
+                            // Enforce a peak (helps ignore ramps/plateaus)
+                            if (smoothed[y] >= smoothed[y - 1] && smoothed[y] >= smoothed[y + 1])
+                            {
+                                if (s > bestScore)
+                                {
+                                    bestScore = s;
+                                    bestY = y;
+                                }
+                            }
+                        }
+
+                        // Fallback if nothing qualified (very low contrast)
+                        if (bestY < 0)
+                        {
+                            float largest = -1f;
+                            int ly = topEdge;
+                            for (int y = topEdge; y < bottomEdge; y++)
+                            {
+                                if (smoothed[y] > largest)
+                                {
+                                    largest = smoothed[y];
+                                    ly = y;
+                                }
+                            }
+                            bestY = ly;
+                            bestScore = largest;
+                        }
+
+                        lineNumbersOfBrightestLines[angleIndex] = bestY;
+                        valuesOfBrightestLines[angleIndex] = bestScore;
+
+                        return workspace;
+                    },
+                    _ => { });
 
                 // Select top LINES distinct angles (keep your original suppression around peaks)
                 for (int i = 0; i < LINES; ++i)
@@ -675,87 +723,99 @@ namespace Bahtinov_Collimator
             float[] subpixelLineNumbers = new float[lineCount];
             float[] brightestLineValues = new float[lineCount];
 
-            Parallel.For(0, lineCount, index1 =>
-            {
-                float[,] imageArray = new float[width, height];
-                float knownAngle = bahtinovLines.GetLineAngle(index1);
-                float sinCurrentRadians = (float)Math.Sin(knownAngle);
-                float cosCurrentRadians = (float)Math.Cos(knownAngle);
-
-                for (int x = leftEdge; x < rightEdge; ++x)
+            // Per-thread workspace: avoid allocating lineCount large float[,] buffers per call.
+            Parallel.For(
+                0,
+                lineCount,
+                () => new AngleScanWorkspace(width, height),
+                (index1, state, workspace) =>
                 {
-                    for (int y = topEdge; y < bottomEdge; ++y)
-                    {
-                        float xDistanceFromCenter = x - starImageXCenter;
-                        float yDistanceFromCenter = y - starImageYCenter;
+                    float[,] imageArray = workspace.RotatedImage;
+                    float[] rowTotals = workspace.RowTotals;
+                    float[] smoothedTotals = workspace.SmoothedTotals;
 
-                        float rotatedXDistance = starImageXCenter + xDistanceFromCenter * cosCurrentRadians + yDistanceFromCenter * sinCurrentRadians;
-                        float rotatedYDistance = starImageYCenter - xDistanceFromCenter * sinCurrentRadians + yDistanceFromCenter * cosCurrentRadians;
+                    // Clear stale values from the previous line processed by this thread.
+                    Array.Clear(imageArray, 0, imageArray.Length);
 
-                        int rotatedXRoundedDown = (int)rotatedXDistance;
-                        int rotatedYRoundedDown = (int)rotatedYDistance;
+                    float knownAngle = bahtinovLines.GetLineAngle(index1);
+                    float sinCurrentRadians = (float)Math.Sin(knownAngle);
+                    float cosCurrentRadians = (float)Math.Cos(knownAngle);
 
-                        if (rotatedXRoundedDown < 0 || rotatedXRoundedDown >= width - 1 || rotatedYRoundedDown < 0 || rotatedYRoundedDown >= height - 1)
-                            continue;
-
-                        float rotatedXFraction = rotatedXDistance - rotatedXRoundedDown;
-                        float rotatedYFraction = rotatedYDistance - rotatedYRoundedDown;
-
-                        float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
-                        float value2 = starArray2D[rotatedXRoundedDown + 1, rotatedYRoundedDown];
-                        float value3 = starArray2D[rotatedXRoundedDown + 1, rotatedYRoundedDown + 1];
-                        float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown + 1];
-
-                        float interpolatedValue = (float)(
-                            value1 * (1 - rotatedXFraction) * (1 - rotatedYFraction) +
-                            value2 * rotatedXFraction * (1 - rotatedYFraction) +
-                            value3 * rotatedXFraction * rotatedYFraction +
-                            value4 * (1 - rotatedXFraction) * rotatedYFraction
-                        );
-
-                        imageArray[x, y] = interpolatedValue;
-                    }
-                }
-
-                float[] rowTotals = new float[height];
-                for (int y = topEdge; y < bottomEdge; ++y)
-                {
-                    float rowTotal = 0f;
                     for (int x = leftEdge; x < rightEdge; ++x)
                     {
-                        rowTotal += imageArray[x, y];
+                        for (int y = topEdge; y < bottomEdge; ++y)
+                        {
+                            float xDistanceFromCenter = x - starImageXCenter;
+                            float yDistanceFromCenter = y - starImageYCenter;
+
+                            float rotatedXDistance = starImageXCenter + xDistanceFromCenter * cosCurrentRadians + yDistanceFromCenter * sinCurrentRadians;
+                            float rotatedYDistance = starImageYCenter - xDistanceFromCenter * sinCurrentRadians + yDistanceFromCenter * cosCurrentRadians;
+
+                            int rotatedXRoundedDown = (int)rotatedXDistance;
+                            int rotatedYRoundedDown = (int)rotatedYDistance;
+
+                            if (rotatedXRoundedDown < 0 || rotatedXRoundedDown >= width - 1 || rotatedYRoundedDown < 0 || rotatedYRoundedDown >= height - 1)
+                                continue;
+
+                            float rotatedXFraction = rotatedXDistance - rotatedXRoundedDown;
+                            float rotatedYFraction = rotatedYDistance - rotatedYRoundedDown;
+
+                            float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
+                            float value2 = starArray2D[rotatedXRoundedDown + 1, rotatedYRoundedDown];
+                            float value3 = starArray2D[rotatedXRoundedDown + 1, rotatedYRoundedDown + 1];
+                            float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown + 1];
+
+                            float interpolatedValue = (float)(
+                                value1 * (1 - rotatedXFraction) * (1 - rotatedYFraction) +
+                                value2 * rotatedXFraction * (1 - rotatedYFraction) +
+                                value3 * rotatedXFraction * rotatedYFraction +
+                                value4 * (1 - rotatedXFraction) * rotatedYFraction
+                            );
+
+                            imageArray[x, y] = interpolatedValue;
+                        }
                     }
-                    rowTotals[y] = rowTotal / (rightEdge - leftEdge);
-                }
 
-                // Same 3-tap smoothing as FindBrightestLines before peak search
-                float[] smoothedTotals = new float[height];
-                for (int y = topEdge; y < bottomEdge; ++y)
-                {
-                    smoothedTotals[y] = rowTotals[y];
-                    if (y > topEdge && y < bottomEdge - 1)
-                        smoothedTotals[y] = (rowTotals[y - 1] + rowTotals[y] + rowTotals[y + 1]) / 3f;
-                }
-
-                float largestValueForThisRotation = -1f;
-                int yPeak = topEdge;
-
-                for (int y = topEdge; y < bottomEdge; ++y)
-                {
-                    if (smoothedTotals[y] > largestValueForThisRotation)
+                    for (int y = topEdge; y < bottomEdge; ++y)
                     {
-                        largestValueForThisRotation = smoothedTotals[y];
-                        yPeak = y;
+                        float rowTotal = 0f;
+                        for (int x = leftEdge; x < rightEdge; ++x)
+                        {
+                            rowTotal += imageArray[x, y];
+                        }
+                        rowTotals[y] = rowTotal / (rightEdge - leftEdge);
                     }
-                }
 
-                float centerY = TryRefinePeakSubpixelParabola(smoothedTotals, yPeak, topEdge, bottomEdge, out float parabolicY)
-                    ? parabolicY
-                    : FindSymmetryCenter(smoothedTotals, yPeak, topEdge, bottomEdge);
-                subpixelLineNumbers[index1] = centerY;
+                    // Same 3-tap smoothing as FindBrightestLines before peak search
+                    for (int y = topEdge; y < bottomEdge; ++y)
+                    {
+                        smoothedTotals[y] = rowTotals[y];
+                        if (y > topEdge && y < bottomEdge - 1)
+                            smoothedTotals[y] = (rowTotals[y - 1] + rowTotals[y] + rowTotals[y + 1]) / 3f;
+                    }
 
-                brightestLineValues[index1] = largestValueForThisRotation;
-            });
+                    float largestValueForThisRotation = -1f;
+                    int yPeak = topEdge;
+
+                    for (int y = topEdge; y < bottomEdge; ++y)
+                    {
+                        if (smoothedTotals[y] > largestValueForThisRotation)
+                        {
+                            largestValueForThisRotation = smoothedTotals[y];
+                            yPeak = y;
+                        }
+                    }
+
+                    float centerY = TryRefinePeakSubpixelParabola(smoothedTotals, yPeak, topEdge, bottomEdge, out float parabolicY)
+                        ? parabolicY
+                        : FindSymmetryCenter(smoothedTotals, yPeak, topEdge, bottomEdge);
+                    subpixelLineNumbers[index1] = centerY;
+
+                    brightestLineValues[index1] = largestValueForThisRotation;
+
+                    return workspace;
+                },
+                _ => { });
 
             for (int index = 0; index < lineCount; ++index)
             {

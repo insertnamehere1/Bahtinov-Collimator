@@ -121,28 +121,28 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Handles the event when a defocus circle is received. Updates the PictureBox with the new image and circle data.
+        /// The incoming bitmap is borrowed for the duration of this (synchronous) call; <see cref="CacheSourceImage"/>
+        /// takes its own copy before we return, so we do not need to clone here or dispose afterwards.
         /// </summary>
         private void OnDefocusCirceReceived(object sender, DefocusCircleEventArgs e)
         {
-            Bitmap image = new Bitmap(e.Image);
-
             if (pictureBox1.InvokeRequired)
-                pictureBox1.Invoke(new Action(() => UpdatePictureBox(image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius)));
+                pictureBox1.Invoke(new Action(() => UpdatePictureBox(e.Image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius)));
             else
-                UpdatePictureBox(image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius);
+                UpdatePictureBox(e.Image, e.InnerCircleCentre, e.InnerCircleRadius, e.OuterCircleCentre, e.OuterCircleRadius);
         }
 
         /// <summary>
         /// Handles the event when Bahtinov line data is received. Updates the PictureBox with the new image and line data.
+        /// The incoming bitmap is borrowed for the duration of this (synchronous) call; <see cref="CacheSourceImage"/>
+        /// takes its own copy before we return, so we do not need to clone here or dispose afterwards.
         /// </summary>
         private void OnBahtinovLineReceive(object sender, BahtinovLineDataEventArgs e)
         {
-            Bitmap image = new Bitmap(e.Image);
-
             if (pictureBox1.InvokeRequired)
-                pictureBox1.Invoke(new Action(() => UpdatePictureBox(image, e.Linedata)));
+                pictureBox1.Invoke(new Action(() => UpdatePictureBox(e.Image, e.Linedata)));
             else
-                UpdatePictureBox(image, e.Linedata);
+                UpdatePictureBox(e.Image, e.Linedata);
         }
 
         /// <summary>
@@ -168,6 +168,7 @@ namespace Bahtinov_Collimator
         #region Update Methods
         /// <summary>
         /// Updates the cached display frame and defocus overlay geometry, then redraws all layers.
+        /// The bitmap is borrowed; <see cref="CacheSourceImage"/> takes its own copy, so we do not dispose it here.
         /// </summary>
         private void UpdatePictureBox(Bitmap image, PointD innerCentre, double innerRadius, PointD outerCentre, double outerRadius)
         {
@@ -180,11 +181,11 @@ namespace Bahtinov_Collimator
             cachedBahtinovData = null;
 
             RedrawFromCache();
-            image.Dispose();
         }
 
         /// <summary>
         /// Updates the PictureBox with the provided image and drawing data, including bahtinov line data and error values.
+        /// The bitmap is borrowed; <see cref="CacheSourceImage"/> takes its own copy, so we do not dispose it here.
         /// </summary>
         private void UpdatePictureBox(Bitmap image, BahtinovLineDataEventArgs.BahtinovLineData data)
         {
@@ -193,7 +194,6 @@ namespace Bahtinov_Collimator
             cachedBahtinovData = CloneBahtinovData(data);
 
             RedrawFromCache();
-            image.Dispose();
         }
         #endregion
 

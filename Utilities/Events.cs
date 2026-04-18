@@ -212,13 +212,16 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BahtinovLineDataEventArgs"/> class with the specified line data and image.
+        /// The image reference is stored directly (no clone). The producer retains ownership for the
+        /// duration of synchronous event dispatch; subscribers must not dispose it or use it after the
+        /// handler returns.
         /// </summary>
         /// <param name="linedata">The Bahtinov line data.</param>
         /// <param name="image">The image associated with the line data.</param>
         public BahtinovLineDataEventArgs(BahtinovLineData linedata, Bitmap image)
         {
             Linedata = linedata;
-            Image = new Bitmap(image);
+            Image = image;
         }
 
         /// <summary>
@@ -469,7 +472,10 @@ namespace Bahtinov_Collimator
             /// <param name="direction">The direction of the defocus circle.</param>
             public DefocusCircleEventArgs(Bitmap image, PointD inner, double innerRadius, PointD outer, double outerRadius, double distance, double direction)
             {
-                Image = new Bitmap(image);
+                // Image reference is stored directly (no clone). The producer retains ownership for the
+                // duration of synchronous event dispatch; subscribers must not dispose it or use it
+                // after the handler returns.
+                Image = image;
                 InnerCircleCentre = inner;
                 OuterCircleCentre = outer;
                 InnerCircleRadius = innerRadius;
