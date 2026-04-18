@@ -91,6 +91,42 @@ namespace SkyCal.Custom_Components
 
         #endregion
 
+        #region DPI scaling
+        //
+        // The pixel-based properties on this control (TitleHeight, BorderThickness,
+        // CornerRadius, TitlePaddingLeft) and TitleFont are interpreted as "logical"
+        // values at 96 DPI. This control lives inside CalibrationComponent, which
+        // sets ScaleChildren = false to keep its hand-rolled layout pass authoritative,
+        // so WinForms never auto-scales these values when the form is dragged between
+        // monitors or launched on a high-DPI display. We therefore apply the scale
+        // factor ourselves at paint/layout time.
+
+        private float DpiScale
+        {
+            get { return DeviceDpi / 96f; }
+        }
+
+        private int ScaleByDpi(int logicalPixels)
+        {
+            return (int)Math.Round(logicalPixels * DpiScale, MidpointRounding.AwayFromZero);
+        }
+
+        private int ScaledTitleHeight
+        {
+            get { return ScaleByDpi(titleHeight); }
+        }
+
+        private int ScaledBorderThickness
+        {
+            get { return Math.Max(1, ScaleByDpi(borderThickness)); }
+        }
+
+        private int ScaledCornerRadius
+        {
+            get { return ScaleByDpi(cornerRadius); }
+        }
+        #endregion
+
         /// <summary>
         /// True if the inner RichTextBox has been created and is safe to access.
         /// </summary>
@@ -385,8 +421,8 @@ namespace SkyCal.Custom_Components
             if (!IsInnerReady)
                 return;
 
-            int inset = borderThickness;
-            int topBand = showTitleBar ? titleHeight : 0;
+            int inset = ScaledBorderThickness;
+            int topBand = showTitleBar ? ScaledTitleHeight : 0;
 
             int contentX = inset + Padding.Left;
             int contentY = inset + Padding.Top + topBand;
@@ -410,7 +446,7 @@ namespace SkyCal.Custom_Components
             if (Width < 2 || Height < 2)
                 return;
 
-            using (var path = CreateRoundedRectPath(new Rectangle(0, 0, Width, Height), cornerRadius))
+            using (var path = CreateRoundedRectPath(new Rectangle(0, 0, Width, Height), ScaledCornerRadius))
             {
                 Region = new Region(path);
             }
@@ -438,6 +474,21 @@ namespace SkyCal.Custom_Components
             base.OnResize(e);
             UpdateLayoutSafe();
             UpdateRegionSafe();
+        }
+
+        /// <summary>
+        /// Raised after the parent finishes handling a DPI change. The inner layout,
+        /// rounded region, and painted title bar are all derived from <see cref="DeviceDpi"/>,
+        /// so recompute them and force a repaint. Without this the title bar keeps its
+        /// 96-DPI pixel size/font when the form is dragged to a higher-DPI monitor, which
+        /// leaves the title text looking too small relative to the rescaled panel.
+        /// </summary>
+        protected override void OnDpiChangedAfterParent(EventArgs e)
+        {
+            base.OnDpiChangedAfterParent(e);
+            UpdateLayoutSafe();
+            UpdateRegionSafe();
+            Invalidate();
         }
 
         /// <summary>
@@ -507,7 +558,9 @@ namespace SkyCal.Custom_Components
 
             try
             {
-                int t = borderThickness;
+                int t = ScaledBorderThickness;
+                int scaledTitleHeight = ScaledTitleHeight;
+                int scaledCornerRadius = ScaledCornerRadius;
                 int strokeInset = t / 2;
 
                 Rectangle strokeBounds = new Rectangle(
@@ -521,7 +574,7 @@ namespace SkyCal.Custom_Components
                     t,
                     Math.Max(0, cw - 2 * t),
                     Math.Max(0, ch - 2 * t));
-                int innerRadius = Math.Max(0, cornerRadius - t);
+                int innerRadius = Math.Max(0, scaledCornerRadius - t);
 
                 using (var fillPath = CreateRoundedRectPath(innerFill, innerRadius))
                 using (var backBrush = new SolidBrush(BackColor))
@@ -529,13 +582,13 @@ namespace SkyCal.Custom_Components
                     g.FillPath(backBrush, fillPath);
                 }
 
-                if (showTitleBar && titleHeight > 0)
+                if (showTitleBar && scaledTitleHeight > 0)
                 {
                     Rectangle titleRect = new Rectangle(
                         t,
                         t,
                         Math.Max(0, cw - 2 * t),
-                        Math.Max(0, titleHeight));
+                        Math.Max(0, scaledTitleHeight));
 
                     using (var titlePath = CreateTopRoundedRectPath(titleRect, innerRadius))
                     using (var titleBrush = new SolidBrush(titleBackColor))
@@ -545,32 +598,57 @@ namespace SkyCal.Custom_Components
 
                     if (showTitleSeparator)
                     {
-                        int y = t + titleHeight;
+                        int y = t + scaledTitleHeight;
                         using (var sepPen = new Pen(borderColor, 1f))
                         {
                             g.DrawLine(sepPen, t, y, cw - t - 1, y);
                         }
                     }
 
+                    // Fonts measured in Point (the WinForms default) are DPI-independent:
+                    // GDI+ converts points to pixels using the current Graphics DpiY at draw
+                    // time (pixels = points * DpiY / 72), so a 9pt font automatically renders
+                    // at 2x the pixel size on a 192-DPI monitor without any manual scaling.
+                    // Only pixel-unit fonts need the DPI factor applied by hand, because they
+                    // are interpreted literally in device pixels regardless of monitor DPI
+                    // and — since CalibrationComponent disables child scaling — WinForms will
+                    // not resize them for us when the form moves to a higher-DPI monitor.
+                    Font sourceFont = titleFont ?? new Font(Font, FontStyle.Bold);
+                    Font tf;
+                    if (sourceFont.Unit == GraphicsUnit.Pixel)
+                    {
+                        tf = new Font(
+                            sourceFont.FontFamily,
+                            sourceFont.Size * DpiScale,
+                            sourceFont.Style,
+                            sourceFont.Unit);
+                    }
+                    else
+                    {
+                        tf = sourceFont;
+                    }
+
                     using (var textBrush = new SolidBrush(titleForeColor))
                     using (var fmt = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
                     {
-                        Font tf = titleFont ?? new Font(Font, FontStyle.Bold);
-
                         Rectangle textRect = new Rectangle(
                             t,
                             t,
                             Math.Max(0, cw - 2 * t),
-                            titleHeight);
+                            scaledTitleHeight);
 
                         g.DrawString(titleText ?? string.Empty, tf, textBrush, textRect, fmt);
-
-                        if (titleFont == null)
-                            tf.Dispose();
                     }
+
+                    // Dispose only the fonts we allocated. Never dispose the user-owned
+                    // titleFont property — its lifetime belongs to the caller.
+                    if (tf != sourceFont)
+                        tf.Dispose();
+                    if (sourceFont != titleFont)
+                        sourceFont.Dispose();
                 }
 
-                using (var borderPath = CreateRoundedRectPath(strokeBounds, cornerRadius))
+                using (var borderPath = CreateRoundedRectPath(strokeBounds, scaledCornerRadius))
                 using (var pen = new Pen(borderColor, t))
                 {
                     pen.Alignment = PenAlignment.Center;
@@ -579,7 +657,7 @@ namespace SkyCal.Custom_Components
             }
             finally
             {
-                using (GraphicsPath regionPath = CreateRoundedRectPath(new Rectangle(0, 0, cw, ch), cornerRadius))
+                using (GraphicsPath regionPath = CreateRoundedRectPath(new Rectangle(0, 0, cw, ch), ScaledCornerRadius))
                     Region = new Region(regionPath);
             }
         }
