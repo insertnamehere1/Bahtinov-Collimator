@@ -167,6 +167,9 @@ namespace Bahtinov_Collimator
             groupBox1.MouseEnter -= FocusChannelGroupBox_MouseEnter;
             groupBox1.MouseLeave -= FocusChannelGroupBox_MouseLeave;
             groupBox1.Resize -= GroupBox1_Resize;
+
+            mirrorDrawingComponent1.MouseEnter -= ChildMouseEnter;
+            mirrorDrawingComponent1.MouseLeave -= ChildMouseLeave;
         }
 
         #endregion

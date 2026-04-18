@@ -127,15 +127,21 @@ namespace Bahtinov_Collimator
             BahtinovData result = new BahtinovData(LINES, rect);
             BitmapData bitmapData = starImage.LockBits(rect, ImageLockMode.ReadWrite, starImage.PixelFormat);
 
-            IntPtr scan0 = bitmapData.Scan0;
             int stride = bitmapData.Stride;
             int bytesPerPixel = System.Drawing.Image.GetPixelFormatSize(starImage.PixelFormat) / 8;
             int width = starImage.Width;
             int height = starImage.Height;
-
-            byte[] starImageArray = new byte[height * stride];
-            Marshal.Copy(scan0, starImageArray, 0, starImageArray.Length);
-            starImage.UnlockBits(bitmapData);
+            byte[] starImageArray;
+            try
+            {
+                IntPtr scan0 = bitmapData.Scan0;
+                starImageArray = new byte[height * stride];
+                Marshal.Copy(scan0, starImageArray, 0, starImageArray.Length);
+            }
+            finally
+            {
+                starImage.UnlockBits(bitmapData);
+            }
 
             float edgeOffset = (width < height ? 0.5f * (float)Math.Sqrt(2.0) * width : 0.5f * (float)Math.Sqrt(2.0) * height) - 8f;
             int leftEdge = (int)(0.5 * (width - edgeOffset));
@@ -678,15 +684,21 @@ namespace Bahtinov_Collimator
 
             // Lock the bitmap data.
             BitmapData bitmapData = starImage.LockBits(rect, ImageLockMode.ReadWrite, starImage.PixelFormat);
-            IntPtr scan0 = bitmapData.Scan0;
             int stride = bitmapData.Stride;
             int bytesPerPixel = Image.GetPixelFormatSize(starImage.PixelFormat) / 8;
             int imagePixelCount = stride * starImage.Height;
-            byte[] starImageArray = new byte[imagePixelCount];
-
-            // Copy pixel data to byte array and back to the image.
-            Marshal.Copy(scan0, starImageArray, 0, imagePixelCount);
-            starImage.UnlockBits(bitmapData);
+            byte[] starImageArray;
+            try
+            {
+                IntPtr scan0 = bitmapData.Scan0;
+                starImageArray = new byte[imagePixelCount];
+                // Copy pixel data to byte array; caller reads from the byte buffer after UnlockBits.
+                Marshal.Copy(scan0, starImageArray, 0, imagePixelCount);
+            }
+            finally
+            {
+                starImage.UnlockBits(bitmapData);
+            }
 
             int width = starImage.Width;
             int height = starImage.Height;

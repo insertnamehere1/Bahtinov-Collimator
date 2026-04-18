@@ -679,11 +679,14 @@ namespace Bahtinov_Collimator
                 cachedBahtinovData = null;
                 cachedOverlayMode = OverlayMode.None;
 
+                // Dispose only bitmaps we own. Properties.Resources returns the same cached
+                // Bitmap instance every call, so disposing it would poison the ResourceManager
+                // for the whole process. Clone once and own the copy we assign here.
                 pictureBox1.Image?.Dispose();
                 pictureBox1.Image = null;
 
                 pictureBox1.Invalidate();
-                pictureBox1.Image = Properties.Resources.TBMask_DarkGray;
+                pictureBox1.Image = new Bitmap(Properties.Resources.TBMask_DarkGray);
                 pictureBox1.BackColor = UITheme.DarkBackground;
             }
         }

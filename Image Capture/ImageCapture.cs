@@ -231,6 +231,10 @@ namespace Bahtinov_Collimator
                     }
                     catch (InvalidOperationException)
                     {
+                        // Dispose the frame we allocated before bailing; the outer finally only
+                        // cleans up `g` and `latestImage`, not `updatedImage`.
+                        updatedImage.Dispose();
+                        updatedImage = null;
                         ImageLostEventProvider.OnImageLost(UiText.Current.ImageCaptureDefocusNotDetectedMessage, UiText.Current.ImageCaptureDefocusNotDetectedTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                         return;
                     }
@@ -301,10 +305,17 @@ namespace Bahtinov_Collimator
             BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, image.PixelFormat);
             int bytesPerPixel = Image.GetPixelFormatSize(image.PixelFormat) / 8;
             int stride = bitmapData.Stride;
-            IntPtr scan0 = bitmapData.Scan0;
-            byte[] pixels = new byte[stride * height];
-
-            Marshal.Copy(scan0, pixels, 0, pixels.Length);
+            byte[] pixels;
+            try
+            {
+                IntPtr scan0 = bitmapData.Scan0;
+                pixels = new byte[stride * height];
+                Marshal.Copy(scan0, pixels, 0, pixels.Length);
+            }
+            finally
+            {
+                image.UnlockBits(bitmapData);
+            }
 
             for (int angle = 0; angle < 360; angle += 4)
             {
@@ -357,13 +368,11 @@ namespace Bahtinov_Collimator
                 }
             }
 
-            image.UnlockBits(bitmapData);
-
-            if (transitionXSum == 0 || transitionYSum == 0)
+            if (transitionCount == 0)
                 throw new InvalidOperationException("No valid transitions detected in the image.");
 
-            double circleX = transitionXSum / (transitionCount / 2) + centerX;
-            double circleY = transitionYSum / (transitionCount / 2) + centerY;
+            double circleX = transitionXSum / transitionCount + centerX;
+            double circleY = transitionYSum / transitionCount + centerY;
 
             return new Point((int)Math.Round(circleX), (int)Math.Round(circleY));
         }

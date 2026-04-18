@@ -134,8 +134,10 @@ namespace Bahtinov_Collimator
         // New image capture, first pass
         /// <summary>
         /// Indicates whether the first pass of image capture has been completed.
+        /// Marked volatile: read/written from both the UI thread and the background
+        /// processing Task spawned in <see cref="OnImageReceived"/>.
         /// </summary>
-        private bool firstPassCompleted = false;
+        private volatile bool firstPassCompleted = false;
 
         // Image Processing Classes
         /// <summary>
@@ -151,8 +153,10 @@ namespace Bahtinov_Collimator
         // Bahtinov line data
         /// <summary>
         /// Contains the data related to the lines in Bahtinov mask images.
+        /// Marked volatile because the reference is published from the background
+        /// processing Task and read from the UI thread (menu gating, hover rendering).
         /// </summary>
-        private BahtinovData bahtinovLineData;
+        private volatile BahtinovData bahtinovLineData;
 
         // Voice Generation
         /// <summary>
@@ -166,14 +170,16 @@ namespace Bahtinov_Collimator
         /// 0 - No image type,
         /// 1 - Bahtinov,
         /// 2 - Defocus.
+        /// Volatile: written by the background processing Task and the UI thread.
         /// </summary>
-        private int imageType = 0;
+        private volatile int imageType = 0;
 
         // Screen Capture Flag
         /// <summary>
         /// Indicates whether the screen capture process is currently running.
+        /// Volatile: written from the UI thread and read from the background processing Task.
         /// </summary>
-        private bool screenCaptureRunningFlag = false;
+        private volatile bool screenCaptureRunningFlag = false;
 
         /// <summary>
         /// Single-flight gate for <see cref="ProcessAndDisplay"/>. 0 = idle, 1 = a frame is being
@@ -933,11 +939,20 @@ namespace Bahtinov_Collimator
                 return;
             }
 
+            Bitmap frame = e.Image;
             Task.Run(() =>
             {
                 try
                 {
-                    ProcessAndDisplay(e.Image);
+                    ProcessAndDisplay(frame);
+                }
+                catch (Exception ex)
+                {
+                    // Never let exceptions from the processing path escape as unobserved task
+                    // exceptions (which can tear down the process on some runtime configurations).
+                    // ProcessAndDisplay owns and disposes `frame` itself, but guard against the
+                    // case where it throws before the try/finally inside it runs.
+                    System.Diagnostics.Debug.WriteLine("ProcessAndDisplay failed: " + ex);
                 }
                 finally
                 {

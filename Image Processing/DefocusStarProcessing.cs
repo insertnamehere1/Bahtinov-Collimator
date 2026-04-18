@@ -128,9 +128,17 @@ namespace Bahtinov_Collimator.Image_Processing
             BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, image.PixelFormat);
             int bytesPerPixel = Image.GetPixelFormatSize(image.PixelFormat) / 8;
             int stride = bitmapData.Stride;
-            IntPtr scan0 = bitmapData.Scan0;
-            byte[] pixels = new byte[stride * height];
-            System.Runtime.InteropServices.Marshal.Copy(scan0, pixels, 0, pixels.Length);
+            byte[] pixels;
+            try
+            {
+                IntPtr scan0 = bitmapData.Scan0;
+                pixels = new byte[stride * height];
+                System.Runtime.InteropServices.Marshal.Copy(scan0, pixels, 0, pixels.Length);
+            }
+            finally
+            {
+                image.UnlockBits(bitmapData);
+            }
 
             for (int angle = 0; angle < 360; angle++)
             {
@@ -184,11 +192,15 @@ namespace Bahtinov_Collimator.Image_Processing
                 }
             }
 
-            image.UnlockBits(bitmapData);
+            if (transitionCount == 0)
+            {
+                // No brightness transitions found; fall back to image center and the max search radius.
+                return (new PointD(centerX, centerY), maxRadius);
+            }
 
-            double radius = transitionCount > 0 ? Math.Round((double)radiusSum / transitionCount) : maxRadius;
-            double circleX = transitionXSum / (transitionCount / 2) + centerX;
-            double circleY = transitionYSum / (transitionCount / 2) + centerY;
+            double radius = Math.Round((double)radiusSum / transitionCount);
+            double circleX = transitionXSum / transitionCount + centerX;
+            double circleY = transitionYSum / transitionCount + centerY;
 
             return (new PointD(circleX, circleY), radius);
         }
