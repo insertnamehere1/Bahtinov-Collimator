@@ -83,6 +83,8 @@
   "HelpOpenErrorTitle": "Errore",
   "LanguageFileMissingMessageFormat": "File JSON della lingua non trovato: {0}",
   "LanguageFileMissingTitle": "File non trovato",
+  "ManifestFileMissingMessage": "Il file manifest dell'applicazione richiesto è mancante. Si prega di reinstallare SkyCal.",
+  "ManifestFileMissingTitle": "File manifest mancante",
 
   "ImageCaptureDefocusNotDetectedMessage": "Impossibile rilevare l'immagine di defocus",
   "ImageCaptureDefocusNotDetectedTitle": "Offset del cerchio",

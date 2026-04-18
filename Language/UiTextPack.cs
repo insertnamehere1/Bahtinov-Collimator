@@ -96,6 +96,8 @@ namespace Bahtinov_Collimator
         [DataMember] public string HelpOpenErrorTitle { get; set; }
         [DataMember] public string LanguageFileMissingMessageFormat { get; set; }
         [DataMember] public string LanguageFileMissingTitle { get; set; }
+        [DataMember] public string ManifestFileMissingMessage { get; set; }
+        [DataMember] public string ManifestFileMissingTitle { get; set; }
 
         [DataMember] public string ImageCaptureDefocusNotDetectedMessage { get; set; }
         [DataMember] public string ImageCaptureDefocusNotDetectedTitle { get; set; }

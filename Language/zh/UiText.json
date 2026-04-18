@@ -83,6 +83,8 @@
   "HelpOpenErrorTitle": "错误",
   "LanguageFileMissingMessageFormat": "未找到语言 JSON 文件：{0}",
   "LanguageFileMissingTitle": "文件未找到",
+  "ManifestFileMissingMessage": "缺少所需的应用程序清单文件。请重新安装 SkyCal。",
+  "ManifestFileMissingTitle": "清单文件缺失",
 
   "ImageCaptureDefocusNotDetectedMessage": "无法检测离焦图像",
   "ImageCaptureDefocusNotDetectedTitle": "圆偏移",

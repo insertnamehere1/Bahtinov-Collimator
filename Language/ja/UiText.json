@@ -83,6 +83,8 @@
   "HelpOpenErrorTitle": "エラー",
   "LanguageFileMissingMessageFormat": "言語 JSON ファイルが見つかりません: {0}",
   "LanguageFileMissingTitle": "ファイルが見つかりません",
+  "ManifestFileMissingMessage": "必要なアプリケーション マニフェスト ファイルがありません。SkyCal を再インストールしてください。",
+  "ManifestFileMissingTitle": "マニフェスト ファイルがありません",
 
   "ImageCaptureDefocusNotDetectedMessage": "デフォーカス画像を検出できません",
   "ImageCaptureDefocusNotDetectedTitle": "サークルオフセット",

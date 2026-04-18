@@ -64,7 +64,16 @@ namespace Bahtinov_Collimator
         /// <returns>The override language code, or null/empty when no override is set.</returns>
         private static string GetOverrideLanguageCode()
         {
-        //    return "ja";
+            // Language Testing 
+            //
+            //    return "de";
+            //    return "en";
+            //    return "es";
+            //    return "fr";
+            //    return "it";
+            //    return "ja";
+            //    return "zh";
+            
             return Environment.GetEnvironmentVariable(OverrideLanguageEnvironmentVariable)?.Trim();
         }
 

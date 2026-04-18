@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -43,6 +45,37 @@ namespace Bahtinov_Collimator
 
         #endregion
 
+        #region Manifest presence check
+
+        /// <summary>
+        /// Verifies that the external application manifest (required for the
+        /// PerMonitorV2 DPI settings) is present alongside the executable.
+        /// Shows a localized error message and aborts startup if it is missing.
+        /// Must be called after <see cref="LanguageLoader.LoadFromSystemCulture"/>
+        /// so that <see cref="UiText.Current"/> is populated.
+        /// </summary>
+        /// <returns>True when the manifest exists; false when startup should abort.</returns>
+        private static bool VerifyManifestPresent()
+        {
+            string exePath = Assembly.GetEntryAssembly()?.Location;
+            if (string.IsNullOrEmpty(exePath))
+                exePath = Application.ExecutablePath;
+
+            string manifestPath = exePath + ".manifest";
+
+            if (File.Exists(manifestPath))
+                return true;
+
+            MessageBox.Show(
+                UiText.Current.ManifestFileMissingMessage,
+                UiText.Current.ManifestFileMissingTitle,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+            return false;
+        }
+
+        #endregion
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -56,7 +89,13 @@ namespace Bahtinov_Collimator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            // Language must load before the manifest check so the missing-manifest
+            // dialog can be shown in the user's language via UiText.Current.
             LanguageLoader.LoadFromSystemCulture(AppDomain.CurrentDomain.BaseDirectory, Properties.Settings.Default.MCTSelected ? "MCT" : "SCT");
+
+            if (!VerifyManifestPresent())
+                return;
+
             Application.Run(new Form1());
         }
     }
