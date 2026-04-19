@@ -345,69 +345,69 @@
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="Language\de\NextStepText_MCT.json">
+    <Content Include="Language\de\NextStepText_MCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\en\NextStepText_MCT.json">
+    </Content>
+    <Content Include="Language\en\NextStepText_MCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\en\NextStepText_SCT.json">
+    </Content>
+    <Content Include="Language\en\NextStepText_SCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\en\UiText.json">
+    </Content>
+    <Content Include="Language\en\UiText.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\es\NextStepText_MCT.json">
+    </Content>
+    <Content Include="Language\es\NextStepText_MCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\fr\NextStepText_MCT.json">
+    </Content>
+    <Content Include="Language\fr\NextStepText_MCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\fr\NextStepText_SCT.json">
+    </Content>
+    <Content Include="Language\fr\NextStepText_SCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\fr\UiText.json">
+    </Content>
+    <Content Include="Language\fr\UiText.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\de\NextStepText_SCT.json">
+    </Content>
+    <Content Include="Language\de\NextStepText_SCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\de\UiText.json">
+    </Content>
+    <Content Include="Language\de\UiText.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\es\NextStepText_SCT.json">
+    </Content>
+    <Content Include="Language\es\NextStepText_SCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\es\UiText.json">
+    </Content>
+    <Content Include="Language\es\UiText.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\it\NextStepText_MCT.json">
+    </Content>
+    <Content Include="Language\it\NextStepText_MCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\it\NextStepText_SCT.json">
+    </Content>
+    <Content Include="Language\it\NextStepText_SCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\it\UiText.json">
+    </Content>
+    <Content Include="Language\it\UiText.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\ja\NextStepText_MCT.json">
+    </Content>
+    <Content Include="Language\ja\NextStepText_MCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\ja\NextStepText_SCT.json">
+    </Content>
+    <Content Include="Language\ja\NextStepText_SCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\ja\UiText.json">
+    </Content>
+    <Content Include="Language\ja\UiText.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\zh\NextStepText_MCT.json">
+    </Content>
+    <Content Include="Language\zh\NextStepText_MCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\zh\NextStepText_SCT.json">
+    </Content>
+    <Content Include="Language\zh\NextStepText_SCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Language\zh\UiText.json">
+    </Content>
+    <Content Include="Language\zh\UiText.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
