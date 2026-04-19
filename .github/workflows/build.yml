@@ -57,7 +57,7 @@ jobs:
             Set-Content -Path $csproj -Value $new -Encoding UTF8
             Write-Host "Updated ApplicationVersion in $csproj"
           } else {
-            throw "Regex matched but produced no change in $csproj"
+            Write-Host "ApplicationVersion in $csproj already at $version - no change required"
           }
       
           # Update AssemblyInfo.cs
