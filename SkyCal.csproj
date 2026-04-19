@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -12,11 +12,15 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <GenerateResourceUsePreserializedResources>false</GenerateResourceUsePreserializedResources>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
     <UpdateMode>Background</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
@@ -28,7 +32,7 @@
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>3.0.0.0</ApplicationVersion>
+    <ApplicationVersion>5.0.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -140,7 +144,10 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Speech" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -152,17 +159,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdjustAssist\AdjustAssistMCT.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Custom Components\CalibrationComponent.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="AdjustAssist\AdjustAssistSCT.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AdjustAssist\AdjustAssistBase.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AdjustAssist\AdjustAssistBase.Designer.cs">
-      <DependentUpon>AdjustAssistBase.cs</DependentUpon>
+    <Compile Include="Custom Components\CalibrationComponent.Designer.cs">
+      <DependentUpon>CalibrationComponent.cs</DependentUpon>
     </Compile>
     <Compile Include="Custom Components\HistoryBar.cs">
       <SubType>Component</SubType>
@@ -170,6 +171,16 @@
     <Compile Include="Custom Components\HistoryBar.Designer.cs">
       <DependentUpon>HistoryBar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Custom Components\MirrorDrawComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\MirrorDrawComponent.Designer.cs">
+      <DependentUpon>MirrorDrawComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\MirrorLineArtTint.cs" />
+    <Compile Include="Custom Components\MctSecondaryMirrorLineArt.cs" />
+    <Compile Include="Custom Components\SctPrimaryMirrorLineArt.cs" />
+    <Compile Include="Custom Components\RichTextBoxExtensions.cs" />
     <Compile Include="Custom Components\RoundedButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -194,11 +205,14 @@
     <Compile Include="Custom Components\RoundedPictureBox.Designer.cs">
       <DependentUpon>RoundedPictureBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Custom Components\SlideSwitchComponent.cs">
+    <Compile Include="Custom Components\RoundedRichTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Custom Components\SlideSwitchComponent.Designer.cs">
-      <DependentUpon>SlideSwitchComponent.cs</DependentUpon>
+    <Compile Include="Custom Components\RoundedRichTextBox.Designer.cs">
+      <DependentUpon>RoundedRichTextBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\TitleBox.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Dialogs\AboutBox.cs">
       <SubType>Form</SubType>
@@ -211,6 +225,12 @@
     </Compile>
     <Compile Include="Custom Components\FocusChannelComponent.Designer.cs">
       <DependentUpon>FocusChannelComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\StartupDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\StartupDialog.Designer.cs">
+      <DependentUpon>StartupDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Image Capture\ImageCapture.cs" />
     <Compile Include="Image Capture\ImageSelect.cs">
@@ -236,11 +256,26 @@
     <Compile Include="Dialogs\DarkMessageBox.Designer.cs">
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\NextStepDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\NextStepDialog.Designer.cs">
+      <DependentUpon>NextStepDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NextStep\NextStepGuidance.cs" />
+    <Compile Include="Language\NextStepTextPack.cs" />
+    <Compile Include="Language\LanguageLoader.cs" />
+    <Compile Include="Language\UiTextPack.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="NextStep\NextStep.cs" />
+    <Compile Include="Custom Components\ToggleSwitch.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Utilities\DpiAwareDialog.cs" />
     <Compile Include="Utilities\Helper.cs" />
     <Compile Include="Image Processing\BahtinovProcessing.cs" />
     <Compile Include="Form1.cs">
@@ -250,7 +285,6 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Utilities\Events.cs" />
-    <Compile Include="Utilities\PolynomialCurveFit.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Dialogs\Settings.cs">
@@ -262,17 +296,22 @@
     <Compile Include="Voice\VoiceControl.cs" />
     <Compile Include="Utilities\UITheme.cs" />
     <Compile Include="Utilities\Utilities.cs" />
-    <EmbeddedResource Include="AdjustAssist\AdjustAssistBase.resx">
-      <DependentUpon>AdjustAssistBase.cs</DependentUpon>
+    <EmbeddedResource Include="Custom Components\CalibrationComponent.resx">
+      <DependentUpon>CalibrationComponent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Custom Components\HistoryBar.resx">
       <DependentUpon>HistoryBar.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Custom Components\MirrorDrawComponent.resx">
+      <DependentUpon>MirrorDrawComponent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\Donate.resx">
       <DependentUpon>Donate.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Custom Components\FocusChannelComponent.resx">
       <DependentUpon>FocusChannelComponent.cs</DependentUpon>
@@ -281,11 +320,18 @@
       <DependentUpon>ImageDisplayComponent.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\StartupDialog.resx">
+      <DependentUpon>StartupDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Image Capture\ImageSelect.resx">
       <DependentUpon>ImageSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\NextStepDialog.resx">
+      <DependentUpon>NextStepDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -298,6 +344,70 @@
     <EmbeddedResource Include="Dialogs\DarkMessageBox.resx">
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Language\de\NextStepText_MCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\en\NextStepText_MCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\en\NextStepText_SCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\en\UiText.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\es\NextStepText_MCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\fr\NextStepText_MCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\fr\NextStepText_SCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\fr\UiText.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\de\NextStepText_SCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\de\UiText.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\es\NextStepText_SCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\es\UiText.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\it\NextStepText_MCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\it\NextStepText_SCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\it\UiText.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\ja\NextStepText_MCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\ja\NextStepText_SCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\ja\UiText.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\zh\NextStepText_MCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\zh\NextStepText_SCT.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Language\zh\UiText.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

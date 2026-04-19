@@ -1,27 +1,54 @@
-﻿using System;
+using Bahtinov_Collimator.Custom_Components;
+using System;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
     public partial class FocusChannelComponent : UserControl
     {
-        #region Fields
+        #region Constants
 
-        [DllImport("user32.dll")]
-        public static extern bool SetProcessDPIAware();
+        private const int HISTORYBAR_VERTICAL_POSITION = -13;
+
+        #endregion
+
+        #region Fields
 
         public delegate void ChannelSelectEventHandler(object sender, ChannelSelectEventArgs e);
         public static event ChannelSelectEventHandler ChannelSelectDataEvent;
 
         private static int focusChannelCount = 0;
-        private static bool[] mouseOver = new bool[3] { false, false, false };
+        private static readonly bool[] mouseOver = new bool[3] { false, false, false };
+
+        public double ErrorOffset { private set; get; } = 0.0f;
+
+        public Custom_Components.MirrorType MirrorType
+        {
+            get => mirrorDrawingComponent1.MirrorType;
+            set => mirrorDrawingComponent1.MirrorType = value;
+        }
 
         private bool disposed = false; // To detect redundant calls
         private int groupID;
-        private Color insideCriticalFocusColor;
-        private Font labelFont;
+
+        /// <summary>Horizontal inset from group box left/right (96 DPI logical px).</summary>
+        private const int HistoryBarHorizontalMarginAt96 = 6;
+
+        /// <summary>
+        /// Default focus channel width (96 DPI logical px), same as <see cref="Form1"/> default channel width.
+        /// Used to compute the history bar width when the mirror is visible: same width as a full-stretch bar at that size.
+        /// </summary>
+        private const int DefaultFocusChannelWidthAt96 = 185;
+
+        /// <summary>Distance from the group box’s left client edge to the mirror (96 DPI logical px).</summary>
+        private const int MirrorHorizontalInsetAt96 = 8;
+
+        /// <summary>Minimum gap between the mirror’s right edge and the history bar’s left (96 DPI logical px).</summary>
+        private const int MirrorGapToHistoryBarAt96 = 8;
+
+        /// <summary>Mirror height as a fraction of <see cref="Control.ClientSize.Height"/> of the group box (scales when the channel resizes).</summary>
+        private const double MirrorHeightFractionOfGroupClient = 0.62;
 
         #endregion
 
@@ -30,60 +57,88 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Initializes a new instance of the <see cref="FocusChannelComponent"/> class.
         /// </summary>
-        /// <param name="groupID">The group ID for the component.</param>
-        public FocusChannelComponent(int groupID)
+        public FocusChannelComponent()
         {
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
 
-            this.groupID = groupID;
-            insideCriticalFocusColor = UITheme.GetGroupBoxTextColor(groupID);
-
-            SetProcessDPIAware();
             InitializeComponent();
-
-            this.AutoScaleMode = AutoScaleMode.None;
-
-
-            // Get the current DPI of the display
-            using (Graphics g = this.CreateGraphics())
-            {
-                float dpi = g.DpiX; // Horizontal DPI (DpiY can also be used)
-
-                // Set the base font size in points (e.g., 12 points)
-                float baseFontSize = 12.0f;
-
-                // Calculate the font size based on DPI (assuming 96 DPI as standard)
-                float scaledFontSize = baseFontSize * 96f / dpi;
-
-                // Apply the scaled font to the form or controls
-                this.labelFont = new Font(this.Font.FontFamily, scaledFontSize);
-            }
-
-            this.groupBox1.Font = labelFont;
-
-            SetLabelProperties(labelFont);
             ApplyTheme();
             SubscribeToEvents();
+            UpdateHistoryBarLayout();
+            UpdateMirrorPanelLayout();
+            focusChannelCount++;
+        }
 
-            switch(groupID)
+        /// <inheritdoc />
+        protected override void OnDpiChangedAfterParent(EventArgs e)
+        {
+            base.OnDpiChangedAfterParent(e);
+            UpdateHistoryBarLayout();
+            UpdateMirrorPanelLayout();
+        }
+
+        /// <summary>
+        /// Reconfigures this channel for the specified group and mask mode.
+        /// </summary>
+        /// <param name="groupID">Channel index (0 red, 1 green, 2 blue).</param>
+        /// <param name="isTribahtinov">True when Tri-Bahtinov mode is active and mirror visualization should be shown.</param>
+        /// <param name="soloRedChannel">When true and <paramref name="groupID"/> is red, the group title shows the single-channel focus label.</param>
+        public void ConfigureFocusChannel(int groupID, bool isTribahtinov, bool soloRedChannel = false)
+        {
+            UnsubscribeToEvents();
+
+            if (focusChannelCount > 0)
+                focusChannelCount--;
+        
+            this.groupID = groupID;
+
+            switch (groupID)
             {
                 case 0:
-                    groupBox1.Text = "Red Group";
+                    groupBox1.Text = soloRedChannel
+                        ? (UiText.Current.FocusErrorGroupBox ?? UiText.Current.FocusGroupRed)
+                        : UiText.Current.FocusGroupRed;
                     break;
                 case 1:
-                    groupBox1.Text = "Green Group";
+                    groupBox1.Text = UiText.Current.FocusGroupGreen;
                     break;
                 case 2:
-                    groupBox1.Text = "Blue Group";
+                    groupBox1.Text = UiText.Current.FocusGroupBlue;
                     break;
                 default:
                     break;
             }
-
             groupBox1.Tag = groupID;
+
+            if (isTribahtinov)
+            {
+                if (Properties.Settings.Default.SCTSelected == true)
+                    mirrorDrawingComponent1.MirrorType = Custom_Components.MirrorType.SctPrimary;
+                if (Properties.Settings.Default.MCTSelected == true)
+                    mirrorDrawingComponent1.MirrorType = Custom_Components.MirrorType.MctSecondary;
+                mirrorDrawingComponent1.Visible = true;
+            }
+            else
+                mirrorDrawingComponent1.Visible = false;
+            
+            ApplyTheme();
+            SubscribeToEvents();
+            UpdateHistoryBarLayout();
+            UpdateMirrorPanelLayout();
             focusChannelCount++;
         }
+
+        /// <summary>
+        /// Scales a 96-DPI logical pixel value to current monitor device pixels.
+        /// </summary>
+        /// <returns>The DPI-scaled device pixel value rounded away from zero.</returns>
+        private int S(int logicalPixelsAt96)
+        {
+            float dpiScale = DeviceDpi / 96f;
+            return (int)Math.Round(logicalPixelsAt96 * dpiScale, MidpointRounding.AwayFromZero);
+        }
+
 
         #endregion
 
@@ -97,11 +152,10 @@ namespace Bahtinov_Collimator
             BahtinovProcessing.FocusDataEvent += FocusDataEvent;
             groupBox1.MouseEnter += FocusChannelGroupBox_MouseEnter;
             groupBox1.MouseLeave += FocusChannelGroupBox_MouseLeave;
+            groupBox1.Resize += GroupBox1_Resize;
 
-            foreach (var label in GetAllLabels())
-            {
-                label.Paint += Label_Paint;
-            }
+            mirrorDrawingComponent1.MouseEnter += ChildMouseEnter;
+            mirrorDrawingComponent1.MouseLeave += ChildMouseLeave;
         }
 
         /// <summary>
@@ -112,124 +166,10 @@ namespace Bahtinov_Collimator
             BahtinovProcessing.FocusDataEvent -= FocusDataEvent;
             groupBox1.MouseEnter -= FocusChannelGroupBox_MouseEnter;
             groupBox1.MouseLeave -= FocusChannelGroupBox_MouseLeave;
+            groupBox1.Resize -= GroupBox1_Resize;
 
-            foreach (var label in GetAllLabels())
-            {
-                label.Paint -= Label_Paint;
-            }
-        }
-
-        #endregion
-
-        #region Label Setup
-
-        /// <summary>
-        /// Initializes the properties of the labels.
-        /// </summary>
-        /// <param name="newFont">The new font to apply to the labels.</param>
-        private void SetLabelProperties(Font newFont)
-        {
-            DisableLabels();
-            SetupLabelLocation();
-            SetLabelFont(newFont);
-            SetLabelTextAlignment();
-            SetLabelTextDirection();
-            SetLabelAutoSize(false);
-            SetLabelText();
-            offsetBarControl1.Maximum = 2.0f;
-            offsetBarControl1.Minimum = -2.0f;
-            offsetBarControl1.Size = new Size(235, 44);
-            offsetBarControl1.Location = new Point(groupBox1.ClientSize.Width - offsetBarControl1.Width - 8, (groupBox1.ClientSize.Height - offsetBarControl1.Height) / 2 + 30);
-        }
-
-        /// <summary>
-        /// Sets up the location of various labels in the form. 
-        /// The labels are organized into three columns: first column, second column, and third column.
-        /// </summary>
-        private void SetupLabelLocation()
-        {
-            // First column: Positioning labels in the first column
-            label1.Location = new Point(9, 26);
-            label5.Location = new Point(9, 51);
-
-            // Second column: Positioning labels in the second column
-            FocusErrorLabel.Location = new Point(170, 24);
-            WithinCriticalFocusLabel.Location = new Point(181, 51);
-
-            // Third column: Positioning labels in the third column
-            label2.Location = new Point(208, 25);
-        }
-
-        /// <summary>
-        /// Sets the font for all labels.
-        /// </summary>
-        /// <param name="newFont">The new font to apply to the labels.</param>
-        private void SetLabelFont(Font newFont)
-        {
-            foreach (var label in GetAllLabels())
-            {
-                label.Font = newFont;
-            }
-        }
-
-        /// <summary>
-        /// Sets the initial text of the labels.
-        /// </summary>
-        private void SetLabelText()
-        {
-            FocusErrorLabel.Text = "0.0";
-            WithinCriticalFocusLabel.Text = "---";
-        }
-
-        /// <summary>
-        /// Sets the text alignment of the labels.
-        /// </summary>
-        private void SetLabelTextAlignment()
-        {
-            foreach (var label in GetAllLabels())
-            {
-                // Check if the current label is WithinCriticalFocusLabel
-                if (label == WithinCriticalFocusLabel)
-                {
-                    label.TextAlign = ContentAlignment.MiddleLeft;
-                }
-                else
-                {
-                    label.TextAlign = ContentAlignment.MiddleRight;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Sets the text direction of the labels.
-        /// </summary>
-        private void SetLabelTextDirection()
-        {
-            foreach (var label in GetAllLabels())
-            {
-                label.RightToLeft = RightToLeft.No;
-            }
-        }
-
-        /// <summary>
-        /// Sets the auto-size property of the labels.
-        /// </summary>
-        /// <param name="autoSize">If set to <c>true</c>, the labels will auto-size.</param>
-        private void SetLabelAutoSize(bool autoSize)
-        {
-            FocusErrorLabel.AutoSize = autoSize;
-            WithinCriticalFocusLabel.AutoSize = true;
-        }
-
-        /// <summary>
-        /// Disables the labels initially.
-        /// </summary>
-        private void DisableLabels()
-        {
-            foreach (var label in GetAllLabels())
-            {
-                label.Enabled = false;
-            }
+            mirrorDrawingComponent1.MouseEnter -= ChildMouseEnter;
+            mirrorDrawingComponent1.MouseLeave -= ChildMouseLeave;
         }
 
         #endregion
@@ -242,6 +182,8 @@ namespace Bahtinov_Collimator
         private void ApplyTheme()
         {
             groupBox1.ForeColor = UITheme.GetGroupBoxTextColor(groupID);
+            mirrorDrawingComponent1.BackColor = groupBox1.BackColor;
+            mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
         }
 
         #endregion
@@ -251,8 +193,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Custom paint event handler for labels.
         /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The <see cref="PaintEventArgs"/> instance containing the event data.</param>
         private void Label_Paint(object sender, PaintEventArgs e)
         {
             if (sender is Label label && label.Parent is GroupBox parentGroupBox && parentGroupBox.Tag is int groupId)
@@ -260,23 +200,12 @@ namespace Bahtinov_Collimator
                 Color textColor = UITheme.GetGroupBoxTextColor(groupId);
                 TextFormatFlags flags = TextFormatFlags.Default;
 
-                // Check label name to set text format flags
-                if (label.Name == "AbsoluteFocusErrorLabel" ||
-                    label.Name == "FocusErrorLabel" ||
-                    label.Name == "WithinCriticalFocusLabel")
+                if (label.Name == "FocusErrorLabel")
                 {
                     flags = TextFormatFlags.VerticalCenter | TextFormatFlags.Right;
                 }
 
-                if (label.Name == "WithinCriticalFocusLabel")
-                {
-                    TextRenderer.DrawText(e.Graphics, label.Text, label.Font, label.ClientRectangle, insideCriticalFocusColor, flags);
-                }
-                else
-                {
-                    // Draw the text with the specified color and format
-                    TextRenderer.DrawText(e.Graphics, label.Text, label.Font, label.ClientRectangle, textColor, flags);
-                }
+                TextRenderer.DrawText(e.Graphics, label.Text, label.Font, label.ClientRectangle, textColor, flags);
             }
         }
 
@@ -301,20 +230,94 @@ namespace Bahtinov_Collimator
             {
                 if (!e.FocusData.ClearDisplay)
                 {
-                    FocusErrorLabel.Text = e.FocusData.BahtinovOffset.ToString("F1");
-                    offsetBarControl1.MarkerColor = e.FocusData.InsideFocus ? Color.Green : Color.OrangeRed;
-                    offsetBarControl1.Value = (float)e.FocusData.BahtinovOffset;    
-                    WithinCriticalFocusLabel.Text = e.FocusData.InsideFocus ? "YES" : "NO";
-                    insideCriticalFocusColor = e.FocusData.InsideFocus ? UITheme.GetGroupBoxTextColor(groupID) : UITheme.GetGroupBoxCriticalColor;
+                    offsetBarControl1.MarkerColor = UITheme.ErrorBarMarkerColorInRange;
+                    offsetBarControl1.Value = (float)e.FocusData.BahtinovOffset;
+                    ErrorOffset = e.FocusData.BahtinovOffset;
                 }
                 else
                 {
-                    insideCriticalFocusColor = UITheme.GetGroupBoxTextColor(groupID);
-                    SetLabelText();
-                    offsetBarControl1.ResetHistory();
-                    offsetBarControl1.MarkerColor = Color.Green;
+                    offsetBarControl1.ResetValueAndHistory();
+                    offsetBarControl1.MarkerColor = UITheme.ErrorBarMarkerColorInRange;
+                    ErrorOffset = 0.0;
                 }
             }
+        }
+
+        #endregion
+
+        #region Telescope Cross-section Drawing
+
+        /// <summary>
+        /// Repositions the mirror drawing surface as the group box resizes.
+        /// </summary>
+        private void GroupBox1_Resize(object sender, EventArgs e)
+        {
+            UpdateHistoryBarLayout();
+            UpdateMirrorPanelLayout();
+        }
+
+        /// <summary>
+        /// Updates history-bar size and placement based on current channel mode and DPI.
+        /// </summary>
+        private void UpdateHistoryBarLayout()
+        {
+            if (offsetBarControl1 == null || groupBox1 == null)
+                return;
+
+            int margin = S(HistoryBarHorizontalMarginAt96);
+            int clientW = groupBox1.ClientSize.Width;
+            int innerW = Math.Max(0, clientW - 2 * margin);
+
+            if (mirrorDrawingComponent1.Visible)
+            {
+                int desiredBarW = S(DefaultFocusChannelWidthAt96) - 2 * S(HistoryBarHorizontalMarginAt96);
+                desiredBarW = Math.Max(S(80), desiredBarW);
+                int barW = Math.Min(desiredBarW, innerW);
+
+                offsetBarControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+                offsetBarControl1.Width = barW;
+                offsetBarControl1.Left = clientW - margin - barW;
+            }
+            else
+            {
+                offsetBarControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+                offsetBarControl1.Left = margin;
+                offsetBarControl1.Width = Math.Min(Math.Max(S(80), innerW), Math.Max(innerW, 1));
+            }
+
+            Rectangle content = groupBox1.DisplayRectangle;
+            int targetTop = content.Top + ((content.Height - offsetBarControl1.Height) / 2) + S(HISTORYBAR_VERTICAL_POSITION);
+            targetTop = Math.Max(content.Top, targetTop);
+
+            if (offsetBarControl1.Top != targetTop)
+                offsetBarControl1.Top = targetTop;
+
+            offsetBarControl1.BringToFront();
+        }
+
+        /// <summary>
+        /// Anchors the mirror to the left; width uses space left of the history bar, height tracks group box height.
+        /// <see cref="Custom_Components.MirrorDrawingComponent"/> scales a fixed 50×100 design to this bounds via <c>Graphics.ScaleTransform</c>.
+        /// </summary>
+        private void UpdateMirrorPanelLayout()
+        {
+            int leftInset = S(MirrorHorizontalInsetAt96);
+            int gapToBar = S(MirrorGapToHistoryBarAt96);
+            int maxMirrorW = Math.Max(0, offsetBarControl1.Left - gapToBar - leftInset);
+            int panelWidth = Math.Max(1, maxMirrorW);
+
+            int ch = groupBox1.ClientSize.Height;
+            int maxH = Math.Max(0, ch - S(42));
+            int panelHeight = Math.Max(S(40), Math.Min(maxH, (int)Math.Round(ch * MirrorHeightFractionOfGroupClient)));
+
+            int panelX = leftInset;
+            int panelY = Math.Max(S(26), (ch - panelHeight) / 2);
+
+            mirrorDrawingComponent1.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            mirrorDrawingComponent1.Bounds = new Rectangle(panelX, panelY, panelWidth, panelHeight);
+            mirrorDrawingComponent1.BackColor = groupBox1.BackColor;
+            mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
+            mirrorDrawingComponent1.Invalidate();
         }
 
         #endregion
@@ -324,11 +327,12 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the MouseEnter event for the group box.
         /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void FocusChannelGroupBox_MouseEnter(object sender, EventArgs e)
+        protected void FocusChannelGroupBox_MouseEnter(object sender, EventArgs e)
         {
             groupBox1.BackColor = UITheme.GetGroupBoxBackgroundColor(groupID);
+            mirrorDrawingComponent1.BackColor = UITheme.GetGroupBoxBackgroundColor(groupID);
+            mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
+            mirrorDrawingComponent1.Invalidate();
             mouseOver[groupID] = true;
             ChannelSelectDataEvent?.Invoke(null, new ChannelSelectEventArgs(mouseOver, focusChannelCount));
         }
@@ -336,13 +340,31 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the MouseLeave event for the group box.
         /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void FocusChannelGroupBox_MouseLeave(object sender, EventArgs e)
         {
             groupBox1.BackColor = UITheme.DarkBackground;
+            mirrorDrawingComponent1.BackColor = UITheme.DarkBackground;
+            mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
+            mirrorDrawingComponent1.Invalidate();
             mouseOver[groupID] = false;
             ChannelSelectDataEvent?.Invoke(null, new ChannelSelectEventArgs(mouseOver, focusChannelCount));
+        }
+
+        /// <summary>
+        /// Redirects child hover events to the parent group-box enter handler.
+        /// </summary>
+        private void ChildMouseEnter(object sender, EventArgs e)
+        {
+            FocusChannelGroupBox_MouseEnter(sender, e);
+        }
+
+        /// <summary>
+        /// Redirects child leave events when the cursor exits the component bounds.
+        /// </summary>
+        private void ChildMouseLeave(object sender, EventArgs e)
+        {
+            if (!ClientRectangle.Contains(PointToClient(Cursor.Position)))
+                FocusChannelGroupBox_MouseLeave(sender, e);
         }
 
         #endregion
@@ -352,7 +374,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
-        /// <param name="disposing">If set to <c>true</c>, release both managed and unmanaged resources; otherwise, only release unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             if (!disposed)
@@ -362,26 +383,13 @@ namespace Bahtinov_Collimator
                     components?.Dispose();
                     UnsubscribeToEvents();
 
-                    if(focusChannelCount > 0)
+                    if (focusChannelCount > 0)
                         focusChannelCount--;
                 }
 
                 disposed = true;
                 base.Dispose(disposing);
             }
-        }
-
-        #endregion
-
-        #region Helper Methods
-
-        /// <summary>
-        /// Gets all labels in the control.
-        /// </summary>
-        /// <returns>An array of labels.</returns>
-        private Label[] GetAllLabels()
-        {
-            return new Label[] { label1, label2, label5, FocusErrorLabel, WithinCriticalFocusLabel };
         }
 
         #endregion

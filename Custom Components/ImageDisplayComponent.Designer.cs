@@ -1,4 +1,4 @@
-﻿using Bahtinov_Collimator.Custom_Components;
+using Bahtinov_Collimator.Custom_Components;
 
 namespace Bahtinov_Collimator
 {
@@ -8,6 +8,11 @@ namespace Bahtinov_Collimator
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Represents the picture box control used to display images with rounded corners.
+        /// </summary>
+        private RoundedPictureBox pictureBox1;
 
         /// <summary> 
         /// Clean up any resources being used.
@@ -36,10 +41,11 @@ namespace Bahtinov_Collimator
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.BorderColor = System.Drawing.Color.Gray;
+            this.pictureBox1.BackColor = UITheme.Transparent;
+            this.pictureBox1.BorderColor = UITheme.BorderDefaultGray;
             this.pictureBox1.BorderThickness = 2;
-            this.pictureBox1.CornerRadius = 12;
+            this.pictureBox1.CornerRadius = 8;
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox1.Name = "pictureBox1";
@@ -50,10 +56,11 @@ namespace Bahtinov_Collimator
             // 
             // ImageDisplayComponent
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.pictureBox1);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Name = "ImageDisplayComponent";
             this.Size = new System.Drawing.Size(600, 600);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -62,8 +69,5 @@ namespace Bahtinov_Collimator
         }
 
         #endregion
-
-        private RoundedPictureBox pictureBox1;
-        //        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

@@ -1,17 +1,25 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Drawing;
-
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
-
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
+    /// <summary>
+    /// Dialog that opens the donation flow and falls back to offline instructions when needed.
+    /// </summary>
     public partial class Donate : Form
     {
         #region DLL Imports
 
+        /// <summary>
+        /// Sets a Desktop Window Manager attribute on the dialog window.
+        /// </summary>
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
@@ -26,117 +34,226 @@ namespace Bahtinov_Collimator
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Donate"/> class.
+        /// Initializes a new instance of the <see cref="Donate"/> dialog.
         /// </summary>
         public Donate()
         {
             InitializeComponent();
-            InitializeRichTextBox();
-            SetColorScheme();
+            ApplyLocalization();
+
+            var color = UITheme.DarkBackground;
+            int colorValue = color.R | (color.G << 8) | (color.B << 16);
+            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
         }
 
         #endregion
 
-        #region Methods
+        #region Lifecycle and Layout
 
         /// <summary>
-        /// Handles the Load event of the form. Increases the font size of the form and its controls.
+        /// Runs after <see cref="DpiAwareDialog.ShowDialogDpiAware"/> has
+        /// moved the dialog to the owner's monitor and WinForms has finished
+        /// per-monitor DPI scaling. Explicitly re-applies the left-column
+        /// layout so the <c>pictureBox1</c> SkyCal logo is guaranteed to fill
+        /// the full designed vertical extent and so <c>pictureBox2</c> (the
+        /// PayPal icon overlaid at the top of <c>pictureBox1</c>) is visibly
+        /// above it in the z-order. On high-DPI secondary monitors the
+        /// designer's mixed anchors + BeginInit/EndInit resource-loading
+        /// sequence sometimes leaves pictureBox1 mis-sized at zero or near-
+        /// zero height, which manifested as the logo simply not being drawn.
+        /// Setting Bounds here forces a known-good layout at the final DPI.
         /// </summary>
-        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        protected override void OnLoad(EventArgs e)
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            // Keep the existing (DPI-scaled) widths, but pin pictureBox1 to
+            // the full height of the client area so the logo is always drawn
+            // at its full designed size regardless of monitor DPI.
+            int pb1Width = pictureBox1.Width;
+            pictureBox1.Bounds = new Rectangle(0, 1, pb1Width, Math.Max(1, ClientSize.Height - 1));
+
+            // Ensure the PayPal icon stays in front of the SkyCal logo so it
+            // isn't hidden when we resize pictureBox1 above.
+            pictureBox2.BringToFront();
+        }
+
+        /// <summary>
+        /// Loads the dialog, checks connectivity, and launches or falls back from the online donation flow.
+        /// </summary>
+        protected override async void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            float increasedSize = this.Font.Size + 2.0f;
-            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
+            bool hasInternet = await HasInternetAccessAsync().ConfigureAwait(true);
 
-            // Adjust fonts
-            this.Font = newFont;
-            richTextBox.Font = newFont;
-            label1.Font = newFont;
-            cancelButton.Font = newFont;
+            if (hasInternet)
+            {
+                string url = GenerateDonationUrl();
+                try
+                {
+                    Process.Start(url);
+                }
+                catch
+                {
+                    ShowOfflineDonationText();
+                    return;
+                }
+            }
+            else
+            {
+                ShowOfflineDonationText();
+                return;
+            }
 
-            string url = GenerateDonationUrl();
-            Process.Start(url);
+            BeginInvoke(new Action(ResizeFormToContent));
         }
 
         /// <summary>
-        /// Sets the color scheme of the form and its controls.
+        /// Resizes the form so the rich-text content fits without scrolling.
+        /// The form is only allowed to GROW - never shrink below its
+        /// designer/DPI-scaled size - so the left-side images
+        /// (<c>pictureBox1</c>, which is anchored Top|Bottom|Left) always have
+        /// the full designed vertical space and don't end up squashed at the
+        /// top of the dialog. This matters especially on high-DPI secondary
+        /// monitors where the text box is proportionally wider, the text
+        /// wraps into fewer lines, and the measured content height is much
+        /// smaller than the baseline richTextBox height.
         /// </summary>
-        private void SetColorScheme()
+        private void ResizeFormToContent()
         {
-            // Main form
-            this.ForeColor = UITheme.DarkForeground;
-            this.BackColor = UITheme.DarkBackground;
+            if (!IsHandleCreated || richTextBox.TextLength == 0) return;
 
-            // Cancel button
-            cancelButton.BackColor = UITheme.ButtonDarkBackground;
-            cancelButton.ForeColor = UITheme.ButtonDarkForeground;
-            cancelButton.FlatStyle = FlatStyle.Popup;
+            AnchorStyles savedAnchor = richTextBox.Anchor;
+            richTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
-            // Title bar
-            var color = UITheme.DarkBackground;
-            int colorValue = color.R | (color.G << 8) | (color.B << 16);
-            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
+            int savedHeight = richTextBox.Height;
+            richTextBox.Height = 32000;
 
-            label1.ForeColor = UITheme.DonateTextColor;
+            Point lastPos = richTextBox.GetPositionFromCharIndex(richTextBox.TextLength - 1);
 
-            pictureBox1.BackColor = UITheme.DonatePictureBackground;
+            // Measure using the richTextBox's own device context so the line
+            // height is in the SAME DPI space as lastPos.Y. The parameterless
+            // TextRenderer.MeasureText overload falls back to a 96-DPI screen
+            // DC, which would mix coordinate spaces on a per-monitor-DPI
+            // display and under-report contentHeight on e.g. 168-DPI monitors.
+            int lineHeight;
+            using (Graphics g = richTextBox.CreateGraphics())
+            {
+                lineHeight = TextRenderer.MeasureText(g, "W", richTextBox.Font).Height;
+            }
+
+            int contentHeight = lastPos.Y + lineHeight + 8;
+            int diff = contentHeight - savedHeight;
+
+            if (diff > 0)
+            {
+                richTextBox.Height = contentHeight;
+                Height += diff;
+            }
+            else
+            {
+                richTextBox.Height = savedHeight;
+            }
+
+            richTextBox.Anchor = savedAnchor;
         }
 
-        /// <summary>
-        /// Initializes the rich text box with donation information.
-        /// </summary>
-        private void InitializeRichTextBox()
-        {
-            richTextBox.BackColor = UITheme.DarkBackground;
-            richTextBox.ForeColor = UITheme.DonateTextColor;
+        #endregion
 
-            richTextBox.Text = "Thank you for using SkyCal!\n\n" +
-            "If SkyCal has helped you achieve sharper focus, easier collimation, or simply made\n" +
-            "your nights under the stars a little more rewarding, please consider showing your \n" +
-            "support. Every coffee keeps the project alive, keeps me awake while writing manuals,\n" +
-            "helps me keep improving the software, and reminds me that the effort was worthwhile.\n\n" +
-            "Clear Skies and Sharp Stars\n" +
-            "Chris Dowd,\n" +
-            "Developer of SkyCal";
-        }
+        #region Donation Flow Helpers
 
         /// <summary>
-        /// Generates the URL for the PayPal donation page.
+        /// Composes the PayPal donation URL with localized metadata.
         /// </summary>
-        /// <returns>The URL as a string.</returns>
+        /// <returns>A complete PayPal donation URL string.</returns>
         private string GenerateDonationUrl()
         {
+            var textPack = UiText.Current;
+            string description = Uri.EscapeDataString(textPack.DonatePaypalDescription);
             string business = Uri.EscapeDataString("chris@chrisandbev.com.au");
-            string description = Uri.EscapeDataString("Buy Chris a Coffee – SkyCal Project");
-            string country = "AU";
-            string currency = "USD";
             string logoUrl = "https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/refs/heads/master/SkyCal.logo.png";
             string thankYouUrl = "https://yourdomain.com/thankyou";
 
             return "https://www.paypal.com/cgi-bin/webscr" +
                    "?cmd=_donations" +
                    "&business=" + business +
-                   "&lc=" + country +
+                   "&lc=AU" +
                    "&item_name=" + description +
-                   "&currency_code=" + currency +
+                   "&currency_code=USD" +
                    "&no_shipping=1" +
                    "&no_note=0" +
-                   "&cn=Leave%20a%20message%20(optional)" +
+                   "&cn=" + Uri.EscapeDataString(textPack.DonatePaypalOptionalMessage) +
                    "&image_url=" + Uri.EscapeDataString(logoUrl) +
                    "&return=" + Uri.EscapeDataString(thankYouUrl) +
                    "&bn=PP-DonationsBF";
         }
 
         /// <summary>
-        /// Closes the form when the Cancel button is clicked.
+        /// Handles the close button click by closing the dialog.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void Button2_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        /// <summary>
+        /// Tests whether internet connectivity is available for opening the donation endpoint.
+        /// </summary>
+        /// <returns>True when internet access appears available; otherwise false.</returns>
+        private static async Task<bool> HasInternetAccessAsync()
+        {
+            if (!NetworkInterface.GetIsNetworkAvailable())
+                return false;
+
+            const string host = "www.paypal.com";
+            const int port = 443;
+
+            try
+            {
+                var addresses = await Dns.GetHostAddressesAsync(host).ConfigureAwait(false);
+                if (addresses == null || addresses.Length == 0)
+                    return false;
+
+                using (var client = new TcpClient())
+                {
+                    var connectTask = client.ConnectAsync(addresses[0], port);
+                    var timeoutTask = Task.Delay(2500);
+
+                    var completed = await Task.WhenAny(connectTask, timeoutTask).ConfigureAwait(false);
+                    if (completed != connectTask)
+                        return false;
+
+                    await connectTask.ConfigureAwait(false);
+                    return client.Connected;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Displays offline donation instructions when the online flow is unavailable.
+        /// </summary>
+        private void ShowOfflineDonationText()
+        {
+            string githubLink = "https://insertnamehere1.github.io/Bahtinov-Collimator/";
+            richTextBox.Text = string.Format(UiText.Current.DonateRichTextOfflineFormat, githubLink);
+            BeginInvoke(new Action(ResizeFormToContent));
+        }
+
+        /// <summary>
+        /// Applies localized text for controls in the donation dialog.
+        /// </summary>
+        private void ApplyLocalization()
+        {
+            var textPack = UiText.Current;
+            Text = textPack.DonateTitle;
+            cancelButton.Text = textPack.DonateCloseButton;
+            richTextBox.Text = UiText.Current.DonateRichTextOnline;
         }
 
         #endregion

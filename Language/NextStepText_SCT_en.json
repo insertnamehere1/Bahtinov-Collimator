@@ -1,0 +1,65 @@
+{
+  "DialogTitle": "What should I do next?",
+  "DebugLineFormat": "Values:  Red {0}   Green {1}   Blue {2}",
+
+  "SectionWhatToDoTitle": "What to do",
+
+  "CaptureHeader": "Capture a Tri-Bahtinov Image",
+  "CaptureSummary": "Please capture a bahtinov image to start any adjustments.",
+  "CaptureBullet1": "Ensure a bright star is centered.",
+  "CaptureBullet2": "Attach Tri-Bahtinov mask and click “Select Star”.",
+
+  "FocusOnlyHeader": "Focus Guidance is not Available",
+  "FocusOnlyNeedsAdjustingSummary": "Guidance is only available for Tri-Bahtinov images.",
+
+  "FocusBalancedHeader": "Balance Error Markers Around 0",
+  "FocusBalancedSummary": "Adjust focus until the three error values are balanced around 0.\n",
+  "FocusAllPositiveBullet": "All values are positive. Move the focuser IN in small steps.",
+  "FocusAllNegativeBullet": "All values are negative. Move the focuser OUT in small steps.",
+  "FocusStraddleNotBalancedBullet1": "Values straddle 0, but they are not balanced yet.",
+  "FocusStraddleNotBalancedBullet2Format": "Move the focuser {0} until the 3 error values are evenly spaced around 0.",
+  "FocusTargetLineFormat": "Target: An average near 0, with similar magnitudes.",
+  "FocusOnlyBeginScrewsBullet": "Begin collimation adjustments only after this balance is achieved.",
+  "FocusFooterHint": "Tip: IN is primary mirror towards secondary or camera towards telescope, \nOUT is primary away from secondary or camera away from telescope",
+
+  "CollimationHeader": "Collimation Adjustments for SCT",
+  "CollimationSummary": "Proceed with balanced collimation using 2 or more screws at the same time.\n",
+
+  "DoneHeader": "Looks Good",
+  "DoneSummary": "All values are close to zero.\n",
+  "DoneBullet": "No adjustment required.",
+  "CollimationPositiveInstructionFormat": "{0} adjustment - LOOSEN (Counter Clockwise). {0} is too far from the primary.",
+  "CollimationNegativeInstructionFormat": "{0} adjustment - TIGHTEN (Clockwise). {0} is too close to the primary.",
+  "CollimationAdjustTogetherBullet": "\r\nAdjust these screws together to keep tension balanced.",
+  "CollimationFooterHint": "Tip: Re-center the star, then refocus until the values straddle 0 again before repeating.",
+
+  "DirectionIn": "IN",
+  "DirectionOut": "OUT",
+
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "the {0} screw",
+
+  "ChannelRed": "Red",
+  "ChannelGreen": "Green",
+  "ChannelBlue": "Blue",
+
+  "CalibrationTitle": "Tri-Bahtinov Calibration",
+  "CalibrationQuitButtonText": "Quit",
+  "CalibrationCloseButtonText": "Close",
+  "CalibrationObjectiveHeader": "\nObjective - Calibration allows SkyCal to advise on collimation screw adjustments, and enable the ‘What Should I Do Next ?’ guidance.",
+  "CalibrationStep1Title": "Step 1 - Setup",
+  "CalibrationStep1Bullet1": "Attach a Tri-Bahtinov collimation mask to your telescope.",
+  "CalibrationStep1Bullet2": "Capture a star image.",
+  "CalibrationWaitingForImage": "Waiting for a valid Bahtinov image...",
+  "CalibrationAimHeader": "\nAim - Adjust focus inward so SkyCal learns how collimation errors change with focus position.",
+  "CalibrationStep2Title": "Step 2 - Moving the focuser.",
+  "CalibrationStep2Bullet1": "If the focuser moves the primary mirror, move it INWARD, toward the secondary.",
+  "CalibrationStep2Bullet2": "If the focuser moves the camera, move it INWARD, toward the telescope body.",
+  "CalibrationAutoCompleteLine": "Calibration completes automatically once enough focus movement is detected.",
+  "CalibrationMovePrompt": "Please move the focuser inward now....",
+  "CalibrationCompleteHeader": "Calibration has completed successfully",
+  "CalibrationCompleteSummary": "      SkyCal has updated its settings."
+}
+
+

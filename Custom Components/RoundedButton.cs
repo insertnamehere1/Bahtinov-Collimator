@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using Bahtinov_Collimator;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -11,47 +12,49 @@ namespace Bahtinov_Collimator.Custom_Components
     /// </summary>
     public partial class RoundedButton : Button
     {
+        #region Appearance Properties
+
         /// <summary>
         /// Radius in pixels for the rounded corners.
         /// </summary>
         public int CornerRadius { get; set; } = 12;
 
         /// <summary>
-        /// Target width for the drawn image in pixels.
-        /// The image is scaled to this width.
+        /// Target width for the drawn image in 96-DPI logical pixels (same basis as <see cref="CornerRadius"/>).
+        /// The image is scaled to this width after DPI scaling.
         /// </summary>
         public int ImageWidth { get; set; } = 32;
 
         /// <summary>
-        /// Target height for the drawn image in pixels.
-        /// The image is scaled to this height.
+        /// Target height for the drawn image in 96-DPI logical pixels.
+        /// The image is scaled to this height after DPI scaling.
         /// </summary>
         public int ImageHeight { get; set; } = 32;
 
         /// <summary>
         /// Semi-transparent overlay color when the mouse is over the button.
         /// </summary>
-        public Color HoverOverlay { get; set; } = Color.FromArgb(40, Color.White);
+        public Color HoverOverlay { get; set; } = UITheme.RoundedButtonHoverOverlay;
 
         /// <summary>
         /// Semi-transparent overlay color when the button is pressed.
         /// </summary>
-        public Color PressedOverlay { get; set; } = Color.FromArgb(60, Color.Black);
+        public Color PressedOverlay { get; set; } = UITheme.RoundedButtonPressedOverlay;
 
         /// <summary>
-        /// Extra horizontal offset (in pixels) applied to the image position.
+        /// Extra horizontal offset in 96-DPI logical pixels applied to the image position.
         /// Positive values move the image to the right.
         /// </summary>
         public int ImageOffsetX { get; set; } = 60;
 
         /// <summary>
-        /// Extra vertical offset (in pixels) applied to the image position.
+        /// Extra vertical offset in 96-DPI logical pixels applied to the image position.
         /// Positive values move the image down.
         /// </summary>
         public int ImageOffsetY { get; set; } = 0;
 
         /// <summary>
-        /// Extra horizontal offset (in pixels) applied to the text rectangle.
+        /// Extra horizontal offset in 96-DPI logical pixels applied to the text rectangle.
         /// Positive values move the text to the right.
         /// </summary>
         public int TextOffsetX { get; set; } = 10;
@@ -59,17 +62,21 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Bevel highlight color that is drawn on the top and right edges.
         /// </summary>
-        public Color BevelLight { get; set; } = Color.FromArgb(220, 255, 255, 255);
+        public Color BevelLight { get; set; } = UITheme.RoundedButtonBevelLight;
 
         /// <summary>
         /// Bevel shadow color that is drawn on the left and bottom edges.
         /// </summary>
-        public Color BevelDark { get; set; } = Color.FromArgb(180, 0, 0, 0);
+        public Color BevelDark { get; set; } = UITheme.RoundedButtonBevelDark;
 
         /// <summary>
         /// Thickness of the bevel line in pixels.
         /// </summary>
         public int BevelThickness { get; set; } = 2;
+
+        #endregion
+
+        #region Interaction State
 
         /// <summary>
         /// True while the mouse is hovering over the button.
@@ -81,115 +88,128 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         private bool isPressed;
 
+        #endregion
+
+        #region Lifecycle
+
         /// <summary>
         /// Initializes the rounded button, configures painting styles,
         /// and hooks mouse events for hover/press state.
         /// </summary>
         public RoundedButton()
         {
-            // Remove default button border and use custom painting.
             FlatStyle = FlatStyle.Flat;
             FlatAppearance.BorderSize = 0;
 
-            // Enable user painting and double buffering for smooth rendering.
             SetStyle(ControlStyles.AllPaintingInWmPaint |
                      ControlStyles.UserPaint |
                      ControlStyles.ResizeRedraw |
                      ControlStyles.OptimizedDoubleBuffer |
                      ControlStyles.DoubleBuffer, true);
 
-            // Mouse hover state
             MouseEnter += (s, e) => { isHovered = true; Invalidate(); };
             MouseLeave += (s, e) => { isHovered = false; isPressed = false; Invalidate(); };
 
-            // Mouse press state
             MouseDown += (s, e) => { isPressed = true; Invalidate(); };
             MouseUp += (s, e) => { isPressed = false; Invalidate(); };
         }
 
+        #endregion
+
+        #region Layout Helpers
+
+        /// <summary>
+        /// Converts 96-DPI design/logical pixel distances to device pixels for the current <see cref="Control.DeviceDpi"/>,
+        /// matching <see cref="CornerRadius"/> handling so layout stays consistent when DPI or form scaling changes.
+        /// </summary>
+        private int S(int logicalPixels)
+        {
+            float dpiScale = DeviceDpi / 96f;
+            return (int)Math.Round(logicalPixels * dpiScale, MidpointRounding.AwayFromZero);
+        }
+
+        #endregion
+
+        #region Painting
         /// <summary>
         /// Custom paint routine that draws the rounded background,
         /// hover/pressed overlay, bevel, and content (image + text).
         /// </summary>
-        /// <param name="e">Paint event data, including graphics context.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            // Smooth edges for rounded shapes.
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            e.Graphics.CompositingQuality = CompositingQuality.HighQuality;
 
-            // Rectangle for the full button area, reduced by 1 pixel
-            // so the border fits within the client rectangle.
             Rectangle rect = new Rectangle(0, 0, Width - 1, Height - 1);
 
-            // Create a rounded path from the button rectangle.
-            using (GraphicsPath path = GetRoundPath(rect, CornerRadius))
+            if (rect.Width <= 0 || rect.Height <= 0)
             {
-                // Limit the clickable/hit region to the rounded shape.
-                Region = new Region(path);
+                Region = null;
+                return;
+            }
 
-                // Fill the background with the button BackColor.
-                using (SolidBrush sb = new SolidBrush(BackColor))
-                    e.Graphics.FillPath(sb, path);
+            int scaledRadius = S(CornerRadius);
+            // Prevent arcs larger than the rect; avoids odd geometry at small sizes.
+            int maxRadius = Math.Max(0, Math.Min(rect.Width, rect.Height) / 2);
+            scaledRadius = Math.Max(0, Math.Min(scaledRadius, maxRadius));
 
-                // Draw overlay for pressed or hovered state.
-                if (isPressed)
+            Region = null;
+            try
+            {
+                using (GraphicsPath path = GetRoundPath(rect, scaledRadius))
                 {
-                    // Darker overlay when pressed.
-                    using (SolidBrush sb = new SolidBrush(PressedOverlay))
+                    using (SolidBrush sb = new SolidBrush(BackColor))
                         e.Graphics.FillPath(sb, path);
-                }
-                else if (isHovered)
-                {
-                    // Lighter overlay when hovered.
-                    using (SolidBrush sb = new SolidBrush(HoverOverlay))
-                        e.Graphics.FillPath(sb, path);
-                }
 
-                // Draw the bevel along the rounded border.
-                DrawBevel(e.Graphics, rect, CornerRadius);
+                    if (isPressed)
+                    {
+                        using (SolidBrush sb = new SolidBrush(PressedOverlay))
+                            e.Graphics.FillPath(sb, path);
+                    }
+                    else if (isHovered)
+                    {
+                        using (SolidBrush sb = new SolidBrush(HoverOverlay))
+                            e.Graphics.FillPath(sb, path);
+                    }
 
-                // Draw image and text.
-                DrawContent(e.Graphics, rect);
+                    DrawBevel(e.Graphics, rect, scaledRadius);
+                    DrawContent(e.Graphics, rect);
+                }
+            }
+            finally
+            {
+                using (GraphicsPath path = GetRoundPath(rect, scaledRadius))
+                    Region = new Region(path);
             }
         }
 
+        #endregion
+
+        #region Drawing Helpers
         /// <summary>
         /// Draws a bevel around the outside of the rounded button.
         /// The top and right edges use the light color, left and bottom use the dark color.
         /// </summary>
-        /// <param name="g">Graphics surface to draw on.</param>
-        /// <param name="rect">Outer rectangle of the button.</param>
-        /// <param name="radius">Corner radius in pixels.</param>
         private void DrawBevel(Graphics g, Rectangle rect, int radius)
         {
-            // t is the thickness of the bevel line.
             int t = BevelThickness;
-
-            // d is the diameter of the corner arc (2 * radius).
             int d = radius * 2;
-
-            // x and y are the top-left coordinates of the button rectangle.
             int x = rect.X;
             int y = rect.Y;
-
-            // w and h are width and height of the rectangle.
             int w = rect.Width;
             int h = rect.Height;
-
-            // right and bottom are the far edges of the rectangle.
             int right = x + w;
             int bottom = y + h;
 
             using (Pen lightPen = new Pen(BevelLight, t))
             using (Pen darkPen = new Pen(BevelDark, t))
             {
-                // Top edge and top corners use the light color (highlight).
                 g.DrawArc(lightPen, x, y, d, d, 180, 90);                      // top-left corner
                 g.DrawLine(lightPen, x + radius, y, right - radius, y);       // top edge
                 g.DrawArc(lightPen, right - d, y, d, d, 270, 90);             // top-right corner
                 g.DrawLine(lightPen, right, y + radius, right, bottom - radius); // right edge
 
-                // Bottom edge and bottom corners use the dark color (shadow).
                 g.DrawArc(darkPen, right - d, bottom - d, d, d, 0, 90);       // bottom-right corner
                 g.DrawLine(darkPen, right - radius, bottom, x + radius, bottom); // bottom edge
                 g.DrawArc(darkPen, x, bottom - d, d, d, 90, 90);              // bottom-left corner
@@ -201,63 +221,44 @@ namespace Bahtinov_Collimator.Custom_Components
         /// Draws the button content: image (if any) and text.
         /// Takes into account the pressed offset, alignment, and user offsets.
         /// </summary>
-        /// <param name="g">Graphics surface to draw on.</param>
-        /// <param name="bounds">Full bounds of the button.</param>
         private void DrawContent(Graphics g, Rectangle bounds)
         {
-            // Small pressed offset to simulate a "pushed in" look.
             int offset = isPressed ? 1 : 0;
 
-            // contentRect is the area inside the bevel, slightly inset.
-            Rectangle contentRect = Rectangle.Inflate(bounds, -4, -4);
+            int contentInset = S(4);
+            Rectangle contentRect = Rectangle.Inflate(bounds, -contentInset, -contentInset);
 
-            // 1) Draw image, positioned using ImageAlign and user offsets.
+            int imgW = Math.Max(1, S(ImageWidth));
+            int imgH = Math.Max(1, S(ImageHeight));
+            int imgOffX = S(ImageOffsetX);
+            int imgOffY = S(ImageOffsetY);
+            int textOffX = S(TextOffsetX);
+
             if (Image != null)
             {
-                // imageRect is the area where the image will be aligned
-                // before applying user offsets and scaling.
                 Rectangle imageRect = GetAlignedRectangle(
-                    new Size(ImageWidth, ImageHeight),
+                    new Size(imgW, imgH),
                     contentRect,
                     ImageAlign
                 );
 
-                // Apply pressed offset.
                 imageRect.Offset(offset, offset);
-
-                // Apply user defined offsets.
-                imageRect.Offset(ImageOffsetX, ImageOffsetY);
-
-                // scaled is the final rectangle used when drawing the image.
-                // It enforces the ImageWidth and ImageHeight.
-                Rectangle scaled = new Rectangle(
-                    imageRect.X,
-                    imageRect.Y,
-                    ImageWidth,
-                    ImageHeight
+                imageRect.Offset(imgOffX, imgOffY);
+                var scaled = new Rectangle(
+                    imageRect.X + (imageRect.Width - imgW) / 2,
+                    imageRect.Y + (imageRect.Height - imgH) / 2,
+                    imgW,
+                    imgH
                 );
 
-                // Center the scaled image within the aligned rectangle if imageRect is larger.
-                scaled.X = imageRect.X + (imageRect.Width - ImageWidth) / 2;
-                scaled.Y = imageRect.Y + (imageRect.Height - ImageHeight) / 2;
-
-                // Draw the image scaled to the target size.
                 g.DrawImage(Image, scaled);
             }
 
-            // 2) Draw text.
             if (!string.IsNullOrEmpty(Text))
             {
-                // Start with the content rectangle.
                 Rectangle textRect = contentRect;
-
-                // Apply pressed offset and additional horizontal text offset.
-                textRect.Offset(offset + TextOffsetX, offset);
-
-                // flags defines text alignment and ellipsis behavior.
+                textRect.Offset(offset + textOffX, offset);
                 TextFormatFlags flags = TextFormatFlags.WordEllipsis;
-
-                // Map the TextAlign property to TextFormatFlags.
                 switch (TextAlign)
                 {
                     case ContentAlignment.TopLeft:
@@ -289,7 +290,6 @@ namespace Bahtinov_Collimator.Custom_Components
                         break;
                 }
 
-                // Draw the text using GDI+ text rendering, with the chosen alignment.
                 TextRenderer.DrawText(
                     g,
                     Text,
@@ -305,55 +305,41 @@ namespace Bahtinov_Collimator.Custom_Components
         /// Calculates a rectangle of a given size positioned within bounds
         /// according to the specified ContentAlignment.
         /// </summary>
-        /// <param name="contentSize">Size of the content to align.</param>
-        /// <param name="bounds">Outer rectangle within which to align.</param>
-        /// <param name="align">Desired alignment.</param>
         /// <returns>A rectangle in which to draw the content.</returns>
         private Rectangle GetAlignedRectangle(Size contentSize, Rectangle bounds, ContentAlignment align)
         {
-            // x and y are the top-left coordinates of the aligned content.
-            int x = bounds.X;
-            int y = bounds.Y;
-
-            // Horizontal alignment.
+            int x;
+            int y;
             if (align == ContentAlignment.TopLeft ||
                 align == ContentAlignment.MiddleLeft ||
                 align == ContentAlignment.BottomLeft)
             {
-                // Align to the left.
                 x = bounds.Left;
             }
             else if (align == ContentAlignment.TopCenter ||
                      align == ContentAlignment.MiddleCenter ||
                      align == ContentAlignment.BottomCenter)
             {
-                // Center horizontally within bounds.
                 x = bounds.Left + (bounds.Width - contentSize.Width) / 2;
             }
             else // Right alignment
             {
-                // Align to the right edge.
                 x = bounds.Right - contentSize.Width;
             }
-
-            // Vertical alignment.
             if (align == ContentAlignment.TopLeft ||
                 align == ContentAlignment.TopCenter ||
                 align == ContentAlignment.TopRight)
             {
-                // Align to the top.
                 y = bounds.Top;
             }
             else if (align == ContentAlignment.MiddleLeft ||
                      align == ContentAlignment.MiddleCenter ||
                      align == ContentAlignment.MiddleRight)
             {
-                // Center vertically within bounds.
                 y = bounds.Top + (bounds.Height - contentSize.Height) / 2;
             }
             else // Bottom alignment
             {
-                // Align to the bottom edge.
                 y = bounds.Bottom - contentSize.Height;
             }
 
@@ -363,33 +349,20 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Creates a GraphicsPath that represents a rounded rectangle.
         /// </summary>
-        /// <param name="r">Rectangle to round.</param>
-        /// <param name="radius">Corner radius in pixels.</param>
         /// <returns>GraphicsPath describing the rounded rectangle.</returns>
         private GraphicsPath GetRoundPath(Rectangle r, int radius)
         {
-            // d is the diameter of the corner arcs.
             int d = radius * 2;
-
-            // path holds the connected arcs and lines that form the rounded rectangle.
             GraphicsPath path = new GraphicsPath();
-
-            // Top-left corner arc (from 180 to 270 degrees).
             path.AddArc(r.X, r.Y, d, d, 180, 90);
-
-            // Top-right corner arc.
             path.AddArc(r.Right - d, r.Y, d, d, 270, 90);
-
-            // Bottom-right corner arc.
             path.AddArc(r.Right - d, r.Bottom - d, d, d, 0, 90);
-
-            // Bottom-left corner arc.
             path.AddArc(r.X, r.Bottom - d, d, d, 90, 90);
-
-            // Close the shape.
             path.CloseFigure();
 
             return path;
         }
+
+        #endregion
     }
 }

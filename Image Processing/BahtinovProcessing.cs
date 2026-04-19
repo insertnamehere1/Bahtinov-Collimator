@@ -1,4 +1,4 @@
-﻿
+
 // Sections of the following code are covered by and existing copyright
 //
 //MIT License
@@ -37,26 +37,42 @@ namespace Bahtinov_Collimator
     internal class BahtinovProcessing
     {
         #region Delegates
-        // Focus Data Listener
         public delegate void FocusDataEventHandler(object sender, FocusDataEventArgs e);
         public static event FocusDataEventHandler FocusDataEvent;
 
-        // LineDrawing Event Listener
         public delegate void BahtinovLineDrawEventHandler(object sender, BahtinovLineDataEventArgs e);
         public static event BahtinovLineDrawEventHandler BahtinovLineDrawEvent;
         #endregion
 
         #region Private Fields
-        // Settings
-        private float apertureSetting;
-        private float focalLengthSetting;
-        private double pixelSizeSetting;
-
-        // to be checked for relevance
         private const float ErrorMarkerScalingValue = 20.0f;
-
-        // retain last error value
         private float lastFocusErrorValue = 0.0f;
+
+
+        #endregion
+
+        #region Nested Types
+
+        /// <summary>
+        /// Per-worker-thread scratch buffers reused across <see cref="Parallel.For"/> iterations in
+        /// <see cref="FindBrightestLines"/>, <see cref="FindFaintLines"/>, and <see cref="FindSubpixelLines"/>.
+        /// Allocating once per thread (instead of once per angle/line) avoids ~180 large
+        /// <c>float[width,height]</c> allocations per call and the associated GC pressure.
+        /// </summary>
+        private sealed class AngleScanWorkspace
+        {
+            public float[,] RotatedImage { get; }
+            public float[] RowTotals { get; }
+            public float[] SmoothedTotals { get; }
+
+            public AngleScanWorkspace(int width, int height)
+            {
+                RotatedImage = new float[width, height];
+                RowTotals = new float[height];
+                SmoothedTotals = new float[height];
+            }
+        }
+
         #endregion
 
         #region Public Fields
@@ -83,10 +99,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         public void LoadSettings()
         {
-            // load settings
-            apertureSetting = Properties.Settings.Default.Aperture;
-            focalLengthSetting = Properties.Settings.Default.FocalLength;
-            pixelSizeSetting = Properties.Settings.Default.PixelSize;
+
         }
 
         /// <summary>
@@ -114,15 +127,21 @@ namespace Bahtinov_Collimator
             BahtinovData result = new BahtinovData(LINES, rect);
             BitmapData bitmapData = starImage.LockBits(rect, ImageLockMode.ReadWrite, starImage.PixelFormat);
 
-            IntPtr scan0 = bitmapData.Scan0;
             int stride = bitmapData.Stride;
             int bytesPerPixel = System.Drawing.Image.GetPixelFormatSize(starImage.PixelFormat) / 8;
             int width = starImage.Width;
             int height = starImage.Height;
-
-            byte[] starImageArray = new byte[height * stride];
-            Marshal.Copy(scan0, starImageArray, 0, starImageArray.Length);
-            starImage.UnlockBits(bitmapData);
+            byte[] starImageArray;
+            try
+            {
+                IntPtr scan0 = bitmapData.Scan0;
+                starImageArray = new byte[height * stride];
+                Marshal.Copy(scan0, starImageArray, 0, starImageArray.Length);
+            }
+            finally
+            {
+                starImage.UnlockBits(bitmapData);
+            }
 
             float edgeOffset = (width < height ? 0.5f * (float)Math.Sqrt(2.0) * width : 0.5f * (float)Math.Sqrt(2.0) * height) - 8f;
             int leftEdge = (int)(0.5 * (width - edgeOffset));
@@ -148,84 +167,99 @@ namespace Bahtinov_Collimator
             float[] lineNumbersOfBrightestLines = new float[DEGREES180];
             float[] valuesOfBrightestLines = new float[DEGREES180];
 
-            Parallel.For(0, DEGREES180, index1 =>
-            {
-                float[,] rotatedImage = new float[width, height];
-                float currentRadians = RADIANS_PER_DEGREE * index1;
-                float sin_CurrentRadians = (float)Math.Sin(currentRadians);
-                float cos_CurrentRadians = (float)Math.Cos(currentRadians);
-
-                for (int x = leftEdge; x < rightEdge; ++x)
+            // Per-thread workspace: one float[,] per worker thread (not per iteration) so we avoid
+            // allocating 180 large 2D arrays (~180 x width x height x 4 bytes) per call.
+            Parallel.For(
+                0,
+                DEGREES180,
+                () => new AngleScanWorkspace(width, height),
+                (index1, state, workspace) =>
                 {
-                    for (int y = topEdge; y < bottomEdge; ++y)
-                    {
-                        float X_DistanceFromCentre = x - starImage_X_Centre;
-                        float Y_DistanceFromCentre = y - starImage_Y_Centre;
+                    float[,] rotatedImage = workspace.RotatedImage;
+                    float[] rowTotals = workspace.RowTotals;
+                    float[] smoothedTotals = workspace.SmoothedTotals;
 
-                        float rotatedXDistance = starImage_X_Centre + X_DistanceFromCentre * cos_CurrentRadians + Y_DistanceFromCentre * sin_CurrentRadians;
-                        float rotatedYDistance = starImage_Y_Centre - X_DistanceFromCentre * sin_CurrentRadians + Y_DistanceFromCentre * cos_CurrentRadians;
+                    // Clear only the region we will read from to avoid stale values from previous angle
+                    // (pixels where the rotated source falls outside bounds are left untouched by the
+                    // writes below).
+                    Array.Clear(rotatedImage, 0, rotatedImage.Length);
 
-                        int rotatedXRoundedDown = (int)rotatedXDistance;
-                        int rotatedXRoundedUp = rotatedXRoundedDown + 1;
-                        int rotatedYRoundedDown = (int)rotatedYDistance;
-                        int rotatedYRoundedUp = rotatedYRoundedDown + 1;
+                    float currentRadians = RADIANS_PER_DEGREE * index1;
+                    float sin_CurrentRadians = (float)Math.Sin(currentRadians);
+                    float cos_CurrentRadians = (float)Math.Cos(currentRadians);
 
-                        if (rotatedXRoundedDown >= leftEdge && rotatedXRoundedUp < rightEdge &&
-                            rotatedYRoundedDown >= topEdge && rotatedYRoundedUp < bottomEdge)
-                        {
-                            float rotatedXFraction = rotatedXDistance - rotatedXRoundedDown;
-                            float rotatedYFraction = rotatedYDistance - rotatedYRoundedDown;
-
-                            float oneMinusRotatedXFraction = 1.0f - rotatedXFraction;
-                            float oneMinusRotatedYFraction = 1.0f - rotatedYFraction;
-                            float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
-                            float value2 = starArray2D[rotatedXRoundedUp, rotatedYRoundedDown];
-                            float value3 = starArray2D[rotatedXRoundedUp, rotatedYRoundedUp];
-                            float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedUp];
-
-                            rotatedImage[x, y] = value1 * oneMinusRotatedXFraction * oneMinusRotatedYFraction +
-                                                 value2 * rotatedXFraction * oneMinusRotatedYFraction +
-                                                 value3 * rotatedXFraction * rotatedYFraction +
-                                                 value4 * oneMinusRotatedXFraction * rotatedYFraction;
-                        }
-                    }
-                }
-
-                float[] rowTotals = new float[height];
-                for (int y = topEdge; y < bottomEdge; ++y)
-                {
-                    float rowTotal = 0;
                     for (int x = leftEdge; x < rightEdge; ++x)
                     {
-                        rowTotal += rotatedImage[x, y];
-                    }
-                    rowTotals[y] = rowTotal / (rightEdge - leftEdge);
-                }
+                        for (int y = topEdge; y < bottomEdge; ++y)
+                        {
+                            float X_DistanceFromCentre = x - starImage_X_Centre;
+                            float Y_DistanceFromCentre = y - starImage_Y_Centre;
 
-                float[] smoothedTotals = new float[height];
-                for (int y = topEdge; y < bottomEdge; ++y)
-                {
-                    smoothedTotals[y] = rowTotals[y];
-                    if (y > topEdge && y < bottomEdge - 1)
+                            float rotatedXDistance = starImage_X_Centre + X_DistanceFromCentre * cos_CurrentRadians + Y_DistanceFromCentre * sin_CurrentRadians;
+                            float rotatedYDistance = starImage_Y_Centre - X_DistanceFromCentre * sin_CurrentRadians + Y_DistanceFromCentre * cos_CurrentRadians;
+
+                            int rotatedXRoundedDown = (int)rotatedXDistance;
+                            int rotatedXRoundedUp = rotatedXRoundedDown + 1;
+                            int rotatedYRoundedDown = (int)rotatedYDistance;
+                            int rotatedYRoundedUp = rotatedYRoundedDown + 1;
+
+                            if (rotatedXRoundedDown >= leftEdge && rotatedXRoundedUp < rightEdge &&
+                                rotatedYRoundedDown >= topEdge && rotatedYRoundedUp < bottomEdge)
+                            {
+                                float rotatedXFraction = rotatedXDistance - rotatedXRoundedDown;
+                                float rotatedYFraction = rotatedYDistance - rotatedYRoundedDown;
+
+                                float oneMinusRotatedXFraction = 1.0f - rotatedXFraction;
+                                float oneMinusRotatedYFraction = 1.0f - rotatedYFraction;
+                                float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
+                                float value2 = starArray2D[rotatedXRoundedUp, rotatedYRoundedDown];
+                                float value3 = starArray2D[rotatedXRoundedUp, rotatedYRoundedUp];
+                                float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedUp];
+
+                                rotatedImage[x, y] = value1 * oneMinusRotatedXFraction * oneMinusRotatedYFraction +
+                                                     value2 * rotatedXFraction * oneMinusRotatedYFraction +
+                                                     value3 * rotatedXFraction * rotatedYFraction +
+                                                     value4 * oneMinusRotatedXFraction * rotatedYFraction;
+                            }
+                        }
+                    }
+
+                    for (int y = topEdge; y < bottomEdge; ++y)
                     {
-                        smoothedTotals[y] = (rowTotals[y - 1] + rowTotals[y] + rowTotals[y + 1]) / 3;
+                        float rowTotal = 0;
+                        for (int x = leftEdge; x < rightEdge; ++x)
+                        {
+                            rowTotal += rotatedImage[x, y];
+                        }
+                        rowTotals[y] = rowTotal / (rightEdge - leftEdge);
                     }
-                }
 
-                float largestValue = -1f;
-                float lineNumber = -1f;
-                for (int y = topEdge; y < bottomEdge; ++y)
-                {
-                    if (smoothedTotals[y] > largestValue)
+                    for (int y = topEdge; y < bottomEdge; ++y)
                     {
-                        largestValue = smoothedTotals[y];
-                        lineNumber = y;
+                        smoothedTotals[y] = rowTotals[y];
+                        if (y > topEdge && y < bottomEdge - 1)
+                        {
+                            smoothedTotals[y] = (rowTotals[y - 1] + rowTotals[y] + rowTotals[y + 1]) / 3;
+                        }
                     }
-                }
 
-                lineNumbersOfBrightestLines[index1] = lineNumber;
-                valuesOfBrightestLines[index1] = largestValue;
-            });
+                    float largestValue = -1f;
+                    float lineNumber = -1f;
+                    for (int y = topEdge; y < bottomEdge; ++y)
+                    {
+                        if (smoothedTotals[y] > largestValue)
+                        {
+                            largestValue = smoothedTotals[y];
+                            lineNumber = y;
+                        }
+                    }
+
+                    lineNumbersOfBrightestLines[index1] = lineNumber;
+                    valuesOfBrightestLines[index1] = largestValue;
+
+                    return workspace;
+                },
+                _ => { /* nothing to dispose; arrays are GCed when thread-local goes out of scope */ });
 
             for (int i = 0; i < LINES; ++i)
             {
@@ -255,26 +289,394 @@ namespace Bahtinov_Collimator
                     valuesOfBrightestLines[index] = 0.0f;
                 }
             }
-
-            return result;
+                return result;
         }
 
         /// <summary>
-        /// Enhances the accuracy of line detection in a star image by performing subpixel interpolation.
-        /// 
-        /// The method performs the following steps:
-        /// 1. Initializes the bounding box and scales it according to the DPI settings.
-        /// 2. Reads and processes the image pixel data into a 2D array.
-        /// 3. For each line specified in the <paramref name="bahtinovLines"/> object, applies rotation and interpolation to find the subpixel-accurate position and value of the line.
-        /// 4. Updates the provided <paramref name="bahtinovLines"/> object with the refined line indices and values.
-        /// 
-        /// Returns the updated <see cref="BahtinovData"/> object containing the subpixel-accurate line indices and values.
-        /// 
+        /// Attempts to detect very faint Bahtinov / Tri-Bahtinov diffraction spikes by scanning all angles and
+        /// selecting row-peaks using a local-contrast (z-score) metric rather than raw brightness.
+        ///
+        /// The method works as follows:
+        /// 1. Converts the bitmap into a float luminance image with a gentle gamma (sqrt) to lift faint structure.
+        /// 2. Applies a soft central mask (core + feather) to suppress the saturated star core and halo dominance,
+        ///    improving the visibility of faint spikes in the projection profile.
+        /// 3. For each angle from 0..179 degrees, rotates the image (bilinear sampling) and computes a 1D profile
+        ///    of mean brightness per row.
+        /// 4. Smooths the 1D profile with a 5-tap kernel to reduce noise.
+        /// 5. Computes a local z-score for each row using a sliding window mean and standard deviation.
+        ///    This emphasizes narrow peaks that stand out from their local background.
+        /// 6. Picks the strongest local peak for each angle and finally selects the best 9 angles, suppressing
+        ///    nearby angles (±5°) to avoid duplicates.
+        ///
+        /// This function is intended as a fallback when the normal bright-line detector fails, because it is more
+        /// sensitive but can be more prone to selecting spurious peaks in high-contrast or unusual images.
+        /// </summary>
+        public BahtinovData FindFaintLines(Bitmap starImage)
+        {
+            const int LINES = 9;
+            const int DEGREES180 = 180;
+            const float RADIANS_PER_DEGREE = (float)Math.PI / DEGREES180;
+            const int DEG_5 = 5;
+
+            // Profile processing parameters (tweak if you like)
+            const int LOCAL_STATS_WINDOW = 23;     // odd number: 17..31 are typical
+            const float EPS_STD = 1e-6f;
+
+            // Core suppression: mask a small central disk (reduces halo/core dominance)
+            // 0.06..0.12 are typical depending on star size and crop.
+            const float CORE_RADIUS_FRACTION = 0.08f;
+            const float CORE_FEATHER_FRACTION = 0.03f;
+
+            Rectangle rect = new Rectangle(0, 0, starImage.Width, starImage.Height);
+            BahtinovData result = new BahtinovData(LINES, rect);
+
+            BitmapData bitmapData = starImage.LockBits(rect, ImageLockMode.ReadWrite, starImage.PixelFormat);
+
+            try
+            {
+                IntPtr scan0 = bitmapData.Scan0;
+                int stride = bitmapData.Stride;
+                int bytesPerPixel = System.Drawing.Image.GetPixelFormatSize(starImage.PixelFormat) / 8;
+                int width = starImage.Width;
+                int height = starImage.Height;
+
+                // ------------------------------------------------------------
+                // Convert to float luminance image (with gentle gamma), and
+                // suppress the saturated core so faint spikes can win.
+                // ------------------------------------------------------------
+                float[,] starArray2D = new float[width, height];
+
+                float cx = (width + 1) * 0.5f;
+                float cy = (height + 1) * 0.5f;
+                float minDim = Math.Min(width, height);
+                float coreRadius = CORE_RADIUS_FRACTION * minDim;
+                float coreFeather = CORE_FEATHER_FRACTION * minDim;
+
+                unsafe
+                {
+                    byte* basePtr = (byte*)scan0.ToPointer();
+
+                    for (int y = 0; y < height; y++)
+                    {
+                        byte* rowPtr = basePtr + (y * stride);
+                        for (int x = 0; x < width; x++)
+                        {
+                            byte* px = rowPtr + (x * bytesPerPixel);
+
+                            // Most formats you’ll see here are 24/32bpp (BGR/BGRA).
+                            // Fallback: if bytesPerPixel < 3, just treat first as intensity.
+                            float r, g, b;
+                            if (bytesPerPixel >= 3)
+                            {
+                                b = px[0];
+                                g = px[1];
+                                r = px[2];
+                            }
+                            else
+                            {
+                                r = g = b = px[0];
+                            }
+
+                            // Luminance
+                            float lum = (0.299f * r + 0.587f * g + 0.114f * b) / 255f;
+
+                            // Gentle gamma to lift faint structure
+                            float v = (float)Math.Sqrt(Math.Max(0.0f, lum));
+
+                            // Core mask (soft)
+                            float dx = x - cx;
+                            float dy = y - cy;
+                            float rr = (float)Math.Sqrt(dx * dx + dy * dy);
+
+                            float w = 1.0f;
+                            if (rr <= coreRadius)
+                            {
+                                w = 0.0f;
+                            }
+                            else if (rr < coreRadius + coreFeather)
+                            {
+                                // Linear feather from 0 -> 1
+                                w = (rr - coreRadius) / coreFeather;
+                            }
+
+                            starArray2D[x, y] = v * w;
+                        }
+                    }
+                }
+
+                // Compute ROI used for row projections (keep your original "safe" margins)
+                int leftEdge = 0;
+                int rightEdge = width;
+                int topEdge = 0;
+                int bottomEdge = height;
+
+                // If you have a known crop logic elsewhere, keep it. Otherwise this uses full image.
+                // You can tighten edges to reduce border interpolation noise:
+                // int margin = Math.Max(1, Math.Min(width, height) / 50);
+                // leftEdge += margin; rightEdge -= margin; topEdge += margin; bottomEdge -= margin;
+
+                float[] lineNumbersOfBrightestLines = new float[DEGREES180];
+                float[] valuesOfBrightestLines = new float[DEGREES180];
+
+                // Per-thread workspace: one large rotated buffer per worker thread (not per angle).
+                Parallel.For(
+                    0,
+                    DEGREES180,
+                    () => new AngleScanWorkspace(width, height),
+                    (angleIndex, state, workspace) =>
+                    {
+                        float[,] rotatedImage = workspace.RotatedImage;
+                        float[] rowTotals = workspace.RowTotals;
+
+                        // Clear stale values from the previous angle processed by this thread.
+                        Array.Clear(rotatedImage, 0, rotatedImage.Length);
+
+                        float currentRadians = RADIANS_PER_DEGREE * angleIndex;
+                        float sin = (float)Math.Sin(currentRadians);
+                        float cos = (float)Math.Cos(currentRadians);
+
+                        // Rotate around center (same as FindBrightestLines)
+                        float cxf = (width + 1) * 0.5f;
+                        float cyf = (height + 1) * 0.5f;
+
+                        for (int y = topEdge; y < bottomEdge; y++)
+                        {
+                            float yy = y - cyf;
+                            for (int x = leftEdge; x < rightEdge; x++)
+                            {
+                                float xx = x - cxf;
+
+                                // Inverse rotation to sample source
+                                float srcXf = (xx * cos + yy * sin) + cxf;
+                                float srcYf = (-xx * sin + yy * cos) + cyf;
+
+                                int srcX0 = (int)srcXf;
+                                int srcY0 = (int)srcYf;
+
+                                if (srcX0 >= 0 && srcX0 < width - 1 && srcY0 >= 0 && srcY0 < height - 1)
+                                {
+                                    float fx = srcXf - srcX0;
+                                    float fy = srcYf - srcY0;
+                                    float oneMinusFx = 1f - fx;
+                                    float oneMinusFy = 1f - fy;
+
+                                    float v1 = starArray2D[srcX0, srcY0];
+                                    float v2 = starArray2D[srcX0 + 1, srcY0];
+                                    float v3 = starArray2D[srcX0, srcY0 + 1];
+                                    float v4 = starArray2D[srcX0 + 1, srcY0 + 1];
+
+                                    rotatedImage[x, y] =
+                                        v1 * oneMinusFx * oneMinusFy +
+                                        v2 * fx * oneMinusFy +
+                                        v3 * oneMinusFx * fy +
+                                        v4 * fx * fy;
+                                }
+                            }
+                        }
+
+                        int rowWidth = Math.Max(1, rightEdge - leftEdge);
+
+                        for (int y = topEdge; y < bottomEdge; y++)
+                        {
+                            float sum = 0f;
+                            for (int x = leftEdge; x < rightEdge; x++)
+                                sum += rotatedImage[x, y];
+
+                            rowTotals[y] = sum / rowWidth;
+                        }
+
+                        // Smooth the profile (Gaussian-ish 5 tap) to reduce noise
+                        float[] smoothed = Smooth1D5(rowTotals, topEdge, bottomEdge);
+
+                        // Compute local mean/std quickly using prefix sums, then z-score
+                        float[] z = ComputeLocalZScore(smoothed, topEdge, bottomEdge, LOCAL_STATS_WINDOW, EPS_STD);
+
+                        // Pick strongest local maximum by z-score (faint but distinct spikes win here)
+                        float bestScore = -1f;
+                        int bestY = -1;
+
+                        for (int y = topEdge + 2; y < bottomEdge - 2; y++)
+                        {
+                            float s = z[y];
+                            if (s <= 0f)
+                                continue;
+
+                            // Enforce a peak (helps ignore ramps/plateaus)
+                            if (smoothed[y] >= smoothed[y - 1] && smoothed[y] >= smoothed[y + 1])
+                            {
+                                if (s > bestScore)
+                                {
+                                    bestScore = s;
+                                    bestY = y;
+                                }
+                            }
+                        }
+
+                        // Fallback if nothing qualified (very low contrast)
+                        if (bestY < 0)
+                        {
+                            float largest = -1f;
+                            int ly = topEdge;
+                            for (int y = topEdge; y < bottomEdge; y++)
+                            {
+                                if (smoothed[y] > largest)
+                                {
+                                    largest = smoothed[y];
+                                    ly = y;
+                                }
+                            }
+                            bestY = ly;
+                            bestScore = largest;
+                        }
+
+                        lineNumbersOfBrightestLines[angleIndex] = bestY;
+                        valuesOfBrightestLines[angleIndex] = bestScore;
+
+                        return workspace;
+                    },
+                    _ => { });
+
+                // Select top LINES distinct angles (keep your original suppression around peaks)
+                for (int i = 0; i < LINES; ++i)
+                {
+                    float maxValue = -1f;
+                    float angleInRadians = -1f;
+                    float lineNumber = -1f;
+                    int brightestLineIndex = -1;
+
+                    for (int j = 0; j < DEGREES180; ++j)
+                    {
+                        if (valuesOfBrightestLines[j] > maxValue)
+                        {
+                            maxValue = valuesOfBrightestLines[j];
+                            lineNumber = lineNumbersOfBrightestLines[j];
+                            angleInRadians = j * RADIANS_PER_DEGREE;
+                            brightestLineIndex = j;
+                        }
+                    }
+
+                    result.LineIndex[i] = lineNumber;
+                    result.LineAngles[i] = angleInRadians;
+                    result.LineValue[i] = maxValue;
+
+                    for (int j = brightestLineIndex - DEG_5; j <= brightestLineIndex + DEG_5; ++j)
+                    {
+                        int index = (j + DEGREES180) % DEGREES180;
+                        valuesOfBrightestLines[index] = 0.0f;
+                    }
+                }
+
+                return result;
+            }
+            finally
+            {
+                starImage.UnlockBits(bitmapData);
+            }
+        }
+
+        /// <summary>
+        /// Smooths a 1D profile using a stable 5-tap kernel [1, 4, 6, 4, 1] / 16.
+        ///
+        /// The smoothing reduces noise while preserving peak locations reasonably well, which improves the
+        /// reliability of subsequent peak detection (especially on faint, noisy profiles).
+        ///
+        /// Only rows that have 2 valid neighbors on each side are filtered; the edges are copied unchanged.
+        /// </summary>
+        private static float[] Smooth1D5(float[] src, int topEdge, int bottomEdge)
+        {
+            // 5-tap kernel: [1 4 6 4 1] / 16
+            int n = src.Length;
+            float[] dst = new float[n];
+
+            // Copy edges
+            for (int i = 0; i < n; i++)
+                dst[i] = src[i];
+
+            for (int y = topEdge + 2; y < bottomEdge - 2; y++)
+            {
+                dst[y] = (src[y - 2] + 4f * src[y - 1] + 6f * src[y] + 4f * src[y + 1] + src[y + 2]) / 16f;
+            }
+
+            return dst;
+        }
+
+        /// <summary>
+        /// Computes a positive-only local z-score for each element of a 1D profile over a sliding window.
+        ///
+        /// For each y in [topEdge, bottomEdge):
+        /// - Computes localMean and localStd over a window centered on y (clamped to the provided bounds),
+        ///   using prefix sums for speed.
+        /// - Computes z[y] = (profile[y] - localMean) / (localStd + epsStd).
+        /// - Negative values are clamped to 0 so only upward deviations (peak-like features) are retained.
+        ///
+        /// This highlights narrow peaks that rise above the local background and de-emphasizes broad gradients
+        /// and slowly-varying structure, which is useful for detecting faint diffraction spikes.
+        /// </summary>
+        private static float[] ComputeLocalZScore(float[] profile, int topEdge, int bottomEdge, int window, float epsStd)
+        {
+            // z[y] = (profile[y] - localMean[y]) / (localStd[y] + eps)
+            // localMean/localStd over a sliding window using prefix sums for speed.
+
+            if (window < 5) window = 5;
+            if ((window & 1) == 0) window++; // force odd
+
+            int n = profile.Length;
+            float[] z = new float[n];
+
+            double[] prefix = new double[n + 1];
+            double[] prefix2 = new double[n + 1];
+
+            for (int i = 0; i < n; i++)
+            {
+                double v = profile[i];
+                prefix[i + 1] = prefix[i] + v;
+                prefix2[i + 1] = prefix2[i] + v * v;
+            }
+
+            int half = window / 2;
+
+            for (int y = topEdge; y < bottomEdge; y++)
+            {
+                int a = y - half;
+                int b = y + half;
+
+                if (a < topEdge) a = topEdge;
+                if (b > bottomEdge - 1) b = bottomEdge - 1;
+
+                int count = (b - a + 1);
+                if (count <= 1)
+                {
+                    z[y] = 0f;
+                    continue;
+                }
+
+                double sum = prefix[b + 1] - prefix[a];
+                double sum2 = prefix2[b + 1] - prefix2[a];
+
+                double mean = sum / count;
+                double var = (sum2 / count) - (mean * mean);
+                if (var < 0.0) var = 0.0;
+
+                double std = Math.Sqrt(var);
+                double denom = std + epsStd;
+
+                double zz = (profile[y] - mean) / denom;
+
+                // We only care about positive deviations (spikes)
+                z[y] = (float)(zz > 0.0 ? zz : 0.0);
+            }
+
+            return z;
+        }
+
+        /// <summary>
+        /// Refines line positions using the same green-channel sqrt model as <see cref="FindBrightestLines"/>,
+        /// 3-tap row smoothing, parabolic subpixel peak fit on the 1D profile, with symmetry-based fallback.
+        /// </summary>
         /// <param name="starImage">The bitmap image of the star to be analyzed.</param>
         /// <param name="lineCount">The number of lines to detect and refine.</param>
         /// <param name="bahtinovLines">The <see cref="BahtinovData"/> object containing initial line data to be refined.</param>
         /// <returns>The updated <see cref="BahtinovData"/> object with refined line indices and values.</returns>
-        /// </summary>
         public BahtinovData FindSubpixelLines(Bitmap starImage, int lineCount, BahtinovData bahtinovLines)
         {
             // Define the full rectangle of the image.
@@ -282,14 +684,21 @@ namespace Bahtinov_Collimator
 
             // Lock the bitmap data.
             BitmapData bitmapData = starImage.LockBits(rect, ImageLockMode.ReadWrite, starImage.PixelFormat);
-            IntPtr scan0 = bitmapData.Scan0;
-            int imagePixelCount = bitmapData.Stride * starImage.Height;
-            byte[] starImageArray = new byte[imagePixelCount];
-
-            // Copy pixel data to byte array and back to the image.
-            Marshal.Copy(scan0, starImageArray, 0, imagePixelCount);
-            Marshal.Copy(starImageArray, 0, scan0, imagePixelCount);
-            starImage.UnlockBits(bitmapData);
+            int stride = bitmapData.Stride;
+            int bytesPerPixel = Image.GetPixelFormatSize(starImage.PixelFormat) / 8;
+            int imagePixelCount = stride * starImage.Height;
+            byte[] starImageArray;
+            try
+            {
+                IntPtr scan0 = bitmapData.Scan0;
+                starImageArray = new byte[imagePixelCount];
+                // Copy pixel data to byte array; caller reads from the byte buffer after UnlockBits.
+                Marshal.Copy(scan0, starImageArray, 0, imagePixelCount);
+            }
+            finally
+            {
+                starImage.UnlockBits(bitmapData);
+            }
 
             int width = starImage.Width;
             int height = starImage.Height;
@@ -308,105 +717,289 @@ namespace Bahtinov_Collimator
             float divisionFactor = 3f / byte.MaxValue;
 
             float[,] starArray2D = new float[width, height];
-            float pixelValueTotal = 0f;
-            float pixelsCounted = 0f;
 
-            // Process the pixels in the bounding box and populate starArray2D.
+            // Green channel + sqrt, matching FindBrightestLines for consistent geometry vs angle pass.
             for (int x = leftEdge; x < rightEdge; ++x)
             {
                 for (int y = topEdge; y < bottomEdge; ++y)
                 {
-                    int pixelIndex = (x + y * width) * bitmapData.Stride / width;
-                    byte redValue = starImageArray[pixelIndex];
-                    byte greenValue = starImageArray[pixelIndex + 1];
-                    byte blueValue = starImageArray[pixelIndex + 2];
+                    int pixelIndex = y * stride + x * bytesPerPixel;
+                    if (pixelIndex < 0 || pixelIndex + 1 >= starImageArray.Length)
+                        continue;
 
-                    float pixelValue = (redValue + greenValue + blueValue) * divisionFactor;
-                    starArray2D[x, y] = (float)Math.Sqrt(pixelValue);
-                    pixelValueTotal += starArray2D[x, y];
-                    ++pixelsCounted;
+                    byte greenValue = starImageArray[pixelIndex + 1];
+                    starArray2D[x, y] = (float)Math.Sqrt(greenValue * divisionFactor);
                 }
             }
 
             float[] subpixelLineNumbers = new float[lineCount];
             float[] brightestLineValues = new float[lineCount];
 
-            Parallel.For(0, lineCount, index1 =>
-            {
-                float[,] imageArray = new float[width, height];
-                float knownAngle = bahtinovLines.GetLineAngle(index1);
-                float sinCurrentRadians = (float)Math.Sin(knownAngle);
-                float cosCurrentRadians = (float)Math.Cos(knownAngle);
-
-                for (int x = leftEdge; x < rightEdge; ++x)
+            // Per-thread workspace: avoid allocating lineCount large float[,] buffers per call.
+            Parallel.For(
+                0,
+                lineCount,
+                () => new AngleScanWorkspace(width, height),
+                (index1, state, workspace) =>
                 {
-                    for (int y = topEdge; y < bottomEdge; ++y)
-                    {
-                        float xDistanceFromCenter = x - starImageXCenter;
-                        float yDistanceFromCenter = y - starImageYCenter;
+                    float[,] imageArray = workspace.RotatedImage;
+                    float[] rowTotals = workspace.RowTotals;
+                    float[] smoothedTotals = workspace.SmoothedTotals;
 
-                        float rotatedXDistance = starImageXCenter + xDistanceFromCenter * cosCurrentRadians + yDistanceFromCenter * sinCurrentRadians;
-                        float rotatedYDistance = starImageYCenter - xDistanceFromCenter * sinCurrentRadians + yDistanceFromCenter * cosCurrentRadians;
+                    // Clear stale values from the previous line processed by this thread.
+                    Array.Clear(imageArray, 0, imageArray.Length);
 
-                        int rotatedXRoundedDown = (int)rotatedXDistance;
-                        int rotatedYRoundedDown = (int)rotatedYDistance;
+                    float knownAngle = bahtinovLines.GetLineAngle(index1);
+                    float sinCurrentRadians = (float)Math.Sin(knownAngle);
+                    float cosCurrentRadians = (float)Math.Cos(knownAngle);
 
-                        if (rotatedXRoundedDown < 0 || rotatedXRoundedDown >= width - 1 || rotatedYRoundedDown < 0 || rotatedYRoundedDown >= height - 1)
-                            continue;
-
-                        float rotatedXFraction = rotatedXDistance - rotatedXRoundedDown;
-                        float rotatedYFraction = rotatedYDistance - rotatedYRoundedDown;
-
-                        float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
-                        float value2 = starArray2D[rotatedXRoundedDown + 1, rotatedYRoundedDown];
-                        float value3 = starArray2D[rotatedXRoundedDown + 1, rotatedYRoundedDown + 1];
-                        float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown + 1];
-
-                        float interpolatedValue = (float)(
-                            value1 * (1 - rotatedXFraction) * (1 - rotatedYFraction) +
-                            value2 * rotatedXFraction * (1 - rotatedYFraction) +
-                            value3 * rotatedXFraction * rotatedYFraction +
-                            value4 * (1 - rotatedXFraction) * rotatedYFraction
-                        );
-
-                        imageArray[x, y] = interpolatedValue;
-                    }
-                }
-
-                float[] rowTotals = new float[height];
-                for (int y = topEdge; y < bottomEdge; ++y)
-                {
-                    float rowTotal = 0f;
                     for (int x = leftEdge; x < rightEdge; ++x)
                     {
-                        rowTotal += imageArray[x, y];
+                        for (int y = topEdge; y < bottomEdge; ++y)
+                        {
+                            float xDistanceFromCenter = x - starImageXCenter;
+                            float yDistanceFromCenter = y - starImageYCenter;
+
+                            float rotatedXDistance = starImageXCenter + xDistanceFromCenter * cosCurrentRadians + yDistanceFromCenter * sinCurrentRadians;
+                            float rotatedYDistance = starImageYCenter - xDistanceFromCenter * sinCurrentRadians + yDistanceFromCenter * cosCurrentRadians;
+
+                            int rotatedXRoundedDown = (int)rotatedXDistance;
+                            int rotatedYRoundedDown = (int)rotatedYDistance;
+
+                            if (rotatedXRoundedDown < 0 || rotatedXRoundedDown >= width - 1 || rotatedYRoundedDown < 0 || rotatedYRoundedDown >= height - 1)
+                                continue;
+
+                            float rotatedXFraction = rotatedXDistance - rotatedXRoundedDown;
+                            float rotatedYFraction = rotatedYDistance - rotatedYRoundedDown;
+
+                            float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
+                            float value2 = starArray2D[rotatedXRoundedDown + 1, rotatedYRoundedDown];
+                            float value3 = starArray2D[rotatedXRoundedDown + 1, rotatedYRoundedDown + 1];
+                            float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown + 1];
+
+                            float interpolatedValue = (float)(
+                                value1 * (1 - rotatedXFraction) * (1 - rotatedYFraction) +
+                                value2 * rotatedXFraction * (1 - rotatedYFraction) +
+                                value3 * rotatedXFraction * rotatedYFraction +
+                                value4 * (1 - rotatedXFraction) * rotatedYFraction
+                            );
+
+                            imageArray[x, y] = interpolatedValue;
+                        }
                     }
-                    rowTotals[y] = rowTotal / (rightEdge - leftEdge);
-                }
 
-                float largestValueForThisRotation = -1f;
-                float lineNumberOfLargestValue = -1f;
-
-                for (int y = topEdge; y < bottomEdge; ++y)
-                {
-                    if (rowTotals[y] > largestValueForThisRotation)
+                    for (int y = topEdge; y < bottomEdge; ++y)
                     {
-                        largestValueForThisRotation = rowTotals[y];
-                        lineNumberOfLargestValue = y;
+                        float rowTotal = 0f;
+                        for (int x = leftEdge; x < rightEdge; ++x)
+                        {
+                            rowTotal += imageArray[x, y];
+                        }
+                        rowTotals[y] = rowTotal / (rightEdge - leftEdge);
                     }
-                }
 
-                float subPixelLineNumber = (float)PolynomialCurveFit.FindMaxValueIndex(rowTotals, (int)lineNumberOfLargestValue, 2);
-                subpixelLineNumbers[index1] = subPixelLineNumber;
-                brightestLineValues[index1] = largestValueForThisRotation;
-            });
+                    // Same 3-tap smoothing as FindBrightestLines before peak search
+                    for (int y = topEdge; y < bottomEdge; ++y)
+                    {
+                        smoothedTotals[y] = rowTotals[y];
+                        if (y > topEdge && y < bottomEdge - 1)
+                            smoothedTotals[y] = (rowTotals[y - 1] + rowTotals[y] + rowTotals[y + 1]) / 3f;
+                    }
+
+                    float largestValueForThisRotation = -1f;
+                    int yPeak = topEdge;
+
+                    for (int y = topEdge; y < bottomEdge; ++y)
+                    {
+                        if (smoothedTotals[y] > largestValueForThisRotation)
+                        {
+                            largestValueForThisRotation = smoothedTotals[y];
+                            yPeak = y;
+                        }
+                    }
+
+                    float centerY = TryRefinePeakSubpixelParabola(smoothedTotals, yPeak, topEdge, bottomEdge, out float parabolicY)
+                        ? parabolicY
+                        : FindSymmetryCenter(smoothedTotals, yPeak, topEdge, bottomEdge);
+                    subpixelLineNumbers[index1] = centerY;
+
+                    brightestLineValues[index1] = largestValueForThisRotation;
+
+                    return workspace;
+                },
+                _ => { });
 
             for (int index = 0; index < lineCount; ++index)
             {
                 bahtinovLines.LineIndex[index] = subpixelLineNumbers[index];
             }
-
             return bahtinovLines;
+        }
+
+        /// <summary>
+        /// Subpixel peak via parabolic fit to three samples around the integer maximum.
+        /// Returns false if the fit is unreliable (edge index, flat peak, or wrong curvature).
+        /// </summary>
+        private static bool TryRefinePeakSubpixelParabola(
+            float[] profile,
+            int peak,
+            int yMin,
+            int yMax,
+            out float centerY)
+        {
+            centerY = peak;
+            if (peak <= yMin || peak >= yMax - 1)
+                return false;
+
+            double a = profile[peak - 1];
+            double b = profile[peak];
+            double c = profile[peak + 1];
+            double denom = a - 2.0 * b + c;
+            if (Math.Abs(denom) < 1e-12 || denom > 0.0)
+                return false;
+
+            double delta = 0.5 * (a - c) / denom;
+            if (double.IsNaN(delta) || double.IsInfinity(delta))
+                return false;
+
+            delta = Math.Max(-0.5, Math.Min(0.5, delta));
+            centerY = (float)(peak + delta);
+            return true;
+        }
+
+        /// <summary>
+        /// Determines the centre position of a Bahtinov diffraction line using symmetry
+        /// analysis of a one-dimensional brightness profile.
+        ///
+        /// The method performs the following steps:
+        /// 1. Estimates the background level from the profile edges.
+        /// 2. Determines an adaptive analysis window around an initial peak estimate.
+        /// 3. Evaluates left–right symmetry of the profile within this window.
+        /// 4. Selects the position that minimises asymmetry and refines it to subpixel
+        ///    accuracy.
+        ///
+        /// Returns the subpixel-accurate centre position of the diffraction line.
+        /// 
+        /// <param name="profile">One-dimensional brightness profile derived from the rotated image.</param>
+        /// <param name="yPeak">Initial estimate of the line position, typically the brightest row.</param>
+        /// <param name="yMin">Inclusive lower bound of valid profile indices.</param>
+        /// <param name="yMax">Exclusive upper bound of valid profile indices.</param>
+        /// <returns>The subpixel-accurate centre position of the diffraction line, or
+        /// <paramref name="yPeak"/> if a reliable result cannot be determined.</returns>
+        /// </summary>
+        private static float FindSymmetryCenter(
+            float[] profile,
+            int yPeak,
+            int yMin,
+            int yMax)
+        {
+            if (profile == null) throw new ArgumentNullException(nameof(profile));
+            if (yPeak < yMin || yPeak >= yMax) return yPeak;
+
+            // 1) Background estimate: use a robust-ish edge mean (keeps it fast)
+            // We pick the smaller edge mean to avoid bias if one edge contains signal.
+            const int edgeN = 8;
+
+            float Mean(int a, int b)
+            {
+                a = Math.Max(a, yMin);
+                b = Math.Min(b, yMax);
+                int n = b - a;
+                if (n <= 0) return 0f;
+                double s = 0;
+                for (int i = a; i < b; i++) s += profile[i];
+                return (float)(s / n);
+            }
+
+            float bgLeft = Mean(yMin, yMin + edgeN);
+            float bgRight = Mean(yMax - edgeN, yMax);
+            float bg = Math.Min(bgLeft, bgRight);
+
+            float peak = profile[yPeak];
+            float amp = peak - bg;
+            if (amp <= 1e-6f) return yPeak;
+
+            // 2) Choose a window size automatically from the profile (no fixed line width)
+            // Use a low fraction of peak above bg to capture the band wings.
+            float level = bg + 0.20f * amp;
+
+            int left = yPeak;
+            while (left > yMin && profile[left] > level) left--;
+            int right = yPeak;
+            while (right < yMax - 1 && profile[right] > level) right++;
+
+            // Width estimate for matching. Clamp to keep it stable.
+            int halfW = Math.Max(4, (right - left) / 2);
+            halfW = Math.Min(halfW, 35);
+
+            // Search range around the peak: allow small shifts.
+            int searchR = Math.Max(3, halfW / 2);
+            searchR = Math.Min(searchR, 20);
+
+            double BestScoreForCenter(int c)
+            {
+                // Compare mirrored samples. Use background-subtracted weights so the band matters.
+                int maxI = Math.Min(halfW, Math.Min(c - yMin, (yMax - 1) - c));
+                if (maxI < 2) return double.PositiveInfinity;
+
+                double score = 0;
+                double wsum = 0;
+
+                for (int i = 1; i <= maxI; i++)
+                {
+                    float l = profile[c - i] - bg;
+                    float r = profile[c + i] - bg;
+                    if (l < 0f) l = 0f;
+                    if (r < 0f) r = 0f;
+
+                    // Weight by signal so noisy wings do not dominate
+                    double w = l + r;
+                    if (w <= 1e-9) continue;
+
+                    double d = l - r;
+                    score += w * d * d;
+                    wsum += w;
+                }
+
+                if (wsum <= 1e-9) return double.PositiveInfinity;
+                return score / wsum;
+            }
+
+            int c0 = yPeak;
+            int cMin = Math.Max(yMin + halfW, c0 - searchR);
+            int cMax = Math.Min(yMax - 1 - halfW, c0 + searchR);
+
+            double best = double.PositiveInfinity;
+            int bestC = c0;
+
+            for (int c = cMin; c <= cMax; c++)
+            {
+                double s = BestScoreForCenter(c);
+                if (s < best)
+                {
+                    best = s;
+                    bestC = c;
+                }
+            }
+
+            // 3) Subpixel refinement by parabolic fit on score(bestC-1..bestC+1)
+            if (bestC > cMin && bestC < cMax)
+            {
+                double s1 = BestScoreForCenter(bestC - 1);
+                double s2 = BestScoreForCenter(bestC);
+                double s3 = BestScoreForCenter(bestC + 1);
+
+                double denom = (s1 - 2.0 * s2 + s3);
+                if (Math.Abs(denom) > 1e-12)
+                {
+                    // Vertex of parabola through (-1,s1), (0,s2), (+1,s3)
+                    double delta = 0.5 * (s1 - s3) / denom;
+                    delta = Math.Max(-0.5, Math.Min(0.5, delta));
+                    return (float)(bestC + delta);
+                }
+            }
+
+            return bestC;
         }
 
         /// <summary>
@@ -431,7 +1024,7 @@ namespace Bahtinov_Collimator
         {
             if (lines.LineAngles.Length != 3 && lines.LineAngles.Length != 9)
             {
-                ImageLostEventProvider.OnImageLost("Unable to detect Bahtinov image lines", "DisplayLines", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                ImageLostEventProvider.OnImageLost(UiText.Current.BahtinovLinesNotDetectedMessage, UiText.Current.BahtinovLinesNotDetectedTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                 return false;
             }
 
@@ -446,6 +1039,8 @@ namespace Bahtinov_Collimator
             float starImage_X_Centre = (float)(width + 1.0) / 2.0f;
             float starImage_Y_Centre = (float)(height + 1.0) / 2.0f;
             float yOffset = 0.0f;
+            // Empirical +1px Y nudge so overlays align with the captured image (legacy height−Y screen mapping).
+            const float BahtinovOverlayScreenYOffset = 1f;
 
             // Choose a small epsilon relative to image size for robust parallel checks
             double eps = Math.Max(width, height) * 1e-12; // very strict, yet safe for 500x500
@@ -494,8 +1089,8 @@ namespace Bahtinov_Collimator
 
                     // Add to group for drawing (screen coordinates with Y flipped as you had)
                     var bahtinovLine = new BahtinovLineDataEventArgs.Line(
-                        new Point((int)Math.Round(lineStart_X), (int)Math.Round(height - lineStart_Y + yOffset)),
-                        new Point((int)Math.Round(lineEnd_X), (int)Math.Round(height - lineEnd_Y + yOffset)),
+                        new Point((int)Math.Round(lineStart_X), (int)Math.Round(height - lineStart_Y + yOffset + BahtinovOverlayScreenYOffset)),
+                        new Point((int)Math.Round(lineEnd_X), (int)Math.Round(height - lineEnd_Y + yOffset + BahtinovOverlayScreenYOffset)),
                         index
                     );
                     lineGroup.AddLine(bahtinovLine);
@@ -523,7 +1118,7 @@ namespace Bahtinov_Collimator
 
                 if (firstLine == null || secondLine == null || thirdLine == null)
                 {
-                    ImageLostEventProvider.OnImageLost("Image Lost", "Bahtinov Processing: missing lines", MessageBoxIcon.Error, MessageBoxButtons.OK);
+                    ImageLostEventProvider.OnImageLost(UiText.Current.BahtinovImageLostMessage, UiText.Current.BahtinovImageLostTitle, MessageBoxIcon.Error, MessageBoxButtons.OK);
                     lastFocusErrorValue = 0.0f;
                     return false;
                 }
@@ -533,7 +1128,7 @@ namespace Bahtinov_Collimator
                 if (!inter.HasValue)
                 {
                     // If these are nearly parallel, you could fall back to midpoints or skip
-                    ImageLostEventProvider.OnImageLost("Unable to compute intersection for Bahtinov lines", "DisplayLines", MessageBoxIcon.Warning, MessageBoxButtons.OK);
+                    ImageLostEventProvider.OnImageLost(UiText.Current.BahtinovIntersectionComputeFailedMessage, UiText.Current.BahtinovIntersectionComputeFailedTitle, MessageBoxIcon.Warning, MessageBoxButtons.OK);
                     lastFocusErrorValue = 0.0f;
                     return false;
                 }
@@ -568,8 +1163,12 @@ namespace Bahtinov_Collimator
                 switch (group)
                 {
                     case 0:
-                        // 0 < angle < π
-                        errorSign = (errorDir > 0.0 && errorDir < Math.PI) ? 1f : -1f;
+                        if (lines.LineAngles.Length == 9)
+                            // 0 < angle < π
+                            errorSign = (errorDir > 0.0 && errorDir < Math.PI) ? 1f : -1f;
+                        else
+                            // Keep sign if this is a simple bahtinov mask
+                            errorSign = -1f;
                         break;
 
                     case 1:
@@ -587,29 +1186,15 @@ namespace Bahtinov_Collimator
                         break;
                 }
 
+                errorSign *= (Properties.Settings.Default.SignChange ? -1f : 1f);
+
                 double errorDistanceD = Math.Sqrt(dxErr * dxErr + dyErr * dyErr);
-                double bahtinovOffset = errorSign * Math.Floor(errorDistanceD * 10.0) / 10.0;
-
-                float radianPerDegree = (float)Math.PI / 180f;
+                double bahtinovOffset = errorSign * Math.Round(errorDistanceD, 1, MidpointRounding.AwayFromZero);
                 float bahtinovAngle = Math.Abs((bahtinovLines.LineAngles[2] - bahtinovLines.LineAngles[0]) / 2.0f);
-
-                float pixelsPerMicron = (float)(9.0f / 32.0f * (apertureSetting / 1000.0f) /
-                                        ((focalLengthSetting / 1000.0f) * pixelSizeSetting) *
-                                        (1.0f + Math.Cos(45.0f * radianPerDegree) * (1.0f + (float)Math.Tan(bahtinovAngle))));
-
-                double focusErrorInMicrons = errorDistanceD / pixelsPerMicron;
-
-                float criticalFocusValue = 8.99999974990351E-07f * (focalLengthSetting / 1000.0f) /
-                                           (apertureSetting / 1000.0f) * (focalLengthSetting / 1000.0f) /
-                                           (apertureSetting / 1000.0f);
-
-                bool withinCriticalFocus = Math.Abs(focusErrorInMicrons * 1E-06) < Math.Abs(criticalFocusValue);
 
                 FocusData fd = new FocusData
                 {
                     BahtinovOffset = bahtinovOffset,
-                    DefocusError = focusErrorInMicrons,
-                    InsideFocus = withinCriticalFocus,
                     Id = group
                 };
 
@@ -632,13 +1217,13 @@ namespace Bahtinov_Collimator
 
                 int circleRadius = UITheme.ErrorCircleRadius;
                 int circle_x = (int)(errorMarker_X - circleRadius);
-                int circle_y = (int)(height - errorMarker_Y - circleRadius + yOffset);
+                int circle_y = (int)(height - errorMarker_Y - circleRadius + yOffset + BahtinovOverlayScreenYOffset);
                 int circle_width = circleRadius * 2;
                 int circle_height = circleRadius * 2;
-                string errorValue = (errorSign * (Math.Floor((float)errorDistanceD * 10) / 10)).ToString("F1");
+                string errorValue = bahtinovOffset.ToString("F1");
 
                 lineGroup.ErrorCircle = new BahtinovLineDataEventArgs.ErrorCircle(
-                    new Point(circle_x, circle_y), circle_width, circle_height, withinCriticalFocus, errorValue);
+                    new Point(circle_x, circle_y), circle_width, circle_height, errorValue);
 
                 // Error line is drawn perpendicular to the 2nd line at the error marker location
                 float lineX1 = errorMarker_X + circleRadius;
@@ -657,9 +1242,9 @@ namespace Bahtinov_Collimator
                 float rotatedY2 = (float)(lineX2 * Math.Sin(-bahtinovLines.LineAngles[1]) + lineY2 * Math.Cos(-bahtinovLines.LineAngles[1]));
 
                 rotatedX1 += errorMarker_X;
-                rotatedY1 += height - errorMarker_Y;
+                rotatedY1 += height - errorMarker_Y + BahtinovOverlayScreenYOffset;
                 rotatedX2 += errorMarker_X;
-                rotatedY2 += height - errorMarker_Y;
+                rotatedY2 += height - errorMarker_Y + BahtinovOverlayScreenYOffset;
 
                 lineGroup.ErrorLine = new BahtinovLineDataEventArgs.ErrorLine(
                     new Point((int)rotatedX1, (int)rotatedY1),

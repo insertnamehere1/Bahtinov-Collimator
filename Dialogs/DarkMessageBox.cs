@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -6,10 +6,16 @@ using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
 {
+    /// <summary>
+    /// Dark-themed message box wrapper that supports standard icon and button combinations.
+    /// </summary>
     public partial class DarkMessageBox : Form
     {
         #region DLL Imports
 
+        /// <summary>
+        /// Sets a Desktop Window Manager attribute on the dialog window.
+        /// </summary>
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
@@ -49,74 +55,67 @@ namespace Bahtinov_Collimator
             InitializeComponent();
             this.Text = title;
             messageLabel.Text = message;
+            okButton.Text = UiText.Current.CommonOk;
+            cancelButton.Text = UiText.Current.CommonCancel;
             DrawIconInPictureBox(icon);
-            SetTextSize();
-            SetColor();
             ConfigureButtons(buttons);
+            // Initial baseline (96-DPI) sizing. This gives our DPI-aware
+            // ShowDialog helper a reasonable starting Size to predict the
+            // owner-centered target position. AutoSizeControls is re-run in
+            // OnShown once the dialog has landed on its final monitor so the
+            // panel1 docking is correct even after the cross-monitor DPI
+            // scale.
             AutoSizeControls();
+
+            var color = UITheme.DarkBackground;
+            int colorValue = color.R | (color.G << 8) | (color.B << 16);
+            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
         }
 
         #endregion
 
-        #region Methods
-
-        /// <summary>
-        /// Sets the color scheme of the message box and its controls.
-        /// </summary>
-        private void SetColor()
-        {
-            var color = UITheme.DarkBackground;
-            int colorValue = color.R | (color.G << 8) | (color.B << 16);
-            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
-
-            panel1.BackColor = UITheme.MessageBoxPanelBackground;
-            this.BackColor = UITheme.DarkBackground;
-            messageLabel.ForeColor = UITheme.MessageBoxTextColor;
-
-            okButton.BackColor = UITheme.ButtonDarkBackground;
-            okButton.ForeColor = UITheme.ButtonDarkForeground;
-            okButton.FlatStyle = FlatStyle.Popup;
-
-            cancelButton.BackColor = UITheme.ButtonDarkBackground;
-            cancelButton.ForeColor = UITheme.ButtonDarkForeground;
-            cancelButton.FlatStyle = FlatStyle.Popup;
-        }
-
-        /// <summary>
-        /// Increases the font size of the message box and its controls.
-        /// </summary>
-        private void SetTextSize()
-        {
-            float increasedSize = this.Font.Size + 2.0f;
-            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
-
-            // Adjust fonts
-            this.Font = newFont;
-            this.messageLabel.Font = newFont;
-            this.cancelButton.Font = newFont;
-            this.okButton.Font = newFont;
-        }
+        #region Instance Methods
 
         /// <summary>
         /// Configures the visibility and text of the buttons based on the specified button options.
         /// </summary>
-        /// <param name="buttons">The buttons to display in the message box.</param>
         private void ConfigureButtons(MessageBoxButtons buttons)
         {
             okButton.Visible = false;
             cancelButton.Visible = false;
 
-            if (buttons.HasFlag(MessageBoxButtons.OK))
+            switch (buttons)
             {
-                okButton.Visible = true;
-            }
+                case MessageBoxButtons.OK:
+                    okButton.Visible = true;
+                    okButton.Text = UiText.Current.CommonOk;
+                    break;
 
-            if (buttons.HasFlag(MessageBoxButtons.YesNo))
-            {
-                okButton.Visible = true;
-                cancelButton.Visible = true;
-                okButton.Text = "Yes";
-                cancelButton.Text = "No";
+                case MessageBoxButtons.OKCancel:
+                    okButton.Visible = true;
+                    cancelButton.Visible = true;
+                    okButton.Text = UiText.Current.CommonOk;
+                    cancelButton.Text = UiText.Current.CommonCancel;
+                    break;
+
+                case MessageBoxButtons.YesNo:
+                    okButton.Visible = true;
+                    cancelButton.Visible = true;
+                    okButton.Text = UiText.Current.CommonYes;
+                    cancelButton.Text = UiText.Current.CommonNo;
+                    break;
+
+                case MessageBoxButtons.YesNoCancel:
+                    okButton.Visible = true;
+                    cancelButton.Visible = true;
+                    okButton.Text = UiText.Current.CommonYes;
+                    cancelButton.Text = UiText.Current.CommonCancel;
+                    break;
+
+                default:
+                    okButton.Visible = true;
+                    okButton.Text = UiText.Current.CommonOk;
+                    break;
             }
         }
 
@@ -125,18 +124,53 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void AutoSizeControls()
         {
-            this.messageLabel.AutoSize = true;
-            int width = Math.Max(this.messageLabel.Width + 150, this.okButton.Width + 255);
-            int height = this.messageLabel.Height + this.okButton.Height + 105; // Padding and spacing
-            this.ClientSize = new Size(width, height);
+            float dpiScale = DeviceDpi / 96f;
+
+            int S(int logicalPixels)
+            {
+                return (int)Math.Round(logicalPixels * dpiScale, MidpointRounding.AwayFromZero);
+            }
+
+            SuspendLayout();
+
+            messageLabel.AutoSize = true;
+            messageLabel.MaximumSize = new Size(S(650), 0);
+            messageLabel.PerformLayout();
+
+            PerformLayout();
+
+            int horizontalPadding = S(24);
+            int verticalPadding = S(20);
+            int bottomPanelTopSpacing = S(18);
+
+            int contentLeft = Math.Min(iconBox.Left, messageLabel.Left);
+            int contentRight = Math.Max(iconBox.Right, messageLabel.Right);
+            int contentTop = Math.Min(iconBox.Top, messageLabel.Top);
+            int contentBottom = Math.Max(iconBox.Bottom, messageLabel.Bottom);
+
+            int desiredClientWidth = (contentRight - contentLeft) + (horizontalPadding * 2);
+
+            int desiredClientWidthForButtons = (okButton.Visible ? okButton.Width : 0)
+                + (cancelButton.Visible ? cancelButton.Width : 0)
+                + S(48); // side padding + button gap allowance
+
+            int finalClientWidth = Math.Max(desiredClientWidth, desiredClientWidthForButtons);
+
+            int contentHeight = (contentBottom - contentTop);
+            int finalClientHeight = verticalPadding + contentHeight + bottomPanelTopSpacing + panel1.Height;
+
+            ClientSize = new Size(finalClientWidth, finalClientHeight);
+
+            panel1.Location = new Point(0, ClientSize.Height - panel1.Height);
+            panel1.Width = ClientSize.Width;
+
+            ResumeLayout(performLayout: true);
         }
 
         /// <summary>
         /// Handles the click event for the OK button. Sets the user response to OK and closes the message box.
         /// </summary>
-        /// <param name="sender">The source of the event, typically the OK button.</param>
-        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        private void okButton_Click(object sender, EventArgs e)
+        private void OkButton_Click(object sender, EventArgs e)
         {
             UserResponse = DialogResult.OK;
             this.DialogResult = DialogResult.Yes;
@@ -146,9 +180,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Handles the click event for the Cancel button. Sets the user response to Cancel and closes the message box.
         /// </summary>
-        /// <param name="sender">The source of the event, typically the Cancel button.</param>
-        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        private void cancelButton_Click(object sender, EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             UserResponse = DialogResult.Cancel;
             this.DialogResult = DialogResult.No;
@@ -181,7 +213,6 @@ namespace Bahtinov_Collimator
             }
             else
             {
-                // Fallback if there are no open forms
                 return ShowCustomMessageBoxInternal(message, title, icon, buttons, owner);
             }
         }
@@ -189,51 +220,70 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Creates and displays the custom message box within the specified owner's bounds.
         /// </summary>
-        /// <param name="message">The message to display in the message box.</param>
-        /// <param name="title">The title of the message box.</param>
-        /// <param name="icon">The icon to display in the message box.</param>
-        /// <param name="buttons">The buttons to display in the message box.</param>
-        /// <param name="owner">The owner form of the message box.</param>
         /// <returns>The <see cref="DialogResult"/> indicating the user's response.</returns>
         private static DialogResult ShowCustomMessageBoxInternal(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons, Form owner)
         {
             using (DarkMessageBox customMessageBox = new DarkMessageBox(message, title, buttons, icon))
             {
-                // Position the message box within the owner's bounds
-                Rectangle ownerRect = owner.Bounds;
-                int x = ownerRect.Left + (ownerRect.Width - customMessageBox.Width) / 2;
-                int y = ownerRect.Top + (ownerRect.Height - customMessageBox.Height) / 2;
-
-                customMessageBox.StartPosition = FormStartPosition.Manual;
-                customMessageBox.Location = new Point(x, y);
-
-                // Return the DialogResult directly
-                return customMessageBox.ShowDialog(owner);
+                // Let the DPI-aware helper do the centering. Computing an
+                // owner-centered location up front is wrong in multi-DPI
+                // setups because the dialog's Width/Height here are still
+                // at the designer 96-DPI baseline and will grow once the
+                // dialog crosses onto the owner's higher-DPI monitor.
+                customMessageBox.StartPosition = FormStartPosition.CenterParent;
+                return customMessageBox.ShowDialogDpiAware(owner);
             }
         }
 
         /// <summary>
         /// Handles the Load event of the form.
         /// </summary>
-        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            // Centering logic now handled in ShowCustomMessageBoxInternal
+        }
+
+        /// <summary>
+        /// Finalizes the layout and owner-centered position once the dialog
+        /// has been moved onto the owner's monitor and WinForms has applied
+        /// per-monitor DPI scaling. <see cref="DpiAwareDialog.ShowDialogDpiAware"/>
+        /// has already run its <c>Shown</c> handler by the time we call
+        /// <c>base.OnShown</c>, so at this point <c>DeviceDpi</c> reflects the
+        /// final monitor and <see cref="AutoSizeControls"/> produces pixel
+        /// sizes that actually match what the user will see.
+        /// </summary>
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            AutoSizeControls();
+
+            // Re-center on the owner using the now-final (scaled) size. The
+            // helper's pre-computed center was based on a predicted size; the
+            // final size after AutoSizeControls can differ (it's content-sized
+            // based on the message text), so without this the dialog ends up
+            // visibly off-center on the owner.
+            Form ownerForm = this.Owner;
+            if (ownerForm != null && ownerForm.IsHandleCreated)
+            {
+                Rectangle ob = ownerForm.Bounds;
+                int x = ob.Left + (ob.Width - this.Width) / 2;
+                int y = ob.Top + (ob.Height - this.Height) / 2;
+                this.Location = new Point(x, y);
+            }
         }
 
         /// <summary>
         /// Draws the specified icon in the iconBox control.
         /// </summary>
-        /// <param name="icon">The icon to display.</param>
         private void DrawIconInPictureBox(MessageBoxIcon icon)
         {
-            int iconSize = 32; // Adjust the size if needed
+            int iconSize = 32;
             Bitmap bitmap = new Bitmap(iconSize, iconSize);
 
             using (Graphics g = Graphics.FromImage(bitmap))
             {
-                g.Clear(Color.Transparent);
+                g.Clear(UITheme.Transparent);
 
                 Icon iconImage = GetIcon(icon, iconSize);
                 g.DrawIcon(iconImage, new Rectangle(0, 0, iconSize, iconSize));
@@ -245,8 +295,6 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Retrieves the icon associated with the specified MessageBoxIcon and resizes it.
         /// </summary>
-        /// <param name="messageBoxIcon">The MessageBoxIcon to retrieve.</param>
-        /// <param name="size">The size of the icon.</param>
         /// <returns>The resized icon.</returns>
         private Icon GetIcon(MessageBoxIcon messageBoxIcon, int size)
         {

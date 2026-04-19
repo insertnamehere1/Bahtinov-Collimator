@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Deployment.Application;
 using System.Drawing;
 using System.Reflection;
@@ -12,10 +12,12 @@ namespace Bahtinov_Collimator
     {
         #region P/Invoke Declarations
 
+        /// <summary>
+        /// Sets a Desktop Window Manager attribute on the dialog window.
+        /// </summary>
         [DllImport("dwmapi.dll", PreserveSig = true)]
         private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 
-        // Constants
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 19;
 
         #endregion
@@ -29,19 +31,18 @@ namespace Bahtinov_Collimator
         public AboutBox()
         {
             InitializeComponent();
-            SetColorScheme();
 
-            this.Text = String.Format("About {0}", AssemblyTitle);
+            this.Text = string.Format(UiText.Current.AboutDialogTitleFormat, AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
-            this.labelProductName.ForeColor = UITheme.AboutTextColor;
-            this.labelVersion.Text = String.Format("Version {0}", GetVersion());
-            this.labelVersion.ForeColor = UITheme.AboutTextColor;
+            this.labelVersion.Text = string.Format(UiText.Current.AboutVersionFormat, GetVersion());
             this.labelCopyright.Text = AssemblyCopyright;
-            this.labelCopyright.ForeColor = UITheme.AboutTextColor;
             this.labelCompanyName.Text = AssemblyCompany;
-            this.labelCompanyName.ForeColor = UITheme.AboutTextColor;
-            this.textBoxDescription.Text = AssemblyDescription;
-            this.textBoxDescription.ForeColor = UITheme.AboutTextColor;
+            this.textBoxDescription.Text = UiText.Current.AboutDescription;
+            this.okButton.Text = UiText.Current.CommonOk;
+
+            var color = UITheme.DarkBackground;
+            int colorValue = color.R | (color.G << 8) | (color.B << 16);
+            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
         }
 
         #endregion
@@ -156,26 +157,6 @@ namespace Bahtinov_Collimator
             this.Close();
         }
 
-        /// <summary>
-        /// Handles the Load event of the form. Increases the font size of the form and its controls.
-        /// </summary>
-        /// <param name="e">An <see cref="EventArgs"/> object that contains the event data.</param>
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            float increasedSize = this.Font.Size + 2.0f;
-            Font newFont = new Font(this.Font.FontFamily, increasedSize, this.Font.Style);
-
-            // Adjust fonts
-            this.Font = newFont;
-            this.labelProductName.Font = new Font(this.Font.FontFamily, this.Font.Size + 3.0f, this.Font.Style);
-            this.labelVersion.Font = newFont;
-            this.labelCopyright.Font = newFont;
-            this.labelCompanyName.Font = newFont;
-            this.textBoxDescription.Font = newFont;
-        }
-
         #endregion
 
         #region Helper Methods
@@ -191,31 +172,6 @@ namespace Bahtinov_Collimator
                 return ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString();
             }
             return AssemblyVersion;
-        }
-
-        /// <summary>
-        /// Applies the color scheme to the form and its controls.
-        /// </summary>
-        private void SetColorScheme()
-        {
-            // Set colors for main form
-            this.ForeColor = UITheme.DarkForeground;
-            this.BackColor = UITheme.DarkBackground;
-
-            // Set colors for OK button
-            okButton.BackColor = UITheme.ButtonDarkBackground;
-            okButton.ForeColor = UITheme.ButtonDarkForeground;
-            okButton.FlatStyle = FlatStyle.Popup;
-
-            // Set colors for titlebar
-            var color = UITheme.DarkBackground;
-            int colorValue = color.R | (color.G << 8) | (color.B << 16);
-            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
-
-            // Set colors for other controls
-            textBoxDescription.ForeColor = UITheme.AboutTextColor;
-            textBoxDescription.BackColor = UITheme.DarkBackground;
-            logoPictureBox.BackColor = UITheme.AboutPictureBackground;
         }
 
         #endregion

@@ -1,4 +1,9 @@
-﻿namespace Bahtinov_Collimator
+using Bahtinov_Collimator;
+using Bahtinov_Collimator.Custom_Components;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace Bahtinov_Collimator
 {
     partial class DarkMessageBox
     {
@@ -31,8 +36,8 @@
             this.messageLabel = new System.Windows.Forms.Label();
             this.iconBox = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.cancelButton = new System.Windows.Forms.Button();
-            this.okButton = new System.Windows.Forms.Button();
+            this.cancelButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
+            this.okButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
             ((System.ComponentModel.ISupportInitialize)(this.iconBox)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -40,17 +45,18 @@
             // messageLabel
             // 
             this.messageLabel.AutoSize = true;
-            this.messageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.messageLabel.Location = new System.Drawing.Point(78, 38);
+            this.messageLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.messageLabel.ForeColor = UITheme.White;
+            this.messageLabel.Location = new System.Drawing.Point(78, 30);
             this.messageLabel.Name = "messageLabel";
-            this.messageLabel.Size = new System.Drawing.Size(44, 16);
+            this.messageLabel.Size = new System.Drawing.Size(46, 17);
             this.messageLabel.TabIndex = 0;
             this.messageLabel.Text = "label1";
             this.messageLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // iconBox
             // 
-            this.iconBox.Location = new System.Drawing.Point(26, 26);
+            this.iconBox.Location = new System.Drawing.Point(26, 15);
             this.iconBox.Name = "iconBox";
             this.iconBox.Size = new System.Drawing.Size(40, 40);
             this.iconBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -61,43 +67,76 @@
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.BackColor = UITheme.MessageBoxPanelBackground;
             this.panel1.Controls.Add(this.cancelButton);
             this.panel1.Controls.Add(this.okButton);
-            this.panel1.Location = new System.Drawing.Point(0, 98);
+            this.panel1.Location = new System.Drawing.Point(5, 196);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(333, 46);
+            this.panel1.Size = new System.Drawing.Size(499, 43);
             this.panel1.TabIndex = 4;
             // 
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(138, 8);
+            this.cancelButton.BackColor = UITheme.ButtonDarkBackground;
+            this.cancelButton.BevelDark = UITheme.RoundedButtonBevelDark;
+            this.cancelButton.BevelLight = UITheme.RoundedButtonBevelLight;
+            this.cancelButton.BevelThickness = 4;
+            this.cancelButton.CornerRadius = 6;
+            this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.cancelButton.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.cancelButton.ForeColor = UITheme.ButtonDarkForeground;
+            this.cancelButton.HoverOverlay = UITheme.RoundedButtonHoverOverlay;
+            this.cancelButton.ImageHeight = 32;
+            this.cancelButton.ImageOffsetX = 60;
+            this.cancelButton.ImageOffsetY = 0;
+            this.cancelButton.ImageWidth = 32;
+            this.cancelButton.Location = new System.Drawing.Point(314, 7);
             this.cancelButton.Name = "cancelButton";
+            this.cancelButton.PressedOverlay = UITheme.RoundedButtonPressedOverlay;
             this.cancelButton.Size = new System.Drawing.Size(82, 30);
             this.cancelButton.TabIndex = 2;
             this.cancelButton.Text = "Cancel";
+            this.cancelButton.TextOffsetX = 0;
             this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
+            this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(235, 8);
+            this.okButton.BackColor = UITheme.ButtonDarkBackground;
+            this.okButton.BevelDark = UITheme.RoundedButtonBevelDark;
+            this.okButton.BevelLight = UITheme.RoundedButtonBevelLight;
+            this.okButton.BevelThickness = 4;
+            this.okButton.CornerRadius = 6;
+            this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.okButton.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.okButton.ForeColor = UITheme.ButtonDarkForeground;
+            this.okButton.HoverOverlay = UITheme.RoundedButtonHoverOverlay;
+            this.okButton.ImageHeight = 32;
+            this.okButton.ImageOffsetX = 60;
+            this.okButton.ImageOffsetY = 0;
+            this.okButton.ImageWidth = 32;
+            this.okButton.Location = new System.Drawing.Point(410, 7);
             this.okButton.Name = "okButton";
+            this.okButton.PressedOverlay = UITheme.RoundedButtonPressedOverlay;
             this.okButton.Size = new System.Drawing.Size(82, 30);
             this.okButton.TabIndex = 1;
             this.okButton.Text = "OK";
+            this.okButton.TextOffsetX = 0;
             this.okButton.UseVisualStyleBackColor = true;
-            this.okButton.Click += new System.EventHandler(this.okButton_Click);
+            this.okButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
             // DarkMessageBox
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(333, 143);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.BackColor = UITheme.DarkBackground;
+            this.ClientSize = new System.Drawing.Size(472, 273);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.iconBox);
             this.Controls.Add(this.messageLabel);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DarkMessageBox";
@@ -118,7 +157,10 @@
         private System.Windows.Forms.Label messageLabel;
         private System.Windows.Forms.PictureBox iconBox;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.Button cancelButton;
+        private RoundedButton okButton;
+        private RoundedButton cancelButton;
     }
 }
+
+
+

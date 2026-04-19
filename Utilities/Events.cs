@@ -1,8 +1,9 @@
-﻿using System;
+using Bahtinov_Collimator.Helper;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Bahtinov_Collimator.Helper;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Bahtinov_Collimator
 {
@@ -25,9 +26,7 @@ namespace Bahtinov_Collimator
         /// <exception cref="ArgumentNullException">Thrown when the <paramref name="image"/> parameter is null.</exception>
         protected internal ImageReceivedEventArgs(Bitmap image)
         {
-            if (image == null)
-                throw new ArgumentNullException(nameof(image));
-
+            _ = image ?? throw new ArgumentNullException(nameof(image));
             Image = image;
         }
     }
@@ -59,8 +58,7 @@ namespace Bahtinov_Collimator
         /// <exception cref="ArgumentException">Thrown when the length of <paramref name="data"/> does not match the <paramref name="channelCount"/>.</exception>
         protected internal ChannelSelectEventArgs(bool[] data, int channelCount)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            _ = data ?? throw new ArgumentNullException(nameof(data));
 
             ChannelSelected = data;
             ChannelCount = channelCount;
@@ -134,6 +132,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Occurs when an image is lost and needs to notify subscribers.
         /// </summary>
+        
         public static event ImageLostEventHandler ImageLostEvent;
 
         /// <summary>
@@ -145,7 +144,6 @@ namespace Bahtinov_Collimator
         /// <param name="button">The buttons to be displayed in the message box.</param>
         public static void OnImageLost(string message, string title, MessageBoxIcon icon, MessageBoxButtons button)
         {
-            // Invoke the event if there are subscribers
             ImageLostEvent?.Invoke(null, new ImageLostEventArgs(message, title, icon, button));
         }
     }
@@ -184,16 +182,6 @@ namespace Bahtinov_Collimator
         public double BahtinovOffset { get; set; }
 
         /// <summary>
-        /// Gets or sets the defocus error value.
-        /// </summary>
-        public double DefocusError { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the focus is inside the desired focus range.
-        /// </summary>
-        public bool InsideFocus { get; set; }
-
-        /// <summary>
         /// Gets or sets the identifier for the focus data.
         /// </summary>
         public int Id { get; set; }
@@ -224,13 +212,16 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BahtinovLineDataEventArgs"/> class with the specified line data and image.
+        /// The image reference is stored directly (no clone). The producer retains ownership for the
+        /// duration of synchronous event dispatch; subscribers must not dispose it or use it after the
+        /// handler returns.
         /// </summary>
         /// <param name="linedata">The Bahtinov line data.</param>
         /// <param name="image">The image associated with the line data.</param>
         public BahtinovLineDataEventArgs(BahtinovLineData linedata, Bitmap image)
         {
             Linedata = linedata;
-            Image = new Bitmap(image);
+            Image = image;
         }
 
         /// <summary>
@@ -348,11 +339,6 @@ namespace Bahtinov_Collimator
             public int Width { get; set; }
 
             /// <summary>
-            /// Gets or sets a value indicating whether the error circle is inside the focus range.
-            /// </summary>
-            public bool InsideFocus { get; set; }
-
-            /// <summary>
             /// Gets or sets the error value associated with the error circle.
             /// </summary>
             public string ErrorValue { get; set; }
@@ -363,14 +349,12 @@ namespace Bahtinov_Collimator
             /// <param name="origin">The origin point of the error circle.</param>
             /// <param name="height">The height of the error circle.</param>
             /// <param name="width">The width of the error circle.</param>
-            /// <param name="insideFocus">Indicates whether the error circle is inside the focus range.</param>
             /// <param name="errorValue">The error value associated with the error circle.</param>
-            public ErrorCircle(Point origin, int height, int width, bool insideFocus, string errorValue)
+            public ErrorCircle(Point origin, int height, int width, string errorValue)
             {
                 Origin = origin;
                 Height = height;
                 Width = width;
-                InsideFocus = insideFocus;
                 ErrorValue = errorValue;
             }
         }
@@ -488,7 +472,10 @@ namespace Bahtinov_Collimator
             /// <param name="direction">The direction of the defocus circle.</param>
             public DefocusCircleEventArgs(Bitmap image, PointD inner, double innerRadius, PointD outer, double outerRadius, double distance, double direction)
             {
-                Image = new Bitmap(image);
+                // Image reference is stored directly (no clone). The producer retains ownership for the
+                // duration of synchronous event dispatch; subscribers must not dispose it or use it
+                // after the handler returns.
+                Image = image;
                 InnerCircleCentre = inner;
                 OuterCircleCentre = outer;
                 InnerCircleRadius = innerRadius;

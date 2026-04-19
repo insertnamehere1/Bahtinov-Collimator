@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using System.Deployment.Application;
 
@@ -21,24 +21,22 @@ namespace Bahtinov_Collimator.Helper
 
                     if (info.UpdateAvailable)
                     {
-                        // Ask the user for confirmation before updating
                         DialogResult result = DarkMessageBox.Show(
-                            "A new update is available. Do you want to download and install it now?",
-                            "Update Available",
+                            UiText.Current.UpdateAvailableMessage,
+                            UiText.Current.UpdateAvailableTitle,
                             MessageBoxIcon.Question,
                             MessageBoxButtons.YesNo
                         );
 
                         if (result == DialogResult.Yes)
                         {
-                            // Perform the update
-                            bool success = ad.Update(); // Updates the application asynchronously
+                            bool success = ad.Update();
 
                             if (success)
                             {
                                 DarkMessageBox.Show(
-                                    "New updates have been downloaded. Restart the application to install.",
-                                    "Update Completed",
+                                    UiText.Current.UpdateDownloadedMessage,
+                                    UiText.Current.UpdateDownloadedTitle,
                                     MessageBoxIcon.Information,
                                     MessageBoxButtons.OK
                                 );
@@ -46,8 +44,8 @@ namespace Bahtinov_Collimator.Helper
                             else
                             {
                                 DarkMessageBox.Show(
-                                    "The update download failed. Please try again.",
-                                    "Update Failed",
+                                    UiText.Current.UpdateFailedMessage,
+                                    UiText.Current.UpdateFailedTitle,
                                     MessageBoxIcon.Exclamation,
                                     MessageBoxButtons.OK
                                 );
@@ -56,8 +54,8 @@ namespace Bahtinov_Collimator.Helper
                         else
                         {
                             DarkMessageBox.Show(
-                                "Update canceled.",
-                                "Update Canceled",
+                                UiText.Current.UpdateCanceledMessage,
+                                UiText.Current.UpdateCanceledTitle,
                                 MessageBoxIcon.Information,
                                 MessageBoxButtons.OK
                             );
@@ -66,8 +64,8 @@ namespace Bahtinov_Collimator.Helper
                     else
                     {
                         DarkMessageBox.Show(
-                            "No new updates are available.",
-                            "No Updates",
+                            UiText.Current.UpdateNoneMessage,
+                            UiText.Current.UpdateNoneTitle,
                             MessageBoxIcon.Information,
                             MessageBoxButtons.OK
                         );
@@ -77,93 +75,13 @@ namespace Bahtinov_Collimator.Helper
             catch (Exception)
             {
                 DarkMessageBox.Show(
-                    "Unable to connect to the update server.",
-                    "Network Problem",
+                    UiText.Current.UpdateNetworkErrorMessage,
+                    UiText.Current.UpdateNetworkErrorTitle,
                     MessageBoxIcon.Exclamation,
                     MessageBoxButtons.OK
                 );
             }
         }
-        #endregion
-
-        #region Line Class
-
-        /// <summary>
-        /// Represents a line with start and end points, slope, and intercept.
-        /// </summary>
-        public class Line
-        {
-            /// <summary>
-            /// Gets the X coordinate of the start point.
-            /// </summary>
-            public float StartX { get; }
-
-            /// <summary>
-            /// Gets the Y coordinate of the start point.
-            /// </summary>
-            public float StartY { get; }
-
-            /// <summary>
-            /// Gets the X coordinate of the end point.
-            /// </summary>
-            public float EndX { get; }
-
-            /// <summary>
-            /// Gets the Y coordinate of the end point.
-            /// </summary>
-            public float EndY { get; }
-
-            /// <summary>
-            /// Gets or sets the slope of the line.
-            /// </summary>
-            public float Slope { get; set; }
-
-            /// <summary>
-            /// Gets or sets the intercept of the line.
-            /// </summary>
-            public float Intercept { get; private set; }
-
-            /// <summary>
-            /// Gets a value indicating whether the line is first or third in some context.
-            /// </summary>
-            public bool IsFirstOrThird { get; }
-
-            /// <summary>
-            /// Gets or sets the calculated Y coordinate of the start point.
-            /// </summary>
-            public float CalculatedYStart { get; set; }
-
-            /// <summary>
-            /// Initializes a new instance of the Line class with the specified start and end points.
-            /// </summary>
-            /// <param name="startX">The X coordinate of the start point.</param>
-            /// <param name="startY">The Y coordinate of the start point.</param>
-            /// <param name="endX">The X coordinate of the end point.</param>
-            /// <param name="endY">The Y coordinate of the end point.</param>
-            /// <param name="isFirstOrThird">A flag indicating whether the line is first or third.</param>
-            public Line(float startX, float startY, float endX, float endY, bool isFirstOrThird = false)
-            {
-                StartX = startX;
-                StartY = startY;
-                EndX = endX;
-                EndY = endY;
-                IsFirstOrThird = isFirstOrThird;
-
-                // Calculate Slope and Intercept
-                if (EndX != StartX) // Avoid division by zero
-                {
-                    Slope = (EndY - StartY) / (EndX - StartX);
-                    Intercept = StartY - (Slope * StartX);
-                }
-                else
-                {
-                    // Handle vertical lines if needed
-                    Slope = float.PositiveInfinity;
-                    Intercept = float.NaN; // Vertical line does not have a y-intercept
-                }
-            }
-        }
-
         #endregion
     }
 
