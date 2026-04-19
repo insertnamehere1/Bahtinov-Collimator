@@ -112,6 +112,32 @@ namespace Bahtinov_Collimator.Custom_Components
         }
 
         /// <summary>
+        /// Returns the rectangle the rounded border is stroked along, in client coordinates.
+        /// Callers (e.g. external Paint handlers that draw over the picture box) can use this
+        /// together with <see cref="GetRoundedPath"/> to clip / re-stroke against the same shape.
+        /// </summary>
+        public Rectangle GetStrokeBounds()
+        {
+            int t = borderThickness;
+            int strokeInset = t / 2;
+            Rectangle client = ClientRectangle;
+            return new Rectangle(
+                strokeInset,
+                strokeInset,
+                Math.Max(0, client.Width - t),
+                Math.Max(0, client.Height - t));
+        }
+
+        /// <summary>
+        /// Builds the rounded-rectangle path the control uses for both its image fill and its border,
+        /// using the current <see cref="CornerRadius"/>. The caller owns the returned path.
+        /// </summary>
+        public GraphicsPath GetRoundedPath(Rectangle bounds)
+        {
+            return GetRoundPath(bounds, cornerRadius);
+        }
+
+        /// <summary>
         /// Same construction as <see cref="RoundedGroupBox"/> GetRoundPath (no StartFigure — one continuous figure).
         /// </summary>
         private static GraphicsPath GetRoundPath(Rectangle rect, int radius)
@@ -216,12 +242,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 return;
 
             int t = borderThickness;
-            int strokeInset = t / 2;
-            Rectangle strokeBounds = new Rectangle(
-                strokeInset,
-                strokeInset,
-                Math.Max(0, cw - t),
-                Math.Max(0, ch - t));
+            Rectangle strokeBounds = GetStrokeBounds();
 
             using (GraphicsPath path = GetRoundPath(strokeBounds, cornerRadius))
             {

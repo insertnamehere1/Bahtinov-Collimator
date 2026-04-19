@@ -1,3 +1,4 @@
+using Bahtinov_Collimator.Custom_Components;
 using Bahtinov_Collimator.Image_Processing;
 using System;
 using System.Collections.Generic;
@@ -392,6 +393,10 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Handles the Paint event of the PictureBox control to render the image layers on the control.
+        /// The layered bitmaps are rectangular, so we clip them to the same rounded path the
+        /// <see cref="RoundedPictureBox"/> uses for its image fill (otherwise the opaque
+        /// source-image pixels in <c>layers[0]</c> would paint over the rounded corners), then
+        /// re-stroke the border on top so it stays visible above the overlays.
         /// </summary>
         private void PictureBoxPaint(object sender, PaintEventArgs e)
         {
@@ -405,18 +410,36 @@ namespace Bahtinov_Collimator
             if (destRect.Width <= 0 || destRect.Height <= 0)
                 return;
 
-            e.Graphics.DrawImage(layers[0], destRect);
+            Rectangle strokeBounds = pictureBox1.GetStrokeBounds();
 
-            if (selectedGroup == 0)
+            using (GraphicsPath roundedPath = pictureBox1.GetRoundedPath(strokeBounds))
             {
-                for (int i = 1; i < layers.Count; i++)
+                Region previousClip = e.Graphics.Clip;
+                e.Graphics.SetClip(roundedPath, CombineMode.Intersect);
+
+                e.Graphics.DrawImage(layers[0], destRect);
+
+                if (selectedGroup == 0)
                 {
-                    e.Graphics.DrawImage(layers[i], destRect);
+                    for (int i = 1; i < layers.Count; i++)
+                    {
+                        e.Graphics.DrawImage(layers[i], destRect);
+                    }
                 }
-            }
-            else if (selectedGroup > 0 && selectedGroup < layers.Count)
-            {
-                e.Graphics.DrawImage(layers[selectedGroup], destRect);
+                else if (selectedGroup > 0 && selectedGroup < layers.Count)
+                {
+                    e.Graphics.DrawImage(layers[selectedGroup], destRect);
+                }
+
+                e.Graphics.Clip = previousClip;
+                previousClip.Dispose();
+
+                using (var borderPen = new Pen(pictureBox1.BorderColor, pictureBox1.BorderThickness))
+                {
+                    borderPen.Alignment = PenAlignment.Center;
+                    e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                    e.Graphics.DrawPath(borderPen, roundedPath);
+                }
             }
         }
 
