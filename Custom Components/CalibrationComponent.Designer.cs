@@ -49,6 +49,7 @@ namespace Bahtinov_Collimator.Custom_Components
             | System.Windows.Forms.AnchorStyles.Right)));
             this.titledRoundedRichTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
             this.titledRoundedRichTextBox1.BorderColor = System.Drawing.Color.Gray;
+            this.titledRoundedRichTextBox1.BorderThickness = 2;
             this.titledRoundedRichTextBox1.CornerRadius = 8;
             this.titledRoundedRichTextBox1.ForeColor = System.Drawing.Color.White;
             // 
@@ -59,11 +60,11 @@ namespace Bahtinov_Collimator.Custom_Components
             this.titledRoundedRichTextBox1.InnerRichTextBox.DetectUrls = false;
             this.titledRoundedRichTextBox1.InnerRichTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.titledRoundedRichTextBox1.InnerRichTextBox.ForeColor = System.Drawing.Color.White;
-            this.titledRoundedRichTextBox1.InnerRichTextBox.Location = new System.Drawing.Point(6, 18);
+            this.titledRoundedRichTextBox1.InnerRichTextBox.Location = new System.Drawing.Point(13, 37);
             this.titledRoundedRichTextBox1.InnerRichTextBox.Name = "";
             this.titledRoundedRichTextBox1.InnerRichTextBox.ReadOnly = true;
             this.titledRoundedRichTextBox1.InnerRichTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.titledRoundedRichTextBox1.InnerRichTextBox.Size = new System.Drawing.Size(138, 239);
+            this.titledRoundedRichTextBox1.InnerRichTextBox.Size = new System.Drawing.Size(274, 475);
             this.titledRoundedRichTextBox1.InnerRichTextBox.TabIndex = 0;
             this.titledRoundedRichTextBox1.Location = new System.Drawing.Point(4, 22);
             this.titledRoundedRichTextBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
