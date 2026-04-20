@@ -120,7 +120,7 @@ jobs:
           /p:UpdateEnabled=true
           /p:UpdateMode=Foreground
           /p:GenerateDeploymentProviderUrl=true
-          /p:DeploymentUrl=https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/master/published/SkyCal.application
+          /p:DeploymentUrl=https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/master/published/SkyCal%20Focus%20and%20Collimation%20Tool.application
           /p:InstallUrl=https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/master/published/
           /p:UpdateUrl=https://raw.githubusercontent.com/insertnamehere1/Bahtinov-Collimator/master/published/
 
