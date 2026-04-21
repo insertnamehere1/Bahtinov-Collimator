@@ -84,6 +84,19 @@ namespace Bahtinov_Collimator
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
+            // Defer expansion until after the first message pump, so the WinForms startup
+            // white flash happens while the form is still 1x1 off-screen and invisible.
+            BeginInvoke(new Action(RevealOverlay));
+        }
+
+        /// <summary>
+        /// Expands the 1x1 off-screen startup form to the full virtual desktop and repaints.
+        /// The deferred expansion is what hides the startup white flash: the flash happens
+        /// while the window is still 1x1 off-screen and therefore never visible.
+        /// </summary>
+        private void RevealOverlay()
+        {
+            Bounds = SystemInformation.VirtualScreen;
             UpdateInstructionPanelBounds();
             Invalidate();
         }
@@ -94,14 +107,17 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Configures the form's properties to make it suitable for screen area selection.
-        /// The form is borderless, semi-transparent, always on top, and spans the entire
+        /// The form is borderless, semi-transparent, always on top, and will span the entire
         /// virtual desktop so the user can select a star on any connected monitor.
+        /// It is created 1x1 off-screen so the WinForms startup white flash happens while the
+        /// form is invisible; <see cref="RevealOverlay"/> expands it to the virtual desktop
+        /// after the first message pump.
         /// </summary>
         private void InitializeForm()
         {
             FormBorderStyle = FormBorderStyle.None;
             StartPosition = FormStartPosition.Manual;
-            Bounds = SystemInformation.VirtualScreen;
+            Bounds = new Rectangle(-32000, -32000, 1, 1);
             BackColor = UITheme.SelectionBackground;
             Opacity = UITheme.SelectionBackgroundTransparency;
             TopMost = true;
