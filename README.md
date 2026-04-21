@@ -37,8 +37,8 @@ Whether you are setting up a telescope for the first time or fine-tuning your eq
   <img src="assets/Picture1.jpg" width="45%" alt="Collimation View">
 </p>
 
-- Click here to download SkyCal Online setup.exe [Online Setup](https://github.com/insertnamehere1/Bahtinov-Collimator/releases/download/v5.0.0.2/SkyCal-Setup.exe)
-- Click here to download SkyCal Offline setup.exe [Offline Setup](https://github.com/insertnamehere1/Bahtinov-Collimator/releases/download/v5.0.0.2/SkyCal-ClickOnce-Offline-v5.0.0.2.zip)
+- Click here to download SkyCal Online setup.exe [Online Setup](https://github.com/insertnamehere1/Bahtinov-Collimator/releases/download/v5.0.0.3/SkyCal-Setup.exe)
+- Click here to download SkyCal Offline setup.exe [Offline Setup](https://github.com/insertnamehere1/Bahtinov-Collimator/releases/download/v5.0.0.3/SkyCal-ClickOnce-Offline-v5.0.0.3.zip)
 
 - For detailed documentation, please refer to the [User Manual](https://github.com/insertnamehere1/Bahtinov-Collimator/blob/master/Resources/help.pdf)
 
