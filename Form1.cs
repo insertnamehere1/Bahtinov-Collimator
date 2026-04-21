@@ -1039,7 +1039,8 @@ namespace Bahtinov_Collimator
             groupBoxRed.Visible = false;
             groupBoxGreen.Visible = false;
             groupBoxBlue.Visible = false;
-            InitializeRedFocusBox();
+            if (!Properties.Settings.Default.DefocusSwitch)
+                InitializeRedFocusBox();
             RoundedStartButton.Text = UiText.Current.StartButtonSelectStar;
             RoundedStartButton.Image = Properties.Resources.SelectionCircle;
             ApplyMainWorkspaceLayout();
