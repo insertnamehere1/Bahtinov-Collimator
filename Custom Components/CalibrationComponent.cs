@@ -8,7 +8,8 @@ namespace Bahtinov_Collimator.Custom_Components
 {
     /// <summary>
     /// Displays a guided calibration workflow that determines whether moving the primary mirror
-    /// toward the secondary causes the measured Bahtinov/Tri-Bahtinov offset(s) to increase or decrease.
+    /// toward the secondary causes the measured Tri-Bahtinov offsets to increase or decrease.
+    /// Calibration is only used in Tri-Bahtinov mode and requires all three color channels.
     ///
     /// Result:
     /// - If the measured change is negative beyond a threshold, SignSwitch is set to false.
@@ -23,8 +24,6 @@ namespace Bahtinov_Collimator.Custom_Components
         private readonly float[] current = new float[3] { float.NaN, float.NaN, float.NaN };
         private readonly float[] baseline = new float[3] { 0f, 0f, 0f };
         private bool baselineCaptured;
-        private bool seenGreen;
-        private bool seenBlue;
         private readonly Timer aggregationTimer;
         private bool aggregationActive;
         private CalibrationState state = CalibrationState.WaitingForFirstValidRead;
@@ -244,35 +243,20 @@ namespace Bahtinov_Collimator.Custom_Components
             baseline[0] = baseline[1] = baseline[2] = 0f;
 
             baselineCaptured = false;
-            seenGreen = false;
-            seenBlue = false;
 
             state = CalibrationState.WaitingForFirstValidRead;
 
             ImageCapture.ForceImageUpdate();
             UpdateInstructionText();
+            UpdateProgressBar();
         }
 
         /// <summary>
-        /// Returns true if we have evidence of Tri-Bahtinov (channels 1 or 2 producing data).
-        /// Otherwise, treat as Bahtinov (channel 0 only).
-        /// </summary>
-        private bool IsTriBahtinov
-        {
-            get { return seenGreen || seenBlue; }
-        }
-
-        /// <summary>
-        /// Returns true if we have enough readings to proceed:
-        /// - Tri-Bahtinov: all three channels must be non-zero
-        /// - Bahtinov: only channel 0 must be non-zero
+        /// Returns true once all three Tri-Bahtinov channels have produced a valid reading.
         /// </summary>
         private bool HasEnoughDataToBaseline()
         {
-            if (IsTriBahtinov)
-                return !float.IsNaN(current[0]) && !float.IsNaN(current[1]) && !float.IsNaN(current[2]);
-
-            return !float.IsNaN(current[0]);
+            return !float.IsNaN(current[0]) && !float.IsNaN(current[1]) && !float.IsNaN(current[2]);
         }
 
         #endregion
@@ -299,13 +283,12 @@ namespace Bahtinov_Collimator.Custom_Components
             if (id < 0 || id > 2)
                 return;
 
-            if (id == 1) seenGreen = true;
-            if (id == 2) seenBlue = true;
-
             if (!e.FocusData.ClearDisplay)
                 current[id] = (float)e.FocusData.BahtinovOffset;
             else
                 current[id] = float.NaN;
+
+            UpdateProgressBar();
 
             if (!aggregationActive)
             {
@@ -339,6 +322,7 @@ namespace Bahtinov_Collimator.Custom_Components
             if (state == CalibrationState.Complete)
             {
                 UpdateInstructionText();
+                UpdateProgressBar();
                 return;
             }
 
@@ -347,6 +331,7 @@ namespace Bahtinov_Collimator.Custom_Components
                 state = CalibrationState.WaitingForFirstValidRead;
                 baselineCaptured = false;
                 UpdateInstructionText();
+                UpdateProgressBar();
 
                 return;
             }
@@ -378,6 +363,41 @@ namespace Bahtinov_Collimator.Custom_Components
                     UpdateInstructionText();
                 }
             }
+
+            UpdateProgressBar();
+        }
+
+        /// <summary>
+        /// Updates the progress bar on the titled rounded rich text box to reflect how much
+        /// focus movement has been detected relative to the 0.5 px completion threshold.
+        /// The bar is only visible during the <see cref="CalibrationState.MeasuringDirection"/>
+        /// state and is otherwise hidden.
+        /// </summary>
+        /// <remarks>
+        /// Progress is computed as min(|current - baseline|) / 0.5 across all three Tri-Bahtinov
+        /// channels — the slowest-moving channel gates progress, since calibration only completes
+        /// when ALL channels exceed the threshold. NaN readings are treated as "no movement yet"
+        /// (progress 0) rather than hiding the bar.
+        /// </remarks>
+        private void UpdateProgressBar()
+        {
+            if (state != CalibrationState.MeasuringDirection || !baselineCaptured)
+            {
+                titledRoundedRichTextBox1.ShowProgressBar = false;
+                return;
+            }
+
+            float d0 = float.IsNaN(current[0]) ? 0f : Math.Abs(current[0] - baseline[0]);
+            float d1 = float.IsNaN(current[1]) ? 0f : Math.Abs(current[1] - baseline[1]);
+            float d2 = float.IsNaN(current[2]) ? 0f : Math.Abs(current[2] - baseline[2]);
+            float minAbsDelta = Math.Min(d0, Math.Min(d1, d2));
+
+            float progress = minAbsDelta / CompletionThresholdPixels;
+            if (progress < 0f) progress = 0f;
+            else if (progress > 1f) progress = 1f;
+
+            titledRoundedRichTextBox1.ShowProgressBar = true;
+            titledRoundedRichTextBox1.ProgressValue = progress;
         }
 
         /// <summary>
@@ -396,8 +416,9 @@ namespace Bahtinov_Collimator.Custom_Components
         }
 
         /// <summary>
-        /// Computes the signed change from baseline and completes calibration if it exceeds the threshold.
-        /// Tri-Bahtinov uses the sum of channels. Bahtinov uses channel 0 only.
+        /// Computes the signed change from baseline across all three Tri-Bahtinov channels and
+        /// completes calibration once every channel has moved at least the threshold in the
+        /// same direction.
         /// </summary>
         /// <returns>True if calibration completed and setting was written.</returns>
         private bool TryCompleteCalibration()
@@ -407,39 +428,25 @@ namespace Bahtinov_Collimator.Custom_Components
 
             float threshold = CompletionThresholdPixels;
 
-            bool signSwitch;
+            float d0 = current[0] - baseline[0];
+            float d1 = current[1] - baseline[1];
+            float d2 = current[2] - baseline[2];
 
-            if (IsTriBahtinov)
-            {
-                float d0 = current[0] - baseline[0];
-                float d1 = current[1] - baseline[1];
-                float d2 = current[2] - baseline[2];
+            bool allExceeded =
+                Math.Abs(d0) >= threshold &&
+                Math.Abs(d1) >= threshold &&
+                Math.Abs(d2) >= threshold;
 
-                bool allExceeded =
-                    Math.Abs(d0) >= threshold &&
-                    Math.Abs(d1) >= threshold &&
-                    Math.Abs(d2) >= threshold;
+            if (!allExceeded)
+                return false;
 
-                if (!allExceeded)
-                    return false;
+            bool allPositive = (d0 > 0f) && (d1 > 0f) && (d2 > 0f);
+            bool allNegative = (d0 < 0f) && (d1 < 0f) && (d2 < 0f);
 
-                bool allPositive = (d0 > 0f) && (d1 > 0f) && (d2 > 0f);
-                bool allNegative = (d0 < 0f) && (d1 < 0f) && (d2 < 0f);
+            if (!allPositive && !allNegative)
+                return false;
 
-                if (!allPositive && !allNegative)
-                    return false;
-
-                signSwitch = allPositive;
-            }
-            else
-            {
-                float delta = current[0] - baseline[0];
-
-                if (Math.Abs(delta) < threshold)
-                    return false;
-
-                signSwitch = (delta > 0f);
-            }
+            bool signSwitch = allPositive;
 
             if (signSwitch)
                 Properties.Settings.Default.SignChange = !Properties.Settings.Default.SignChange;

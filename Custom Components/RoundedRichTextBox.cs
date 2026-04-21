@@ -40,6 +40,20 @@ namespace SkyCal.Custom_Components
         private Color titleForeColor = UITheme.TextBoxForeground;
         private Font titleFont;
 
+        // Progress bar (optional band drawn at the bottom, inside the rounded container).
+        // All pixel sizes are logical values at 96 DPI; scaled via ScaleByDpi().
+        private bool showProgressBar = false;
+        private float progressValue = 0f;
+        private int progressBarHeight = 14;
+        private int progressBarSideMargin = 16;
+        private int progressBarBottomMargin = 10;
+        private int progressBarTopGap = 4;
+        private int progressBarDivisions = 5;
+        private Color progressBarFillColor = Color.FromArgb(72, 187, 92);
+        private Color progressBarTrackColor = Color.FromArgb(30, 34, 40);
+        private Color progressBarBorderColor = Color.FromArgb(150, 150, 150);
+        private Color progressBarDivisionColor = Color.FromArgb(220, 220, 220);
+
         #region Win32 (Caret suppression + scrollbar chrome)
 
         [DllImport("user32.dll")]
@@ -124,6 +138,40 @@ namespace SkyCal.Custom_Components
         private int ScaledCornerRadius
         {
             get { return ScaleByDpi(cornerRadius); }
+        }
+
+        private int ScaledProgressBarHeight
+        {
+            get { return ScaleByDpi(progressBarHeight); }
+        }
+
+        private int ScaledProgressBarSideMargin
+        {
+            get { return ScaleByDpi(progressBarSideMargin); }
+        }
+
+        private int ScaledProgressBarBottomMargin
+        {
+            get { return ScaleByDpi(progressBarBottomMargin); }
+        }
+
+        private int ScaledProgressBarTopGap
+        {
+            get { return ScaleByDpi(progressBarTopGap); }
+        }
+
+        /// <summary>
+        /// Total vertical space reserved for the progress bar band (bar + gap above + margin below),
+        /// measured in scaled device pixels. Zero when <see cref="ShowProgressBar"/> is false.
+        /// </summary>
+        private int ScaledProgressBarBandHeight
+        {
+            get
+            {
+                if (!showProgressBar)
+                    return 0;
+                return ScaledProgressBarHeight + ScaledProgressBarTopGap + ScaledProgressBarBottomMargin;
+            }
         }
         #endregion
 
@@ -345,6 +393,142 @@ namespace SkyCal.Custom_Components
         }
 
         /// <summary>
+        /// Shows or hides the progress bar band at the bottom of the container.
+        /// When visible, the inner RichTextBox shrinks vertically to make room.
+        /// </summary>
+        [Category("Progress Bar")]
+        [DefaultValue(false)]
+        public bool ShowProgressBar
+        {
+            get { return showProgressBar; }
+            set
+            {
+                if (showProgressBar == value)
+                    return;
+                showProgressBar = value;
+                UpdateLayoutSafe();
+                Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Current progress value in the range [0, 1] (values outside are clamped).
+        /// Drawn as a green fill left-to-right across the bar.
+        /// </summary>
+        [Category("Progress Bar")]
+        [DefaultValue(0f)]
+        public float ProgressValue
+        {
+            get { return progressValue; }
+            set
+            {
+                float clamped = value;
+                if (clamped < 0f) clamped = 0f;
+                else if (clamped > 1f) clamped = 1f;
+
+                if (Math.Abs(progressValue - clamped) < 0.0001f)
+                    return;
+
+                progressValue = clamped;
+                if (showProgressBar)
+                    Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Number of equal divisions drawn on the progress bar (tick segments).
+        /// A value of 5 draws 4 internal dividers (0.2, 0.4, 0.6, 0.8 of the bar width).
+        /// </summary>
+        [Category("Progress Bar")]
+        [DefaultValue(5)]
+        public int ProgressBarDivisions
+        {
+            get { return progressBarDivisions; }
+            set
+            {
+                progressBarDivisions = Math.Max(1, value);
+                if (showProgressBar)
+                    Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Height of the progress bar in logical pixels at 96 DPI.
+        /// </summary>
+        [Category("Progress Bar")]
+        [DefaultValue(14)]
+        public int ProgressBarHeight
+        {
+            get { return progressBarHeight; }
+            set
+            {
+                progressBarHeight = Math.Max(4, value);
+                UpdateLayoutSafe();
+                Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Fill color of the progress bar.
+        /// </summary>
+        [Category("Progress Bar")]
+        public Color ProgressBarFillColor
+        {
+            get { return progressBarFillColor; }
+            set
+            {
+                progressBarFillColor = value;
+                if (showProgressBar)
+                    Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Track (empty) color of the progress bar.
+        /// </summary>
+        [Category("Progress Bar")]
+        public Color ProgressBarTrackColor
+        {
+            get { return progressBarTrackColor; }
+            set
+            {
+                progressBarTrackColor = value;
+                if (showProgressBar)
+                    Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Border color of the progress bar.
+        /// </summary>
+        [Category("Progress Bar")]
+        public Color ProgressBarBorderColor
+        {
+            get { return progressBarBorderColor; }
+            set
+            {
+                progressBarBorderColor = value;
+                if (showProgressBar)
+                    Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Color of the internal division tick lines drawn across the bar.
+        /// </summary>
+        [Category("Progress Bar")]
+        public Color ProgressBarDivisionColor
+        {
+            get { return progressBarDivisionColor; }
+            set
+            {
+                progressBarDivisionColor = value;
+                if (showProgressBar)
+                    Invalidate();
+            }
+        }
+
+        /// <summary>
         /// Initializes a new titled rounded RichTextBox control.
         /// </summary>
         public TitledRoundedRichTextBox()
@@ -423,12 +607,13 @@ namespace SkyCal.Custom_Components
 
             int inset = ScaledBorderThickness;
             int topBand = showTitleBar ? ScaledTitleHeight : 0;
+            int bottomBand = ScaledProgressBarBandHeight;
 
             int contentX = inset + Padding.Left;
             int contentY = inset + Padding.Top + topBand;
 
             int contentW = Math.Max(0, Width - (inset * 2) - Padding.Left - Padding.Right);
-            int contentH = Math.Max(0, Height - (inset * 2) - Padding.Top - Padding.Bottom - topBand);
+            int contentH = Math.Max(0, Height - (inset * 2) - Padding.Top - Padding.Bottom - topBand - bottomBand);
 
             richTextBox.Location = new Point(contentX, contentY);
             richTextBox.Size = new Size(contentW, contentH);
@@ -648,6 +833,11 @@ namespace SkyCal.Custom_Components
                         sourceFont.Dispose();
                 }
 
+                if (showProgressBar)
+                {
+                    DrawProgressBar(g, t, cw, ch);
+                }
+
                 using (var borderPath = CreateRoundedRectPath(strokeBounds, scaledCornerRadius))
                 using (var pen = new Pen(borderColor, t))
                 {
@@ -659,6 +849,78 @@ namespace SkyCal.Custom_Components
             {
                 using (GraphicsPath regionPath = CreateRoundedRectPath(new Rectangle(0, 0, cw, ch), ScaledCornerRadius))
                     Region = new Region(regionPath);
+            }
+        }
+
+        /// <summary>
+        /// Draws the bottom progress bar band: a rounded track filled left-to-right based on
+        /// <see cref="ProgressValue"/>, with internal tick dividers at each division boundary.
+        /// The bar sits inside the outer border, horizontally inset by the configured side margin.
+        /// </summary>
+        private void DrawProgressBar(Graphics g, int borderThicknessPx, int cw, int ch)
+        {
+            int side = ScaledProgressBarSideMargin;
+            int bottomMargin = ScaledProgressBarBottomMargin;
+            int barHeight = ScaledProgressBarHeight;
+
+            int barLeft = borderThicknessPx + side;
+            int barRight = cw - borderThicknessPx - side;
+            int barWidth = barRight - barLeft;
+            if (barWidth <= 2 || barHeight <= 2)
+                return;
+
+            int barTop = ch - borderThicknessPx - bottomMargin - barHeight;
+            if (barTop < borderThicknessPx)
+                return;
+
+            Rectangle barRect = new Rectangle(barLeft, barTop, barWidth, barHeight);
+            int barCorner = Math.Min(barHeight / 2, ScaleByDpi(4));
+
+            using (var trackPath = CreateRoundedRectPath(barRect, barCorner))
+            using (var trackBrush = new SolidBrush(progressBarTrackColor))
+            {
+                g.FillPath(trackBrush, trackPath);
+            }
+
+            if (progressValue > 0f)
+            {
+                int fillWidth = (int)Math.Round(barWidth * progressValue, MidpointRounding.AwayFromZero);
+                if (fillWidth > 0)
+                {
+                    Rectangle fillRect = new Rectangle(barLeft, barTop, fillWidth, barHeight);
+
+                    Region prevClip = g.Clip;
+                    using (var clipPath = CreateRoundedRectPath(barRect, barCorner))
+                    {
+                        g.SetClip(clipPath, CombineMode.Intersect);
+                        using (var fillBrush = new SolidBrush(progressBarFillColor))
+                        {
+                            g.FillRectangle(fillBrush, fillRect);
+                        }
+                        g.Clip = prevClip;
+                    }
+                }
+            }
+
+            if (progressBarDivisions > 1)
+            {
+                using (var divPen = new Pen(progressBarDivisionColor, 1f))
+                {
+                    int tickTop = barTop + 2;
+                    int tickBottom = barTop + barHeight - 2;
+                    for (int i = 1; i < progressBarDivisions; i++)
+                    {
+                        int x = barLeft + (int)Math.Round(barWidth * (i / (float)progressBarDivisions));
+                        g.DrawLine(divPen, x, tickTop, x, tickBottom);
+                    }
+                }
+            }
+
+            using (var borderPath = CreateRoundedRectPath(barRect, barCorner))
+            using (var borderPen = new Pen(progressBarBorderColor, 1f))
+            {
+                borderPen.Alignment = PenAlignment.Inset;
+                g.DrawPath(borderPen, borderPath);
             }
         }
 
