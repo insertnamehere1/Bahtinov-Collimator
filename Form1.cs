@@ -241,7 +241,7 @@ namespace Bahtinov_Collimator
             SetEvents();
 
             // disable and gray the "what should i do next" menu item if we havent been calibrated
-            menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted;
+            menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted && !Properties.Settings.Default.NoneSelected;
 
             // Create instances of the image processing classes.
             bahtinovProcessing = new BahtinovProcessing();
@@ -613,7 +613,7 @@ namespace Bahtinov_Collimator
         {
             bool isCalibrated = Properties.Settings.Default.CalibrationCompleted;
             bool isTriBahtinov = (bahtinovLineData?.LineValue.Length == 9);
-            bool isWidened = isCalibrated && isTriBahtinov;
+            bool isWidened = isCalibrated && isTriBahtinov && !Properties.Settings.Default.NoneSelected;
             groupBoxRed.Visible = true;
             groupBoxRed.ConfigureFocusChannel(0, isWidened, soloRedChannel);
             groupBoxGreen.Visible = false;
@@ -627,7 +627,7 @@ namespace Bahtinov_Collimator
         private void InitializeGreenFocusBox()
         {
             groupBoxGreen.Visible = true;
-            groupBoxGreen.ConfigureFocusChannel(1, Properties.Settings.Default.CalibrationCompleted);
+            groupBoxGreen.ConfigureFocusChannel(1, Properties.Settings.Default.CalibrationCompleted && !Properties.Settings.Default.NoneSelected);
         }
 
         /// <summary>
@@ -637,7 +637,7 @@ namespace Bahtinov_Collimator
         private void InitializeBlueFocusBox()
         {
             groupBoxBlue.Visible = true;
-            groupBoxBlue.ConfigureFocusChannel(2, Properties.Settings.Default.CalibrationCompleted);
+            groupBoxBlue.ConfigureFocusChannel(2, Properties.Settings.Default.CalibrationCompleted && !Properties.Settings.Default.NoneSelected);
         }
 
         /// <summary>
@@ -1006,7 +1006,7 @@ namespace Bahtinov_Collimator
             {
                 bahtinovLineData = null;
                 InitializeRedFocusBox();
-                whatDoIDoNextToolStripMenuItem.Enabled = Properties.Settings.Default.CalibrationCompleted;
+                whatDoIDoNextToolStripMenuItem.Enabled = Properties.Settings.Default.CalibrationCompleted && !Properties.Settings.Default.NoneSelected;
                 focusCalibrationToolStripMenuItem.Enabled = true;
             }
         }
@@ -1242,7 +1242,7 @@ namespace Bahtinov_Collimator
                     InitializeGreenFocusBox();
                     InitializeBlueFocusBox();
 
-                    if(Properties.Settings.Default.CalibrationCompleted)
+                    if(Properties.Settings.Default.CalibrationCompleted && !Properties.Settings.Default.NoneSelected)
                         IncreaseFocusChannelSize();
                 }
 
@@ -1487,7 +1487,7 @@ namespace Bahtinov_Collimator
                     dlg.ShowDialogDpiAware(this);
                 }
                 // enable "what should i do next" menu item if we have been calibrated
-                menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted;
+                menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted && !Properties.Settings.Default.NoneSelected;
             }
             catch(FileNotFoundException err)
             {
@@ -1510,8 +1510,9 @@ namespace Bahtinov_Collimator
             {
                 bahtinovProcessing.LoadSettings();
                 voiceControl.LoadSettings();
+                menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted && !Properties.Settings.Default.NoneSelected;
 
-                if(Properties.Settings.Default.KeepOnTop == true)
+                if (Properties.Settings.Default.KeepOnTop == true)
                     this.TopMost = true;
                 else
                     this.TopMost = false;   
@@ -1575,7 +1576,7 @@ namespace Bahtinov_Collimator
                 StartButton_Click(this, EventArgs.Empty);
 
             // enable "what should i do next" menu item if we have been calibrated
-            menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted;
+            menuStrip1.Items[4].Enabled = Properties.Settings.Default.CalibrationCompleted && !Properties.Settings.Default.NoneSelected;
         }
 
         /// <summary>
