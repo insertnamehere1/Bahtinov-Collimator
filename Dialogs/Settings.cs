@@ -76,6 +76,8 @@ namespace Bahtinov_Collimator
             historyMakersTextBox.Text = Properties.Settings.Default.historyCount.ToString();
             SCTRadioButton.Checked = Properties.Settings.Default.SCTSelected;
             MakCassRadioButton.Checked = Properties.Settings.Default.MCTSelected;
+            newtonianRadioButton.Checked = Properties.Settings.Default.NewtSelected;
+            guidanceOffRadioButton.Checked = Properties.Settings.Default.NoneSelected;
             onTopCheckBox.Checked = Properties.Settings.Default.KeepOnTop;
             minimizeCheckBox.Checked = Properties.Settings.Default.Minimize;
         }
@@ -96,6 +98,7 @@ namespace Bahtinov_Collimator
             SCTRadioButton.Text = textPack.SettingsGuidanceSct;
             MakCassRadioButton.Text = textPack.SettingsGuidanceMakCass;
             newtonianRadioButton.Text = textPack.SettingsGuidanceNewtonian;
+            guidanceOffRadioButton.Text = textPack.SettingsGuidanceOff;
             errorSignCheckBox.Text = textPack.SettingsCalibrationSignSwitch;
             label2.Text = textPack.SettingsCalibrationDescription;
             label1.Text = textPack.SettingsHistoryMarkersLabel;
@@ -126,7 +129,9 @@ namespace Bahtinov_Collimator
                     Properties.Settings.Default.SignChange != errorSignCheckBox.Checked ||
                     Properties.Settings.Default.historyCount != int.Parse(historyMakersTextBox.Text) ||
                     Properties.Settings.Default.SCTSelected != SCTRadioButton.Checked ||
-                    Properties.Settings.Default.MCTSelected != MakCassRadioButton.Checked)
+                    Properties.Settings.Default.MCTSelected != MakCassRadioButton.Checked ||
+                    Properties.Settings.Default.NewtSelected != newtonianRadioButton.Checked ||
+                    Properties.Settings.Default.NoneSelected != guidanceOffRadioButton.Checked)
                 {
                     RestartCapture = true;
                 }
@@ -138,6 +143,9 @@ namespace Bahtinov_Collimator
                 Properties.Settings.Default.historyCount = int.Parse(historyMakersTextBox.Text);
                 Properties.Settings.Default.SCTSelected = SCTRadioButton.Checked;
                 Properties.Settings.Default.MCTSelected = MakCassRadioButton.Checked;
+                Properties.Settings.Default.NewtSelected = newtonianRadioButton.Checked;
+                Properties.Settings.Default.NoneSelected = guidanceOffRadioButton.Checked;
+
                 Properties.Settings.Default.KeepOnTop = onTopCheckBox.Checked;
                 Properties.Settings.Default.Minimize = minimizeCheckBox.Checked;
 

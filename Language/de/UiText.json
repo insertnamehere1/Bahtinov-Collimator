@@ -37,6 +37,7 @@
   "SettingsGuidanceNewtonian": "Newton",
   "SettingsGuidanceMakCass": "Maksutov-Cassegrain (MCT)",
   "SettingsGuidanceSct": "Schmidt–Cassegrain (SCT)",
+  "SettingsGuidanceOff": "Leitfaden aus",
   "SettingsGroupCalibrationTitle": "Kalibrierung",
   "SettingsCalibrationSignSwitch": "Vorzeichen umkehren",
   "SettingsCalibrationDescription": "Vorzeichen umkehren, wenn die SkyCal-Hinweise umgekehrt erscheinen",

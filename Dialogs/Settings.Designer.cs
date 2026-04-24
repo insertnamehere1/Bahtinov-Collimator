@@ -37,6 +37,7 @@ namespace Bahtinov_Collimator
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             this.groupBox3 = new Bahtinov_Collimator.Custom_Components.RoundedGroupBox();
+            this.guidanceOffRadioButton = new System.Windows.Forms.RadioButton();
             this.newtonianRadioButton = new System.Windows.Forms.RadioButton();
             this.MakCassRadioButton = new System.Windows.Forms.RadioButton();
             this.SCTRadioButton = new System.Windows.Forms.RadioButton();
@@ -70,6 +71,7 @@ namespace Bahtinov_Collimator
             // 
             this.groupBox3.BorderColor = System.Drawing.Color.Gray;
             this.groupBox3.BorderThickness = 2;
+            this.groupBox3.Controls.Add(this.guidanceOffRadioButton);
             this.groupBox3.Controls.Add(this.newtonianRadioButton);
             this.groupBox3.Controls.Add(this.MakCassRadioButton);
             this.groupBox3.Controls.Add(this.SCTRadioButton);
@@ -85,12 +87,26 @@ namespace Bahtinov_Collimator
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Guidance Configuration";
             // 
+            // guidanceOffRadioButton
+            // 
+            this.guidanceOffRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.guidanceOffRadioButton.Location = new System.Drawing.Point(19, 91);
+            this.guidanceOffRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.guidanceOffRadioButton.Name = "guidanceOffRadioButton";
+            this.guidanceOffRadioButton.Size = new System.Drawing.Size(110, 23);
+            this.guidanceOffRadioButton.TabIndex = 3;
+            this.guidanceOffRadioButton.TabStop = true;
+            this.guidanceOffRadioButton.Text = "Guidance Off";
+            this.guidanceOffRadioButton.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.guidanceOffRadioButton.UseVisualStyleBackColor = true;
+            // 
             // newtonianRadioButton
             // 
             this.newtonianRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.newtonianRadioButton.Enabled = false;
-            this.newtonianRadioButton.Location = new System.Drawing.Point(19, 83);
+            this.newtonianRadioButton.Location = new System.Drawing.Point(19, 68);
             this.newtonianRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.newtonianRadioButton.Name = "newtonianRadioButton";
             this.newtonianRadioButton.Size = new System.Drawing.Size(93, 23);
@@ -101,7 +117,7 @@ namespace Bahtinov_Collimator
             // 
             // MakCassRadioButton
             // 
-            this.MakCassRadioButton.Location = new System.Drawing.Point(19, 56);
+            this.MakCassRadioButton.Location = new System.Drawing.Point(19, 44);
             this.MakCassRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MakCassRadioButton.Name = "MakCassRadioButton";
             this.MakCassRadioButton.Size = new System.Drawing.Size(201, 23);
@@ -115,7 +131,7 @@ namespace Bahtinov_Collimator
             // 
             this.SCTRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SCTRadioButton.Location = new System.Drawing.Point(19, 30);
+            this.SCTRadioButton.Location = new System.Drawing.Point(19, 23);
             this.SCTRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.SCTRadioButton.Name = "SCTRadioButton";
             this.SCTRadioButton.Size = new System.Drawing.Size(184, 23);
@@ -396,6 +412,7 @@ namespace Bahtinov_Collimator
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Settings";
             this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.minimizeGroupBox.ResumeLayout(false);
             this.ErrorSignGroupBox.ResumeLayout(false);
             this.keepOnTopGroupBox.ResumeLayout(false);
@@ -429,5 +446,6 @@ namespace Bahtinov_Collimator
         private RoundedGroupBox minimizeGroupBox;
         private System.Windows.Forms.Label minimizeLabel;
         private System.Windows.Forms.CheckBox minimizeCheckBox;
+        private System.Windows.Forms.RadioButton guidanceOffRadioButton;
     }
 }

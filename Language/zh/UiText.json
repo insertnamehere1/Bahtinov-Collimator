@@ -37,6 +37,7 @@
   "SettingsGuidanceNewtonian": "牛顿式",
   "SettingsGuidanceMakCass": "马卡塞格林 (MCT)",
   "SettingsGuidanceSct": "施密特-卡塞格林 (SCT)",
+  "SettingsGuidanceOff": "关闭引导",
   "SettingsGroupCalibrationTitle": "校准",
   "SettingsCalibrationSignSwitch": "符号反转",
   "SettingsCalibrationDescription": "如果 SkyCal 的引导方向看起来相反，请切换符号反转。",

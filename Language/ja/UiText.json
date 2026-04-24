@@ -37,6 +37,7 @@
   "SettingsGuidanceNewtonian": "ニュートン式",
   "SettingsGuidanceMakCass": "マクストフ・カセグレン (MCT)",
   "SettingsGuidanceSct": "シュミット・カセグレン (SCT)",
+  "SettingsGuidanceOff": "ガイダンスオフ",
   "SettingsGroupCalibrationTitle": "キャリブレーション",
   "SettingsCalibrationSignSwitch": "符号切り替え",
   "SettingsCalibrationDescription": "SkyCal のガイダンスが逆に表示される場合は符号切り替えを変更してください",

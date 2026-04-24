@@ -37,6 +37,7 @@
   "SettingsGuidanceNewtonian": "Newtoniano",
   "SettingsGuidanceMakCass": "Maksutov-Cassegrain (MCT)",
   "SettingsGuidanceSct": "Schmidt–Cassegrain (SCT)",
+  "SettingsGuidanceOff": "Guía desactivada",
   "SettingsGroupCalibrationTitle": "Calibración",
   "SettingsCalibrationSignSwitch": "Invertir signo",
   "SettingsCalibrationDescription": "Cambie el signo si la guía de SkyCal parece invertida.",

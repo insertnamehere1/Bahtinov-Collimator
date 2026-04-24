@@ -52,6 +52,7 @@ namespace Bahtinov_Collimator
         [DataMember] public string SettingsGuidanceNewtonian { get; set; }
         [DataMember] public string SettingsGuidanceMakCass { get; set; }
         [DataMember] public string SettingsGuidanceSct { get; set; }
+        [DataMember] public string SettingsGuidanceOff { get; set; }
         [DataMember] public string SettingsGroupCalibrationTitle { get; set; }
         [DataMember] public string SettingsCalibrationSignSwitch { get; set; }
         [DataMember] public string SettingsCalibrationDescription { get; set; }
