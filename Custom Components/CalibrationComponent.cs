@@ -370,8 +370,8 @@ namespace Bahtinov_Collimator.Custom_Components
         /// <summary>
         /// Updates the progress bar on the titled rounded rich text box to reflect how much
         /// focus movement has been detected relative to the 0.5 px completion threshold.
-        /// The bar is only visible during the <see cref="CalibrationState.MeasuringDirection"/>
-        /// state and is otherwise hidden.
+        /// The bar is visible during <see cref="CalibrationState.MeasuringDirection"/> and
+        /// remains visible at 100% in the <see cref="CalibrationState.Complete"/> state.
         /// </summary>
         /// <remarks>
         /// Progress is computed as min(|current - baseline|) / 0.5 across all three Tri-Bahtinov
@@ -381,6 +381,13 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </remarks>
         private void UpdateProgressBar()
         {
+            if (state == CalibrationState.Complete)
+            {
+                titledRoundedRichTextBox1.ShowProgressBar = true;
+                titledRoundedRichTextBox1.ProgressValue = 1f;
+                return;
+            }
+
             if (state != CalibrationState.MeasuringDirection || !baselineCaptured)
             {
                 titledRoundedRichTextBox1.ShowProgressBar = false;
