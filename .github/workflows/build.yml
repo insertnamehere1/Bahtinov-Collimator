@@ -176,7 +176,7 @@ jobs:
             
       - name: Upload CI artifacts
         id: upload-artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: build-output-${{ github.run_number }} 
           path: artifacts/
@@ -202,7 +202,7 @@ jobs:
         uses: microsoft/setup-msbuild@v3
 
       - name: Set up NuGet
-        uses: NuGet/setup-nuget@v2
+        uses: NuGet/setup-nuget@v3
 
       - name: Restore packages
         run: nuget restore "Bahtinov Collimator.sln"
