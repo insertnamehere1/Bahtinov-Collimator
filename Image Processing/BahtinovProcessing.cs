@@ -1053,22 +1053,6 @@ namespace Bahtinov_Collimator
                 Array.Copy(lines.LineAngles, startIndex, bahtinovLines.LineAngles, 0, 3);
                 Array.Copy(lines.LineIndex, startIndex, bahtinovLines.LineIndex, 0, 3);
 
-                // Preserve your vertical-swap logic
-                if (Math.Abs(bahtinovLines.LineAngles[0] - 1.5708) < 0.0001)
-                {
-                    float tmp = bahtinovLines.LineAngles[0];
-                    float tmp2 = bahtinovLines.LineIndex[0];
-                    bahtinovLines.LineAngles[0] = bahtinovLines.LineAngles[2];
-                    bahtinovLines.LineIndex[0] = bahtinovLines.LineIndex[2];
-                    bahtinovLines.LineAngles[2] = tmp;
-                    bahtinovLines.LineIndex[2] = tmp2;
-                }
-
-                // Storage for endpoints, and for normal-form lines
-                // second line endpoints are still required later for sign and distances
-                double secondLineStartX = 0, secondLineStartY = 0;
-                double secondLineEndX = 0, secondLineEndY = 0;
-
                 Line2D? firstLine = null;
                 Line2D? secondLine = null;
                 Line2D? thirdLine = null;
@@ -1105,10 +1089,6 @@ namespace Bahtinov_Collimator
                             break;
                         case 1:
                             secondLine = L;
-                            secondLineStartX = lineStart_X;
-                            secondLineStartY = lineStart_Y;
-                            secondLineEndX = lineEnd_X;
-                            secondLineEndY = lineEnd_Y;
                             break;
                         case 2:
                             thirdLine = L;
@@ -1138,49 +1118,34 @@ namespace Bahtinov_Collimator
                 // Project the intersection onto the second line to get the perpendicular foot
                 var (perpXD, perpYD) = secondLine.Value.ProjectPoint(xIntersectionD, yIntersectionD);
 
-                // Distances and sign (keep your existing sign convention)
                 double dxErr = xIntersectionD - perpXD;
                 double dyErr = yIntersectionD - perpYD;
 
-                double dx2 = secondLineEndX - secondLineStartX;
-                double dy2 = secondLineEndY - secondLineStartY;
+                // Robust sign: which side of the middle line is the intersection on?
+                // The line is stored in normalized normal form (a*x + b*y + c = 0 with
+                // sqrt(a^2 + b^2) = 1), so this is a true signed perpendicular distance
+                // and it is continuous at every orientation, including exactly 90°
+                // (where Atan2-based sector tests collapse onto a boundary and stop
+                // flipping with focus direction).
+                double signedDist =
+                    secondLine.Value.A * xIntersectionD +
+                    secondLine.Value.B * yIntersectionD +
+                    secondLine.Value.C;
 
-                // Compute perpendicular direction of the error vector (radians)
-                double errorDir = Math.Atan2(dyErr, dxErr);
-
-                // Normalize to [0, 2π)
-                if (errorDir < 0.0)
-                    errorDir += Math.PI * 2.0;
-
-                // Invert direction by rotating π radians
-                errorDir += Math.PI;
-                if (errorDir >= Math.PI * 2.0)
-                    errorDir -= Math.PI * 2.0;
-
-                // Determine sign based on radial window per group
-                float errorSign;
-
+                // Per-group polarity preserves the original sign convention from the
+                // previous Atan2 sector test for non-degenerate orientations:
+                // groups 0/2 reported "+" on the positive-normal side, group 1 was
+                // inverted (sign was negative inside its sector).
+                float polarity;
                 switch (group)
                 {
-                    case 0:
-                        // 0 < angle < π
-                        errorSign = (errorDir > 0.0 && errorDir < Math.PI) ? 1f : -1f;
-                        break;
-
-                    case 1:
-                        // π/3 < angle < 4π/3  (60°–240°) => sign is NEGATIVE there
-                        errorSign = (errorDir > Math.PI / 3.0 && errorDir < 4.0 * Math.PI / 3.0) ? -1f : 1f;
-                        break;
-
-                    case 2:
-                        // 2π/3 < angle < 5π/3  (120°–300°)
-                        errorSign = (errorDir > 2.0 * Math.PI / 3.0 && errorDir < 5.0 * Math.PI / 3.0) ? 1f : -1f;
-                        break;
-
-                    default:
-                        errorSign = -1f;
-                        break;
+                    case 0: polarity = +1f; break;
+                    case 1: polarity = -1f; break;
+                    case 2: polarity = +1f; break;
+                    default: polarity = -1f; break;
                 }
+
+                float errorSign = (signedDist >= 0.0 ? +1f : -1f) * polarity;
 
                 errorSign *= (Properties.Settings.Default.SignChange ? -1f : 1f);
 
