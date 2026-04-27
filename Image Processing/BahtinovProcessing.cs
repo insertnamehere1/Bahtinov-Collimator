@@ -64,12 +64,18 @@ namespace Bahtinov_Collimator
             public float[,] RotatedImage { get; }
             public float[] RowTotals { get; }
             public float[] SmoothedTotals { get; }
+            public float[] ZScore { get; }
+            public double[] Prefix { get; }
+            public double[] Prefix2 { get; }
 
             public AngleScanWorkspace(int width, int height)
             {
                 RotatedImage = new float[width, height];
                 RowTotals = new float[height];
                 SmoothedTotals = new float[height];
+                ZScore = new float[height];
+                Prefix = new double[height + 1];
+                Prefix2 = new double[height + 1];
             }
         }
 
@@ -118,11 +124,28 @@ namespace Bahtinov_Collimator
         public BahtinovData FindBrightestLines(Bitmap starImage)
         {
             const int LINES = 9;
-            const float ANGLE_STEP_DEGREES = 0.2f;
-            const int ANGLE_STEPS = (int)(180f / ANGLE_STEP_DEGREES); // 360 samples across [0, 180)
-            const float RADIANS_PER_STEP = (float)Math.PI / ANGLE_STEPS;
             const float DIVISION_FACTOR = 3f / byte.MaxValue;
-            const int SUPPRESSION_STEPS = (int)(5f / ANGLE_STEP_DEGREES); // +/-5 degrees
+
+            // Two-pass angle search:
+            //   Pass 1 sweeps the full [0, 180) range at a coarse step (2°) to
+            //          quickly locate candidate diffraction-line angles.
+            //   Pass 2 refines each candidate with a fine step (0.1°) over a
+            //          narrow window centred on the coarse pick. Total angle
+            //          evaluations: COARSE_STEPS + LINES * FINE_STEPS_PER_CANDIDATE
+            //          which is far fewer than a flat 0.1° sweep would require.
+            const float COARSE_STEP_DEGREES = 2.0f;
+            const int   COARSE_STEPS = (int)(180f / COARSE_STEP_DEGREES); // 90
+            const float COARSE_RADIANS_PER_STEP = (float)Math.PI / COARSE_STEPS;
+            const float COARSE_SUPPRESSION_DEGREES = 5.0f;
+            int   COARSE_SUPPRESSION_STEPS =
+                (int)Math.Ceiling(COARSE_SUPPRESSION_DEGREES / COARSE_STEP_DEGREES); // 3
+
+            const float FINE_STEP_DEGREES = 0.1f;
+            const float FINE_HALF_WINDOW_DEGREES = COARSE_STEP_DEGREES / 2f; // ±1°
+            const int   FINE_STEPS_PER_CANDIDATE =
+                (int)(2f * FINE_HALF_WINDOW_DEGREES / FINE_STEP_DEGREES) + 1; // 21
+            const float FINE_RADIANS_PER_STEP = (float)(Math.PI * FINE_STEP_DEGREES / 180.0);
+            const int   FINE_HALF_INDEX = FINE_STEPS_PER_CANDIDATE / 2;
 
             Rectangle rect = new Rectangle(0, 0, starImage.Width, starImage.Height);
             BahtinovData result = new BahtinovData(LINES, rect);
@@ -160,137 +183,128 @@ namespace Bahtinov_Collimator
                 {
                     int pixelIndex = y * stride + x * bytesPerPixel;
                     byte greenValue = starImageArray[pixelIndex + 1];
-
                     starArray2D[x, y] = (float)Math.Sqrt(greenValue * DIVISION_FACTOR);
                 }
             }
 
-            float[] lineNumbersOfBrightestLines = new float[ANGLE_STEPS];
-            float[] valuesOfBrightestLines = new float[ANGLE_STEPS];
+            // -----------------------------------------------------------------
+            // Pass 1: coarse 2° sweep over the full [0, 180) range.
+            // -----------------------------------------------------------------
+            float[] coarseLineNumbers = new float[COARSE_STEPS];
+            float[] coarseValues = new float[COARSE_STEPS];
 
-            // Per-thread workspace: one float[,] per worker thread (not per iteration) so we avoid
-            // allocating 180 large 2D arrays (~180 x width x height x 4 bytes) per call.
             Parallel.For(
                 0,
-                ANGLE_STEPS,
+                COARSE_STEPS,
                 () => new AngleScanWorkspace(width, height),
-                (index1, state, workspace) =>
+                (idx, state, workspace) =>
                 {
-                    float[,] rotatedImage = workspace.RotatedImage;
-                    float[] rowTotals = workspace.RowTotals;
-                    float[] smoothedTotals = workspace.SmoothedTotals;
+                    float angleRadians = idx * COARSE_RADIANS_PER_STEP;
+                    ScanAngleBright(
+                        workspace, starArray2D,
+                        leftEdge, rightEdge, topEdge, bottomEdge,
+                        starImage_X_Centre, starImage_Y_Centre,
+                        angleRadians,
+                        out float lineNumber, out float largestValue);
 
-                    // Clear only the region we will read from to avoid stale values from previous angle
-                    // (pixels where the rotated source falls outside bounds are left untouched by the
-                    // writes below).
-                    Array.Clear(rotatedImage, 0, rotatedImage.Length);
-
-                    float currentRadians = RADIANS_PER_STEP * index1;
-                    float sin_CurrentRadians = (float)Math.Sin(currentRadians);
-                    float cos_CurrentRadians = (float)Math.Cos(currentRadians);
-
-                    for (int x = leftEdge; x < rightEdge; ++x)
-                    {
-                        for (int y = topEdge; y < bottomEdge; ++y)
-                        {
-                            float X_DistanceFromCentre = x - starImage_X_Centre;
-                            float Y_DistanceFromCentre = y - starImage_Y_Centre;
-
-                            float rotatedXDistance = starImage_X_Centre + X_DistanceFromCentre * cos_CurrentRadians + Y_DistanceFromCentre * sin_CurrentRadians;
-                            float rotatedYDistance = starImage_Y_Centre - X_DistanceFromCentre * sin_CurrentRadians + Y_DistanceFromCentre * cos_CurrentRadians;
-
-                            int rotatedXRoundedDown = (int)rotatedXDistance;
-                            int rotatedXRoundedUp = rotatedXRoundedDown + 1;
-                            int rotatedYRoundedDown = (int)rotatedYDistance;
-                            int rotatedYRoundedUp = rotatedYRoundedDown + 1;
-
-                            if (rotatedXRoundedDown >= leftEdge && rotatedXRoundedUp < rightEdge &&
-                                rotatedYRoundedDown >= topEdge && rotatedYRoundedUp < bottomEdge)
-                            {
-                                float rotatedXFraction = rotatedXDistance - rotatedXRoundedDown;
-                                float rotatedYFraction = rotatedYDistance - rotatedYRoundedDown;
-
-                                float oneMinusRotatedXFraction = 1.0f - rotatedXFraction;
-                                float oneMinusRotatedYFraction = 1.0f - rotatedYFraction;
-                                float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
-                                float value2 = starArray2D[rotatedXRoundedUp, rotatedYRoundedDown];
-                                float value3 = starArray2D[rotatedXRoundedUp, rotatedYRoundedUp];
-                                float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedUp];
-
-                                rotatedImage[x, y] = value1 * oneMinusRotatedXFraction * oneMinusRotatedYFraction +
-                                                     value2 * rotatedXFraction * oneMinusRotatedYFraction +
-                                                     value3 * rotatedXFraction * rotatedYFraction +
-                                                     value4 * oneMinusRotatedXFraction * rotatedYFraction;
-                            }
-                        }
-                    }
-
-                    for (int y = topEdge; y < bottomEdge; ++y)
-                    {
-                        float rowTotal = 0;
-                        for (int x = leftEdge; x < rightEdge; ++x)
-                        {
-                            rowTotal += rotatedImage[x, y];
-                        }
-                        rowTotals[y] = rowTotal / (rightEdge - leftEdge);
-                    }
-
-                    for (int y = topEdge; y < bottomEdge; ++y)
-                    {
-                        smoothedTotals[y] = rowTotals[y];
-                        if (y > topEdge && y < bottomEdge - 1)
-                        {
-                            smoothedTotals[y] = (rowTotals[y - 1] + rowTotals[y] + rowTotals[y + 1]) / 3;
-                        }
-                    }
-
-                    float largestValue = -1f;
-                    float lineNumber = -1f;
-                    for (int y = topEdge; y < bottomEdge; ++y)
-                    {
-                        if (smoothedTotals[y] > largestValue)
-                        {
-                            largestValue = smoothedTotals[y];
-                            lineNumber = y;
-                        }
-                    }
-
-                    lineNumbersOfBrightestLines[index1] = lineNumber;
-                    valuesOfBrightestLines[index1] = largestValue;
-
+                    coarseLineNumbers[idx] = lineNumber;
+                    coarseValues[idx] = largestValue;
                     return workspace;
                 },
-                _ => { /* nothing to dispose; arrays are GCed when thread-local goes out of scope */ });
+                _ => { });
 
-            for (int i = 0; i < LINES; ++i)
+            // Pick the top LINES coarse candidates with ±5° non-maximum suppression.
+            float[] candidateAngles = new float[LINES];
             {
-                float maxValue = -1f;
-                float angleInRadians = -1f;
-                float lineNumber = -1f;
-                int brightestLineIndex = -1;
-
-                for (int j = 0; j < ANGLE_STEPS; ++j)
+                float[] coarseScratch = (float[])coarseValues.Clone();
+                for (int i = 0; i < LINES; i++)
                 {
-                    if (valuesOfBrightestLines[j] > maxValue)
+                    float maxValue = -1f;
+                    int bestIdx = -1;
+                    for (int j = 0; j < COARSE_STEPS; j++)
                     {
-                        maxValue = valuesOfBrightestLines[j];
-                        lineNumber = lineNumbersOfBrightestLines[j];
-                        angleInRadians = j * RADIANS_PER_STEP;
-                        brightestLineIndex = j;
+                        if (coarseScratch[j] > maxValue)
+                        {
+                            maxValue = coarseScratch[j];
+                            bestIdx = j;
+                        }
+                    }
+
+                    if (bestIdx < 0)
+                    {
+                        candidateAngles[i] = 0f;
+                        continue;
+                    }
+
+                    candidateAngles[i] = bestIdx * COARSE_RADIANS_PER_STEP;
+
+                    for (int j = bestIdx - COARSE_SUPPRESSION_STEPS; j <= bestIdx + COARSE_SUPPRESSION_STEPS; j++)
+                    {
+                        int wrapped = (j + COARSE_STEPS) % COARSE_STEPS;
+                        coarseScratch[wrapped] = 0f;
+                    }
+                }
+            }
+
+            // -----------------------------------------------------------------
+            // Pass 2: refine each candidate at 0.1° over a ±1° window.
+            // All LINES * FINE_STEPS_PER_CANDIDATE evaluations are run in a
+            // single Parallel.For so they share workspace pools efficiently.
+            // -----------------------------------------------------------------
+            int totalFineEvals = LINES * FINE_STEPS_PER_CANDIDATE;
+            float[] fineLineNumbers = new float[totalFineEvals];
+            float[] fineValues = new float[totalFineEvals];
+
+            Parallel.For(
+                0,
+                totalFineEvals,
+                () => new AngleScanWorkspace(width, height),
+                (flatIdx, state, workspace) =>
+                {
+                    int candidateIdx = flatIdx / FINE_STEPS_PER_CANDIDATE;
+                    int stepIdx = flatIdx % FINE_STEPS_PER_CANDIDATE;
+
+                    int delta = stepIdx - FINE_HALF_INDEX;
+                    float angleRadians = candidateAngles[candidateIdx] + delta * FINE_RADIANS_PER_STEP;
+
+                    ScanAngleBright(
+                        workspace, starArray2D,
+                        leftEdge, rightEdge, topEdge, bottomEdge,
+                        starImage_X_Centre, starImage_Y_Centre,
+                        angleRadians,
+                        out float lineNumber, out float largestValue);
+
+                    fineLineNumbers[flatIdx] = lineNumber;
+                    fineValues[flatIdx] = largestValue;
+                    return workspace;
+                },
+                _ => { });
+
+            // Pick the best fine sample per candidate and write to result.
+            for (int c = 0; c < LINES; c++)
+            {
+                int baseIdx = c * FINE_STEPS_PER_CANDIDATE;
+                float maxValue = -1f;
+                int bestStep = FINE_HALF_INDEX;
+                for (int s = 0; s < FINE_STEPS_PER_CANDIDATE; s++)
+                {
+                    float v = fineValues[baseIdx + s];
+                    if (v > maxValue)
+                    {
+                        maxValue = v;
+                        bestStep = s;
                     }
                 }
 
-                result.LineIndex[i] = lineNumber;
-                result.LineAngles[i] = angleInRadians;
-                result.LineValue[i] = maxValue;
+                int delta = bestStep - FINE_HALF_INDEX;
+                float refinedAngle = candidateAngles[c] + delta * FINE_RADIANS_PER_STEP;
 
-                for (int j = brightestLineIndex - SUPPRESSION_STEPS; j <= brightestLineIndex + SUPPRESSION_STEPS; ++j)
-                {
-                    int index = (j + ANGLE_STEPS) % ANGLE_STEPS;
-                    valuesOfBrightestLines[index] = 0.0f;
-                }
+                result.LineIndex[c] = fineLineNumbers[baseIdx + bestStep];
+                result.LineAngles[c] = refinedAngle;
+                result.LineValue[c] = fineValues[baseIdx + bestStep];
             }
-                return result;
+
+            return result;
         }
 
         /// <summary>
@@ -315,10 +329,21 @@ namespace Bahtinov_Collimator
         public BahtinovData FindFaintLines(Bitmap starImage)
         {
             const int LINES = 9;
-            const float ANGLE_STEP_DEGREES = 0.2f;
-            const int ANGLE_STEPS = (int)(180f / ANGLE_STEP_DEGREES); // 360 samples across [0, 180)
-            const float RADIANS_PER_STEP = (float)Math.PI / ANGLE_STEPS;
-            const int SUPPRESSION_STEPS = (int)(5f / ANGLE_STEP_DEGREES); // +/-5 degrees
+
+            // Two-pass angle search; see FindBrightestLines for rationale.
+            const float COARSE_STEP_DEGREES = 2.0f;
+            const int   COARSE_STEPS = (int)(180f / COARSE_STEP_DEGREES); // 90
+            const float COARSE_RADIANS_PER_STEP = (float)Math.PI / COARSE_STEPS;
+            const float COARSE_SUPPRESSION_DEGREES = 5.0f;
+            int   COARSE_SUPPRESSION_STEPS =
+                (int)Math.Ceiling(COARSE_SUPPRESSION_DEGREES / COARSE_STEP_DEGREES); // 3
+
+            const float FINE_STEP_DEGREES = 0.1f;
+            const float FINE_HALF_WINDOW_DEGREES = COARSE_STEP_DEGREES / 2f; // ±1°
+            const int   FINE_STEPS_PER_CANDIDATE =
+                (int)(2f * FINE_HALF_WINDOW_DEGREES / FINE_STEP_DEGREES) + 1; // 21
+            const float FINE_RADIANS_PER_STEP = (float)(Math.PI * FINE_STEP_DEGREES / 180.0);
+            const int   FINE_HALF_INDEX = FINE_STEPS_PER_CANDIDATE / 2;
 
             // Profile processing parameters (tweak if you like)
             const int LOCAL_STATS_WINDOW = 23;     // odd number: 17..31 are typical
@@ -348,8 +373,8 @@ namespace Bahtinov_Collimator
                 // ------------------------------------------------------------
                 float[,] starArray2D = new float[width, height];
 
-                float cx = (width + 1) * 0.5f;
-                float cy = (height + 1) * 0.5f;
+                float cxf = (width + 1) * 0.5f;
+                float cyf = (height + 1) * 0.5f;
                 float minDim = Math.Min(width, height);
                 float coreRadius = CORE_RADIUS_FRACTION * minDim;
                 float coreFeather = CORE_FEATHER_FRACTION * minDim;
@@ -365,8 +390,6 @@ namespace Bahtinov_Collimator
                         {
                             byte* px = rowPtr + (x * bytesPerPixel);
 
-                            // Most formats you’ll see here are 24/32bpp (BGR/BGRA).
-                            // Fallback: if bytesPerPixel < 3, just treat first as intensity.
                             float r, g, b;
                             if (bytesPerPixel >= 3)
                             {
@@ -379,15 +402,11 @@ namespace Bahtinov_Collimator
                                 r = g = b = px[0];
                             }
 
-                            // Luminance
                             float lum = (0.299f * r + 0.587f * g + 0.114f * b) / 255f;
-
-                            // Gentle gamma to lift faint structure
                             float v = (float)Math.Sqrt(Math.Max(0.0f, lum));
 
-                            // Core mask (soft)
-                            float dx = x - cx;
-                            float dy = y - cy;
+                            float dx = x - cxf;
+                            float dy = y - cyf;
                             float rr = (float)Math.Sqrt(dx * dx + dy * dy);
 
                             float w = 1.0f;
@@ -397,7 +416,6 @@ namespace Bahtinov_Collimator
                             }
                             else if (rr < coreRadius + coreFeather)
                             {
-                                // Linear feather from 0 -> 1
                                 w = (rr - coreRadius) / coreFeather;
                             }
 
@@ -406,166 +424,127 @@ namespace Bahtinov_Collimator
                     }
                 }
 
-                // Compute ROI used for row projections (keep your original "safe" margins)
                 int leftEdge = 0;
                 int rightEdge = width;
                 int topEdge = 0;
                 int bottomEdge = height;
 
-                // If you have a known crop logic elsewhere, keep it. Otherwise this uses full image.
-                // You can tighten edges to reduce border interpolation noise:
-                // int margin = Math.Max(1, Math.Min(width, height) / 50);
-                // leftEdge += margin; rightEdge -= margin; topEdge += margin; bottomEdge -= margin;
+                // -----------------------------------------------------------------
+                // Pass 1: coarse 2° sweep over the full [0, 180) range.
+                // -----------------------------------------------------------------
+                float[] coarseLineNumbers = new float[COARSE_STEPS];
+                float[] coarseValues = new float[COARSE_STEPS];
 
-                float[] lineNumbersOfBrightestLines = new float[ANGLE_STEPS];
-                float[] valuesOfBrightestLines = new float[ANGLE_STEPS];
-
-                // Per-thread workspace: one large rotated buffer per worker thread (not per angle).
                 Parallel.For(
                     0,
-                    ANGLE_STEPS,
+                    COARSE_STEPS,
                     () => new AngleScanWorkspace(width, height),
-                    (angleIndex, state, workspace) =>
+                    (idx, state, workspace) =>
                     {
-                        float[,] rotatedImage = workspace.RotatedImage;
-                        float[] rowTotals = workspace.RowTotals;
+                        float angleRadians = idx * COARSE_RADIANS_PER_STEP;
+                        ScanAngleFaint(
+                            workspace, starArray2D,
+                            width, height,
+                            leftEdge, rightEdge, topEdge, bottomEdge,
+                            cxf, cyf,
+                            angleRadians,
+                            LOCAL_STATS_WINDOW, EPS_STD,
+                            out int bestY, out float bestScore);
 
-                        // Clear stale values from the previous angle processed by this thread.
-                        Array.Clear(rotatedImage, 0, rotatedImage.Length);
-
-                        float currentRadians = RADIANS_PER_STEP * angleIndex;
-                        float sin = (float)Math.Sin(currentRadians);
-                        float cos = (float)Math.Cos(currentRadians);
-
-                        // Rotate around center (same as FindBrightestLines)
-                        float cxf = (width + 1) * 0.5f;
-                        float cyf = (height + 1) * 0.5f;
-
-                        for (int y = topEdge; y < bottomEdge; y++)
-                        {
-                            float yy = y - cyf;
-                            for (int x = leftEdge; x < rightEdge; x++)
-                            {
-                                float xx = x - cxf;
-
-                                // Inverse rotation to sample source
-                                float srcXf = (xx * cos + yy * sin) + cxf;
-                                float srcYf = (-xx * sin + yy * cos) + cyf;
-
-                                int srcX0 = (int)srcXf;
-                                int srcY0 = (int)srcYf;
-
-                                if (srcX0 >= 0 && srcX0 < width - 1 && srcY0 >= 0 && srcY0 < height - 1)
-                                {
-                                    float fx = srcXf - srcX0;
-                                    float fy = srcYf - srcY0;
-                                    float oneMinusFx = 1f - fx;
-                                    float oneMinusFy = 1f - fy;
-
-                                    float v1 = starArray2D[srcX0, srcY0];
-                                    float v2 = starArray2D[srcX0 + 1, srcY0];
-                                    float v3 = starArray2D[srcX0, srcY0 + 1];
-                                    float v4 = starArray2D[srcX0 + 1, srcY0 + 1];
-
-                                    rotatedImage[x, y] =
-                                        v1 * oneMinusFx * oneMinusFy +
-                                        v2 * fx * oneMinusFy +
-                                        v3 * oneMinusFx * fy +
-                                        v4 * fx * fy;
-                                }
-                            }
-                        }
-
-                        int rowWidth = Math.Max(1, rightEdge - leftEdge);
-
-                        for (int y = topEdge; y < bottomEdge; y++)
-                        {
-                            float sum = 0f;
-                            for (int x = leftEdge; x < rightEdge; x++)
-                                sum += rotatedImage[x, y];
-
-                            rowTotals[y] = sum / rowWidth;
-                        }
-
-                        // Smooth the profile (Gaussian-ish 5 tap) to reduce noise
-                        float[] smoothed = Smooth1D5(rowTotals, topEdge, bottomEdge);
-
-                        // Compute local mean/std quickly using prefix sums, then z-score
-                        float[] z = ComputeLocalZScore(smoothed, topEdge, bottomEdge, LOCAL_STATS_WINDOW, EPS_STD);
-
-                        // Pick strongest local maximum by z-score (faint but distinct spikes win here)
-                        float bestScore = -1f;
-                        int bestY = -1;
-
-                        for (int y = topEdge + 2; y < bottomEdge - 2; y++)
-                        {
-                            float s = z[y];
-                            if (s <= 0f)
-                                continue;
-
-                            // Enforce a peak (helps ignore ramps/plateaus)
-                            if (smoothed[y] >= smoothed[y - 1] && smoothed[y] >= smoothed[y + 1])
-                            {
-                                if (s > bestScore)
-                                {
-                                    bestScore = s;
-                                    bestY = y;
-                                }
-                            }
-                        }
-
-                        // Fallback if nothing qualified (very low contrast)
-                        if (bestY < 0)
-                        {
-                            float largest = -1f;
-                            int ly = topEdge;
-                            for (int y = topEdge; y < bottomEdge; y++)
-                            {
-                                if (smoothed[y] > largest)
-                                {
-                                    largest = smoothed[y];
-                                    ly = y;
-                                }
-                            }
-                            bestY = ly;
-                            bestScore = largest;
-                        }
-
-                        lineNumbersOfBrightestLines[angleIndex] = bestY;
-                        valuesOfBrightestLines[angleIndex] = bestScore;
-
+                        coarseLineNumbers[idx] = bestY;
+                        coarseValues[idx] = bestScore;
                         return workspace;
                     },
                     _ => { });
 
-                // Select top LINES distinct angles (keep your original suppression around peaks)
-                for (int i = 0; i < LINES; ++i)
+                // Pick the top LINES coarse candidates with ±5° non-maximum suppression.
+                float[] candidateAngles = new float[LINES];
                 {
-                    float maxValue = -1f;
-                    float angleInRadians = -1f;
-                    float lineNumber = -1f;
-                    int brightestLineIndex = -1;
-
-                    for (int j = 0; j < ANGLE_STEPS; ++j)
+                    float[] coarseScratch = (float[])coarseValues.Clone();
+                    for (int i = 0; i < LINES; i++)
                     {
-                        if (valuesOfBrightestLines[j] > maxValue)
+                        float maxValue = -1f;
+                        int bestIdx = -1;
+                        for (int j = 0; j < COARSE_STEPS; j++)
                         {
-                            maxValue = valuesOfBrightestLines[j];
-                            lineNumber = lineNumbersOfBrightestLines[j];
-                            angleInRadians = j * RADIANS_PER_STEP;
-                            brightestLineIndex = j;
+                            if (coarseScratch[j] > maxValue)
+                            {
+                                maxValue = coarseScratch[j];
+                                bestIdx = j;
+                            }
+                        }
+
+                        if (bestIdx < 0)
+                        {
+                            candidateAngles[i] = 0f;
+                            continue;
+                        }
+
+                        candidateAngles[i] = bestIdx * COARSE_RADIANS_PER_STEP;
+
+                        for (int j = bestIdx - COARSE_SUPPRESSION_STEPS; j <= bestIdx + COARSE_SUPPRESSION_STEPS; j++)
+                        {
+                            int wrapped = (j + COARSE_STEPS) % COARSE_STEPS;
+                            coarseScratch[wrapped] = 0f;
+                        }
+                    }
+                }
+
+                // -----------------------------------------------------------------
+                // Pass 2: refine each candidate at 0.1° over a ±1° window.
+                // -----------------------------------------------------------------
+                int totalFineEvals = LINES * FINE_STEPS_PER_CANDIDATE;
+                float[] fineLineNumbers = new float[totalFineEvals];
+                float[] fineValues = new float[totalFineEvals];
+
+                Parallel.For(
+                    0,
+                    totalFineEvals,
+                    () => new AngleScanWorkspace(width, height),
+                    (flatIdx, state, workspace) =>
+                    {
+                        int candidateIdx = flatIdx / FINE_STEPS_PER_CANDIDATE;
+                        int stepIdx = flatIdx % FINE_STEPS_PER_CANDIDATE;
+
+                        int delta = stepIdx - FINE_HALF_INDEX;
+                        float angleRadians = candidateAngles[candidateIdx] + delta * FINE_RADIANS_PER_STEP;
+
+                        ScanAngleFaint(
+                            workspace, starArray2D,
+                            width, height,
+                            leftEdge, rightEdge, topEdge, bottomEdge,
+                            cxf, cyf,
+                            angleRadians,
+                            LOCAL_STATS_WINDOW, EPS_STD,
+                            out int bestY, out float bestScore);
+
+                        fineLineNumbers[flatIdx] = bestY;
+                        fineValues[flatIdx] = bestScore;
+                        return workspace;
+                    },
+                    _ => { });
+
+                for (int c = 0; c < LINES; c++)
+                {
+                    int baseIdx = c * FINE_STEPS_PER_CANDIDATE;
+                    float maxValue = -1f;
+                    int bestStep = FINE_HALF_INDEX;
+                    for (int s = 0; s < FINE_STEPS_PER_CANDIDATE; s++)
+                    {
+                        float v = fineValues[baseIdx + s];
+                        if (v > maxValue)
+                        {
+                            maxValue = v;
+                            bestStep = s;
                         }
                     }
 
-                    result.LineIndex[i] = lineNumber;
-                    result.LineAngles[i] = angleInRadians;
-                    result.LineValue[i] = maxValue;
+                    int delta = bestStep - FINE_HALF_INDEX;
+                    float refinedAngle = candidateAngles[c] + delta * FINE_RADIANS_PER_STEP;
 
-                    for (int j = brightestLineIndex - SUPPRESSION_STEPS; j <= brightestLineIndex + SUPPRESSION_STEPS; ++j)
-                    {
-                        int index = (j + ANGLE_STEPS) % ANGLE_STEPS;
-                        valuesOfBrightestLines[index] = 0.0f;
-                    }
+                    result.LineIndex[c] = fineLineNumbers[baseIdx + bestStep];
+                    result.LineAngles[c] = refinedAngle;
+                    result.LineValue[c] = fineValues[baseIdx + bestStep];
                 }
 
                 return result;
@@ -577,20 +556,226 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Smooths a 1D profile using a stable 5-tap kernel [1, 4, 6, 4, 1] / 16.
+        /// Bilinearly rotates the ROI of <paramref name="starArray2D"/> by
+        /// <paramref name="angleRadians"/>, sums per row, applies 3-tap row smoothing,
+        /// and returns the brightest row index and its smoothed value.
+        ///
+        /// Used by both passes of <see cref="FindBrightestLines"/> so the same kernel
+        /// is shared between the coarse and fine angle sweeps.
+        /// </summary>
+        private static void ScanAngleBright(
+            AngleScanWorkspace workspace,
+            float[,] starArray2D,
+            int leftEdge, int rightEdge, int topEdge, int bottomEdge,
+            float starImage_X_Centre, float starImage_Y_Centre,
+            float angleRadians,
+            out float lineNumber, out float largestValue)
+        {
+            float[,] rotatedImage = workspace.RotatedImage;
+            float[] rowTotals = workspace.RowTotals;
+            float[] smoothedTotals = workspace.SmoothedTotals;
+
+            // Pixels outside the rotated source map are left at zero (Array.Clear).
+            Array.Clear(rotatedImage, 0, rotatedImage.Length);
+
+            float sin_CurrentRadians = (float)Math.Sin(angleRadians);
+            float cos_CurrentRadians = (float)Math.Cos(angleRadians);
+
+            for (int x = leftEdge; x < rightEdge; ++x)
+            {
+                for (int y = topEdge; y < bottomEdge; ++y)
+                {
+                    float X_DistanceFromCentre = x - starImage_X_Centre;
+                    float Y_DistanceFromCentre = y - starImage_Y_Centre;
+
+                    float rotatedXDistance = starImage_X_Centre + X_DistanceFromCentre * cos_CurrentRadians + Y_DistanceFromCentre * sin_CurrentRadians;
+                    float rotatedYDistance = starImage_Y_Centre - X_DistanceFromCentre * sin_CurrentRadians + Y_DistanceFromCentre * cos_CurrentRadians;
+
+                    int rotatedXRoundedDown = (int)rotatedXDistance;
+                    int rotatedXRoundedUp = rotatedXRoundedDown + 1;
+                    int rotatedYRoundedDown = (int)rotatedYDistance;
+                    int rotatedYRoundedUp = rotatedYRoundedDown + 1;
+
+                    if (rotatedXRoundedDown >= leftEdge && rotatedXRoundedUp < rightEdge &&
+                        rotatedYRoundedDown >= topEdge && rotatedYRoundedUp < bottomEdge)
+                    {
+                        float rotatedXFraction = rotatedXDistance - rotatedXRoundedDown;
+                        float rotatedYFraction = rotatedYDistance - rotatedYRoundedDown;
+
+                        float oneMinusRotatedXFraction = 1.0f - rotatedXFraction;
+                        float oneMinusRotatedYFraction = 1.0f - rotatedYFraction;
+                        float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
+                        float value2 = starArray2D[rotatedXRoundedUp, rotatedYRoundedDown];
+                        float value3 = starArray2D[rotatedXRoundedUp, rotatedYRoundedUp];
+                        float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedUp];
+
+                        rotatedImage[x, y] = value1 * oneMinusRotatedXFraction * oneMinusRotatedYFraction +
+                                             value2 * rotatedXFraction * oneMinusRotatedYFraction +
+                                             value3 * rotatedXFraction * rotatedYFraction +
+                                             value4 * oneMinusRotatedXFraction * rotatedYFraction;
+                    }
+                }
+            }
+
+            int rowWidth = Math.Max(1, rightEdge - leftEdge);
+            for (int y = topEdge; y < bottomEdge; ++y)
+            {
+                float rowTotal = 0;
+                for (int x = leftEdge; x < rightEdge; ++x)
+                {
+                    rowTotal += rotatedImage[x, y];
+                }
+                rowTotals[y] = rowTotal / rowWidth;
+            }
+
+            for (int y = topEdge; y < bottomEdge; ++y)
+            {
+                smoothedTotals[y] = rowTotals[y];
+                if (y > topEdge && y < bottomEdge - 1)
+                {
+                    smoothedTotals[y] = (rowTotals[y - 1] + rowTotals[y] + rowTotals[y + 1]) / 3f;
+                }
+            }
+
+            largestValue = -1f;
+            lineNumber = -1f;
+            for (int y = topEdge; y < bottomEdge; ++y)
+            {
+                if (smoothedTotals[y] > largestValue)
+                {
+                    largestValue = smoothedTotals[y];
+                    lineNumber = y;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Bilinearly rotates the full image stored in <paramref name="starArray2D"/> by
+        /// <paramref name="angleRadians"/>, computes a 1D row-mean profile, smooths it
+        /// with a 5-tap kernel, applies a local z-score detector, and returns the
+        /// strongest local-maximum row index and its z-score.
+        ///
+        /// Used by both passes of <see cref="FindFaintLines"/> so the same kernel is
+        /// shared between the coarse and fine angle sweeps.
+        /// </summary>
+        private static void ScanAngleFaint(
+            AngleScanWorkspace workspace,
+            float[,] starArray2D,
+            int width, int height,
+            int leftEdge, int rightEdge, int topEdge, int bottomEdge,
+            float cxf, float cyf,
+            float angleRadians,
+            int statsWindow, float epsStd,
+            out int bestY, out float bestScore)
+        {
+            float[,] rotatedImage = workspace.RotatedImage;
+            float[] rowTotals = workspace.RowTotals;
+            float[] smoothed = workspace.SmoothedTotals;
+            float[] z = workspace.ZScore;
+            double[] prefix = workspace.Prefix;
+            double[] prefix2 = workspace.Prefix2;
+
+            Array.Clear(rotatedImage, 0, rotatedImage.Length);
+
+            float sin = (float)Math.Sin(angleRadians);
+            float cos = (float)Math.Cos(angleRadians);
+
+            for (int y = topEdge; y < bottomEdge; y++)
+            {
+                float yy = y - cyf;
+                for (int x = leftEdge; x < rightEdge; x++)
+                {
+                    float xx = x - cxf;
+
+                    // Inverse rotation to sample source
+                    float srcXf = (xx * cos + yy * sin) + cxf;
+                    float srcYf = (-xx * sin + yy * cos) + cyf;
+
+                    int srcX0 = (int)srcXf;
+                    int srcY0 = (int)srcYf;
+
+                    if (srcX0 >= 0 && srcX0 < width - 1 && srcY0 >= 0 && srcY0 < height - 1)
+                    {
+                        float fx = srcXf - srcX0;
+                        float fy = srcYf - srcY0;
+                        float oneMinusFx = 1f - fx;
+                        float oneMinusFy = 1f - fy;
+
+                        float v1 = starArray2D[srcX0, srcY0];
+                        float v2 = starArray2D[srcX0 + 1, srcY0];
+                        float v3 = starArray2D[srcX0, srcY0 + 1];
+                        float v4 = starArray2D[srcX0 + 1, srcY0 + 1];
+
+                        rotatedImage[x, y] =
+                            v1 * oneMinusFx * oneMinusFy +
+                            v2 * fx * oneMinusFy +
+                            v3 * oneMinusFx * fy +
+                            v4 * fx * fy;
+                    }
+                }
+            }
+
+            int rowWidth = Math.Max(1, rightEdge - leftEdge);
+            for (int y = topEdge; y < bottomEdge; y++)
+            {
+                float sum = 0f;
+                for (int x = leftEdge; x < rightEdge; x++)
+                    sum += rotatedImage[x, y];
+
+                rowTotals[y] = sum / rowWidth;
+            }
+
+            Smooth1D5(rowTotals, smoothed, topEdge, bottomEdge);
+            ComputeLocalZScore(smoothed, z, prefix, prefix2, topEdge, bottomEdge, statsWindow, epsStd);
+
+            bestScore = -1f;
+            bestY = -1;
+
+            for (int y = topEdge + 2; y < bottomEdge - 2; y++)
+            {
+                float s = z[y];
+                if (s <= 0f)
+                    continue;
+
+                if (smoothed[y] >= smoothed[y - 1] && smoothed[y] >= smoothed[y + 1])
+                {
+                    if (s > bestScore)
+                    {
+                        bestScore = s;
+                        bestY = y;
+                    }
+                }
+            }
+
+            if (bestY < 0)
+            {
+                float largest = -1f;
+                int ly = topEdge;
+                for (int y = topEdge; y < bottomEdge; y++)
+                {
+                    if (smoothed[y] > largest)
+                    {
+                        largest = smoothed[y];
+                        ly = y;
+                    }
+                }
+                bestY = ly;
+                bestScore = largest;
+            }
+        }
+
+        /// <summary>
+        /// Smooths a 1D profile using a stable 5-tap kernel [1, 4, 6, 4, 1] / 16, writing
+        /// the result into a caller-supplied <paramref name="dst"/> buffer.
         ///
         /// The smoothing reduces noise while preserving peak locations reasonably well, which improves the
         /// reliability of subsequent peak detection (especially on faint, noisy profiles).
         ///
         /// Only rows that have 2 valid neighbors on each side are filtered; the edges are copied unchanged.
         /// </summary>
-        private static float[] Smooth1D5(float[] src, int topEdge, int bottomEdge)
+        private static void Smooth1D5(float[] src, float[] dst, int topEdge, int bottomEdge)
         {
-            // 5-tap kernel: [1 4 6 4 1] / 16
             int n = src.Length;
-            float[] dst = new float[n];
-
-            // Copy edges
             for (int i = 0; i < n; i++)
                 dst[i] = src[i];
 
@@ -598,8 +783,6 @@ namespace Bahtinov_Collimator
             {
                 dst[y] = (src[y - 2] + 4f * src[y - 1] + 6f * src[y] + 4f * src[y + 1] + src[y + 2]) / 16f;
             }
-
-            return dst;
         }
 
         /// <summary>
@@ -614,20 +797,28 @@ namespace Bahtinov_Collimator
         /// This highlights narrow peaks that rise above the local background and de-emphasizes broad gradients
         /// and slowly-varying structure, which is useful for detecting faint diffraction spikes.
         /// </summary>
-        private static float[] ComputeLocalZScore(float[] profile, int topEdge, int bottomEdge, int window, float epsStd)
+        private static void ComputeLocalZScore(
+            float[] profile,
+            float[] z,
+            double[] prefix,
+            double[] prefix2,
+            int topEdge,
+            int bottomEdge,
+            int window,
+            float epsStd)
         {
             // z[y] = (profile[y] - localMean[y]) / (localStd[y] + eps)
             // localMean/localStd over a sliding window using prefix sums for speed.
+            // The prefix and prefix2 buffers are caller-supplied (pre-allocated and
+            // reused across angles in the parallel scan) to avoid per-angle GC churn.
 
             if (window < 5) window = 5;
             if ((window & 1) == 0) window++; // force odd
 
             int n = profile.Length;
-            float[] z = new float[n];
 
-            double[] prefix = new double[n + 1];
-            double[] prefix2 = new double[n + 1];
-
+            // prefix[0] / prefix2[0] are conventionally 0; we never write to index 0 below
+            // so reused buffers retain that 0 from initial allocation.
             for (int i = 0; i < n; i++)
             {
                 double v = profile[i];
@@ -667,8 +858,6 @@ namespace Bahtinov_Collimator
                 // We only care about positive deviations (spikes)
                 z[y] = (float)(zz > 0.0 ? zz : 0.0);
             }
-
-            return z;
         }
 
         /// <summary>
