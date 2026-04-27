@@ -118,10 +118,11 @@ namespace Bahtinov_Collimator
         public BahtinovData FindBrightestLines(Bitmap starImage)
         {
             const int LINES = 9;
-            const int DEGREES180 = 180;
-            const float RADIANS_PER_DEGREE = (float)Math.PI / DEGREES180;
+            const float ANGLE_STEP_DEGREES = 0.2f;
+            const int ANGLE_STEPS = (int)(180f / ANGLE_STEP_DEGREES); // 360 samples across [0, 180)
+            const float RADIANS_PER_STEP = (float)Math.PI / ANGLE_STEPS;
             const float DIVISION_FACTOR = 3f / byte.MaxValue;
-            const int DEG_5 = 5;
+            const int SUPPRESSION_STEPS = (int)(5f / ANGLE_STEP_DEGREES); // +/-5 degrees
 
             Rectangle rect = new Rectangle(0, 0, starImage.Width, starImage.Height);
             BahtinovData result = new BahtinovData(LINES, rect);
@@ -164,14 +165,14 @@ namespace Bahtinov_Collimator
                 }
             }
 
-            float[] lineNumbersOfBrightestLines = new float[DEGREES180];
-            float[] valuesOfBrightestLines = new float[DEGREES180];
+            float[] lineNumbersOfBrightestLines = new float[ANGLE_STEPS];
+            float[] valuesOfBrightestLines = new float[ANGLE_STEPS];
 
             // Per-thread workspace: one float[,] per worker thread (not per iteration) so we avoid
             // allocating 180 large 2D arrays (~180 x width x height x 4 bytes) per call.
             Parallel.For(
                 0,
-                DEGREES180,
+                ANGLE_STEPS,
                 () => new AngleScanWorkspace(width, height),
                 (index1, state, workspace) =>
                 {
@@ -184,7 +185,7 @@ namespace Bahtinov_Collimator
                     // writes below).
                     Array.Clear(rotatedImage, 0, rotatedImage.Length);
 
-                    float currentRadians = RADIANS_PER_DEGREE * index1;
+                    float currentRadians = RADIANS_PER_STEP * index1;
                     float sin_CurrentRadians = (float)Math.Sin(currentRadians);
                     float cos_CurrentRadians = (float)Math.Cos(currentRadians);
 
@@ -268,13 +269,13 @@ namespace Bahtinov_Collimator
                 float lineNumber = -1f;
                 int brightestLineIndex = -1;
 
-                for (int j = 0; j < DEGREES180; ++j)
+                for (int j = 0; j < ANGLE_STEPS; ++j)
                 {
                     if (valuesOfBrightestLines[j] > maxValue)
                     {
                         maxValue = valuesOfBrightestLines[j];
                         lineNumber = lineNumbersOfBrightestLines[j];
-                        angleInRadians = j * RADIANS_PER_DEGREE;
+                        angleInRadians = j * RADIANS_PER_STEP;
                         brightestLineIndex = j;
                     }
                 }
@@ -283,9 +284,9 @@ namespace Bahtinov_Collimator
                 result.LineAngles[i] = angleInRadians;
                 result.LineValue[i] = maxValue;
 
-                for (int j = brightestLineIndex - DEG_5; j <= brightestLineIndex + DEG_5; ++j)
+                for (int j = brightestLineIndex - SUPPRESSION_STEPS; j <= brightestLineIndex + SUPPRESSION_STEPS; ++j)
                 {
-                    int index = (j + DEGREES180) % DEGREES180;
+                    int index = (j + ANGLE_STEPS) % ANGLE_STEPS;
                     valuesOfBrightestLines[index] = 0.0f;
                 }
             }
@@ -314,9 +315,10 @@ namespace Bahtinov_Collimator
         public BahtinovData FindFaintLines(Bitmap starImage)
         {
             const int LINES = 9;
-            const int DEGREES180 = 180;
-            const float RADIANS_PER_DEGREE = (float)Math.PI / DEGREES180;
-            const int DEG_5 = 5;
+            const float ANGLE_STEP_DEGREES = 0.2f;
+            const int ANGLE_STEPS = (int)(180f / ANGLE_STEP_DEGREES); // 360 samples across [0, 180)
+            const float RADIANS_PER_STEP = (float)Math.PI / ANGLE_STEPS;
+            const int SUPPRESSION_STEPS = (int)(5f / ANGLE_STEP_DEGREES); // +/-5 degrees
 
             // Profile processing parameters (tweak if you like)
             const int LOCAL_STATS_WINDOW = 23;     // odd number: 17..31 are typical
@@ -415,13 +417,13 @@ namespace Bahtinov_Collimator
                 // int margin = Math.Max(1, Math.Min(width, height) / 50);
                 // leftEdge += margin; rightEdge -= margin; topEdge += margin; bottomEdge -= margin;
 
-                float[] lineNumbersOfBrightestLines = new float[DEGREES180];
-                float[] valuesOfBrightestLines = new float[DEGREES180];
+                float[] lineNumbersOfBrightestLines = new float[ANGLE_STEPS];
+                float[] valuesOfBrightestLines = new float[ANGLE_STEPS];
 
                 // Per-thread workspace: one large rotated buffer per worker thread (not per angle).
                 Parallel.For(
                     0,
-                    DEGREES180,
+                    ANGLE_STEPS,
                     () => new AngleScanWorkspace(width, height),
                     (angleIndex, state, workspace) =>
                     {
@@ -431,7 +433,7 @@ namespace Bahtinov_Collimator
                         // Clear stale values from the previous angle processed by this thread.
                         Array.Clear(rotatedImage, 0, rotatedImage.Length);
 
-                        float currentRadians = RADIANS_PER_DEGREE * angleIndex;
+                        float currentRadians = RADIANS_PER_STEP * angleIndex;
                         float sin = (float)Math.Sin(currentRadians);
                         float cos = (float)Math.Cos(currentRadians);
 
@@ -544,13 +546,13 @@ namespace Bahtinov_Collimator
                     float lineNumber = -1f;
                     int brightestLineIndex = -1;
 
-                    for (int j = 0; j < DEGREES180; ++j)
+                    for (int j = 0; j < ANGLE_STEPS; ++j)
                     {
                         if (valuesOfBrightestLines[j] > maxValue)
                         {
                             maxValue = valuesOfBrightestLines[j];
                             lineNumber = lineNumbersOfBrightestLines[j];
-                            angleInRadians = j * RADIANS_PER_DEGREE;
+                            angleInRadians = j * RADIANS_PER_STEP;
                             brightestLineIndex = j;
                         }
                     }
@@ -559,9 +561,9 @@ namespace Bahtinov_Collimator
                     result.LineAngles[i] = angleInRadians;
                     result.LineValue[i] = maxValue;
 
-                    for (int j = brightestLineIndex - DEG_5; j <= brightestLineIndex + DEG_5; ++j)
+                    for (int j = brightestLineIndex - SUPPRESSION_STEPS; j <= brightestLineIndex + SUPPRESSION_STEPS; ++j)
                     {
-                        int index = (j + DEGREES180) % DEGREES180;
+                        int index = (j + ANGLE_STEPS) % ANGLE_STEPS;
                         valuesOfBrightestLines[index] = 0.0f;
                     }
                 }
