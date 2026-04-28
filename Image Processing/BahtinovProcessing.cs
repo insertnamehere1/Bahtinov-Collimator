@@ -571,79 +571,72 @@ namespace Bahtinov_Collimator
             float angleRadians,
             out float lineNumber, out float largestValue)
         {
-            float[,] rotatedImage = workspace.RotatedImage;
             float[] rowTotals = workspace.RowTotals;
-            float[] smoothedTotals = workspace.SmoothedTotals;
-
-            // Pixels outside the rotated source map are left at zero (Array.Clear).
-            Array.Clear(rotatedImage, 0, rotatedImage.Length);
 
             float sin_CurrentRadians = (float)Math.Sin(angleRadians);
             float cos_CurrentRadians = (float)Math.Cos(angleRadians);
+            int maxSourceX = rightEdge - 1;
+            int maxSourceY = bottomEdge - 1;
 
-            for (int x = leftEdge; x < rightEdge; ++x)
+            for (int y = topEdge; y < bottomEdge; ++y)
             {
-                for (int y = topEdge; y < bottomEdge; ++y)
+                float yDistanceFromCentre = y - starImage_Y_Centre;
+                float rowTotal = 0f;
+                float xDistanceFromCentre = leftEdge - starImage_X_Centre;
+
+                // Affine stepping:
+                // srcX(x+1) = srcX(x) + cos(theta)
+                // srcY(x+1) = srcY(x) - sin(theta)
+                float rotatedXDistance = starImage_X_Centre + xDistanceFromCentre * cos_CurrentRadians + yDistanceFromCentre * sin_CurrentRadians;
+                float rotatedYDistance = starImage_Y_Centre - xDistanceFromCentre * sin_CurrentRadians + yDistanceFromCentre * cos_CurrentRadians;
+
+                for (int x = leftEdge; x < rightEdge; ++x)
                 {
-                    float X_DistanceFromCentre = x - starImage_X_Centre;
-                    float Y_DistanceFromCentre = y - starImage_Y_Centre;
-
-                    float rotatedXDistance = starImage_X_Centre + X_DistanceFromCentre * cos_CurrentRadians + Y_DistanceFromCentre * sin_CurrentRadians;
-                    float rotatedYDistance = starImage_Y_Centre - X_DistanceFromCentre * sin_CurrentRadians + Y_DistanceFromCentre * cos_CurrentRadians;
-
                     int rotatedXRoundedDown = (int)rotatedXDistance;
                     int rotatedXRoundedUp = rotatedXRoundedDown + 1;
                     int rotatedYRoundedDown = (int)rotatedYDistance;
                     int rotatedYRoundedUp = rotatedYRoundedDown + 1;
 
-                    if (rotatedXRoundedDown >= leftEdge && rotatedXRoundedUp < rightEdge &&
-                        rotatedYRoundedDown >= topEdge && rotatedYRoundedUp < bottomEdge)
+                    if (rotatedXRoundedDown >= leftEdge && rotatedXRoundedUp <= maxSourceX &&
+                        rotatedYRoundedDown >= topEdge && rotatedYRoundedUp <= maxSourceY)
                     {
                         float rotatedXFraction = rotatedXDistance - rotatedXRoundedDown;
                         float rotatedYFraction = rotatedYDistance - rotatedYRoundedDown;
 
-                        float oneMinusRotatedXFraction = 1.0f - rotatedXFraction;
-                        float oneMinusRotatedYFraction = 1.0f - rotatedYFraction;
                         float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
                         float value2 = starArray2D[rotatedXRoundedUp, rotatedYRoundedDown];
                         float value3 = starArray2D[rotatedXRoundedUp, rotatedYRoundedUp];
                         float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedUp];
 
-                        rotatedImage[x, y] = value1 * oneMinusRotatedXFraction * oneMinusRotatedYFraction +
-                                             value2 * rotatedXFraction * oneMinusRotatedYFraction +
-                                             value3 * rotatedXFraction * rotatedYFraction +
-                                             value4 * oneMinusRotatedXFraction * rotatedYFraction;
+                        float topBlend = value1 + rotatedXFraction * (value2 - value1);
+                        float bottomBlend = value4 + rotatedXFraction * (value3 - value4);
+                        rowTotal += topBlend + rotatedYFraction * (bottomBlend - topBlend);
                     }
+
+                    rotatedXDistance += cos_CurrentRadians;
+                    rotatedYDistance -= sin_CurrentRadians;
                 }
+
+                rowTotals[y] = rowTotal;
             }
 
             int rowWidth = Math.Max(1, rightEdge - leftEdge);
             for (int y = topEdge; y < bottomEdge; ++y)
             {
-                float rowTotal = 0;
-                for (int x = leftEdge; x < rightEdge; ++x)
-                {
-                    rowTotal += rotatedImage[x, y];
-                }
-                rowTotals[y] = rowTotal / rowWidth;
-            }
-
-            for (int y = topEdge; y < bottomEdge; ++y)
-            {
-                smoothedTotals[y] = rowTotals[y];
-                if (y > topEdge && y < bottomEdge - 1)
-                {
-                    smoothedTotals[y] = (rowTotals[y - 1] + rowTotals[y] + rowTotals[y + 1]) / 3f;
-                }
+                rowTotals[y] /= rowWidth;
             }
 
             largestValue = -1f;
             lineNumber = -1f;
             for (int y = topEdge; y < bottomEdge; ++y)
             {
-                if (smoothedTotals[y] > largestValue)
+                float smoothedValue = rowTotals[y];
+                if (y > topEdge && y < bottomEdge - 1)
+                    smoothedValue = (rowTotals[y - 1] + rowTotals[y] + rowTotals[y + 1]) / 3f;
+
+                if (smoothedValue > largestValue)
                 {
-                    largestValue = smoothedTotals[y];
+                    largestValue = smoothedValue;
                     lineNumber = y;
                 }
             }
@@ -933,60 +926,60 @@ namespace Bahtinov_Collimator
                 () => new AngleScanWorkspace(width, height),
                 (index1, state, workspace) =>
                 {
-                    float[,] imageArray = workspace.RotatedImage;
                     float[] rowTotals = workspace.RowTotals;
                     float[] smoothedTotals = workspace.SmoothedTotals;
-
-                    // Clear stale values from the previous line processed by this thread.
-                    Array.Clear(imageArray, 0, imageArray.Length);
+                    int maxSourceX = width - 1;
+                    int maxSourceY = height - 1;
+                    int rowWidth = rightEdge - leftEdge;
 
                     float knownAngle = bahtinovLines.GetLineAngle(index1);
                     float sinCurrentRadians = (float)Math.Sin(knownAngle);
                     float cosCurrentRadians = (float)Math.Cos(knownAngle);
 
-                    for (int x = leftEdge; x < rightEdge; ++x)
+                    for (int y = topEdge; y < bottomEdge; ++y)
                     {
-                        for (int y = topEdge; y < bottomEdge; ++y)
+                        float yDistanceFromCenter = y - starImageYCenter;
+                        float xDistanceFromCenter = leftEdge - starImageXCenter;
+                        float rowTotal = 0f;
+
+                        // Affine stepping:
+                        // srcX(x+1) = srcX(x) + cos(theta)
+                        // srcY(x+1) = srcY(x) - sin(theta)
+                        float rotatedXDistance = starImageXCenter + xDistanceFromCenter * cosCurrentRadians + yDistanceFromCenter * sinCurrentRadians;
+                        float rotatedYDistance = starImageYCenter - xDistanceFromCenter * sinCurrentRadians + yDistanceFromCenter * cosCurrentRadians;
+
+                        for (int x = leftEdge; x < rightEdge; ++x)
                         {
-                            float xDistanceFromCenter = x - starImageXCenter;
-                            float yDistanceFromCenter = y - starImageYCenter;
-
-                            float rotatedXDistance = starImageXCenter + xDistanceFromCenter * cosCurrentRadians + yDistanceFromCenter * sinCurrentRadians;
-                            float rotatedYDistance = starImageYCenter - xDistanceFromCenter * sinCurrentRadians + yDistanceFromCenter * cosCurrentRadians;
-
                             int rotatedXRoundedDown = (int)rotatedXDistance;
                             int rotatedYRoundedDown = (int)rotatedYDistance;
 
-                            if (rotatedXRoundedDown < 0 || rotatedXRoundedDown >= width - 1 || rotatedYRoundedDown < 0 || rotatedYRoundedDown >= height - 1)
+                            if (rotatedXRoundedDown < 0 || rotatedXRoundedDown >= maxSourceX || rotatedYRoundedDown < 0 || rotatedYRoundedDown >= maxSourceY)
+                            {
+                                rotatedXDistance += cosCurrentRadians;
+                                rotatedYDistance -= sinCurrentRadians;
                                 continue;
+                            }
 
                             float rotatedXFraction = rotatedXDistance - rotatedXRoundedDown;
                             float rotatedYFraction = rotatedYDistance - rotatedYRoundedDown;
-
                             float value1 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown];
                             float value2 = starArray2D[rotatedXRoundedDown + 1, rotatedYRoundedDown];
                             float value3 = starArray2D[rotatedXRoundedDown + 1, rotatedYRoundedDown + 1];
                             float value4 = starArray2D[rotatedXRoundedDown, rotatedYRoundedDown + 1];
 
-                            float interpolatedValue = (float)(
-                                value1 * (1 - rotatedXFraction) * (1 - rotatedYFraction) +
-                                value2 * rotatedXFraction * (1 - rotatedYFraction) +
-                                value3 * rotatedXFraction * rotatedYFraction +
-                                value4 * (1 - rotatedXFraction) * rotatedYFraction
-                            );
+                            // Bilinear interpolation using two horizontal blends and one vertical blend.
+                            // This form reduces arithmetic vs expanding all four weighted terms.
+                            float topBlend = value1 + rotatedXFraction * (value2 - value1);
+                            float bottomBlend = value4 + rotatedXFraction * (value3 - value4);
+                            float interpolatedValue = topBlend + rotatedYFraction * (bottomBlend - topBlend);
 
-                            imageArray[x, y] = interpolatedValue;
-                        }
-                    }
+                            rowTotal += interpolatedValue;
 
-                    for (int y = topEdge; y < bottomEdge; ++y)
-                    {
-                        float rowTotal = 0f;
-                        for (int x = leftEdge; x < rightEdge; ++x)
-                        {
-                            rowTotal += imageArray[x, y];
+                            rotatedXDistance += cosCurrentRadians;
+                            rotatedYDistance -= sinCurrentRadians;
                         }
-                        rowTotals[y] = rowTotal / (rightEdge - leftEdge);
+
+                        rowTotals[y] = rowTotal / rowWidth;
                     }
 
                     // Same 3-tap smoothing as FindBrightestLines before peak search
