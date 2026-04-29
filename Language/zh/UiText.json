@@ -17,6 +17,8 @@
   "MenuAbout": "关于",
   "MenuSupportSkyCal": "支持 SkyCal",
   "MenuWhatDoIDoNext": "我下一步该做什么？",
+  "MenuLanguage": "语言",
+  "LanguageAutoOption": "自动（系统）",
   "StartButtonSelectStar": "选择恒星",
   "StartButtonStop": "停止",
   "LabelBahtinov": "巴赫汀诺夫",
@@ -132,5 +134,10 @@
 
   "SettingsKeepOnTopLabel": "使 SkyCal 始终显示在其他所有应用程序之上",
   "SettingsKeepOnTopDescription": "保持 SkyCal 置顶",
-  "SettingsGroupWindowTitle": "置顶"
+  "SettingsGroupWindowTitle": "置顶",
+  "LanguageUnavailableTitle": "语言不可用",
+  "LanguageUnavailableMessageFormat": "所选语言 '{0}' 不可用或不完整。SkyCal 将使用 '{1}'。",
+  "LanguageRestartRequiredTitle": "需要重启",
+  "LanguageRestartRequiredMessage": "请重启 SkyCal 以应用语言更改。",
+  "LanguageDisplayName": "中文"
 }

@@ -17,6 +17,8 @@
   "MenuAbout": "About",
   "MenuSupportSkyCal": "Support SkyCal",
   "MenuWhatDoIDoNext": "What Should I Do Next?",
+  "MenuLanguage": "Language",
+  "LanguageAutoOption": "Auto (System)",
   "StartButtonSelectStar": "Select Star",
   "StartButtonStop": "Stop",
   "LabelBahtinov": "Bahtinov",
@@ -132,5 +134,10 @@
 
   "SettingsKeepOnTopLabel": "Make SkyCal appear always on top of any other applications",
   "SettingsKeepOnTopDescription": "Keep SkyCal on top",
-  "SettingsGroupWindowTitle": "Keep On Top"
+  "SettingsGroupWindowTitle": "Keep On Top",
+  "LanguageUnavailableTitle": "Language Unavailable",
+  "LanguageUnavailableMessageFormat": "The selected language '{0}' is unavailable or incomplete. SkyCal will use '{1}'.",
+  "LanguageRestartRequiredTitle": "Restart Required",
+  "LanguageRestartRequiredMessage": "Please restart SkyCal to apply language changes.",
+  "LanguageDisplayName": "English"
 }

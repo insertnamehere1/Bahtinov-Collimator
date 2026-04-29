@@ -91,7 +91,25 @@ namespace Bahtinov_Collimator
 
             // Language must load before the manifest check so the missing-manifest
             // dialog can be shown in the user's language via UiText.Current.
-            LanguageLoader.LoadFromSystemCulture(AppDomain.CurrentDomain.BaseDirectory, Properties.Settings.Default.MCTSelected ? "MCT" : "SCT");
+            string telescopeModel = Properties.Settings.Default.MCTSelected ? "MCT" : "SCT";
+            bool usedEnglishFallback = LanguageLoader.LoadFromPreference(
+                AppDomain.CurrentDomain.BaseDirectory,
+                telescopeModel,
+                Properties.Settings.Default.LanguagePreference,
+                out string resolvedLanguageCode);
+
+            if (usedEnglishFallback)
+            {
+                string invalidPreference = Properties.Settings.Default.LanguagePreference;
+                Properties.Settings.Default.LanguagePreference = "auto";
+                Properties.Settings.Default.Save();
+
+                DarkMessageBox.Show(
+                    string.Format(UiText.Current.LanguageUnavailableMessageFormat, invalidPreference, resolvedLanguageCode),
+                    UiText.Current.LanguageUnavailableTitle,
+                    MessageBoxIcon.Warning,
+                    MessageBoxButtons.OK);
+            }
 
             if (!VerifyManifestPresent())
                 return;

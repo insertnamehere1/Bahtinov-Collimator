@@ -17,6 +17,8 @@
   "MenuAbout": "Über",
   "MenuSupportSkyCal": "SkyCal unterstützen",
   "MenuWhatDoIDoNext": "Was soll ich als Nächstes tun?",
+  "MenuLanguage": "Sprache",
+  "LanguageAutoOption": "Automatisch (System)",
   "StartButtonSelectStar": "Stern wählen",
   "StartButtonStop": "Stopp",
   "LabelBahtinov": "Bahtinov",
@@ -132,5 +134,10 @@
 
   "SettingsKeepOnTopLabel": "SkyCal immer im Vordergrund aller anderen Anwendungen anzeigen",
   "SettingsKeepOnTopDescription": "SkyCal im Vordergrund halten",
-  "SettingsGroupWindowTitle": "Im Vordergrund halten"
+  "SettingsGroupWindowTitle": "Im Vordergrund halten",
+  "LanguageUnavailableTitle": "Sprache nicht verfügbar",
+  "LanguageUnavailableMessageFormat": "Die ausgewählte Sprache '{0}' ist nicht verfügbar oder unvollständig. SkyCal verwendet '{1}'.",
+  "LanguageRestartRequiredTitle": "Neustart erforderlich",
+  "LanguageRestartRequiredMessage": "Bitte starten Sie SkyCal neu, um die Sprachänderungen anzuwenden.",
+  "LanguageDisplayName": "Deutsch"
 }

@@ -190,5 +190,17 @@ namespace Bahtinov_Collimator.Properties {
                 this["NoneSelected"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("auto")]
+        public string LanguagePreference {
+            get {
+                return ((string)(this["LanguagePreference"]));
+            }
+            set {
+                this["LanguagePreference"] = value;
+            }
+        }
     }
 }

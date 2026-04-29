@@ -187,6 +187,7 @@ namespace Bahtinov_Collimator
         /// Bahtinov work cannot pile up behind the 10 ms capture timer during tracking.
         /// </summary>
         private int processingFrameFlag;
+        private const string AutoLanguagePreference = "auto";
 
         /// <summary>
         /// Target position to move the form to after it first becomes visible
@@ -227,6 +228,7 @@ namespace Bahtinov_Collimator
             imageDisplayComponent1.ClearDisplay(); 
             RestoreWindowPosition();
             ApplyLocalization();
+            PopulateLanguageMenu();
 
             // Initialize the red focus channel component.
             InitializeRedFocusBox();
@@ -661,6 +663,7 @@ namespace Bahtinov_Collimator
             settingsToolStripMenuItem1.Text = textPack.MenuSetup;
             generalSettingsToolStripMenuItem.Text = textPack.MenuSettings;
             focusCalibrationToolStripMenuItem.Text = textPack.MenuCalibration;
+            languageToolStripMenuItem.Text = textPack.MenuLanguage;
             aboutToolStripMenuItem.Text = textPack.MenuHelp;
             helpToolStripMenuItem.Text = textPack.MenuUserManual;
             checkForUpdatesToolStripMenuItem.Text = textPack.MenuCheckUpdates;
@@ -671,6 +674,110 @@ namespace Bahtinov_Collimator
             bahtinovLabel.Text = textPack.LabelBahtinov;
             defocusLabel.Text = textPack.LabelDefocus;
             analysisGroupBox.Text = textPack.AnalysisModeGroupBox;
+        }
+
+        /// <summary>
+        /// Rebuilds the language submenu from valid language packs on disk.
+        /// </summary>
+        private void PopulateLanguageMenu()
+        {
+            languageToolStripMenuItem.DropDownItems.Clear();
+
+            string preference = NormalizeLanguagePreference(Properties.Settings.Default.LanguagePreference);
+            var autoItem = new ToolStripMenuItem(UiText.Current.LanguageAutoOption)
+            {
+                Tag = AutoLanguagePreference,
+                Checked = string.Equals(preference, AutoLanguagePreference, StringComparison.OrdinalIgnoreCase)
+            };
+            autoItem.Click += LanguageSelectionToolStripMenuItem_Click;
+            languageToolStripMenuItem.DropDownItems.Add(autoItem);
+            languageToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+
+            foreach (var option in LanguageLoader.GetAvailableLanguages(AppDomain.CurrentDomain.BaseDirectory))
+            {
+                var languageItem = new ToolStripMenuItem(option.DisplayName)
+                {
+                    Tag = option.Code,
+                    Checked = string.Equals(preference, option.Code, StringComparison.OrdinalIgnoreCase)
+                };
+                languageItem.Click += LanguageSelectionToolStripMenuItem_Click;
+                languageToolStripMenuItem.DropDownItems.Add(languageItem);
+            }
+        }
+
+        private static string NormalizeLanguagePreference(string preference)
+        {
+            if (string.IsNullOrWhiteSpace(preference))
+                return AutoLanguagePreference;
+
+            return preference.Trim();
+        }
+
+        /// <summary>
+        /// Persists a language preference and prompts the user to restart in the selected language pack.
+        /// </summary>
+        private void LanguageSelectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!(sender is ToolStripMenuItem selectedItem))
+                return;
+
+            string selectedPreference = NormalizeLanguagePreference(selectedItem.Tag as string);
+            string previousPreference = NormalizeLanguagePreference(Properties.Settings.Default.LanguagePreference);
+            if (string.Equals(selectedPreference, previousPreference, StringComparison.OrdinalIgnoreCase))
+                return;
+
+            UiTextPack promptPack = UiText.Current;
+            bool unavailable = false;
+            string resolvedCode = LanguageLoader.ResolveLanguageCodeForPreference(AppDomain.CurrentDomain.BaseDirectory, selectedPreference);
+            try
+            {
+                promptPack = LanguageLoader.ReadUiTextPackForLanguage(AppDomain.CurrentDomain.BaseDirectory, resolvedCode);
+            }
+            catch
+            {
+                resolvedCode = LanguageLoader.DefaultLanguageCode;
+                unavailable = true;
+                promptPack = LanguageLoader.ReadUiTextPackForLanguage(AppDomain.CurrentDomain.BaseDirectory, LanguageLoader.DefaultLanguageCode);
+            }
+
+            if (!string.Equals(selectedPreference, AutoLanguagePreference, StringComparison.OrdinalIgnoreCase)
+                && !string.Equals(selectedPreference, resolvedCode, StringComparison.OrdinalIgnoreCase))
+            {
+                unavailable = true;
+            }
+
+            if (unavailable)
+            {
+                DarkMessageBox.Show(
+                    string.Format(promptPack.LanguageUnavailableMessageFormat, selectedPreference, resolvedCode),
+                    promptPack.LanguageUnavailableTitle,
+                    MessageBoxIcon.Warning,
+                    MessageBoxButtons.OK,
+                    promptPack,
+                    this);
+            }
+
+            DialogResult restartResult = DarkMessageBox.Show(
+                promptPack.LanguageRestartRequiredMessage,
+                promptPack.LanguageRestartRequiredTitle,
+                MessageBoxIcon.Question,
+                MessageBoxButtons.OKCancel,
+                promptPack,
+                this);
+
+            if (restartResult == DialogResult.Yes)
+            {
+                Properties.Settings.Default.LanguagePreference = selectedPreference;
+                Properties.Settings.Default.Save();
+                Application.Restart();
+                Close();
+                return;
+            }
+
+            // Cancel/No means keep the prior language choice.
+            Properties.Settings.Default.LanguagePreference = previousPreference;
+            Properties.Settings.Default.Save();
+            PopulateLanguageMenu();
         }
 
         /// <summary>
@@ -718,14 +825,15 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void SetMenuItemsColor(ToolStripItemCollection items, Color backColor, Color foreColor)
         {
-            foreach (ToolStripMenuItem item in items)
+            foreach (ToolStripItem item in items)
             {
-                item.BackColor = backColor;
-                item.ForeColor = foreColor;
-                if (item.HasDropDownItems)
-                {
-                    SetMenuItemsColor(item.DropDownItems, backColor, foreColor);
-                }
+                if (!(item is ToolStripMenuItem menuItem))
+                    continue;
+
+                menuItem.BackColor = backColor;
+                menuItem.ForeColor = foreColor;
+                if (menuItem.HasDropDownItems)
+                    SetMenuItemsColor(menuItem.DropDownItems, backColor, foreColor);
             }
         }
 
@@ -1456,7 +1564,11 @@ namespace Bahtinov_Collimator
         {
             // Reload the correct JSON based on current MCT/SCT setting
             string model = Properties.Settings.Default.MCTSelected ? "MCT" : "SCT";
-            LanguageLoader.LoadFromSystemCulture(AppDomain.CurrentDomain.BaseDirectory, model);
+            LanguageLoader.LoadFromPreference(
+                AppDomain.CurrentDomain.BaseDirectory,
+                model,
+                Properties.Settings.Default.LanguagePreference,
+                out _);
 
             var nextStepText = NextStepText.Current;
             var screwMap = new Dictionary<string, string>

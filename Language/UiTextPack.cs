@@ -150,6 +150,13 @@ namespace Bahtinov_Collimator
         [DataMember] public string SettingsGroupMinimizeTitle { get; set; }
         [DataMember] public string SettingsMinimizeDescription { get; set; }
         [DataMember] public string SettingsMinimizeLabel { get; set; }
+        [DataMember] public string MenuLanguage { get; set; }
+        [DataMember] public string LanguageAutoOption { get; set; }
+        [DataMember] public string LanguageUnavailableTitle { get; set; }
+        [DataMember] public string LanguageUnavailableMessageFormat { get; set; }
+        [DataMember] public string LanguageRestartRequiredTitle { get; set; }
+        [DataMember] public string LanguageRestartRequiredMessage { get; set; }
+        [DataMember] public string LanguageDisplayName { get; set; }
 
         #endregion
     }
@@ -192,15 +199,27 @@ namespace Bahtinov_Collimator
             if (!File.Exists(filePath))
                 throw new FileNotFoundException("UI text JSON not found.", filePath);
 
+            current = ReadPackFromJson(filePath);
+        }
+
+        /// <summary>
+        /// Reads and deserializes a UI text pack from JSON without replacing the global current pack.
+        /// </summary>
+        public static UiTextPack ReadPackFromJson(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                throw new ArgumentException("filePath is null/empty.", nameof(filePath));
+
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("UI text JSON not found.", filePath);
+
             string json = File.ReadAllText(filePath, Encoding.UTF8);
             using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(json)))
             {
                 var ser = new DataContractJsonSerializer(typeof(UiTextPack));
 
-                var obj = ser.ReadObject(ms) as UiTextPack
+                return ser.ReadObject(ms) as UiTextPack
                     ?? throw new SerializationException("Failed to deserialize UiTextPack from JSON.");
-
-                current = obj;
             }
         }
 

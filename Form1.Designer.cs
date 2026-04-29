@@ -37,6 +37,7 @@ namespace Bahtinov_Collimator
             this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.generalSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.focusCalibrationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.languageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -94,7 +95,8 @@ namespace Bahtinov_Collimator
             // 
             this.settingsToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.generalSettingsToolStripMenuItem,
-            this.focusCalibrationToolStripMenuItem});
+            this.focusCalibrationToolStripMenuItem,
+            this.languageToolStripMenuItem});
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
             this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(56, 23);
             this.settingsToolStripMenuItem1.Text = "Setup";
@@ -112,6 +114,12 @@ namespace Bahtinov_Collimator
             this.focusCalibrationToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
             this.focusCalibrationToolStripMenuItem.Text = "Calibration";
             this.focusCalibrationToolStripMenuItem.Click += new System.EventHandler(this.FocusCalibrationToolStripMenuItem_Click);
+            // 
+            // languageToolStripMenuItem
+            // 
+            this.languageToolStripMenuItem.Name = "languageToolStripMenuItem";
+            this.languageToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.languageToolStripMenuItem.Text = "Language";
             // 
             // aboutToolStripMenuItem
             // 
@@ -331,6 +339,7 @@ namespace Bahtinov_Collimator
         private System.Windows.Forms.ToolStripMenuItem whatDoIDoNextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generalSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem focusCalibrationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem languageToolStripMenuItem;
         private ToggleSwitch toggleSwitch1;
         private Custom_Components.RoundedGroupBox analysisGroupBox;
         private ImageDisplayComponent imageDisplayComponent1;

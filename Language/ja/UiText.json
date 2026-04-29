@@ -17,6 +17,8 @@
   "MenuAbout": "バージョン情報",
   "MenuSupportSkyCal": "SkyCal をサポート",
   "MenuWhatDoIDoNext": "次に何をすればいいですか？",
+  "MenuLanguage": "言語",
+  "LanguageAutoOption": "自動 (システム)",
   "StartButtonSelectStar": "星を選択",
   "StartButtonStop": "停止",
   "LabelBahtinov": "バフティノフ",
@@ -132,5 +134,10 @@
 
   "SettingsKeepOnTopLabel": "SkyCal を常に他のアプリケーションの上に表示",
   "SettingsKeepOnTopDescription": "SkyCal を常に前面に表示",
-  "SettingsGroupWindowTitle": "常に前面に表示"
+  "SettingsGroupWindowTitle": "常に前面に表示",
+  "LanguageUnavailableTitle": "言語を利用できません",
+  "LanguageUnavailableMessageFormat": "選択した言語 '{0}' は利用できないか不完全です。SkyCal は '{1}' を使用します。",
+  "LanguageRestartRequiredTitle": "再起動が必要です",
+  "LanguageRestartRequiredMessage": "言語の変更を適用するには、SkyCal を再起動してください。",
+  "LanguageDisplayName": "日本語"
 }
