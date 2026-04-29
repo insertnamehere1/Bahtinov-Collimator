@@ -30,6 +30,7 @@ namespace Bahtinov_Collimator
         #region Fields
 
         public static DialogResult UserResponse { get; private set; } = DialogResult.None;
+        private readonly UiTextPack _textPack;
 
         private static readonly Dictionary<MessageBoxIcon, Icon> IconMap = new Dictionary<MessageBoxIcon, Icon>
         {
@@ -50,13 +51,14 @@ namespace Bahtinov_Collimator
         /// <param name="title">The title of the message box.</param>
         /// <param name="buttons">The buttons to display in the message box.</param>
         /// <param name="icon">The icon to display in the message box.</param>
-        public DarkMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon)
+        public DarkMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, UiTextPack textPack = null)
         {
             InitializeComponent();
+            _textPack = textPack ?? UiText.Current;
             this.Text = title;
             messageLabel.Text = message;
-            okButton.Text = UiText.Current.CommonOk;
-            cancelButton.Text = UiText.Current.CommonCancel;
+            okButton.Text = _textPack.CommonOk;
+            cancelButton.Text = _textPack.CommonCancel;
             DrawIconInPictureBox(icon);
             ConfigureButtons(buttons);
             // Initial baseline (96-DPI) sizing. This gives our DPI-aware
@@ -88,33 +90,33 @@ namespace Bahtinov_Collimator
             {
                 case MessageBoxButtons.OK:
                     okButton.Visible = true;
-                    okButton.Text = UiText.Current.CommonOk;
+                    okButton.Text = _textPack.CommonOk;
                     break;
 
                 case MessageBoxButtons.OKCancel:
                     okButton.Visible = true;
                     cancelButton.Visible = true;
-                    okButton.Text = UiText.Current.CommonOk;
-                    cancelButton.Text = UiText.Current.CommonCancel;
+                    okButton.Text = _textPack.CommonOk;
+                    cancelButton.Text = _textPack.CommonCancel;
                     break;
 
                 case MessageBoxButtons.YesNo:
                     okButton.Visible = true;
                     cancelButton.Visible = true;
-                    okButton.Text = UiText.Current.CommonYes;
-                    cancelButton.Text = UiText.Current.CommonNo;
+                    okButton.Text = _textPack.CommonYes;
+                    cancelButton.Text = _textPack.CommonNo;
                     break;
 
                 case MessageBoxButtons.YesNoCancel:
                     okButton.Visible = true;
                     cancelButton.Visible = true;
-                    okButton.Text = UiText.Current.CommonYes;
-                    cancelButton.Text = UiText.Current.CommonCancel;
+                    okButton.Text = _textPack.CommonYes;
+                    cancelButton.Text = _textPack.CommonCancel;
                     break;
 
                 default:
                     okButton.Visible = true;
-                    okButton.Text = UiText.Current.CommonOk;
+                    okButton.Text = _textPack.CommonOk;
                     break;
             }
         }
@@ -204,16 +206,40 @@ namespace Bahtinov_Collimator
 
                 if (mainForm.InvokeRequired)
                 {
-                    return (DialogResult)mainForm.Invoke(new Func<DialogResult>(() => ShowCustomMessageBoxInternal(message, title, icon, buttons, mainForm)));
+                    return (DialogResult)mainForm.Invoke(new Func<DialogResult>(() => ShowCustomMessageBoxInternal(message, title, icon, buttons, null, mainForm)));
                 }
                 else
                 {
-                    return ShowCustomMessageBoxInternal(message, title, icon, buttons, mainForm);
+                    return ShowCustomMessageBoxInternal(message, title, icon, buttons, null, mainForm);
                 }
             }
             else
             {
-                return ShowCustomMessageBoxInternal(message, title, icon, buttons, owner);
+                return ShowCustomMessageBoxInternal(message, title, icon, buttons, null, owner);
+            }
+        }
+
+        /// <summary>
+        /// Displays the custom message box using an explicit text pack for button labels.
+        /// </summary>
+        public static DialogResult Show(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons, UiTextPack textPack, Form owner = null)
+        {
+            if (Application.OpenForms.Count > 0)
+            {
+                Form mainForm = owner ?? Application.OpenForms[0];
+
+                if (mainForm.InvokeRequired)
+                {
+                    return (DialogResult)mainForm.Invoke(new Func<DialogResult>(() => ShowCustomMessageBoxInternal(message, title, icon, buttons, textPack, mainForm)));
+                }
+                else
+                {
+                    return ShowCustomMessageBoxInternal(message, title, icon, buttons, textPack, mainForm);
+                }
+            }
+            else
+            {
+                return ShowCustomMessageBoxInternal(message, title, icon, buttons, textPack, owner);
             }
         }
 
@@ -221,9 +247,9 @@ namespace Bahtinov_Collimator
         /// Creates and displays the custom message box within the specified owner's bounds.
         /// </summary>
         /// <returns>The <see cref="DialogResult"/> indicating the user's response.</returns>
-        private static DialogResult ShowCustomMessageBoxInternal(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons, Form owner)
+        private static DialogResult ShowCustomMessageBoxInternal(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons, UiTextPack textPack, Form owner)
         {
-            using (DarkMessageBox customMessageBox = new DarkMessageBox(message, title, buttons, icon))
+            using (DarkMessageBox customMessageBox = new DarkMessageBox(message, title, buttons, icon, textPack))
             {
                 // Let the DPI-aware helper do the centering. Computing an
                 // owner-centered location up front is wrong in multi-DPI
