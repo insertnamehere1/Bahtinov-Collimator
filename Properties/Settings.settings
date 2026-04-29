@@ -47,5 +47,8 @@
     <Setting Name="LanguagePreference" Type="System.String" Scope="User">
       <Value Profile="(Default)">auto</Value>
     </Setting>
+    <Setting Name="UpgradeRequired" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

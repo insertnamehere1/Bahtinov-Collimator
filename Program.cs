@@ -89,6 +89,14 @@ namespace Bahtinov_Collimator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            // Migrate user-scoped settings forward exactly once after an update.
+            if (Properties.Settings.Default.UpgradeRequired)
+            {
+                Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.UpgradeRequired = false;
+                Properties.Settings.Default.Save();
+            }
+
             // Language must load before the manifest check so the missing-manifest
             // dialog can be shown in the user's language via UiText.Current.
             string telescopeModel = Properties.Settings.Default.MCTSelected ? "MCT" : "SCT";
