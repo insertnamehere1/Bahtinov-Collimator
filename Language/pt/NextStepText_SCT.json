@@ -1,0 +1,64 @@
+{
+  "DialogTitle": "O que devo fazer a seguir? (SCT)",
+  "DebugLineFormat": "Valores:  Vermelho {0}   Verde {1}   Azul {2}",
+
+  "SectionWhatToDoTitle": "O que fazer",
+
+  "CaptureHeader": "Capturar uma imagem Tri-Bahtinov",
+  "CaptureSummary": "Capture uma imagem bahtinov para iniciar quaisquer ajustes.",
+  "CaptureBullet1": "Certifique-se de que uma estrela brilhante está centrada.",
+  "CaptureBullet2": "Coloque a máscara Tri-Bahtinov e clique em «Selecionar estrela».",
+
+  "FocusOnlyHeader": "Orientação de foco indisponível",
+  "FocusOnlyNeedsAdjustingSummary": "A orientação só está disponível para imagens Tri-Bahtinov.",
+
+  "FocusBalancedHeader": "Equilibrar os marcadores de erro em torno de 0",
+  "FocusBalancedSummary": "Ajuste o foco até os três valores de erro estarem equilibrados em torno de 0.\n",
+  "FocusAllPositiveBullet": "Todos os valores são positivos. Mova o focador para DENTRO em pequenos passos.",
+  "FocusAllNegativeBullet": "Todos os valores são negativos. Mova o focador para FORA em pequenos passos.",
+  "FocusStraddleNotBalancedBullet1": "Os valores atravessam 0, mas ainda não estão equilibrados.",
+  "FocusStraddleNotBalancedBullet2Format": "Mova o focador {0} até os 3 valores de erro estarem uniformemente distribuídos em torno de 0.",
+  "FocusTargetLineFormat": "Objetivo: uma média próxima de 0, com magnitudes semelhantes.",
+  "FocusOnlyBeginScrewsBullet": "Inicie os ajustes de colimação só depois de alcançar este equilíbrio.",
+  "FocusFooterHint": "Dica: DENTRO é o espelho primário em direção ao secundário ou a câmara em direção ao telescópio;\nFORA é o primário afastado do secundário ou a câmara afastada do telescópio",
+
+  "CollimationHeader": "Ajustes de colimação para SCT",
+  "CollimationSummary": "Prossiga com colimação equilibrada usando 2 ou mais parafusos em simultâneo.\n",
+
+  "DoneHeader": "Parece correto",
+  "DoneSummary": "Todos os valores estão próximos de zero.\n",
+  "DoneBullet": "Não é necessário ajuste.",
+  "CollimationPositiveInstructionFormat": "Ajuste {0} - AFROUXAR (sentido anti-horário). {0} está demasiado longe do primário.",
+  "CollimationNegativeInstructionFormat": "Ajuste {0} - APERTAR (sentido horário). {0} está demasiado perto do primário.",
+  "CollimationAdjustTogetherBullet": "\r\nAjuste estes parafusos em conjunto para manter a tensão equilibrada.",
+  "CollimationFooterHint": "Dica: Recentre a estrela, volte a focar até os valores atravessarem 0 novamente antes de repetir.",
+
+  "DirectionIn": "DENTRO",
+  "DirectionOut": "FORA",
+
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "o parafuso {0}",
+
+  "ChannelRed": "Vermelho",
+  "ChannelGreen": "Verde",
+  "ChannelBlue": "Azul",
+
+  "CalibrationTitle": "Calibração Tri-Bahtinov",
+  "CalibrationQuitButtonText": "Sair",
+  "CalibrationCloseButtonText": "Fechar",
+  "CalibrationObjectiveHeader": "\nObjetivo - A calibração permite ao SkyCal aconselhar sobre os ajustes dos parafusos de colimação e ativar a orientação «O que devo fazer a seguir?».",
+  "CalibrationStep1Title": "Passo 1 - Preparação",
+  "CalibrationStep1Bullet1": "Coloque uma máscara de colimação Tri-Bahtinov.",
+  "CalibrationStep1Bullet2": "Capture uma imagem de estrela.",
+  "CalibrationStep1Warning": "Nota: Ajuste o software de captura para que os picos de difração fiquem nítidos e bem definidos.",
+  "CalibrationWaitingForImage": "À espera de uma imagem Tri-Bahtinov válida...",
+  "CalibrationAimHeader": "\nObjetivo - Ajuste o foco para dentro para o SkyCal aprender como os erros de colimação variam com a posição do foco.",
+  "CalibrationStep2Title": "Passo 2 - Mover o focador.",
+  "CalibrationStep2Bullet1": "Se o focador move o espelho primário, mova-o PARA DENTRO, em direção ao secundário.",
+  "CalibrationStep2Bullet2": "Se o focador move a câmara, mova-a PARA DENTRO, em direção ao corpo do telescópio.",
+  "CalibrationAutoCompleteLine": "Nota: Deixe o focador estabilizar totalmente antes de capturar cada imagem. Continue a ajustar o foco para dentro em pequenos passos até a calibração estar concluída.",
+  "CalibrationMovePrompt": "Mova o focador para dentro agora....",
+  "CalibrationCompleteHeader": "Calibração concluída com sucesso",
+  "CalibrationCompleteSummary": "O SkyCal atualizou as suas definições."
+}
