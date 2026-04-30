@@ -37,6 +37,21 @@ namespace Bahtinov_Collimator
         #region Layout
 
         /// <summary>
+        /// Text format flags for the instruction panel. When the UI language is RTL, adds
+        /// <see cref="TextFormatFlags.RightToLeft"/> and <see cref="TextFormatFlags.Right"/> so Arabic
+        /// lays out right-aligned inside the panel; the panel itself stays top-left on the primary monitor.
+        /// </summary>
+        private static TextFormatFlags GetInstructionTextFormatFlags(bool includeVerticalTop)
+        {
+            TextFormatFlags flags = TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding;
+            if (includeVerticalTop)
+                flags |= TextFormatFlags.Top;
+            if (LanguageLoader.IsCurrentLanguageRightToLeft())
+                flags |= TextFormatFlags.RightToLeft | TextFormatFlags.Right;
+            return flags;
+        }
+
+        /// <summary>
         /// Top-left instruction panel size (for invalidation so it stays visible during partial repaints).
         /// Anchored to the primary monitor so it is visible even when the form spans a multi-monitor virtual desktop.
         /// </summary>
@@ -49,7 +64,7 @@ namespace Bahtinov_Collimator
             int maxPanelW = Math.Min(800, Math.Max(120, panelAreaW));
             int maxTextWidth = Math.Max(40, maxPanelW - 2 * InstructionInnerPad);
             string text = UiText.Current.ImageCaptureSelectionOverlayInstructions;
-            TextFormatFlags measureFlags = TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding;
+            TextFormatFlags measureFlags = GetInstructionTextFormatFlags(includeVerticalTop: false);
             Size textSize = TextRenderer.MeasureText(
                 text,
                 Font,
@@ -235,13 +250,14 @@ namespace Bahtinov_Collimator
                     _instructionPanelBounds.Height - 1);
             }
 
+            TextFormatFlags drawFlags = GetInstructionTextFormatFlags(includeVerticalTop: true);
             TextRenderer.DrawText(
                 graphics,
                 text,
                 Font,
                 textRect,
                 UITheme.MenuStripForeground,
-                TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl | TextFormatFlags.Top | TextFormatFlags.NoPadding);
+                drawFlags);
         }
 
         /// <summary>
