@@ -138,6 +138,6 @@
   "LanguageUnavailableTitle": "Lingua non disponibile",
   "LanguageUnavailableMessageFormat": "La lingua selezionata '{0}' non è disponibile o è incompleta. SkyCal userà '{1}'.",
   "LanguageRestartRequiredTitle": "Riavvio richiesto",
-  "LanguageRestartRequiredMessage": "Riavvia SkyCal per applicare le modifiche della lingua.",
+  "LanguageRestartRequiredMessage": "Riavvia SkyCal per applicare le modifiche della lingua",
   "LanguageDisplayName": "Italiano"
 }

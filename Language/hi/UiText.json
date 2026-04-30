@@ -138,6 +138,6 @@
   "LanguageUnavailableTitle": "भाषा उपलब्ध नहीं",
   "LanguageUnavailableMessageFormat": "चयनित भाषा '{0}' उपलब्ध नहीं है या अधूरी है। SkyCal '{1}' का उपयोग करेगा।",
   "LanguageRestartRequiredTitle": "पुनः आरंभ आवश्यक",
-  "LanguageRestartRequiredMessage": "भाषा परिवर्तन लागू करने के लिए कृपया SkyCal पुनः आरंभ करें।",
+  "LanguageRestartRequiredMessage": "भाषा परिवर्तन लागू करने के लिए कृपया SkyCal पुनः आरंभ करें",
   "LanguageDisplayName": "हिन्दी"
 }

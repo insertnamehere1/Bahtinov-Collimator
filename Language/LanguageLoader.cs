@@ -169,6 +169,32 @@ namespace Bahtinov_Collimator
             return UiText.ReadPackFromJson(path);
         }
 
+        /// <summary>
+        /// Returns true when the language code should render with right-to-left layout.
+        /// </summary>
+        public static bool IsLanguageRightToLeft(string languageCode)
+        {
+            if (string.IsNullOrWhiteSpace(languageCode))
+                return false;
+
+            try
+            {
+                return CultureInfo.GetCultureInfo(languageCode).TextInfo.IsRightToLeft;
+            }
+            catch (CultureNotFoundException)
+            {
+                return string.Equals(languageCode.Trim(), "ar", StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
+        /// <summary>
+        /// Returns true when the currently loaded language is right-to-left.
+        /// </summary>
+        public static bool IsCurrentLanguageRightToLeft()
+        {
+            return IsLanguageRightToLeft(CurrentLanguageCode);
+        }
+
         #endregion
 
         #region Helper Methods

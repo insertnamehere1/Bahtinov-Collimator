@@ -138,6 +138,6 @@
   "LanguageUnavailableTitle": "언어 사용 불가",
   "LanguageUnavailableMessageFormat": "선택한 언어 '{0}'을(를) 사용할 수 없거나 불완전합니다. SkyCal은(는) '{1}'을(를) 사용합니다.",
   "LanguageRestartRequiredTitle": "다시 시작 필요",
-  "LanguageRestartRequiredMessage": "언어 변경을 적용하려면 SkyCal을 다시 시작해 주세요.",
+  "LanguageRestartRequiredMessage": "언어 변경을 적용하려면 SkyCal을 다시 시작해 주세요",
   "LanguageDisplayName": "한국어"
 }

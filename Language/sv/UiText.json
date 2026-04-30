@@ -138,6 +138,6 @@
   "LanguageUnavailableTitle": "Språk otillgängligt",
   "LanguageUnavailableMessageFormat": "Det valda språket '{0}' är otillgängligt eller ofullständigt. SkyCal använder '{1}'.",
   "LanguageRestartRequiredTitle": "Omstart krävs",
-  "LanguageRestartRequiredMessage": "Starta om SkyCal för att tillämpa språkändringar.",
+  "LanguageRestartRequiredMessage": "Starta om SkyCal för att tillämpa språkändringar",
   "LanguageDisplayName": "Svenska"
 }

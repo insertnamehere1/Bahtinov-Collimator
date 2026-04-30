@@ -40,6 +40,7 @@ namespace SkyCal
         {
             InitializeComponent();
             UISetup();
+            ApplyLayoutDirectionForLanguage();
 
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
@@ -61,6 +62,16 @@ namespace SkyCal
         #endregion
 
         #region UI Setup
+
+        /// <summary>
+        /// Applies right-to-left layout when the current language requires it.
+        /// </summary>
+        private void ApplyLayoutDirectionForLanguage()
+        {
+            bool isRtl = LanguageLoader.IsCurrentLanguageRightToLeft();
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
+            RightToLeftLayout = isRtl;
+        }
 
         /// <summary>
         /// Applies initial layout and localized text for all controls in the dialog.

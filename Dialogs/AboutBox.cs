@@ -31,6 +31,7 @@ namespace Bahtinov_Collimator
         public AboutBox()
         {
             InitializeComponent();
+            ApplyLayoutDirectionForLanguage();
 
             this.Text = string.Format(UiText.Current.AboutDialogTitleFormat, AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
@@ -160,6 +161,16 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Helper Methods
+
+        /// <summary>
+        /// Applies right-to-left layout when the current language requires it.
+        /// </summary>
+        private void ApplyLayoutDirectionForLanguage()
+        {
+            bool isRtl = LanguageLoader.IsCurrentLanguageRightToLeft();
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
+            RightToLeftLayout = isRtl;
+        }
 
         /// <summary>
         /// Retrieves the current version of the application, considering network deployment.

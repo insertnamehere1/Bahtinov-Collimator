@@ -138,6 +138,6 @@
   "LanguageUnavailableTitle": "语言不可用",
   "LanguageUnavailableMessageFormat": "所选语言 '{0}' 不可用或不完整。SkyCal 将使用 '{1}'。",
   "LanguageRestartRequiredTitle": "需要重启",
-  "LanguageRestartRequiredMessage": "请重启 SkyCal 以应用语言更改。",
+  "LanguageRestartRequiredMessage": "请重启 SkyCal 以应用语言更改",
   "LanguageDisplayName": "中文"
 }

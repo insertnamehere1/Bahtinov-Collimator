@@ -66,11 +66,11 @@ namespace Bahtinov_Collimator
             if (File.Exists(manifestPath))
                 return true;
 
-            MessageBox.Show(
+            DarkMessageBox.Show(
                 UiText.Current.ManifestFileMissingMessage,
                 UiText.Current.ManifestFileMissingTitle,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
+                MessageBoxIcon.Error,
+                MessageBoxButtons.OK);
             return false;
         }
 

@@ -126,6 +126,6 @@
   "LanguageUnavailableTitle": "Dil Kullanilamiyor",
   "LanguageUnavailableMessageFormat": "Secilen dil '{0}' kullanilamiyor veya eksik. SkyCal '{1}' dilini kullanacak.",
   "LanguageRestartRequiredTitle": "Yeniden Baslatma Gerekli",
-  "LanguageRestartRequiredMessage": "Dil degisikliklerini uygulamak icin lutfen SkyCal'i yeniden baslatin.",
+  "LanguageRestartRequiredMessage": "Dil degisikliklerini uygulamak icin lutfen SkyCal'i yeniden baslatin",
   "LanguageDisplayName": "Turkce"
 }

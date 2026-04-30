@@ -55,6 +55,7 @@ namespace Bahtinov_Collimator
         {
             InitializeComponent();
             _textPack = textPack ?? UiText.Current;
+            ApplyLayoutDirectionForLanguage();
             this.Text = title;
             messageLabel.Text = message;
             okButton.Text = _textPack.CommonOk;
@@ -77,6 +78,16 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Instance Methods
+
+        /// <summary>
+        /// Applies right-to-left layout when the current language requires it.
+        /// </summary>
+        private void ApplyLayoutDirectionForLanguage()
+        {
+            bool isRtl = LanguageLoader.IsCurrentLanguageRightToLeft();
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
+            RightToLeftLayout = isRtl;
+        }
 
         /// <summary>
         /// Configures the visibility and text of the buttons based on the specified button options.
@@ -165,8 +176,53 @@ namespace Bahtinov_Collimator
 
             panel1.Location = new Point(0, ClientSize.Height - panel1.Height);
             panel1.Width = ClientSize.Width;
+            LayoutActionButtons();
 
             ResumeLayout(performLayout: true);
+        }
+
+        /// <summary>
+        /// Centers the visible action buttons inside the bottom panel for both LTR and RTL layouts.
+        /// </summary>
+        private void LayoutActionButtons()
+        {
+            if (panel1 == null || okButton == null || cancelButton == null)
+                return;
+
+            okButton.Anchor = AnchorStyles.None;
+            cancelButton.Anchor = AnchorStyles.None;
+
+            var visibleButtons = new List<Control>();
+            if (okButton.Visible)
+                visibleButtons.Add(okButton);
+            if (cancelButton.Visible)
+                visibleButtons.Add(cancelButton);
+
+            if (visibleButtons.Count == 0)
+                return;
+
+            // Keep the primary action near the RTL-leading edge.
+            if (RightToLeftLayout && visibleButtons.Count > 1)
+                visibleButtons.Reverse();
+
+            int gap = (int)Math.Round(14f * DeviceDpi / 96f, MidpointRounding.AwayFromZero);
+            int totalWidth = 0;
+            for (int i = 0; i < visibleButtons.Count; i++)
+            {
+                totalWidth += visibleButtons[i].Width;
+                if (i < visibleButtons.Count - 1)
+                    totalWidth += gap;
+            }
+
+            int startX = Math.Max(0, (panel1.ClientSize.Width - totalWidth) / 2);
+            int y = Math.Max(0, (panel1.ClientSize.Height - okButton.Height) / 2);
+
+            int x = startX;
+            foreach (Control button in visibleButtons)
+            {
+                button.Location = new Point(x, y);
+                x += button.Width + gap;
+            }
         }
 
         /// <summary>

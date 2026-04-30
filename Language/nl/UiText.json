@@ -138,6 +138,6 @@
   "LanguageUnavailableTitle": "Taal niet beschikbaar",
   "LanguageUnavailableMessageFormat": "De geselecteerde taal '{0}' is niet beschikbaar of onvolledig. SkyCal gebruikt '{1}'.",
   "LanguageRestartRequiredTitle": "Herstart vereist",
-  "LanguageRestartRequiredMessage": "Start SkyCal opnieuw om taalwijzigingen toe te passen.",
+  "LanguageRestartRequiredMessage": "Start SkyCal opnieuw om taalwijzigingen toe te passen",
   "LanguageDisplayName": "Nederlands"
 }

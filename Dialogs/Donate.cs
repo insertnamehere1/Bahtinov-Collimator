@@ -40,6 +40,7 @@ namespace Bahtinov_Collimator
         {
             InitializeComponent();
             ApplyLocalization();
+            ApplyLayoutDirectionForLanguage();
 
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
@@ -49,6 +50,16 @@ namespace Bahtinov_Collimator
         #endregion
 
         #region Lifecycle and Layout
+
+        /// <summary>
+        /// Applies right-to-left layout when the current language requires it.
+        /// </summary>
+        private void ApplyLayoutDirectionForLanguage()
+        {
+            bool isRtl = LanguageLoader.IsCurrentLanguageRightToLeft();
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
+            RightToLeftLayout = isRtl;
+        }
 
         /// <summary>
         /// Runs after <see cref="DpiAwareDialog.ShowDialogDpiAware"/> has

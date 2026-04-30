@@ -228,6 +228,7 @@ namespace Bahtinov_Collimator
             imageDisplayComponent1.ClearDisplay(); 
             RestoreWindowPosition();
             ApplyLocalization();
+            ApplyLayoutDirectionForLanguage();
             PopulateLanguageMenu();
 
             // Initialize the red focus channel component.
@@ -330,7 +331,17 @@ namespace Bahtinov_Collimator
             }
 
             if (ClientSize.Width != minClientWidth)
+            {
                 ClientSize = new Size(minClientWidth, ClientSize.Height);
+
+                // In RTL/RightToLeftLayout, a ClientSize.Width change exposes new
+                // pixels on the form's left edge (mirrored), and Windows does not
+                // automatically paint that newly invalidated strip with the form
+                // BackColor. Force a full repaint so the dark background fills the
+                // entire client area instead of leaving a black strip on the left
+                // when calibration opens/closes.
+                Invalidate();
+            }
         }
 
         /// <summary>
@@ -674,6 +685,16 @@ namespace Bahtinov_Collimator
             bahtinovLabel.Text = textPack.LabelBahtinov;
             defocusLabel.Text = textPack.LabelDefocus;
             analysisGroupBox.Text = textPack.AnalysisModeGroupBox;
+        }
+
+        /// <summary>
+        /// Applies right-to-left layout when the current language requires it.
+        /// </summary>
+        private void ApplyLayoutDirectionForLanguage()
+        {
+            bool isRtl = LanguageLoader.IsCurrentLanguageRightToLeft();
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
+            RightToLeftLayout = isRtl;
         }
 
         /// <summary>
@@ -1213,7 +1234,12 @@ namespace Bahtinov_Collimator
             catch (Exception ex)
             {
                 // Handle exceptions if the file cannot be opened
-                MessageBox.Show(string.Format(UiText.Current.HelpOpenErrorMessageFormat, ex.Message), UiText.Current.HelpOpenErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DarkMessageBox.Show(
+                    string.Format(UiText.Current.HelpOpenErrorMessageFormat, ex.Message),
+                    UiText.Current.HelpOpenErrorTitle,
+                    MessageBoxIcon.Error,
+                    MessageBoxButtons.OK,
+                    this);
             }
         }
 
@@ -1538,6 +1564,15 @@ namespace Bahtinov_Collimator
                     : UITheme.MenuDarkForeground;
 
                 base.OnRenderItemText(e);
+            }
+
+            /// <summary>
+            /// Applies themed arrow color for submenu indicators.
+            /// </summary>
+            protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
+            {
+                e.ArrowColor = UITheme.MenuDarkForeground;
+                base.OnRenderArrow(e);
             }
 
             private sealed class DarkColorTable : ProfessionalColorTable

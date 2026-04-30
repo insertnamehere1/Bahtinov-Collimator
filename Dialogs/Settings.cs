@@ -29,7 +29,7 @@ namespace Bahtinov_Collimator
         /// Gets a value indicating whether changing settings requires capture components to restart.
         /// </summary>
         public bool RestartCapture { get; private set; }
-        
+
         #endregion
 
         #region Constructor
@@ -41,6 +41,7 @@ namespace Bahtinov_Collimator
         {
             InitializeComponent();
             ApplyLocalization();
+            ApplyLayoutDirectionForLanguage();
             LoadSettings();
 
             var color = UITheme.DarkBackground;
@@ -112,6 +113,79 @@ namespace Bahtinov_Collimator
             minimizeGroupBox.Text = textPack.SettingsGroupMinimizeTitle;
             minimizeCheckBox.Text = textPack.SettingsMinimizeDescription;
             minimizeLabel.Text = textPack.SettingsMinimizeLabel;
+        }
+
+        /// <summary>
+        /// Applies right-to-left layout when the current language requires it.
+        /// </summary>
+        private void ApplyLayoutDirectionForLanguage()
+        {
+            bool isRtl = LanguageLoader.IsCurrentLanguageRightToLeft();
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
+            RightToLeftLayout = isRtl;
+
+            ApplyMirroredChoiceControlPlacement(isRtl);
+        }
+
+        /// <summary>
+        /// Mirrors checkbox/radio-button placement inside group boxes for RTL languages.
+        /// This preserves LTR designer positions while ensuring control locations are mirrored in Arabic.
+        /// </summary>
+        private void ApplyMirroredChoiceControlPlacement(bool isRtl)
+        {
+            MirrorControlsInContainer(groupBox1, isRtl, VoiceCheckBox);
+            MirrorControlsInContainer(ErrorSignGroupBox, isRtl, errorSignCheckBox);
+            MirrorControlsInContainer(keepOnTopGroupBox, isRtl, onTopCheckBox);
+            MirrorControlsInContainer(minimizeGroupBox, isRtl, minimizeCheckBox);
+            MirrorControlsInContainer(groupBox3, isRtl, SCTRadioButton, MakCassRadioButton, newtonianRadioButton, guidanceOffRadioButton);
+            MirrorControlsInContainer(groupBox4, isRtl, historyMakersTextBox, label1);
+
+            ApplyMirroredSupplementaryControlPlacement(isRtl);
+        }
+
+        /// <summary>
+        /// Mirrors descriptive labels for RTL languages.
+        /// </summary>
+        private void ApplyMirroredSupplementaryControlPlacement(bool isRtl)
+        {
+            MirrorControlsInContainer(groupBox1, isRtl, label5);
+            MirrorControlsInContainer(ErrorSignGroupBox, isRtl, label2);
+            MirrorControlsInContainer(keepOnTopGroupBox, isRtl, onTopLabel);
+            MirrorControlsInContainer(minimizeGroupBox, isRtl, minimizeLabel);
+            MirrorControlsInContainer(groupBox4, isRtl, label3);
+        }
+
+        /// <summary>
+        /// Applies mirrored X placement (or restores LTR X placement) for the provided controls.
+        /// </summary>
+        private static void MirrorControlsInContainer(Control container, bool isRtl, params Control[] controls)
+        {
+            if (container == null || controls == null)
+                return;
+
+            foreach (Control control in controls)
+            {
+                if (control == null)
+                    continue;
+
+                if (!(control.Tag is int ltrX))
+                {
+                    ltrX = control.Left;
+                    control.Tag = ltrX;
+                }
+
+                if (isRtl)
+                {
+                    int mirroredX = container.ClientSize.Width - ltrX - control.Width;
+                    control.Left = Math.Max(0, mirroredX);
+                    control.RightToLeft = RightToLeft.Yes;
+                }
+                else
+                {
+                    control.Left = ltrX;
+                    control.RightToLeft = RightToLeft.No;
+                }
+            }
         }
 
         #endregion

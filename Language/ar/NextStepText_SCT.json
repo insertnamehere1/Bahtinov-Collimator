@@ -1,0 +1,64 @@
+{
+  "DialogTitle": "ما الذي يجب أن أفعله بعد ذلك؟ (SCT)",
+  "DebugLineFormat": "القيم: أحمر {0}   أخضر {1}   أزرق {2}",
+
+  "SectionWhatToDoTitle": "ما يجب فعله",
+
+  "CaptureHeader": "التقط صورة Tri-Bahtinov",
+  "CaptureSummary": "يرجى التقاط صورة باهتينوف لبدء أي تعديلات.",
+  "CaptureBullet1": "تأكد من أن نجمة ساطعة في المنتصف.",
+  "CaptureBullet2": "ثبّت قناع Tri-Bahtinov ثم اضغط \"اختر نجمة\".",
+
+  "FocusOnlyHeader": "إرشاد التركيز غير متاح",
+  "FocusOnlyNeedsAdjustingSummary": "الإرشاد متاح فقط لصور Tri-Bahtinov.",
+
+  "FocusBalancedHeader": "وازن مؤشرات الخطأ حول 0",
+  "FocusBalancedSummary": "اضبط التركيز حتى تتوازن قيم الأخطاء الثلاث حول 0.\n",
+  "FocusAllPositiveBullet": "كل القيم موجبة. حرّك الفوكسَر إلى الداخل IN بخطوات صغيرة.",
+  "FocusAllNegativeBullet": "كل القيم سالبة. حرّك الفوكسَر إلى الخارج OUT بخطوات صغيرة.",
+  "FocusStraddleNotBalancedBullet1": "القيم تتوزع حول 0 لكنها غير متوازنة بعد.",
+  "FocusStraddleNotBalancedBullet2Format": "حرّك الفوكسَر {0} حتى تتوزع قيم الأخطاء الثلاث بشكل متساوٍ حول 0.",
+  "FocusTargetLineFormat": "الهدف: متوسط قريب من 0 وبمقادير متقاربة.",
+  "FocusOnlyBeginScrewsBullet": "ابدأ تعديلات المحاذاة فقط بعد تحقيق هذا التوازن.",
+  "FocusFooterHint": "تلميح: IN يعني تحريك المرآة الأساسية نحو الثانوية أو الكاميرا نحو التلسكوب،\nو OUT يعني تحريك المرآة الأساسية بعيداً عن الثانوية أو الكاميرا بعيداً عن التلسكوب",
+
+  "CollimationHeader": "تعديلات المحاذاة لـ SCT",
+  "CollimationSummary": "تابع المحاذاة المتوازنة باستخدام برغيين أو أكثر في الوقت نفسه.\n",
+
+  "DoneHeader": "يبدو جيداً",
+  "DoneSummary": "كل القيم قريبة من الصفر.\n",
+  "DoneBullet": "لا حاجة لأي تعديل.",
+  "CollimationPositiveInstructionFormat": "تعديل {0} - أرخِ (عكس عقارب الساعة). {0} بعيد جداً عن المرآة الأساسية.",
+  "CollimationNegativeInstructionFormat": "تعديل {0} - شدّ (مع عقارب الساعة). {0} قريب جداً من المرآة الأساسية.",
+  "CollimationAdjustTogetherBullet": "\r\nاضبط هذه البراغي معاً للحفاظ على توازن الشد.",
+  "CollimationFooterHint": "تلميح: أعد تمركز النجمة، ثم أعد التركيز حتى تعود القيم للتوزع حول 0 قبل التكرار.",
+
+  "DirectionIn": "إلى الداخل",
+  "DirectionOut": "إلى الخارج",
+
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "برغي {0}",
+
+  "ChannelRed": "أحمر",
+  "ChannelGreen": "أخضر",
+  "ChannelBlue": "أزرق",
+
+  "CalibrationTitle": "معايرة Tri-Bahtinov",
+  "CalibrationQuitButtonText": "خروج",
+  "CalibrationCloseButtonText": "إغلاق",
+  "CalibrationObjectiveHeader": "\nالهدف - تُمكّن المعايرة SkyCal من تقديم إرشادات تعديل براغي المحاذاة، وتفعيل ميزة \"ما الذي يجب أن أفعله بعد ذلك؟\".",
+  "CalibrationStep1Title": "الخطوة 1 - الإعداد",
+  "CalibrationStep1Bullet1": "ثبّت قناع محاذاة Tri-Bahtinov.",
+  "CalibrationStep1Bullet2": "التقط صورة لنجمة.",
+  "CalibrationStep1Warning": "ملاحظة: اضبط برنامج الالتقاط بحيث تكون أشعة الحيود واضحة ومحددة جيداً.",
+  "CalibrationWaitingForImage": "في انتظار صورة Tri-Bahtinov صالحة...",
+  "CalibrationAimHeader": "\nالهدف - اضبط التركيز إلى الداخل حتى يتعلم SkyCal كيف تتغير أخطاء المحاذاة مع موضع التركيز.",
+  "CalibrationStep2Title": "الخطوة 2 - تحريك الفوكسَر.",
+  "CalibrationStep2Bullet1": "إذا كان الفوكسَر يحرك المرآة الأساسية، فحرّكه إلى الداخل باتجاه المرآة الثانوية.",
+  "CalibrationStep2Bullet2": "إذا كان الفوكسَر يحرك الكاميرا، فحرّكها إلى الداخل باتجاه جسم التلسكوب.",
+  "CalibrationAutoCompleteLine": "ملاحظة: اترك الفوكسَر يستقر تماماً قبل التقاط كل صورة. استمر بتحريك التركيز إلى الداخل بخطوات صغيرة حتى تكتمل المعايرة.",
+  "CalibrationMovePrompt": "يرجى تحريك الفوكسَر إلى الداخل الآن....",
+  "CalibrationCompleteHeader": "اكتملت المعايرة بنجاح",
+  "CalibrationCompleteSummary": "قام SkyCal بتحديث إعداداته."
+}

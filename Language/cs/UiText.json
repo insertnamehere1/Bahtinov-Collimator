@@ -126,6 +126,6 @@
   "LanguageUnavailableTitle": "Jazyk neni dostupny",
   "LanguageUnavailableMessageFormat": "Vybrany jazyk '{0}' neni dostupny nebo je neuplny. SkyCal pouzije '{1}'.",
   "LanguageRestartRequiredTitle": "Je nutny restart",
-  "LanguageRestartRequiredMessage": "Pro pouziti zmen jazyka restartujte SkyCal.",
+  "LanguageRestartRequiredMessage": "Pro pouziti zmen jazyka restartujte SkyCal",
   "LanguageDisplayName": "Cestina"
 }

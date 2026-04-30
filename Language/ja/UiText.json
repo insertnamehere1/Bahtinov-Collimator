@@ -138,6 +138,6 @@
   "LanguageUnavailableTitle": "言語を利用できません",
   "LanguageUnavailableMessageFormat": "選択した言語 '{0}' は利用できないか不完全です。SkyCal は '{1}' を使用します。",
   "LanguageRestartRequiredTitle": "再起動が必要です",
-  "LanguageRestartRequiredMessage": "言語の変更を適用するには、SkyCal を再起動してください。",
+  "LanguageRestartRequiredMessage": "言語の変更を適用するには、SkyCal を再起動してください",
   "LanguageDisplayName": "日本語"
 }

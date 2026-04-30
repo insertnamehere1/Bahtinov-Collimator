@@ -72,6 +72,7 @@ namespace Bahtinov_Collimator
         public NextStepDialog(NextStepGuidance guidance, Icon icon = null)
         {
             InitializeComponent();
+            ApplyLayoutDirectionForLanguage();
 
             Text = guidance?.DialogTitle ?? "What should I do next?";
             Icon = icon;
@@ -82,6 +83,7 @@ namespace Bahtinov_Collimator
 
             BackColor = UITheme.DarkBackground;
             ForeColor = UITheme.White;
+            okButton.Text = UiText.Current.CommonOk;
             AcceptButton = okButton;
 
             panelLeftInset = scrollPanel.Left;
@@ -94,6 +96,17 @@ namespace Bahtinov_Collimator
 
             ClientSizeChanged += (s, e) => RelayoutForNewSize();
             Load += (s, e) => SizeFormToContent();
+        }
+
+        /// <summary>
+        /// Applies right-to-left layout when the current language requires it.
+        /// </summary>
+        private void ApplyLayoutDirectionForLanguage()
+        {
+            bool isRtl = LanguageLoader.IsCurrentLanguageRightToLeft();
+            RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
+            RightToLeftLayout = isRtl;
+            stackLayout.RightToLeft = RightToLeft;
         }
 
         #endregion
