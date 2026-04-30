@@ -1,0 +1,64 @@
+﻿{
+  "DialogTitle": "Vad ska jag göra härnäst? (MCT)",
+  "DebugLineFormat": "Värden:  Röd {0}   Grön {1}   Blå {2}",
+
+  "SectionWhatToDoTitle": "Vad göra",
+
+  "CaptureHeader": "Fånga en Tri-Bahtinov-bild",
+  "CaptureSummary": "Fånga en bahtinov-bild för att börja med justeringar.",
+  "CaptureBullet1": "Se till att en ljusstark stjärna är centrerad.",
+  "CaptureBullet2": "Montera Tri-Bahtinov-masken och klicka på \"Välj stjärna\".",
+
+  "FocusOnlyHeader": "Fokusvägledning är inte tillgänglig",
+  "FocusOnlyNeedsAdjustingSummary": "Vägledning är bara tillgänglig för Tri-Bahtinov-bilder.",
+
+  "FocusBalancedHeader": "Balansera felmarkörer runt 0",
+  "FocusBalancedSummary": "Justera fokus tills de tre felvärdena är balanserade runt 0.\n",
+  "FocusAllPositiveBullet": "Alla värden är positiva. Flytta fokuseraren IN i små steg.",
+  "FocusAllNegativeBullet": "Alla värden är negativa. Flytta fokuseraren UT i små steg.",
+  "FocusStraddleNotBalancedBullet1": "Värdena ligger på varsin sida om 0 men är ännu inte balanserade.",
+  "FocusStraddleNotBalancedBullet2Format": "Flytta fokuseraren {0} tills de 3 felvärdena är jämnt fördelade runt 0.",
+  "FocusTargetLineFormat": "Mål: ett medelvärde nära 0, med liknande storlekar.",
+  "FocusOnlyBeginScrewsBullet": "Börja kollimeringsjusteringar först efter att denna balans uppnåtts.",
+  "FocusFooterHint": "Tips: IN är primärspegel mot sekundär eller kamera mot teleskop,\nUT är primär bort från sekundär eller kamera bort från teleskop",
+
+  "CollimationHeader": "Kollimeringsjusteringar för MCT",
+  "CollimationSummary": "Fortsätt med balanserad kollimering med 2 eller fler skruvar samtidigt.\n",
+
+  "DoneHeader": "Ser bra ut",
+  "DoneSummary": "Alla värden är nära noll.\n",
+  "DoneBullet": "Ingen justering krävs.",
+  "CollimationPositiveInstructionFormat": "{0}-justering - LOSSA (moturs). {0} är för långt från sekundärspegeln.",
+  "CollimationNegativeInstructionFormat": "{0}-justering - DRA ÅT (medurs). {0} är för nära sekundärspegeln.",
+  "CollimationAdjustTogetherBullet": "\r\nJustera dessa skruvar tillsammans för att hålla spänningen balanserad.",
+  "CollimationFooterHint": "Tips: Centrera stjärnan igen och fokusera om tills värdena åter ligger på varsin sida om 0 innan du upprepar.",
+
+  "DirectionIn": "IN",
+  "DirectionOut": "UT",
+
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "{0}-skruven",
+
+  "ChannelRed": "Röd",
+  "ChannelGreen": "Grön",
+  "ChannelBlue": "Blå",
+
+  "CalibrationTitle": "Tri-Bahtinov-kalibrering",
+  "CalibrationQuitButtonText": "Avsluta",
+  "CalibrationCloseButtonText": "Stäng",
+  "CalibrationObjectiveHeader": "\nMål - Kalibrering gör att SkyCal kan ge råd om kollimeringsskruvar och aktivera vägledningen 'Vad ska jag göra härnäst?'.",
+  "CalibrationStep1Title": "Steg 1 - Förberedelse",
+  "CalibrationStep1Bullet1": "Montera en Tri-Bahtinov-kollimeringsmask.",
+  "CalibrationStep1Bullet2": "Fånga en stjärnbild.",
+  "CalibrationStep1Warning": "Obs: Justera infångningsprogrammet så att diffraktionsspikarna är tydliga och väldefinierade.",
+  "CalibrationWaitingForImage": "Väntar på en giltig Tri-Bahtinov-bild...",
+  "CalibrationAimHeader": "\nSyfte - Justera fokus inåt så att SkyCal lär sig hur kollimeringsfel förändras med fokuspositionen.",
+  "CalibrationStep2Title": "Steg 2 - Flytta fokuseraren.",
+  "CalibrationStep2Bullet1": "Om fokuseraren flyttar primärspegeln, flytta den INÅT mot sekundären.",
+  "CalibrationStep2Bullet2": "Om fokuseraren flyttar kameran, flytta den INÅT mot teleskoptuben.",
+  "CalibrationAutoCompleteLine": "Obs: Låt fokuseraren stabilisera sig helt innan varje bild fångas. Fortsätt justera fokus inåt i små steg tills kalibreringen är klar.",
+  "CalibrationMovePrompt": "Flytta fokuseraren inåt nu....",
+  "CalibrationCompleteHeader": "Kalibreringen har slutförts",
+  "CalibrationCompleteSummary": "SkyCal har uppdaterat sina inställningar."
+}
