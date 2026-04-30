@@ -1,0 +1,64 @@
+﻿{
+  "DialogTitle": "मुझे आगे क्या करना चाहिए? (MCT)",
+  "DebugLineFormat": "मान:  लाल {0}   हरा {1}   नीला {2}",
+
+  "SectionWhatToDoTitle": "क्या करें",
+
+  "CaptureHeader": "त्रि-बाह्टिनोव छवि कैप्चर करें",
+  "CaptureSummary": "कृपया कोई भी समायोजन शुरू करने के लिए त्रि-बाह्टिनोव छवि कैप्चर करें।",
+  "CaptureBullet1": "सुनिश्चित करें कि एक चमकीला तारा केंद्र में हो।",
+  "CaptureBullet2": "त्रि-बाह्टिनोव मास्क लगाएँ और \"तारा चुनें\" पर क्लिक करें।",
+
+  "FocusOnlyHeader": "फोकस मार्गदर्शन उपलब्ध नहीं है",
+  "FocusOnlyNeedsAdjustingSummary": "मार्गदर्शन केवल त्रि-बाह्टिनोव छवियों के लिए उपलब्ध है।",
+
+  "FocusBalancedHeader": "त्रुटि संकेतकों को 0 के आसपास संतुलित करें",
+  "FocusBalancedSummary": "फोकस समायोजित करें जब तक तीनों त्रुटि मान 0 के आसपास संतुलित न हो जाएँ।\n",
+  "FocusAllPositiveBullet": "सभी मान धनात्मक हैं। फोकसर को छोटे चरणों में अंदर ले जाएँ।",
+  "FocusAllNegativeBullet": "सभी मान ऋणात्मक हैं। फोकसर को छोटे चरणों में बाहर ले जाएँ।",
+  "FocusStraddleNotBalancedBullet1": "मान 0 के दोनों ओर हैं, लेकिन अभी संतुलित नहीं हैं।",
+  "FocusStraddleNotBalancedBullet2Format": "फोकसर को {0} ले जाएँ जब तक 3 त्रुटि मान 0 के आसपास समान दूरी पर न हों।",
+  "FocusTargetLineFormat": "लक्ष्य: औसत 0 के पास हो और परिमाण लगभग समान हों।",
+  "FocusOnlyBeginScrewsBullet": "यह संतुलन प्राप्त होने के बाद ही कोलिमेशन समायोजन शुरू करें।",
+  "FocusFooterHint": "सुझाव: अंदर का मतलब प्राथमिक दर्पण सेकेंडरी की ओर या कैमरा दूरबीन की ओर,\nबाहर का मतलब प्राथमिक दर्पण सेकेंडरी से दूर या कैमरा दूरबीन से दूर",
+
+  "CollimationHeader": "MCT के लिए कोलिमेशन समायोजन",
+  "CollimationSummary": "संतुलित कोलिमेशन के लिए एक साथ 2 या अधिक स्क्रू उपयोग करें।\n",
+
+  "DoneHeader": "सब ठीक दिख रहा है",
+  "DoneSummary": "सभी मान शून्य के करीब हैं।\n",
+  "DoneBullet": "कोई समायोजन आवश्यक नहीं।",
+  "CollimationPositiveInstructionFormat": "{0} समायोजन - ढीला करें (वामावर्त)। {0} सेकेंडरी दर्पण से बहुत दूर है।",
+  "CollimationNegativeInstructionFormat": "{0} समायोजन - कसें (दक्षिणावर्त)। {0} सेकेंडरी दर्पण के बहुत पास है।",
+  "CollimationAdjustTogetherBullet": "\r\nतनाव संतुलित रखने के लिए इन स्क्रूओं को साथ में समायोजित करें।",
+  "CollimationFooterHint": "सुझाव: तारे को फिर केंद्रित करें, फिर दोबारा फोकस करें जब तक मान फिर से 0 के दोनों ओर न हों।",
+
+  "DirectionIn": "अंदर",
+  "DirectionOut": "बाहर",
+
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "{0} स्क्रू",
+
+  "ChannelRed": "लाल",
+  "ChannelGreen": "हरा",
+  "ChannelBlue": "नीला",
+
+  "CalibrationTitle": "त्रि-बाह्टिनोव कैलिब्रेशन",
+  "CalibrationQuitButtonText": "बंद करें",
+  "CalibrationCloseButtonText": "बंद",
+  "CalibrationObjectiveHeader": "\nउद्देश्य - कैलिब्रेशन से SkyCal को कोलिमेशन स्क्रू समायोजन की सलाह देने और 'मुझे आगे क्या करना चाहिए?' मार्गदर्शन सक्षम करने में मदद मिलती है।",
+  "CalibrationStep1Title": "चरण 1 - सेटअप",
+  "CalibrationStep1Bullet1": "त्रि-बाह्टिनोव कोलिमेशन मास्क लगाएँ।",
+  "CalibrationStep1Bullet2": "तारे की छवि कैप्चर करें।",
+  "CalibrationStep1Warning": "नोट: अपनी कैप्चर सॉफ्टवेयर सेटिंग्स ऐसी रखें कि विवर्तन स्पाइक्स स्पष्ट और साफ दिखें।",
+  "CalibrationWaitingForImage": "मान्य त्रि-बाह्टिनोव छवि की प्रतीक्षा हो रही है...",
+  "CalibrationAimHeader": "\nलक्ष्य - फोकस को अंदर की ओर समायोजित करें ताकि SkyCal सीख सके कि फोकस स्थिति के साथ कोलिमेशन त्रुटियाँ कैसे बदलती हैं।",
+  "CalibrationStep2Title": "चरण 2 - फोकसर को चलाना",
+  "CalibrationStep2Bullet1": "यदि फोकसर प्राथमिक दर्पण को चलाता है, तो उसे अंदर की ओर सेकेंडरी की ओर ले जाएँ।",
+  "CalibrationStep2Bullet2": "यदि फोकसर कैमरे को चलाता है, तो उसे अंदर की ओर दूरबीन बॉडी की ओर ले जाएँ।",
+  "CalibrationAutoCompleteLine": "नोट: हर छवि कैप्चर करने से पहले फोकसर को पूरी तरह स्थिर होने दें। कैलिब्रेशन पूरा होने तक छोटे चरणों में फोकस अंदर की ओर समायोजित करते रहें।",
+  "CalibrationMovePrompt": "कृपया अब फोकसर को अंदर की ओर ले जाएँ...",
+  "CalibrationCompleteHeader": "कैलिब्रेशन सफलतापूर्वक पूरा हुआ",
+  "CalibrationCompleteSummary": "SkyCal ने अपनी सेटिंग्स अपडेट कर दी हैं।"
+}
