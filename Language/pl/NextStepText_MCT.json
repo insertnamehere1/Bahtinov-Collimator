@@ -1,0 +1,64 @@
+﻿{
+  "DialogTitle": "Co powinienem zrobić dalej? (MCT)",
+  "DebugLineFormat": "Wartości:  Czerwony {0}   Zielony {1}   Niebieski {2}",
+
+  "SectionWhatToDoTitle": "Co zrobić",
+
+  "CaptureHeader": "Przechwyć obraz Tri-Bahtinov",
+  "CaptureSummary": "Przechwyć obraz bahtinova, aby rozpocząć korekty.",
+  "CaptureBullet1": "Upewnij się, że jasna gwiazda jest wyśrodkowana.",
+  "CaptureBullet2": "Załóż maskę Tri-Bahtinov i kliknij „Wybierz gwiazdę”.",
+
+  "FocusOnlyHeader": "Wskazówki ostrości niedostępne",
+  "FocusOnlyNeedsAdjustingSummary": "Wskazówki są dostępne tylko dla obrazów Tri-Bahtinov.",
+
+  "FocusBalancedHeader": "Wyważ znaczniki błędu wokół 0",
+  "FocusBalancedSummary": "Dostosuj ostrość, aż trzy wartości błędu będą zrównoważone wokół 0.\n",
+  "FocusAllPositiveBullet": "Wszystkie wartości są dodatnie. Przesuń fokuser DO ŚRODKA małymi krokami.",
+  "FocusAllNegativeBullet": "Wszystkie wartości są ujemne. Przesuń fokuser NA ZEWNĄTRZ małymi krokami.",
+  "FocusStraddleNotBalancedBullet1": "Wartości obejmują 0, ale nie są jeszcze wyważone.",
+  "FocusStraddleNotBalancedBullet2Format": "Przesuń fokuser {0}, aż 3 wartości błędu będą równomiernie rozłożone wokół 0.",
+  "FocusTargetLineFormat": "Cel: średnia blisko 0, podobne wartości bezwzględne.",
+  "FocusOnlyBeginScrewsBullet": "Rozpocznij korekty kollimacji dopiero po osiągnięciu tej równowagi.",
+  "FocusFooterHint": "Wskazówka: DO ŚRODKA to lustro główne w stronę wtórnego lub aparat w stronę teleskopu,\nNA ZEWNĄTRZ to główne dalej od wtórnego lub aparat dalej od teleskopu",
+
+  "CollimationHeader": "Korekty kollimacji dla MCT",
+  "CollimationSummary": "Kontynuuj zrównoważoną kollimację, używając jednocześnie 2 lub więcej śrub.\n",
+
+  "DoneHeader": "Wygląda dobrze",
+  "DoneSummary": "Wszystkie wartości są blisko zera.\n",
+  "DoneBullet": "Korekta nie jest potrzebna.",
+  "CollimationPositiveInstructionFormat": "Korekta {0} — POLUZUJ (przeciwnie do ruchu wskazówek). {0} jest za daleko od lustra wtórnego.",
+  "CollimationNegativeInstructionFormat": "Korekta {0} — DOKRĘĆ (zgodnie z ruchem wskazówek). {0} jest za blisko lustra wtórnego.",
+  "CollimationAdjustTogetherBullet": "\r\nReguluj te śruby razem, aby utrzymać równomierne naprężenie.",
+  "CollimationFooterHint": "Wskazówka: Wyśrodkuj gwiazdę ponownie, następnie ustaw ostrość, aż wartości znowu obejmą 0, zanim powtórzysz.",
+
+  "DirectionIn": "DO ŚRODKA",
+  "DirectionOut": "NA ZEWNĄTRZ",
+
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "śruba {0}",
+
+  "ChannelRed": "Czerwony",
+  "ChannelGreen": "Zielony",
+  "ChannelBlue": "Niebieski",
+
+  "CalibrationTitle": "Kalibracja Tri-Bahtinov",
+  "CalibrationQuitButtonText": "Zakończ",
+  "CalibrationCloseButtonText": "Zamknij",
+  "CalibrationObjectiveHeader": "\nCel — Kalibracja pozwala SkyCal doradzać przy regulacji śrub kollimacji i włącza wskazówki „Co powinienem zrobić dalej?”.",
+  "CalibrationStep1Title": "Krok 1 — Przygotowanie",
+  "CalibrationStep1Bullet1": "Załóż maskę kollimacji Tri-Bahtinov.",
+  "CalibrationStep1Bullet2": "Przechwyć obraz gwiazdy.",
+  "CalibrationStep1Warning": "Uwaga: Dostosuj oprogramowanie przechwytu tak, aby smugi dyfrakcyjne były wyraźne i dobrze zdefiniowane.",
+  "CalibrationWaitingForImage": "Oczekiwanie na prawidłowy obraz Tri-Bahtinov...",
+  "CalibrationAimHeader": "\nCel — Przesuń ostrość do środka, aby SkyCal nauczył się, jak błędy kollimacji zmieniają się z pozycją ostrości.",
+  "CalibrationStep2Title": "Krok 2 — Poruszanie fokuserem.",
+  "CalibrationStep2Bullet1": "Jeśli fokuser przesuwa lustro główne, przesuń je DO ŚRODKA, w stronę lustra wtórnego.",
+  "CalibrationStep2Bullet2": "Jeśli fokuser przesuwa aparat, przesuń go DO ŚRODKA, w stronę tubusu teleskopu.",
+  "CalibrationAutoCompleteLine": "Uwaga: Pozwól fokuserowi całkowicie się ustabilizować przed każdym przechwytem. Kontynuuj delikatne przesuwanie ostrości do środka, aż kalibracja się zakończy.",
+  "CalibrationMovePrompt": "Przesuń teraz fokuser do środka....",
+  "CalibrationCompleteHeader": "Kalibracja zakończona pomyślnie",
+  "CalibrationCompleteSummary": "SkyCal zaktualizował ustawienia."
+}
