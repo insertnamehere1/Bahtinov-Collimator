@@ -1,0 +1,64 @@
+{
+  "DialogTitle": "Wat moet ik nu doen? (SCT)",
+  "DebugLineFormat": "Waarden:  Rood {0}   Groen {1}   Blauw {2}",
+
+  "SectionWhatToDoTitle": "Wat te doen",
+
+  "CaptureHeader": "Leg een Tri-Bahtinov-beeld vast",
+  "CaptureSummary": "Leg een bahtinov-beeld vast om aanpassingen te starten.",
+  "CaptureBullet1": "Zorg dat een heldere ster gecentreerd is.",
+  "CaptureBullet2": "Plaats het Tri-Bahtinov-masker en klik op «Ster selecteren».",
+
+  "FocusOnlyHeader": "Focusbegeleiding niet beschikbaar",
+  "FocusOnlyNeedsAdjustingSummary": "Begeleiding is alleen beschikbaar voor Tri-Bahtinov-beelden.",
+
+  "FocusBalancedHeader": "Foutmarkers rond 0 in balans brengen",
+  "FocusBalancedSummary": "Stel de focus bij tot de drie foutwaarden rond 0 in balans zijn.\n",
+  "FocusAllPositiveBullet": "Alle waarden zijn positief. Beweeg de focuser IN in kleine stappen.",
+  "FocusAllNegativeBullet": "Alle waarden zijn negatief. Beweeg de focuser UIT in kleine stappen.",
+  "FocusStraddleNotBalancedBullet1": "De waarden liggen aan beide kanten van 0, maar zijn nog niet in balans.",
+  "FocusStraddleNotBalancedBullet2Format": "Beweeg de focuser {0} tot de 3 foutwaarden gelijkmatig rond 0 verdeeld zijn.",
+  "FocusTargetLineFormat": "Doel: een gemiddelde dicht bij 0, met vergelijkbare grootten.",
+  "FocusOnlyBeginScrewsBullet": "Begin pas met collimatiewijzigingen nadat deze balans is bereikt.",
+  "FocusFooterHint": "Tip: IN is primaire spiegel richting secundair of camera richting telescoop,\nUIT is primair weg van secundair of camera weg van telescoop",
+
+  "CollimationHeader": "Collimatiewijzigingen voor SCT",
+  "CollimationSummary": "Ga verder met gebalanceerde collimatie met 2 of meer schroeven tegelijk.\n",
+
+  "DoneHeader": "Ziet er goed uit",
+  "DoneSummary": "Alle waarden liggen dicht bij nul.\n",
+  "DoneBullet": "Geen aanpassing nodig.",
+  "CollimationPositiveInstructionFormat": "{0}-aanpassing - LOSSCHROEVEN (tegen de klok in). {0} staat te ver van de primaire spiegel.",
+  "CollimationNegativeInstructionFormat": "{0}-aanpassing - AANDRAAIEN (met de klok mee). {0} staat te dicht bij de primaire spiegel.",
+  "CollimationAdjustTogetherBullet": "\r\nStel deze schroeven samen bij om de spanning in balans te houden.",
+  "CollimationFooterHint": "Tip: Centreer de ster opnieuw, focus opnieuw tot de waarden weer rond 0 liggen voordat u herhaalt.",
+
+  "DirectionIn": "IN",
+  "DirectionOut": "UIT",
+
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "de {0}-schroef",
+
+  "ChannelRed": "Rood",
+  "ChannelGreen": "Groen",
+  "ChannelBlue": "Blauw",
+
+  "CalibrationTitle": "Tri-Bahtinov-kalibratie",
+  "CalibrationQuitButtonText": "Afsluiten",
+  "CalibrationCloseButtonText": "Sluiten",
+  "CalibrationObjectiveHeader": "\nDoel - Kalibratie laat SkyCal advies geven over collimatieschroeven en schakelt de begeleiding «Wat moet ik nu doen?» in.",
+  "CalibrationStep1Title": "Stap 1 - Voorbereiding",
+  "CalibrationStep1Bullet1": "Plaats een Tri-Bahtinov-collimatiemasker.",
+  "CalibrationStep1Bullet2": "Leg een sterbeeld vast.",
+  "CalibrationStep1Warning": "Opmerking: Stel uw vastlegsoftware zo in dat de diffractiepieken scherp en goed gedefinieerd zijn.",
+  "CalibrationWaitingForImage": "Wachten op een geldig Tri-Bahtinov-beeld...",
+  "CalibrationAimHeader": "\nDoel - Stel de focus naar binnen bij zodat SkyCal leert hoe collimatiefouten veranderen met de focuspositie.",
+  "CalibrationStep2Title": "Stap 2 - De focuser bewegen.",
+  "CalibrationStep2Bullet1": "Als de focuser de primaire spiegel beweegt, beweeg deze INWAARTS, richting het secundair.",
+  "CalibrationStep2Bullet2": "Als de focuser de camera beweegt, beweeg deze INWAARTS, richting de telescoopbuis.",
+  "CalibrationAutoCompleteLine": "Opmerking: Laat de focuser volledig stabiliseren voordat u elk beeld vastlegt. Blijf de focus in kleine stappen naar binnen bijstellen tot de kalibratie klaar is.",
+  "CalibrationMovePrompt": "Beweeg de focuser nu naar binnen....",
+  "CalibrationCompleteHeader": "Kalibratie succesvol voltooid",
+  "CalibrationCompleteSummary": "SkyCal heeft de instellingen bijgewerkt."
+}
