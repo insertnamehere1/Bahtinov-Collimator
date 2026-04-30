@@ -1,0 +1,64 @@
+{
+  "DialogTitle": "다음에 무엇을 해야 하나요? (SCT)",
+  "DebugLineFormat": "값:  빨강 {0}   초록 {1}   파랑 {2}",
+
+  "SectionWhatToDoTitle": "해야 할 일",
+
+  "CaptureHeader": "Tri-Bahtinov 이미지 캡처",
+  "CaptureSummary": "조정을 시작하려면 Bahtinov 이미지를 캡처해 주세요.",
+  "CaptureBullet1": "밝은 별이 중앙에 오도록 하세요.",
+  "CaptureBullet2": "Tri-Bahtinov 마스크를 장착하고 \"별 선택\"을 클릭하세요.",
+
+  "FocusOnlyHeader": "초점 안내를 사용할 수 없습니다",
+  "FocusOnlyNeedsAdjustingSummary": "안내는 Tri-Bahtinov 이미지에서만 사용할 수 있습니다.",
+
+  "FocusBalancedHeader": "오류 마커를 0 주변으로 균형 맞추기",
+  "FocusBalancedSummary": "세 개의 오류 값이 0 주변에서 균형을 이루도록 초점을 조정하세요.\n",
+  "FocusAllPositiveBullet": "모든 값이 양수입니다. 포커서를 작은 단계로 IN 방향으로 이동하세요.",
+  "FocusAllNegativeBullet": "모든 값이 음수입니다. 포커서를 작은 단계로 OUT 방향으로 이동하세요.",
+  "FocusStraddleNotBalancedBullet1": "값이 0을 양쪽에서 걸치고 있지만 아직 균형이 맞지 않았습니다.",
+  "FocusStraddleNotBalancedBullet2Format": "3개의 오류 값이 0 주변에 고르게 배치될 때까지 포커서를 {0} 방향으로 이동하세요.",
+  "FocusTargetLineFormat": "목표: 평균이 0에 가깝고 크기가 서로 비슷해야 합니다.",
+  "FocusOnlyBeginScrewsBullet": "이 균형을 달성한 뒤에만 콜리메이션 조정을 시작하세요.",
+  "FocusFooterHint": "팁: IN은 주경이 부경 쪽으로 또는 카메라가 망원경 쪽으로 이동,\nOUT은 주경이 부경에서 멀어지거나 카메라가 망원경에서 멀어지는 방향입니다",
+
+  "CollimationHeader": "SCT 콜리메이션 조정",
+  "CollimationSummary": "균형 잡힌 콜리메이션을 위해 2개 이상의 스크루를 동시에 조정하세요.\n",
+
+  "DoneHeader": "좋습니다",
+  "DoneSummary": "모든 값이 0에 가깝습니다.\n",
+  "DoneBullet": "조정이 필요하지 않습니다.",
+  "CollimationPositiveInstructionFormat": "{0} 조정 - 풀기(반시계 방향). {0}이(가) 주경에서 너무 멀리 있습니다.",
+  "CollimationNegativeInstructionFormat": "{0} 조정 - 조이기(시계 방향). {0}이(가) 주경에 너무 가깝습니다.",
+  "CollimationAdjustTogetherBullet": "\r\n장력을 균형 있게 유지하려면 이 스크루들을 함께 조정하세요.",
+  "CollimationFooterHint": "팁: 별을 다시 중앙에 맞춘 뒤, 값이 다시 0을 양쪽에서 걸칠 때까지 재초점을 맞추고 반복하세요.",
+
+  "DirectionIn": "IN",
+  "DirectionOut": "OUT",
+
+  "CollimationSpace": "\r\n",
+
+  "ScrewFallbackFormat": "{0} 스크루",
+
+  "ChannelRed": "빨강",
+  "ChannelGreen": "초록",
+  "ChannelBlue": "파랑",
+
+  "CalibrationTitle": "Tri-Bahtinov 캘리브레이션",
+  "CalibrationQuitButtonText": "종료",
+  "CalibrationCloseButtonText": "닫기",
+  "CalibrationObjectiveHeader": "\n목표 - 캘리브레이션을 하면 SkyCal이 콜리메이션 스크루 조정을 안내할 수 있고, '다음에 무엇을 해야 하나요?' 안내가 활성화됩니다.",
+  "CalibrationStep1Title": "1단계 - 준비",
+  "CalibrationStep1Bullet1": "Tri-Bahtinov 콜리메이션 마스크를 장착하세요.",
+  "CalibrationStep1Bullet2": "별 이미지를 캡처하세요.",
+  "CalibrationStep1Warning": "참고: 회절 스파이크가 선명하게 보이도록 캡처 소프트웨어를 조정하세요.",
+  "CalibrationWaitingForImage": "유효한 Tri-Bahtinov 이미지를 기다리는 중...",
+  "CalibrationAimHeader": "\n목적 - 초점을 안쪽으로 조정하여 SkyCal이 초점 위치에 따라 콜리메이션 오차가 어떻게 변하는지 학습하게 하세요.",
+  "CalibrationStep2Title": "2단계 - 포커서 이동",
+  "CalibrationStep2Bullet1": "포커서가 주경을 움직이는 경우, 부경 쪽으로 INWARD 방향으로 이동하세요.",
+  "CalibrationStep2Bullet2": "포커서가 카메라를 움직이는 경우, 망원경 본체 쪽으로 INWARD 방향으로 이동하세요.",
+  "CalibrationAutoCompleteLine": "참고: 각 이미지를 캡처하기 전에 포커서가 완전히 안정되도록 기다리세요. 캘리브레이션이 완료될 때까지 초점을 안쪽으로 작은 단계로 계속 조정하세요.",
+  "CalibrationMovePrompt": "지금 포커서를 안쪽으로 이동해 주세요....",
+  "CalibrationCompleteHeader": "캘리브레이션이 성공적으로 완료되었습니다",
+  "CalibrationCompleteSummary": "SkyCal 설정이 업데이트되었습니다."
+}
