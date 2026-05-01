@@ -281,19 +281,21 @@ namespace Bahtinov_Collimator
             // 
             // historyMakersTextBox
             // 
-            this.historyMakersTextBox.Location = new System.Drawing.Point(22, 26);
-            this.historyMakersTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.historyMakersTextBox.BackColor = System.Drawing.Color.LightGray;
+            this.historyMakersTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.historyMakersTextBox.Location = new System.Drawing.Point(22, 30);
+            this.historyMakersTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 4, 4);
             this.historyMakersTextBox.MaxLength = 20;
             this.historyMakersTextBox.Name = "historyMakersTextBox";
-            this.historyMakersTextBox.Size = new System.Drawing.Size(25, 25);
+            this.historyMakersTextBox.Size = new System.Drawing.Size(25, 18);
             this.historyMakersTextBox.TabIndex = 1;
-            this.historyMakersTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.historyMakersTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(53, 29);
+            this.label1.Location = new System.Drawing.Point(54, 30);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(102, 19);
+            this.label1.Size = new System.Drawing.Size(207, 19);
             this.label1.TabIndex = 0;
             this.label1.Text = "History Makers";
             // 

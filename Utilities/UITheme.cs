@@ -64,7 +64,7 @@ namespace Bahtinov_Collimator
         #region Primitive (for consumers; only UITheme may use System.Drawing.Color literals)
 
         public static Color Transparent { get; } = Color.Transparent;
-        public static Color White { get; } = Color.White;
+        public static Color White { get; } = Color.LightGray;
         public static Color Black { get; } = Color.Black;
 
         #endregion
@@ -73,7 +73,7 @@ namespace Bahtinov_Collimator
 
         public static Color RoundedButtonBevelDark { get; } = Color.FromArgb(180, 90, 90, 90);
         public static Color RoundedButtonBevelLight { get; } = Color.FromArgb(220, 160, 160, 160);
-        public static Color RoundedButtonHoverOverlay { get; } = Color.FromArgb(40, Color.White);
+        public static Color RoundedButtonHoverOverlay { get; } = Color.FromArgb(40, Color.LightGray);
         public static Color RoundedButtonPressedOverlay { get; } = Color.FromArgb(60, 100, 100, 100);
         public static Color RoundedButtonPressedOverlayOnBlack { get; } = Color.FromArgb(60, 0, 0, 0);
         public static Color RoundedButtonDesignerBackGray { get; } = Color.Gray;
@@ -123,7 +123,7 @@ namespace Bahtinov_Collimator
         public static Color MirrorOutline { get; } = Color.DimGray;
         public static Color RoundedRichTextTitleBack { get; } = Color.FromArgb(245, 245, 245);
         public static Color TitleBoxGlassFill { get; } = Color.FromArgb(35, 255, 255, 255);
-        public static Color TitleBoxBorder { get; } = Color.White;
+        public static Color TitleBoxBorder { get; } = Color.LightGray;
         public static Color NextStepTitleHighlight { get; } = Color.FromArgb(45, 255, 200, 0);
         public static Color NextStepTitleFillNeutral { get; } = Color.FromArgb(40, 255, 255, 255);
         public static Color CalibrationTitleBarBack { get; } = Color.FromArgb(90, 90, 90);
@@ -155,7 +155,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the foreground color for the menu strip.
         /// </summary>
-        public static Color MenuStripForeground { get; } = Color.White;
+        public static Color MenuStripForeground { get; } = Color.LightGray;
 
         /// <summary>
         /// Gets the background color for highlighted menu items.
@@ -206,7 +206,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the color for critical group box text.
         /// </summary>
-        public static Color GetGroupBoxCriticalColor { get; } = Color.White;
+        public static Color GetGroupBoxCriticalColor { get; } = Color.LightGray;
 
         #endregion
 
@@ -242,7 +242,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the text color for message boxes.
         /// </summary>
-        public static Color MessageBoxTextColor { get; } = Color.White;
+        public static Color MessageBoxTextColor { get; } = Color.LightGray;
 
         #endregion
 
@@ -285,7 +285,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the text color for the donate section.
         /// </summary>
-        public static Color DonateTextColor { get; } = Color.White;
+        public static Color DonateTextColor { get; } = Color.LightGray;
 
         /// <summary>
         /// Gets the background color for the donate picture.
@@ -299,7 +299,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the text color for the about section.
         /// </summary>
-        public static Color AboutTextColor { get; } = Color.White;
+        public static Color AboutTextColor { get; } = Color.LightGray;
 
         /// <summary>
         /// Gets the background color for the about picture.
@@ -323,7 +323,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the Error Bar text color.
         /// </summary>
-        public static Color ErrorBarTextColor { get; } = Color.White;
+        public static Color ErrorBarTextColor { get; } = Color.LightGray;
 
         /// <summary>
         /// Gets the Error Marker color for the Error Bar when the marker is in the valid range.
@@ -334,7 +334,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the Error Marker History dot color for the Error Bar.
         /// </summary>
-        public static Color ErrorBarHistoryColor { get; } = Color.FromArgb(128, Color.White);
+        public static Color ErrorBarHistoryColor { get; } = Color.FromArgb(128, Color.LightGray);
 
         /// <summary>
         /// Gets the Error Marker History dot Pen color for the Error Bar.
