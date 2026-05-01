@@ -37,7 +37,7 @@ namespace Bahtinov_Collimator
             this.cancelButton = new Bahtinov_Collimator.Custom_Components.RoundedButton();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.richTextBox = new System.Windows.Forms.RichTextBox();
+            this.richTextBox = new Bahtinov_Collimator.RtlSafeRichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -140,6 +140,6 @@ namespace Bahtinov_Collimator
         private RoundedButton cancelButton;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.RichTextBox richTextBox;
+        private RtlSafeRichTextBox richTextBox;
     }
 }

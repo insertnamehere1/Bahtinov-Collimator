@@ -39,8 +39,8 @@ namespace Bahtinov_Collimator
         public Donate()
         {
             InitializeComponent();
-            ApplyLocalization();
             ApplyLayoutDirectionForLanguage();
+            ApplyLocalization();
 
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
@@ -53,12 +53,17 @@ namespace Bahtinov_Collimator
 
         /// <summary>
         /// Applies right-to-left layout when the current language requires it.
+        /// The RichTextBox keeps an explicit <see cref="RightToLeft"/> value so its
+        /// content reads right-to-left; the underlying <see cref="RtlSafeRichTextBox"/>
+        /// strips the form's mirrored-layout extended style so the native RichEdit
+        /// control does not fail to render its text.
         /// </summary>
         private void ApplyLayoutDirectionForLanguage()
         {
             bool isRtl = LanguageLoader.IsCurrentLanguageRightToLeft();
             RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
             RightToLeftLayout = isRtl;
+            richTextBox.RightToLeft = RightToLeft;
         }
 
         /// <summary>
@@ -268,5 +273,36 @@ namespace Bahtinov_Collimator
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// A <see cref="RichTextBox"/> that opts out of the parent form's mirrored
+    /// layout. WinForms sets <c>WS_EX_LAYOUTRTL</c> on every child window when
+    /// a form's <see cref="Form.RightToLeftLayout"/> is true, but the native
+    /// RichEdit control does not honor that flag and ends up failing to render
+    /// its text content (the donate dialog appears blank in Arabic). Removing
+    /// the bit at handle-creation time keeps the surrounding form's mirrored
+    /// layout intact while letting the RichTextBox draw normally; per-character
+    /// RTL text direction is still produced by setting
+    /// <see cref="Control.RightToLeft"/> to <see cref="RightToLeft.Yes"/>.
+    /// </summary>
+    public sealed class RtlSafeRichTextBox : RichTextBox
+    {
+        private const int WS_EX_LAYOUTRTL = 0x00400000;
+
+        /// <summary>
+        /// Returns the base <see cref="CreateParams"/> with the mirrored-layout
+        /// extended style cleared so the native RichEdit control receives a
+        /// non-mirrored client coordinate space.
+        /// </summary>
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle &= ~WS_EX_LAYOUTRTL;
+                return cp;
+            }
+        }
     }
 }
