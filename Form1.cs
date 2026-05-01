@@ -767,6 +767,11 @@ namespace Bahtinov_Collimator
                 unavailable = true;
             }
 
+            // Use the *new* language's directionality for the prompt dialogs so the
+            // buttons aren't laid out in the previously loaded language's mirror order
+            // (e.g., switching away from Arabic should not leave the prompt RTL-mirrored).
+            bool promptIsRtl = LanguageLoader.IsLanguageRightToLeft(resolvedCode);
+
             if (unavailable)
             {
                 DarkMessageBox.Show(
@@ -775,7 +780,8 @@ namespace Bahtinov_Collimator
                     MessageBoxIcon.Warning,
                     MessageBoxButtons.OK,
                     promptPack,
-                    this);
+                    this,
+                    promptIsRtl);
             }
 
             DialogResult restartResult = DarkMessageBox.Show(
@@ -784,7 +790,8 @@ namespace Bahtinov_Collimator
                 MessageBoxIcon.Question,
                 MessageBoxButtons.OKCancel,
                 promptPack,
-                this);
+                this,
+                promptIsRtl);
 
             if (restartResult == DialogResult.Yes)
             {

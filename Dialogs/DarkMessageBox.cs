@@ -31,6 +31,7 @@ namespace Bahtinov_Collimator
 
         public static DialogResult UserResponse { get; private set; } = DialogResult.None;
         private readonly UiTextPack _textPack;
+        private readonly bool? _rightToLeftOverride;
 
         private static readonly Dictionary<MessageBoxIcon, Icon> IconMap = new Dictionary<MessageBoxIcon, Icon>
         {
@@ -51,10 +52,18 @@ namespace Bahtinov_Collimator
         /// <param name="title">The title of the message box.</param>
         /// <param name="buttons">The buttons to display in the message box.</param>
         /// <param name="icon">The icon to display in the message box.</param>
-        public DarkMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, UiTextPack textPack = null)
+        /// <param name="textPack">Optional language pack used for button labels; defaults to <see cref="UiText.Current"/>.</param>
+        /// <param name="rightToLeft">
+        /// Optional override that forces the dialog's layout direction to match a specific
+        /// language's directionality. Used by the language-switching flow so the prompt is
+        /// laid out in the newly selected language rather than the previously loaded one.
+        /// When null, the currently loaded language's directionality is used.
+        /// </param>
+        public DarkMessageBox(string message, string title, MessageBoxButtons buttons, MessageBoxIcon icon, UiTextPack textPack = null, bool? rightToLeft = null)
         {
             InitializeComponent();
             _textPack = textPack ?? UiText.Current;
+            _rightToLeftOverride = rightToLeft;
             ApplyLayoutDirectionForLanguage();
             this.Text = title;
             messageLabel.Text = message;
@@ -80,11 +89,15 @@ namespace Bahtinov_Collimator
         #region Instance Methods
 
         /// <summary>
-        /// Applies right-to-left layout when the current language requires it.
+        /// Applies right-to-left layout based on the override supplied to the constructor,
+        /// falling back to the directionality of the currently loaded language. The
+        /// override matters during the language-switch prompt so the dialog mirrors (or
+        /// un-mirrors) to match the language the user has just selected, not the language
+        /// the application is currently still running in.
         /// </summary>
         private void ApplyLayoutDirectionForLanguage()
         {
-            bool isRtl = LanguageLoader.IsCurrentLanguageRightToLeft();
+            bool isRtl = _rightToLeftOverride ?? LanguageLoader.IsCurrentLanguageRightToLeft();
             RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
             RightToLeftLayout = isRtl;
         }
@@ -215,7 +228,10 @@ namespace Bahtinov_Collimator
             }
 
             int startX = Math.Max(0, (panel1.ClientSize.Width - totalWidth) / 2);
-            int y = Math.Max(0, (panel1.ClientSize.Height - okButton.Height) / 2);
+            // Nudge the buttons ~2 logical pixels below the panel's vertical center so
+            // they sit slightly closer to the bottom edge of the dialog (DPI-scaled).
+            int verticalNudge = (int)Math.Round(2f * DeviceDpi / 96f, MidpointRounding.AwayFromZero);
+            int y = Math.Max(0, (panel1.ClientSize.Height - okButton.Height) / 2 + verticalNudge);
 
             int x = startX;
             foreach (Control button in visibleButtons)
@@ -278,7 +294,12 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Displays the custom message box using an explicit text pack for button labels.
         /// </summary>
-        public static DialogResult Show(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons, UiTextPack textPack, Form owner = null)
+        /// <param name="rightToLeft">
+        /// Optional override for the dialog's layout direction so a prompt can be shown
+        /// in a language that hasn't been loaded yet (used by the language switcher).
+        /// When null, the currently loaded language's directionality is used.
+        /// </param>
+        public static DialogResult Show(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons, UiTextPack textPack, Form owner = null, bool? rightToLeft = null)
         {
             if (Application.OpenForms.Count > 0)
             {
@@ -286,16 +307,16 @@ namespace Bahtinov_Collimator
 
                 if (mainForm.InvokeRequired)
                 {
-                    return (DialogResult)mainForm.Invoke(new Func<DialogResult>(() => ShowCustomMessageBoxInternal(message, title, icon, buttons, textPack, mainForm)));
+                    return (DialogResult)mainForm.Invoke(new Func<DialogResult>(() => ShowCustomMessageBoxInternal(message, title, icon, buttons, textPack, mainForm, rightToLeft)));
                 }
                 else
                 {
-                    return ShowCustomMessageBoxInternal(message, title, icon, buttons, textPack, mainForm);
+                    return ShowCustomMessageBoxInternal(message, title, icon, buttons, textPack, mainForm, rightToLeft);
                 }
             }
             else
             {
-                return ShowCustomMessageBoxInternal(message, title, icon, buttons, textPack, owner);
+                return ShowCustomMessageBoxInternal(message, title, icon, buttons, textPack, owner, rightToLeft);
             }
         }
 
@@ -303,9 +324,9 @@ namespace Bahtinov_Collimator
         /// Creates and displays the custom message box within the specified owner's bounds.
         /// </summary>
         /// <returns>The <see cref="DialogResult"/> indicating the user's response.</returns>
-        private static DialogResult ShowCustomMessageBoxInternal(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons, UiTextPack textPack, Form owner)
+        private static DialogResult ShowCustomMessageBoxInternal(string message, string title, MessageBoxIcon icon, MessageBoxButtons buttons, UiTextPack textPack, Form owner, bool? rightToLeft = null)
         {
-            using (DarkMessageBox customMessageBox = new DarkMessageBox(message, title, buttons, icon, textPack))
+            using (DarkMessageBox customMessageBox = new DarkMessageBox(message, title, buttons, icon, textPack, rightToLeft))
             {
                 // Let the DPI-aware helper do the centering. Computing an
                 // owner-centered location up front is wrong in multi-DPI
