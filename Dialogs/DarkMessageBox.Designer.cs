@@ -91,7 +91,7 @@ namespace Bahtinov_Collimator
             this.okButton.ImageOffsetX = 60;
             this.okButton.ImageOffsetY = 0;
             this.okButton.ImageWidth = 32;
-            this.okButton.Location = new System.Drawing.Point(314, 7);
+            this.okButton.Location = new System.Drawing.Point(314, 8);
             this.okButton.Name = "okButton";
             this.okButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.okButton.Size = new System.Drawing.Size(82, 30);
@@ -117,7 +117,7 @@ namespace Bahtinov_Collimator
             this.cancelButton.ImageOffsetX = 60;
             this.cancelButton.ImageOffsetY = 0;
             this.cancelButton.ImageWidth = 32;
-            this.cancelButton.Location = new System.Drawing.Point(410, 7);
+            this.cancelButton.Location = new System.Drawing.Point(410, 8);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.cancelButton.Size = new System.Drawing.Size(82, 30);
@@ -131,7 +131,7 @@ namespace Bahtinov_Collimator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(17)))), ((int)(((byte)(23)))));
             this.ClientSize = new System.Drawing.Size(472, 273);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.iconBox);

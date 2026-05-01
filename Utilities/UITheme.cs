@@ -16,7 +16,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the background color for dark-themed forms.
         /// </summary>
-        public static Color DarkBackground { get; } = Color.FromArgb(47, 54, 64);
+        public static Color DarkBackground { get; } = Color.FromArgb(13, 17, 23);
 
         /// <summary>
         /// Gets the color used for the dark background of the title area.
@@ -36,6 +36,29 @@ namespace Bahtinov_Collimator
         public static float DeviceDpi { get; set; } = 96f;
 
         public static float DpiScaleFactor => DeviceDpi / 96f;
+        #endregion
+
+        #region Menu Bar Theme
+        /// <summary>
+        /// Gets the background color for dark-themed menu strips.
+        /// 
+        public static Color MenuStripDarkBackground { get; } = DarkBackground;
+
+        /// <summary>
+        ///  Gets the border color color for dark-themed menu strips.
+        /// </summary>
+        public static Color MenuBorderColor = Color.FromArgb(100, 100, 100);
+
+        /// <summary>
+        /// Gets the background color for dark-themed drop-down menus.
+        /// </summary>
+        public static Color MenuDarkBackground { get; } = DarkBackground;
+
+        /// <summary>
+        /// Gets the foreground color for dark-themed drop-down menus.
+        /// </summary>
+        public static Color MenuDarkForeground { get; } = Color.LightGray;
+
         #endregion
 
         #region Primitive (for consumers; only UITheme may use System.Drawing.Color literals)
@@ -138,20 +161,6 @@ namespace Bahtinov_Collimator
         /// Gets the background color for highlighted menu items.
         /// </summary>
         public static Color MenuHighlightBackground { get; } = Color.Gray;
-
-        #endregion
-
-        #region Drop Down Menu Theme
-
-        /// <summary>
-        /// Gets the background color for dark-themed drop-down menus.
-        /// </summary>
-        public static Color MenuDarkBackground { get; } = DarkBackground;
-
-        /// <summary>
-        /// Gets the foreground color for dark-themed drop-down menus.
-        /// </summary>
-        public static Color MenuDarkForeground { get; } = Color.LightGray;
 
         #endregion
 

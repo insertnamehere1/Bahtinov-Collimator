@@ -47,7 +47,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.titledRoundedRichTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.titledRoundedRichTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
+            this.titledRoundedRichTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(17)))), ((int)(((byte)(23)))));
             this.titledRoundedRichTextBox1.BorderColor = System.Drawing.Color.Gray;
             this.titledRoundedRichTextBox1.BorderThickness = 2;
             this.titledRoundedRichTextBox1.CornerRadius = 8;
@@ -70,6 +70,10 @@ namespace Bahtinov_Collimator.Custom_Components
             this.titledRoundedRichTextBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.titledRoundedRichTextBox1.Name = "titledRoundedRichTextBox1";
             this.titledRoundedRichTextBox1.Padding = new System.Windows.Forms.Padding(11, 0, 11, 12);
+            this.titledRoundedRichTextBox1.ProgressBarBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
+            this.titledRoundedRichTextBox1.ProgressBarDivisionColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.titledRoundedRichTextBox1.ProgressBarFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(187)))), ((int)(((byte)(92)))));
+            this.titledRoundedRichTextBox1.ProgressBarTrackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(34)))), ((int)(((byte)(40)))));
             this.titledRoundedRichTextBox1.ReadOnly = true;
             this.titledRoundedRichTextBox1.ShowTitleSeparator = false;
             this.titledRoundedRichTextBox1.Size = new System.Drawing.Size(300, 526);
@@ -112,7 +116,7 @@ namespace Bahtinov_Collimator.Custom_Components
             // CalibrationComponent
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(17)))), ((int)(((byte)(23)))));
             this.Controls.Add(this.titledRoundedRichTextBox1);
             this.Controls.Add(this.quitButton);
             this.ForeColor = System.Drawing.Color.White;

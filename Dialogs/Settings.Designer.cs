@@ -391,7 +391,7 @@ namespace Bahtinov_Collimator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(54)))), ((int)(((byte)(64)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(17)))), ((int)(((byte)(23)))));
             this.ClientSize = new System.Drawing.Size(563, 468);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.minimizeGroupBox);
@@ -412,7 +412,6 @@ namespace Bahtinov_Collimator
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Settings";
             this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.minimizeGroupBox.ResumeLayout(false);
             this.ErrorSignGroupBox.ResumeLayout(false);
             this.keepOnTopGroupBox.ResumeLayout(false);

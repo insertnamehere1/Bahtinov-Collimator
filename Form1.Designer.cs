@@ -60,6 +60,7 @@ namespace Bahtinov_Collimator
             // 
             // menuStrip1
             // 
+            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.menuStrip1.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -71,7 +72,8 @@ namespace Bahtinov_Collimator
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 14);
-            this.menuStrip1.Size = new System.Drawing.Size(584, 37);
+            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
+            this.menuStrip1.Size = new System.Drawing.Size(550, 37);
             this.menuStrip1.TabIndex = 19;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.MouseEnter += new System.EventHandler(this.MenuStrip1_MouseEnter);
@@ -104,21 +106,21 @@ namespace Bahtinov_Collimator
             // generalSettingsToolStripMenuItem
             // 
             this.generalSettingsToolStripMenuItem.Name = "generalSettingsToolStripMenuItem";
-            this.generalSettingsToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.generalSettingsToolStripMenuItem.Size = new System.Drawing.Size(144, 24);
             this.generalSettingsToolStripMenuItem.Text = "Settings";
             this.generalSettingsToolStripMenuItem.Click += new System.EventHandler(this.GeneralSettingsToolStripMenuItem_Click);
             // 
             // focusCalibrationToolStripMenuItem
             // 
             this.focusCalibrationToolStripMenuItem.Name = "focusCalibrationToolStripMenuItem";
-            this.focusCalibrationToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.focusCalibrationToolStripMenuItem.Size = new System.Drawing.Size(144, 24);
             this.focusCalibrationToolStripMenuItem.Text = "Calibration";
             this.focusCalibrationToolStripMenuItem.Click += new System.EventHandler(this.FocusCalibrationToolStripMenuItem_Click);
             // 
             // languageToolStripMenuItem
             // 
             this.languageToolStripMenuItem.Name = "languageToolStripMenuItem";
-            this.languageToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.languageToolStripMenuItem.Size = new System.Drawing.Size(144, 24);
             this.languageToolStripMenuItem.Text = "Language";
             // 
             // aboutToolStripMenuItem
@@ -154,6 +156,7 @@ namespace Bahtinov_Collimator
             // 
             // pleaseDonateToolStripMenuItem
             // 
+            this.pleaseDonateToolStripMenuItem.AutoSize = false;
             this.pleaseDonateToolStripMenuItem.Name = "pleaseDonateToolStripMenuItem";
             this.pleaseDonateToolStripMenuItem.Size = new System.Drawing.Size(114, 23);
             this.pleaseDonateToolStripMenuItem.Text = "Support SkyCal";

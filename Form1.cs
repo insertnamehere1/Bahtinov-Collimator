@@ -811,7 +811,7 @@ namespace Bahtinov_Collimator
             this.BackColor = UITheme.DarkBackground;
 
             // Apply color scheme to the menu strip
-            menuStrip1.BackColor = UITheme.DarkBackground;
+            menuStrip1.BackColor = UITheme.MenuStripDarkBackground;
             menuStrip1.ForeColor = UITheme.MenuStripForeground;
             SetMenuItemsColor(menuStrip1.Items, UITheme.MenuDarkBackground, UITheme.MenuDarkForeground);
 
@@ -1503,12 +1503,11 @@ namespace Bahtinov_Collimator
             /// </summary>
             protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
             {
-                // This draws the border around the whole dropdown
+                // Only border popup/dropdown menus, not the top menu bar.
+                if (!(e.ToolStrip is ToolStripDropDown))
+                    return;
                 Rectangle r = new Rectangle(0, 0, e.ToolStrip.Width - 1, e.ToolStrip.Height - 1);
-
-                Color border = UITheme.DarkBackground;
-
-                using (var pen = new Pen(border))
+                using (var pen = new Pen(UITheme.MenuBorderColor)) // add this in UITheme
                 {
                     e.Graphics.DrawRectangle(pen, r);
                 }
