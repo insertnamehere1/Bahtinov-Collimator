@@ -50,6 +50,20 @@ namespace Bahtinov_Collimator.Custom_Components
         #region Painting
 
         /// <summary>
+        /// Fills the control background with the parent's color so the
+        /// four square corners outside the rounded border do not display
+        /// the GroupBox <see cref="Control.BackColor"/> (which is used as
+        /// the rounded hover/fill color). This ensures hover highlights
+        /// follow the rounded shape.
+        /// </summary>
+        protected override void OnPaintBackground(PaintEventArgs pevent)
+        {
+            Color outside = Parent?.BackColor ?? BackColor;
+            using (SolidBrush brush = new SolidBrush(outside))
+                pevent.Graphics.FillRectangle(brush, ClientRectangle);
+        }
+
+        /// <summary>
         /// Custom paint routine for drawing the rounded background,
         /// border, and title text.
         /// </summary>
@@ -95,14 +109,16 @@ namespace Bahtinov_Collimator.Custom_Components
 
             SizeF textSize = e.Graphics.MeasureString(Text, Font);
 
-            RectangleF textRect = new RectangleF(
-                10,
+            Rectangle textRect = new Rectangle(
+                7,
                 0,
-                textSize.Width + 2,
-                textSize.Height);
+                (int)Math.Ceiling(textSize.Width) + 3,
+                (int)Math.Ceiling(textSize.Height));
 
+            const int textCornerRadius = 5;
+            using (GraphicsPath textPath = GetTopRoundedPath(textRect, textCornerRadius))
             using (SolidBrush backBrush = new SolidBrush(BackColor))
-                e.Graphics.FillRectangle(backBrush, textRect);
+                e.Graphics.FillPath(backBrush, textPath);
 
             using (SolidBrush textBrush = new SolidBrush(ForeColor))
                 e.Graphics.DrawString(Text, Font, textBrush, 10, 0);
@@ -143,6 +159,34 @@ namespace Bahtinov_Collimator.Custom_Components
             path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90);
             path.AddArc(rect.Right - d, rect.Bottom - d, d, d, 0, 90);
             path.AddArc(rect.X, rect.Bottom - d, d, d, 90, 90);
+            path.CloseFigure();
+
+            return path;
+        }
+
+        /// <summary>
+        /// Builds a rectangle path with the top-left and top-right corners
+        /// rounded by <paramref name="radius"/> pixels; the bottom corners
+        /// remain square so the shape sits flush on the body below.
+        /// </summary>
+        private GraphicsPath GetTopRoundedPath(Rectangle rect, int radius)
+        {
+            int r = ClampRadius(rect, radius);
+            int d = r * 2;
+
+            GraphicsPath path = new GraphicsPath();
+
+            if (r <= 0)
+            {
+                path.AddRectangle(rect);
+                return path;
+            }
+
+            path.AddArc(rect.X, rect.Y, d, d, 180, 90);
+            path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90);
+            path.AddLine(rect.Right, rect.Y + r, rect.Right, rect.Bottom);
+            path.AddLine(rect.Right, rect.Bottom, rect.X, rect.Bottom);
+            path.AddLine(rect.X, rect.Bottom, rect.X, rect.Y + r);
             path.CloseFigure();
 
             return path;

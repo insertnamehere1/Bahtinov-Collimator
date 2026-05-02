@@ -138,7 +138,7 @@ namespace Bahtinov_Collimator
         public static Color ChannelAccent1 { get; } = Color.LightGreen;
         public static Color ChannelAccent2 { get; } = Color.FromArgb(66, 179, 245);
 
-        public static Color GroupBoxBackgroundChannel0 { get; } = Color.FromArgb(80, 70, 80);
+        public static Color GroupBoxBackgroundChannel0 { get; } = Color.FromArgb(100, 70, 80);
         public static Color GroupBoxBackgroundChannel1 { get; } = Color.FromArgb(60, 90, 80);
         public static Color GroupBoxBackgroundChannel2 { get; } = Color.FromArgb(60, 70, 100);
 
