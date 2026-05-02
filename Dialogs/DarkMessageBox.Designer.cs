@@ -137,6 +137,7 @@ namespace Bahtinov_Collimator
             this.Controls.Add(this.iconBox);
             this.Controls.Add(this.messageLabel);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "DarkMessageBox";
