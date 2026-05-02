@@ -32,6 +32,23 @@ namespace Bahtinov_Collimator
         private double cachedOuterRadius;
         private BahtinovLineDataEventArgs.BahtinovLineData cachedBahtinovData;
 
+        // Zoom / pan state. zoomFactor multiplies the fit-to-window scale, so 1.0 == "fit"
+        // (the original rendering). imageOffset is the layer-coordinate position of the
+        // displayed image's top-left corner after fit + zoom + pan. Both are applied as
+        // a single matrix in ApplyContentTransform so every layer (image, defocus circles,
+        // Bahtinov lines, error text) zooms and pans uniformly.
+        private float zoomFactor = 1.0f;
+        private PointF imageOffset = PointF.Empty;
+        private const float MinZoom = 1.0f;
+        private const float MaxZoom = 10.0f;
+        private const float WheelZoomStep = 1.2f;
+
+        private bool isPanning;
+        private Point panStartMouse;
+        private PointF panStartImageOffset;
+
+        private MouseWheelMessageFilter mouseWheelFilter;
+
         private enum OverlayMode
         {
             None,
@@ -73,6 +90,11 @@ namespace Bahtinov_Collimator
 
             this.pictureBox1.Paint += new PaintEventHandler(this.PictureBoxPaint);
             this.pictureBox1.Resize += new EventHandler(this.PictureBoxResized);
+
+            this.pictureBox1.MouseDown += PictureBoxMouseDown;
+            this.pictureBox1.MouseMove += PictureBoxMouseMove;
+            this.pictureBox1.MouseUp += PictureBoxMouseUp;
+            this.pictureBox1.MouseDoubleClick += PictureBoxMouseDoubleClick;
         }
 
         /// <summary>
@@ -95,6 +117,16 @@ namespace Bahtinov_Collimator
             base.OnLoad(e);
             UpdateErrorFontForCurrentDpi();
             EnsureLayerSizeMatchesPictureBox(forceRecreate: true);
+
+            // Application-wide message filter so wheel events reach our picture box even when
+            // keyboard focus is on another control. We deliberately do not make the picture
+            // box selectable / focus it on hover so other controls (e.g. dialog text fields)
+            // keep their focus when the user moves the mouse over the image to scroll-zoom.
+            if (mouseWheelFilter == null)
+            {
+                mouseWheelFilter = new MouseWheelMessageFilter(pictureBox1, HandleImageMouseWheel);
+                Application.AddMessageFilter(mouseWheelFilter);
+            }
         }
 
         /// <summary>
@@ -375,6 +407,154 @@ namespace Bahtinov_Collimator
         }
         #endregion
 
+        #region Zoom and Pan
+
+        /// <summary>
+        /// Handles mouse-wheel zoom dispatched from <see cref="MouseWheelMessageFilter"/>. Zoom is anchored at the
+        /// mouse cursor position so the source pixel under the cursor stays under the cursor across the zoom step.
+        /// </summary>
+        private void HandleImageMouseWheel(MouseEventArgs e)
+        {
+            if (cachedSourceImage == null)
+                return;
+
+            Size target = GetLayerTargetSize();
+            if (target.Width <= 0 || target.Height <= 0)
+                return;
+
+            float oldZoom = zoomFactor;
+            float multiplier = e.Delta > 0 ? WheelZoomStep : 1f / WheelZoomStep;
+            float newZoom = Math.Max(MinZoom, Math.Min(MaxZoom, oldZoom * multiplier));
+            if (Math.Abs(newZoom - oldZoom) < 1e-4f)
+                return;
+
+            // Pin the source pixel under the cursor to the cursor's screen position:
+            //   new_offset = cursor - (cursor - old_offset) * (newZoom / oldZoom)
+            float ratio = newZoom / oldZoom;
+            imageOffset = new PointF(
+                e.X - (e.X - imageOffset.X) * ratio,
+                e.Y - (e.Y - imageOffset.Y) * ratio);
+
+            zoomFactor = newZoom;
+
+            if (zoomFactor <= MinZoom + 1e-4f)
+            {
+                // Snap back to the centered fit when fully zoomed out, locking the pan.
+                zoomFactor = MinZoom;
+                imageOffset = GetFitOffset(target);
+            }
+            else
+            {
+                ClampImageOffset();
+            }
+
+            RedrawFromCache();
+        }
+
+        /// <summary>
+        /// Begins a pan drag if the user left-clicks while zoomed in.
+        /// </summary>
+        private void PictureBoxMouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left)
+                return;
+            if (cachedSourceImage == null)
+                return;
+            if (zoomFactor <= MinZoom + 1e-4f)
+                return;
+
+            isPanning = true;
+            panStartMouse = e.Location;
+            panStartImageOffset = imageOffset;
+            pictureBox1.Cursor = Cursors.SizeAll;
+        }
+
+        /// <summary>
+        /// Updates the image offset while a pan drag is active.
+        /// </summary>
+        private void PictureBoxMouseMove(object sender, MouseEventArgs e)
+        {
+            if (!isPanning)
+                return;
+
+            imageOffset = new PointF(
+                panStartImageOffset.X + (e.X - panStartMouse.X),
+                panStartImageOffset.Y + (e.Y - panStartMouse.Y));
+
+            ClampImageOffset();
+            RedrawFromCache();
+        }
+
+        /// <summary>
+        /// Ends the pan drag and restores the default cursor.
+        /// </summary>
+        private void PictureBoxMouseUp(object sender, MouseEventArgs e)
+        {
+            if (!isPanning)
+                return;
+
+            isPanning = false;
+            pictureBox1.Cursor = Cursors.Default;
+        }
+
+        /// <summary>
+        /// Double-click resets the zoom to fit so the user can recover quickly from a deep zoom.
+        /// </summary>
+        private void PictureBoxMouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left)
+                return;
+            if (Math.Abs(zoomFactor - MinZoom) < 1e-4f)
+                return;
+
+            ResetZoom();
+            RedrawFromCache();
+        }
+
+        /// <summary>
+        /// Application-wide message filter that forwards <c>WM_MOUSEWHEEL</c> to a target control whenever the cursor
+        /// is over it, regardless of which control currently holds keyboard focus. This lets us zoom on hover
+        /// without making the picture box selectable (which would steal focus from other controls).
+        /// </summary>
+        private sealed class MouseWheelMessageFilter : IMessageFilter
+        {
+            private const int WM_MOUSEWHEEL = 0x020A;
+
+            private readonly Control target;
+            private readonly Action<MouseEventArgs> handler;
+
+            public MouseWheelMessageFilter(Control target, Action<MouseEventArgs> handler)
+            {
+                this.target = target;
+                this.handler = handler;
+            }
+
+            public bool PreFilterMessage(ref Message m)
+            {
+                if (m.Msg != WM_MOUSEWHEEL)
+                    return false;
+                if (target == null || target.IsDisposed || !target.IsHandleCreated || !target.Visible)
+                    return false;
+
+                // LParam: low word = screen X (signed), high word = screen Y (signed).
+                int lParam = m.LParam.ToInt32();
+                Point screenPoint = new Point((short)(lParam & 0xFFFF), (short)((lParam >> 16) & 0xFFFF));
+
+                Point clientPoint = target.PointToClient(screenPoint);
+                if (!target.ClientRectangle.Contains(clientPoint))
+                    return false;
+
+                // WParam: high word = wheel delta (signed); low word = key/button flags (unused here).
+                int wParam = m.WParam.ToInt32();
+                int delta = (short)((wParam >> 16) & 0xFFFF);
+
+                handler(new MouseEventArgs(MouseButtons.None, 0, clientPoint.X, clientPoint.Y, delta));
+                return true;
+            }
+        }
+
+        #endregion
+
         #region Helper Methods
 
         /// <summary>
@@ -503,6 +683,7 @@ namespace Bahtinov_Collimator
             if (layers == null || layers.Count == 0)
             {
                 layerSize = target;
+                ResetZoom();
                 return;
             }
 
@@ -525,6 +706,9 @@ namespace Bahtinov_Collimator
             }
 
             layerSize = target;
+
+            // Layer geometry changed (resize / DPI); reset zoom + pan so the image starts fitted again.
+            ResetZoom();
         }
 
         /// <summary>
@@ -627,30 +811,88 @@ namespace Bahtinov_Collimator
         }
 
         /// <summary>
-        /// Applies a transform that maps source-image coordinates into the current layer bitmap while preserving aspect ratio.
+        /// Applies a transform that maps source-image coordinates into the current layer bitmap while preserving
+        /// aspect ratio. Includes the user's mouse-wheel zoom factor and pan offset, so every layer rendered
+        /// through this method (image, defocus circles, Bahtinov lines, error text) zooms and pans together.
         /// </summary>
         private void ApplyContentTransform(Graphics g)
         {
             if (g == null)
                 return;
 
-            var target = layers != null && layers.Count > 0 ? layers[0].Size : pictureBox1.ClientSize;
+            Size target = GetLayerTargetSize();
             if (target.Width <= 0 || target.Height <= 0 || sourceWidth <= 0 || sourceHeight <= 0)
                 return;
 
-            float sx = (float)target.Width / sourceWidth;
-            float sy = (float)target.Height / sourceHeight;
-            float scale = Math.Min(sx, sy);
-
-            float scaledW = sourceWidth * scale;
-            float scaledH = sourceHeight * scale;
-            float offsetX = (target.Width - scaledW) / 2f;
-            float offsetY = (target.Height - scaledH) / 2f;
+            float effectiveScale = GetFitScale(target) * zoomFactor;
 
             var m = new Matrix();
-            m.Translate(offsetX, offsetY);
-            m.Scale(scale, scale);
+            m.Translate(imageOffset.X, imageOffset.Y);
+            m.Scale(effectiveScale, effectiveScale);
             g.Transform = m;
+        }
+
+        /// <summary>
+        /// Returns the scale factor that fits the source image inside the picture box, preserving aspect ratio.
+        /// </summary>
+        private float GetFitScale(Size target)
+        {
+            if (target.Width <= 0 || target.Height <= 0 || sourceWidth <= 0 || sourceHeight <= 0)
+                return 1f;
+            return Math.Min((float)target.Width / sourceWidth, (float)target.Height / sourceHeight);
+        }
+
+        /// <summary>
+        /// Returns the layer-coordinate offset of the source image's top-left corner when fitted (zoom = 1, no pan).
+        /// </summary>
+        private PointF GetFitOffset(Size target)
+        {
+            float fitScale = GetFitScale(target);
+            float scaledW = sourceWidth * fitScale;
+            float scaledH = sourceHeight * fitScale;
+            return new PointF((target.Width - scaledW) / 2f, (target.Height - scaledH) / 2f);
+        }
+
+        /// <summary>
+        /// Returns the current layer (= picture box client) size used as the target for content transforms.
+        /// </summary>
+        private Size GetLayerTargetSize()
+        {
+            return layers != null && layers.Count > 0 && layers[0] != null
+                ? layers[0].Size
+                : pictureBox1.ClientSize;
+        }
+
+        /// <summary>
+        /// Resets zoom (1:1 fit) and recenters the image. Called on first load, on resize/DPI changes,
+        /// when the display is cleared, and on user double-click.
+        /// </summary>
+        private void ResetZoom()
+        {
+            zoomFactor = MinZoom;
+            imageOffset = GetFitOffset(GetLayerTargetSize());
+        }
+
+        /// <summary>
+        /// Constrains <see cref="imageOffset"/> so the displayed (zoomed) image always covers the picture box
+        /// when zoomed in, and is centered (letterbox) when at 1:1 fit.
+        /// </summary>
+        private void ClampImageOffset()
+        {
+            Size target = GetLayerTargetSize();
+            float effectiveScale = GetFitScale(target) * zoomFactor;
+            float dispW = sourceWidth * effectiveScale;
+            float dispH = sourceHeight * effectiveScale;
+
+            if (dispW <= target.Width)
+                imageOffset.X = (target.Width - dispW) / 2f;
+            else
+                imageOffset.X = Math.Max(target.Width - dispW, Math.Min(0f, imageOffset.X));
+
+            if (dispH <= target.Height)
+                imageOffset.Y = (target.Height - dispH) / 2f;
+            else
+                imageOffset.Y = Math.Max(target.Height - dispH, Math.Min(0f, imageOffset.Y));
         }
 
         /// <summary>
@@ -701,6 +943,7 @@ namespace Bahtinov_Collimator
                 cachedSourceImage = null;
                 cachedBahtinovData = null;
                 cachedOverlayMode = OverlayMode.None;
+                ResetZoom();
 
                 // Dispose only bitmaps we own. Properties.Resources returns the same cached
                 // Bitmap instance every call, so disposing it would poison the ResourceManager
@@ -719,6 +962,12 @@ namespace Bahtinov_Collimator
         /// </summary>
         protected override void OnHandleDestroyed(EventArgs e)
         {
+            if (mouseWheelFilter != null)
+            {
+                Application.RemoveMessageFilter(mouseWheelFilter);
+                mouseWheelFilter = null;
+            }
+
             errorFont?.Dispose();
             errorFont = null;
             cachedSourceImage?.Dispose();
