@@ -29,6 +29,14 @@ namespace Bahtinov_Collimator
             set => mirrorDrawingComponent1.MirrorType = value;
         }
 
+        /// <summary>
+        /// When true, hovering this channel changes the group box background
+        /// (and mirror panel background) to the channel's highlight color.
+        /// Intended to be enabled only when a Tri-Bahtinov image is displayed
+        /// and all three focus channels (red, green, blue) are visible.
+        /// </summary>
+        public bool HoverHighlightEnabled { get; set; } = true;
+
         private bool disposed = false; // To detect redundant calls
         private int groupID;
 
@@ -329,10 +337,14 @@ namespace Bahtinov_Collimator
         /// </summary>
         protected void FocusChannelGroupBox_MouseEnter(object sender, EventArgs e)
         {
-            groupBox1.BackColor = UITheme.GetGroupBoxBackgroundColor(groupID);
-            mirrorDrawingComponent1.BackColor = UITheme.GetGroupBoxBackgroundColor(groupID);
-            mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
-            mirrorDrawingComponent1.Invalidate();
+            if (HoverHighlightEnabled)
+            {
+                groupBox1.BackColor = UITheme.GetGroupBoxBackgroundColor(groupID);
+                mirrorDrawingComponent1.BackColor = UITheme.GetGroupBoxBackgroundColor(groupID);
+                mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
+                mirrorDrawingComponent1.Invalidate();
+            }
+
             mouseOver[groupID] = true;
             ChannelSelectDataEvent?.Invoke(null, new ChannelSelectEventArgs(mouseOver, focusChannelCount));
         }
@@ -342,10 +354,14 @@ namespace Bahtinov_Collimator
         /// </summary>
         private void FocusChannelGroupBox_MouseLeave(object sender, EventArgs e)
         {
-            groupBox1.BackColor = UITheme.DarkBackground;
-            mirrorDrawingComponent1.BackColor = UITheme.DarkBackground;
-            mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
-            mirrorDrawingComponent1.Invalidate();
+            if (HoverHighlightEnabled)
+            {
+                groupBox1.BackColor = UITheme.DarkBackground;
+                mirrorDrawingComponent1.BackColor = UITheme.DarkBackground;
+                mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
+                mirrorDrawingComponent1.Invalidate();
+            }
+
             mouseOver[groupID] = false;
             ChannelSelectDataEvent?.Invoke(null, new ChannelSelectEventArgs(mouseOver, focusChannelCount));
         }

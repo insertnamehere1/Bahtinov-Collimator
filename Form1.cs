@@ -629,6 +629,11 @@ namespace Bahtinov_Collimator
             bool isWidened = isCalibrated && isTriBahtinov && !Properties.Settings.Default.NoneSelected;
             groupBoxRed.Visible = true;
             groupBoxRed.ConfigureFocusChannel(0, isWidened, soloRedChannel);
+
+            groupBoxRed.HoverHighlightEnabled = isTriBahtinov;
+            groupBoxGreen.HoverHighlightEnabled = isTriBahtinov;
+            groupBoxBlue.HoverHighlightEnabled = isTriBahtinov;
+
             groupBoxGreen.Visible = false;
             groupBoxBlue.Visible = false;
         }
