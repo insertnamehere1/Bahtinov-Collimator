@@ -18,6 +18,8 @@ namespace Bahtinov_Collimator
         /// </summary>
         public static Color DarkBackground { get; } = Color.FromArgb(13, 17, 23);
 
+        public static Color DarkerBackground { get; } = Color.FromArgb(4, 4, 4);
+
         /// <summary>
         /// Gets the color used for the dark background of the title area.
         /// </summary>
@@ -119,7 +121,7 @@ namespace Bahtinov_Collimator
         #region Panels and misc UI
 
         public static Color BorderDefaultGray { get; } = Color.Gray;
-        public static Color MirrorViewBackground { get; } = Color.FromArgb(32, 32, 32);
+        public static Color MirrorViewBackground { get; } = Color.FromArgb(0, 0, 0);
         public static Color MirrorOutline { get; } = Color.DimGray;
         public static Color RoundedRichTextTitleBack { get; } = Color.FromArgb(245, 245, 245);
         public static Color TitleBoxGlassFill { get; } = Color.FromArgb(35, 255, 255, 255);

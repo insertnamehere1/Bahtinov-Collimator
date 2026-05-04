@@ -211,6 +211,7 @@ namespace Bahtinov_Collimator
             // analysisGroupBox
             // 
             this.analysisGroupBox.BorderColor = System.Drawing.Color.Gray;
+            this.analysisGroupBox.BackColor = UITheme.DarkerBackground;
             this.analysisGroupBox.BorderThickness = 2;
             this.analysisGroupBox.Controls.Add(this.RoundedStartButton);
             this.analysisGroupBox.Controls.Add(this.toggleSwitch1);

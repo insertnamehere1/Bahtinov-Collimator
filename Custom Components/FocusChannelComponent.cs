@@ -356,8 +356,8 @@ namespace Bahtinov_Collimator
         {
             if (HoverHighlightEnabled)
             {
-                groupBox1.BackColor = UITheme.DarkBackground;
-                mirrorDrawingComponent1.BackColor = UITheme.DarkBackground;
+                groupBox1.BackColor = UITheme.DarkerBackground;
+                mirrorDrawingComponent1.BackColor = UITheme.DarkerBackground;
                 mirrorDrawingComponent1.MirrorOutlineColor = UITheme.GetGroupBoxTextColor(groupID);
                 mirrorDrawingComponent1.Invalidate();
             }
