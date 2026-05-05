@@ -952,7 +952,8 @@ namespace Bahtinov_Collimator
                 pictureBox1.Image = null;
 
                 pictureBox1.Invalidate();
-                pictureBox1.Image = new Bitmap(Properties.Resources.TBMask_DarkGray);
+                pictureBox1.Image = new Bitmap(Properties.Resources.Mosaic2);
+
                 pictureBox1.BackColor = UITheme.DarkerBackground;
             }
         }
