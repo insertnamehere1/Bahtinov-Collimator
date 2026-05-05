@@ -51,7 +51,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.titledRoundedRichTextBox1.BorderColor = System.Drawing.Color.Gray;
             this.titledRoundedRichTextBox1.BorderThickness = 2;
             this.titledRoundedRichTextBox1.CornerRadius = 8;
-            this.titledRoundedRichTextBox1.ForeColor = System.Drawing.Color.White;
+            this.titledRoundedRichTextBox1.ForeColor = System.Drawing.Color.LightGray;
             // 
             // 
             // 
@@ -80,7 +80,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.titledRoundedRichTextBox1.TabIndex = 0;
             this.titledRoundedRichTextBox1.TitleBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
             this.titledRoundedRichTextBox1.TitleFont = new System.Drawing.Font("Segoe UI", 14F);
-            this.titledRoundedRichTextBox1.TitleForeColor = System.Drawing.Color.White;
+            this.titledRoundedRichTextBox1.TitleForeColor = System.Drawing.Color.LightGray;
             this.titledRoundedRichTextBox1.TitleHeight = 35;
             this.titledRoundedRichTextBox1.TitlePaddingLeft = 90;
             this.titledRoundedRichTextBox1.TitleText = "Summary";
@@ -119,7 +119,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.BackColor = UITheme.DarkBackground;
             this.Controls.Add(this.titledRoundedRichTextBox1);
             this.Controls.Add(this.quitButton);
-            this.ForeColor = System.Drawing.Color.White;
+            this.ForeColor = System.Drawing.Color.LightGray;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "CalibrationComponent";
             this.Size = new System.Drawing.Size(308, 624);

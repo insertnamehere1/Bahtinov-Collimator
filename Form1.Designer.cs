@@ -238,7 +238,7 @@ namespace Bahtinov_Collimator
             this.RoundedStartButton.FlatAppearance.BorderSize = 0;
             this.RoundedStartButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RoundedStartButton.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.RoundedStartButton.ForeColor = System.Drawing.Color.White;
+            this.RoundedStartButton.ForeColor = System.Drawing.Color.LightGray;
             this.RoundedStartButton.HoverOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.RoundedStartButton.Image = ((System.Drawing.Image)(resources.GetObject("RoundedStartButton.Image")));
             this.RoundedStartButton.ImageHeight = 32;

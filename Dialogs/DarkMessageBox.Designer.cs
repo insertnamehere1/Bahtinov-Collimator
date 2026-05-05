@@ -46,7 +46,7 @@ namespace Bahtinov_Collimator
             // 
             this.messageLabel.AutoSize = true;
             this.messageLabel.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.messageLabel.ForeColor = System.Drawing.Color.White;
+            this.messageLabel.ForeColor = System.Drawing.Color.LightGray;
             this.messageLabel.Location = new System.Drawing.Point(78, 30);
             this.messageLabel.Name = "messageLabel";
             this.messageLabel.Size = new System.Drawing.Size(45, 19);

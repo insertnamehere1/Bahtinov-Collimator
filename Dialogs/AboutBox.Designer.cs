@@ -89,7 +89,7 @@ namespace Bahtinov_Collimator
             // 
             this.labelProductName.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelProductName.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.labelProductName.ForeColor = System.Drawing.Color.White;
+            this.labelProductName.ForeColor = System.Drawing.Color.LightGray;
             this.labelProductName.Location = new System.Drawing.Point(179, 0);
             this.labelProductName.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
             this.labelProductName.MaximumSize = new System.Drawing.Size(0, 26);
@@ -102,7 +102,7 @@ namespace Bahtinov_Collimator
             // labelVersion
             // 
             this.labelVersion.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelVersion.ForeColor = System.Drawing.Color.White;
+            this.labelVersion.ForeColor = System.Drawing.Color.LightGray;
             this.labelVersion.Location = new System.Drawing.Point(179, 29);
             this.labelVersion.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
             this.labelVersion.MaximumSize = new System.Drawing.Size(0, 26);
@@ -115,7 +115,7 @@ namespace Bahtinov_Collimator
             // labelCopyright
             // 
             this.labelCopyright.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelCopyright.ForeColor = System.Drawing.Color.White;
+            this.labelCopyright.ForeColor = System.Drawing.Color.LightGray;
             this.labelCopyright.Location = new System.Drawing.Point(179, 58);
             this.labelCopyright.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
             this.labelCopyright.MaximumSize = new System.Drawing.Size(0, 26);
@@ -128,7 +128,7 @@ namespace Bahtinov_Collimator
             // labelCompanyName
             // 
             this.labelCompanyName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelCompanyName.ForeColor = System.Drawing.Color.White;
+            this.labelCompanyName.ForeColor = System.Drawing.Color.LightGray;
             this.labelCompanyName.Location = new System.Drawing.Point(179, 87);
             this.labelCompanyName.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
             this.labelCompanyName.MaximumSize = new System.Drawing.Size(0, 26);
@@ -143,7 +143,7 @@ namespace Bahtinov_Collimator
             this.textBoxDescription.BackColor = UITheme.DarkBackground;
             this.textBoxDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxDescription.ForeColor = System.Drawing.Color.White;
+            this.textBoxDescription.ForeColor = System.Drawing.Color.LightGray;
             this.textBoxDescription.Location = new System.Drawing.Point(179, 121);
             this.textBoxDescription.Margin = new System.Windows.Forms.Padding(9, 5, 4, 5);
             this.textBoxDescription.Multiline = true;

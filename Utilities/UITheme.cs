@@ -18,7 +18,7 @@ namespace Bahtinov_Collimator
         /// </summary>
         public static Color DarkBackground { get; } = Color.FromArgb(30, 34, 40);
 
-        public static Color DarkerBackground { get; } = Color.FromArgb(10, 14, 20);
+        public static Color DarkerBackground { get; } = Color.FromArgb(20, 28, 30);
 
         /// <summary>
         /// Gets the color used for the dark background of the title area.
