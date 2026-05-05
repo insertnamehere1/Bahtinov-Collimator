@@ -105,7 +105,7 @@ namespace Bahtinov_Collimator.Custom_Components
         private const int BaffleInteriorEraseInflate = 1;
 
         /// <summary>Axis starts at <c>mirrorBounds.Left + AxisStartOffsetFromLeft</c>.</summary>
-        private const int AxisStartOffsetFromLeft = 2;
+        private const int AxisStartOffsetFromLeft = -8;
 
         private const float AxisPenWidth = 1.5f;
 

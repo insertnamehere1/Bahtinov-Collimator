@@ -74,7 +74,7 @@ namespace Bahtinov_Collimator
             this.mirrorDrawingComponent1.MirrorOutlineColor = System.Drawing.Color.DimGray;
             this.mirrorDrawingComponent1.MirrorType = Bahtinov_Collimator.Custom_Components.MirrorType.SctPrimary;
             this.mirrorDrawingComponent1.Name = "mirrorDrawingComponent1";
-            this.mirrorDrawingComponent1.OpticalAxisLength = 100;
+            this.mirrorDrawingComponent1.OpticalAxisLength = 110;
             this.mirrorDrawingComponent1.Size = new System.Drawing.Size(100, 100);
             this.mirrorDrawingComponent1.TabIndex = 9;
             // 

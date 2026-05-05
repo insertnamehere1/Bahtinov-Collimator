@@ -47,13 +47,13 @@ namespace Bahtinov_Collimator
         /// Default focus channel width (96 DPI logical px), same as <see cref="Form1"/> default channel width.
         /// Used to compute the history bar width when the mirror is visible: same width as a full-stretch bar at that size.
         /// </summary>
-        private const int DefaultFocusChannelWidthAt96 = 185;
+        private const int DefaultFocusChannelWidthAt96 = 195;
 
         /// <summary>Distance from the group box’s left client edge to the mirror (96 DPI logical px).</summary>
         private const int MirrorHorizontalInsetAt96 = 8;
 
         /// <summary>Minimum gap between the mirror’s right edge and the history bar’s left (96 DPI logical px).</summary>
-        private const int MirrorGapToHistoryBarAt96 = 8;
+        private const int MirrorGapToHistoryBarAt96 = -10;
 
         /// <summary>Mirror height as a fraction of <see cref="Control.ClientSize.Height"/> of the group box (scales when the channel resizes).</summary>
         private const double MirrorHeightFractionOfGroupClient = 0.62;
