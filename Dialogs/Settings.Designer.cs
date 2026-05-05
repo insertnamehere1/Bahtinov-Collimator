@@ -69,8 +69,8 @@ namespace Bahtinov_Collimator
             // 
             // groupBox3
             // 
+            this.groupBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(28)))), ((int)(((byte)(30)))));
             this.groupBox3.BorderColor = System.Drawing.Color.Gray;
-            this.groupBox3.BackColor = UITheme.DarkerBackground;
             this.groupBox3.BorderThickness = 2;
             this.groupBox3.Controls.Add(this.guidanceOffRadioButton);
             this.groupBox3.Controls.Add(this.newtonianRadioButton);
@@ -115,6 +115,7 @@ namespace Bahtinov_Collimator
             this.newtonianRadioButton.TabStop = true;
             this.newtonianRadioButton.Text = "Newtonian";
             this.newtonianRadioButton.UseVisualStyleBackColor = true;
+            this.newtonianRadioButton.Visible = false;
             // 
             // MakCassRadioButton
             // 
@@ -143,8 +144,8 @@ namespace Bahtinov_Collimator
             // 
             // minimizeGroupBox
             // 
+            this.minimizeGroupBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(28)))), ((int)(((byte)(30)))));
             this.minimizeGroupBox.BorderColor = System.Drawing.Color.Gray;
-            this.minimizeGroupBox.BackColor = UITheme.DarkerBackground;
             this.minimizeGroupBox.BorderThickness = 2;
             this.minimizeGroupBox.Controls.Add(this.minimizeLabel);
             this.minimizeGroupBox.Controls.Add(this.minimizeCheckBox);
@@ -181,8 +182,8 @@ namespace Bahtinov_Collimator
             // 
             // ErrorSignGroupBox
             // 
+            this.ErrorSignGroupBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(28)))), ((int)(((byte)(30)))));
             this.ErrorSignGroupBox.BorderColor = System.Drawing.Color.Gray;
-            this.ErrorSignGroupBox.BackColor = UITheme.DarkerBackground;
             this.ErrorSignGroupBox.BorderThickness = 2;
             this.ErrorSignGroupBox.Controls.Add(this.label2);
             this.ErrorSignGroupBox.Controls.Add(this.errorSignCheckBox);
@@ -219,8 +220,8 @@ namespace Bahtinov_Collimator
             // 
             // keepOnTopGroupBox
             // 
+            this.keepOnTopGroupBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(28)))), ((int)(((byte)(30)))));
             this.keepOnTopGroupBox.BorderColor = System.Drawing.Color.Gray;
-            this.keepOnTopGroupBox.BackColor = UITheme.DarkerBackground;
             this.keepOnTopGroupBox.BorderThickness = 2;
             this.keepOnTopGroupBox.Controls.Add(this.onTopLabel);
             this.keepOnTopGroupBox.Controls.Add(this.onTopCheckBox);
@@ -257,8 +258,8 @@ namespace Bahtinov_Collimator
             // 
             // groupBox4
             // 
+            this.groupBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(28)))), ((int)(((byte)(30)))));
             this.groupBox4.BorderColor = System.Drawing.Color.Gray;
-            this.groupBox4.BackColor = UITheme.DarkerBackground;
             this.groupBox4.BorderThickness = 2;
             this.groupBox4.Controls.Add(this.label3);
             this.groupBox4.Controls.Add(this.historyMakersTextBox);
@@ -306,8 +307,8 @@ namespace Bahtinov_Collimator
             // 
             // groupBox1
             // 
+            this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(28)))), ((int)(((byte)(30)))));
             this.groupBox1.BorderColor = System.Drawing.Color.Gray;
-            this.groupBox1.BackColor = UITheme.DarkerBackground;
             this.groupBox1.BorderThickness = 2;
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.VoiceCheckBox);
@@ -331,7 +332,7 @@ namespace Bahtinov_Collimator
             this.label5.Size = new System.Drawing.Size(225, 67);
             this.label5.TabIndex = 34;
             this.label5.Text = "Enable voice guidance and hover\r\nyour mouse over the Focus Group \r\ntext box to ac" +
-                "tivate voice callouts \r\nfor that channel";
+    "tivate voice callouts \r\nfor that channel";
             // 
             // VoiceCheckBox
             // 
@@ -399,7 +400,7 @@ namespace Bahtinov_Collimator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = UITheme.DarkBackground;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(34)))), ((int)(((byte)(40)))));
             this.ClientSize = new System.Drawing.Size(563, 468);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.minimizeGroupBox);
