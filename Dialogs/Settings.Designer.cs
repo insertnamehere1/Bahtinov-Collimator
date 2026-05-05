@@ -400,7 +400,7 @@ namespace Bahtinov_Collimator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(34)))), ((int)(((byte)(40)))));
+            this.BackColor = UITheme.DarkBackground;
             this.ClientSize = new System.Drawing.Size(563, 468);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.minimizeGroupBox);
