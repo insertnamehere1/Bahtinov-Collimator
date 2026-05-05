@@ -55,7 +55,7 @@ namespace Bahtinov_Collimator.Custom_Components
             // 
             // 
             // 
-            this.titledRoundedRichTextBox1.InnerRichTextBox.BackColor = UITheme.DarkerBackground;
+            this.titledRoundedRichTextBox1.InnerRichTextBox.BackColor = UITheme.DarkBackground;
             this.titledRoundedRichTextBox1.InnerRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.titledRoundedRichTextBox1.InnerRichTextBox.DetectUrls = false;
             this.titledRoundedRichTextBox1.InnerRichTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -116,7 +116,7 @@ namespace Bahtinov_Collimator.Custom_Components
             // CalibrationComponent
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(17)))), ((int)(((byte)(23)))));
+            this.BackColor = UITheme.DarkBackground;
             this.Controls.Add(this.titledRoundedRichTextBox1);
             this.Controls.Add(this.quitButton);
             this.ForeColor = System.Drawing.Color.White;

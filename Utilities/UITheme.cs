@@ -16,9 +16,9 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the background color for dark-themed forms.
         /// </summary>
-        public static Color DarkBackground { get; } = Color.FromArgb(13, 17, 23);
+        public static Color DarkBackground { get; } = Color.FromArgb(30, 34, 40);
 
-        public static Color DarkerBackground { get; } = Color.FromArgb(4, 4, 4);
+        public static Color DarkerBackground { get; } = Color.FromArgb(10, 14, 20);
 
         /// <summary>
         /// Gets the color used for the dark background of the title area.
