@@ -40,13 +40,15 @@ namespace Bahtinov_Collimator
         public Settings()
         {
             InitializeComponent();
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+            this.UpdateStyles();
             ApplyLocalization();
             ApplyLayoutDirectionForLanguage();
             LoadSettings();
 
-            var color = UITheme.DarkBackground;
-            int colorValue = color.R | (color.G << 8) | (color.B << 16);
-            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref colorValue, sizeof(int));
+            // BOOL TRUE — not an RGB value (see DWMWA_USE_IMMERSIVE_DARK_MODE).
+            int useImmersiveDarkMode = 1;
+            DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref useImmersiveDarkMode, sizeof(int));
         }
 
         #endregion

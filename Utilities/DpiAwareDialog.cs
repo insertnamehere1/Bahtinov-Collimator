@@ -98,7 +98,13 @@ namespace Bahtinov_Collimator
                 dialog.BeginInvoke((Action)(() =>
                 {
                     if (!dialog.IsDisposed)
+                    {
+                        // While still fully transparent, run one synchronous paint so the first
+                        // visible frame after Opacity = 1 is not an empty/white erase flash.
+                        dialog.Invalidate(true);
+                        dialog.Update();
                         dialog.Opacity = 1d;
+                    }
                 }));
             };
             dialog.Shown += shownHandler;
