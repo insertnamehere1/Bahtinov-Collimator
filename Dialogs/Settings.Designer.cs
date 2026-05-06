@@ -69,7 +69,7 @@ namespace Bahtinov_Collimator
             // 
             // groupBox3
             // 
-            this.groupBox3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(28)))), ((int)(((byte)(30)))));
+            this.groupBox3.BackColor = UITheme.DarkerBackground;
             this.groupBox3.BorderColor = System.Drawing.Color.Gray;
             this.groupBox3.BorderThickness = 2;
             this.groupBox3.Controls.Add(this.guidanceOffRadioButton);
@@ -144,7 +144,7 @@ namespace Bahtinov_Collimator
             // 
             // minimizeGroupBox
             // 
-            this.minimizeGroupBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(28)))), ((int)(((byte)(30)))));
+            this.minimizeGroupBox.BackColor = UITheme.DarkerBackground;
             this.minimizeGroupBox.BorderColor = System.Drawing.Color.Gray;
             this.minimizeGroupBox.BorderThickness = 2;
             this.minimizeGroupBox.Controls.Add(this.minimizeLabel);
@@ -182,7 +182,7 @@ namespace Bahtinov_Collimator
             // 
             // ErrorSignGroupBox
             // 
-            this.ErrorSignGroupBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(28)))), ((int)(((byte)(30)))));
+            this.ErrorSignGroupBox.BackColor = UITheme.DarkerBackground;
             this.ErrorSignGroupBox.BorderColor = System.Drawing.Color.Gray;
             this.ErrorSignGroupBox.BorderThickness = 2;
             this.ErrorSignGroupBox.Controls.Add(this.label2);
@@ -220,7 +220,7 @@ namespace Bahtinov_Collimator
             // 
             // keepOnTopGroupBox
             // 
-            this.keepOnTopGroupBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(28)))), ((int)(((byte)(30)))));
+            this.keepOnTopGroupBox.BackColor = UITheme.DarkerBackground;
             this.keepOnTopGroupBox.BorderColor = System.Drawing.Color.Gray;
             this.keepOnTopGroupBox.BorderThickness = 2;
             this.keepOnTopGroupBox.Controls.Add(this.onTopLabel);
@@ -258,7 +258,7 @@ namespace Bahtinov_Collimator
             // 
             // groupBox4
             // 
-            this.groupBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(28)))), ((int)(((byte)(30)))));
+            this.groupBox4.BackColor = UITheme.DarkerBackground;
             this.groupBox4.BorderColor = System.Drawing.Color.Gray;
             this.groupBox4.BorderThickness = 2;
             this.groupBox4.Controls.Add(this.label3);
@@ -307,7 +307,7 @@ namespace Bahtinov_Collimator
             // 
             // groupBox1
             // 
-            this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(28)))), ((int)(((byte)(30)))));
+            this.groupBox1.BackColor = UITheme.DarkerBackground;
             this.groupBox1.BorderColor = System.Drawing.Color.Gray;
             this.groupBox1.BorderThickness = 2;
             this.groupBox1.Controls.Add(this.label5);
