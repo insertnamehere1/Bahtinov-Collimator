@@ -604,9 +604,9 @@ namespace Bahtinov_Collimator
             if (calibrationComponent == null || calibrationComponent.IsDisposed)
                 return;
 
-            int calWidth = S(UITheme.CalibrateFrameWidth);
+            int calWidth = S(UITheme.CalibrateFrameWidth + 8);
             int topOffset = S(8);
-            int rightGap = S(WorkspaceHorizontalMarginAt96);
+            int rightGap = S(WorkspaceHorizontalMarginAt96 - 4 );
 
             int newX = ClientSize.Width - calWidth - rightGap;
             int newY = topOffset;

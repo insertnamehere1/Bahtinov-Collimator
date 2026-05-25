@@ -47,7 +47,7 @@ namespace Bahtinov_Collimator.Custom_Components
             this.titledRoundedRichTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.titledRoundedRichTextBox1.BackColor = UITheme.DarkerBackground;
+            this.titledRoundedRichTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(38)))), ((int)(((byte)(40)))));
             this.titledRoundedRichTextBox1.BorderColor = System.Drawing.Color.Gray;
             this.titledRoundedRichTextBox1.BorderThickness = 2;
             this.titledRoundedRichTextBox1.CornerRadius = 8;
@@ -55,21 +55,21 @@ namespace Bahtinov_Collimator.Custom_Components
             // 
             // 
             // 
-            this.titledRoundedRichTextBox1.InnerRichTextBox.BackColor = UITheme.DarkBackground;
+            this.titledRoundedRichTextBox1.InnerRichTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(38)))), ((int)(((byte)(40)))));
             this.titledRoundedRichTextBox1.InnerRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.titledRoundedRichTextBox1.InnerRichTextBox.DetectUrls = false;
             this.titledRoundedRichTextBox1.InnerRichTextBox.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.titledRoundedRichTextBox1.InnerRichTextBox.ForeColor = System.Drawing.Color.LightGray;
-            this.titledRoundedRichTextBox1.InnerRichTextBox.Location = new System.Drawing.Point(13, 37);
+            this.titledRoundedRichTextBox1.InnerRichTextBox.Location = new System.Drawing.Point(12, 47);
             this.titledRoundedRichTextBox1.InnerRichTextBox.Name = "";
             this.titledRoundedRichTextBox1.InnerRichTextBox.ReadOnly = true;
             this.titledRoundedRichTextBox1.InnerRichTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.titledRoundedRichTextBox1.InnerRichTextBox.Size = new System.Drawing.Size(274, 475);
+            this.titledRoundedRichTextBox1.InnerRichTextBox.Size = new System.Drawing.Size(276, 467);
             this.titledRoundedRichTextBox1.InnerRichTextBox.TabIndex = 0;
             this.titledRoundedRichTextBox1.Location = new System.Drawing.Point(4, 22);
             this.titledRoundedRichTextBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.titledRoundedRichTextBox1.Name = "titledRoundedRichTextBox1";
-            this.titledRoundedRichTextBox1.Padding = new System.Windows.Forms.Padding(11, 0, 11, 12);
+            this.titledRoundedRichTextBox1.Padding = new System.Windows.Forms.Padding(10);
             this.titledRoundedRichTextBox1.ProgressBarBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             this.titledRoundedRichTextBox1.ProgressBarDivisionColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
             this.titledRoundedRichTextBox1.ProgressBarFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(187)))), ((int)(((byte)(92)))));
@@ -116,7 +116,7 @@ namespace Bahtinov_Collimator.Custom_Components
             // CalibrationComponent
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackColor = UITheme.DarkBackground;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(44)))), ((int)(((byte)(50)))));
             this.Controls.Add(this.titledRoundedRichTextBox1);
             this.Controls.Add(this.quitButton);
             this.ForeColor = System.Drawing.Color.LightGray;
