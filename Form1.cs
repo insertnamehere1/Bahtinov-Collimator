@@ -91,16 +91,34 @@ namespace Bahtinov_Collimator
         private const int DEFAULT_FOCUS_CHAN_WIDTH_AT96 = 185;
 
         /// <summary>
-        /// Horizontal gap (96 DPI logical px) between the focus column and the image display.
-        /// Matches designer: image at X=202, red group at (9,23) with width 185 → 9+185+8=202.
+        /// Default focus channel height (96 DPI logical px). Must match designer channel sizes.
         /// </summary>
-        private const int ImageGapAfterFocusColumnAt96 = 8;
+        private const int DEFAULT_FOCUS_CHAN_HEIGHT_AT96 = 92;
 
         /// <summary>
-        /// Right margin (96 DPI logical px) after the image display inside the client area.
-        /// Designer: ClientSize 659, image right 652 → 7px.
+        /// Top edge of the red focus channel below the menu strip (96 DPI logical px).
         /// </summary>
-        private const int RightMarginAfterImageAt96 = 7;
+        private const int FOCUS_CHAN_RED_TOP_AT96 = 28;
+
+        /// <summary>
+        /// Vertical gap between stacked focus channels (96 DPI logical px).
+        /// </summary>
+        private const int FOCUS_CHAN_VERTICAL_GAP_AT96 = 7;
+
+        /// <summary>
+        /// Gap between the blue focus channel and the analysis group box (96 DPI logical px).
+        /// </summary>
+        private const int FOCUS_CHAN_TO_ANALYSIS_GAP_AT96 = 3;
+
+        /// <summary>
+        /// Left/right inset (96 DPI logical px) from the client edge to the focus column and past the image.
+        /// </summary>
+        private const int WorkspaceHorizontalMarginAt96 = 8;
+
+        /// <summary>
+        /// Horizontal gap (96 DPI logical px) between the focus column and the image display.
+        /// </summary>
+        private const int ImageGapAfterFocusColumnAt96 = 8;
 
         /// <summary>
         /// Gap (96 DPI) between image display and calibration panel when calibration is open.
@@ -302,7 +320,7 @@ namespace Bahtinov_Collimator
             else if (analysisGroupBox != null && analysisGroupBox.Visible)
                 anchorRight = analysisGroupBox.Right;
             else
-                anchorRight = S(9) + S(DEFAULT_FOCUS_CHAN_WIDTH_AT96);
+                anchorRight = S(WorkspaceHorizontalMarginAt96) + S(DEFAULT_FOCUS_CHAN_WIDTH_AT96);
 
             int left = anchorRight + S(ImageGapAfterFocusColumnAt96);
             int y = imageDisplayComponent1.Location.Y;
@@ -320,14 +338,13 @@ namespace Bahtinov_Collimator
             if (imageDisplayComponent1 == null)
                 return;
 
-            int minClientWidth = imageDisplayComponent1.Right + S(RightMarginAfterImageAt96);
+            int minClientWidth = imageDisplayComponent1.Right + S(WorkspaceHorizontalMarginAt96);
 
             if (calibrationComponent != null)
             {
                 int calWidth = S(UITheme.CalibrateFrameWidth);
-                // Match StartCalibration: calibration left = ClientSize.Width - calWidth - S(3)
                 int minForImageAndCalibration =
-                    imageDisplayComponent1.Right + S(GapImageToCalibrationAt96) + calWidth + S(3);
+                    imageDisplayComponent1.Right + S(GapImageToCalibrationAt96) + calWidth + S(WorkspaceHorizontalMarginAt96);
                 minClientWidth = Math.Max(minClientWidth, minForImageAndCalibration);
             }
 
@@ -342,6 +359,34 @@ namespace Bahtinov_Collimator
                 // entire client area instead of leaving a black strip on the left
                 // when calibration opens/closes.
                 Invalidate();
+            }
+        }
+
+        /// <summary>
+        /// Applies default focus channel height and vertical stacking (96-DPI logical layout, DPI-scaled).
+        /// </summary>
+        private void ApplyFocusChannelColumnLayout()
+        {
+            if (groupBoxRed == null || groupBoxGreen == null || groupBoxBlue == null)
+                return;
+
+            int width = groupBoxRed.Width;
+            int height = S(DEFAULT_FOCUS_CHAN_HEIGHT_AT96);
+            int left = S(WorkspaceHorizontalMarginAt96);
+
+            int redTop = S(FOCUS_CHAN_RED_TOP_AT96);
+            int gap = S(FOCUS_CHAN_VERTICAL_GAP_AT96);
+            int greenTop = redTop + height + gap;
+            int blueTop = greenTop + height + gap;
+
+            groupBoxRed.SetBounds(left, redTop, width, height);
+            groupBoxGreen.SetBounds(left, greenTop, width, height);
+            groupBoxBlue.SetBounds(left, blueTop, width, height);
+
+            if (analysisGroupBox != null)
+            {
+                int analysisTop = blueTop + height + S(FOCUS_CHAN_TO_ANALYSIS_GAP_AT96);
+                analysisGroupBox.Location = new Point(left, analysisTop);
             }
         }
 
@@ -517,6 +562,7 @@ namespace Bahtinov_Collimator
                 Opacity = 1d;
 
             SyncAnalysisGroupBoxWidthToFocusColumn();
+            ApplyFocusChannelColumnLayout();
             ApplyMainWorkspaceLayout();
 
             ShowStartupCalibrationPromptIfNeeded(this);
@@ -530,6 +576,7 @@ namespace Bahtinov_Collimator
             base.OnDpiChanged(e);
 
             SyncAnalysisGroupBoxWidthToFocusColumn();
+            ApplyFocusChannelColumnLayout();
             ApplyMainWorkspaceLayout();
             RepositionCalibrationComponent();
             RefreshFocusChannelsAfterDpiChange();
@@ -559,7 +606,7 @@ namespace Bahtinov_Collimator
 
             int calWidth = S(UITheme.CalibrateFrameWidth);
             int topOffset = S(8);
-            int rightGap = S(6);
+            int rightGap = S(WorkspaceHorizontalMarginAt96);
 
             int newX = ClientSize.Width - calWidth - rightGap;
             int newY = topOffset;
@@ -1413,12 +1460,14 @@ namespace Bahtinov_Collimator
 
                 if (groupBoxRed != null && groupBoxRed.Size.Width < maxWidth)
                 {
-                    groupBoxRed.Size = new Size(maxWidth, groupBoxRed.Size.Height);
-                    groupBoxGreen.Size = new Size(maxWidth, groupBoxGreen.Size.Height);
-                    groupBoxBlue.Size = new Size(maxWidth, groupBoxBlue.Size.Height);
+                    int height = S(DEFAULT_FOCUS_CHAN_HEIGHT_AT96);
+                    groupBoxRed.Size = new Size(maxWidth, height);
+                    groupBoxGreen.Size = new Size(maxWidth, height);
+                    groupBoxBlue.Size = new Size(maxWidth, height);
                 }
 
                 SyncAnalysisGroupBoxWidthToFocusColumn();
+                ApplyFocusChannelColumnLayout();
                 ApplyMainWorkspaceLayout();
             }
         }
@@ -1441,12 +1490,14 @@ namespace Bahtinov_Collimator
 
                 if (groupBoxRed != null && groupBoxRed.Size.Width != defaultWidth)
                 {
-                    groupBoxRed.Size = new Size(defaultWidth, groupBoxRed.Size.Height);
-                    groupBoxGreen.Size = new Size(defaultWidth, groupBoxGreen.Size.Height);
-                    groupBoxBlue.Size = new Size(defaultWidth, groupBoxBlue.Size.Height);
+                    int height = S(DEFAULT_FOCUS_CHAN_HEIGHT_AT96);
+                    groupBoxRed.Size = new Size(defaultWidth, height);
+                    groupBoxGreen.Size = new Size(defaultWidth, height);
+                    groupBoxBlue.Size = new Size(defaultWidth, height);
                 }
 
                 SyncAnalysisGroupBoxWidthToFocusColumn();
+                ApplyFocusChannelColumnLayout();
                 ApplyMainWorkspaceLayout();
             }
         }

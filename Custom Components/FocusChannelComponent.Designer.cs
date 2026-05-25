@@ -26,22 +26,24 @@ namespace Bahtinov_Collimator
             // 
             // groupBox1
             // 
-            this.groupBox1.BackColor = UITheme.DarkerBackground;
+            this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(38)))), ((int)(((byte)(40)))));
             this.groupBox1.BorderColor = System.Drawing.Color.Gray;
             this.groupBox1.BorderThickness = 2;
             this.groupBox1.Controls.Add(this.offsetBarControl1);
             this.groupBox1.Controls.Add(this.mirrorDrawingComponent1);
             this.groupBox1.CornerRadius = 12;
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.DrawTitleInsideBorder = false;
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(255, 155);
+            this.groupBox1.Size = new System.Drawing.Size(255, 145);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "FocusChannel";
+            this.groupBox1.TitleInsidePadding = 2;
             // 
             // offsetBarControl1
             // 
@@ -68,7 +70,7 @@ namespace Bahtinov_Collimator
             // 
             // mirrorDrawingComponent1
             // 
-            this.mirrorDrawingComponent1.BackColor = UITheme.DarkerBackground;
+            this.mirrorDrawingComponent1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(38)))), ((int)(((byte)(40)))));
             this.mirrorDrawingComponent1.CornerRadius = 1;
             this.mirrorDrawingComponent1.Location = new System.Drawing.Point(12, 24);
             this.mirrorDrawingComponent1.MirrorOutlineColor = System.Drawing.Color.DimGray;
@@ -83,10 +85,10 @@ namespace Bahtinov_Collimator
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.groupBox1);
             this.DoubleBuffered = true;
-            this.ForeColor = UITheme.DarkerBackground;
+            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(38)))), ((int)(((byte)(40)))));
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "FocusChannelComponent";
-            this.Size = new System.Drawing.Size(255, 155);
+            this.Size = new System.Drawing.Size(255, 145);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 

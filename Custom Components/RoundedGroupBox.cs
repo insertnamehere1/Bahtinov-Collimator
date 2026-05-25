@@ -30,6 +30,17 @@ namespace Bahtinov_Collimator.Custom_Components
         /// </summary>
         public int BorderThickness { get; set; } = 2;
 
+        /// <summary>
+        /// When true, the title is drawn below the top border inside the rounded frame
+        /// instead of straddling the top edge (classic GroupBox style).
+        /// </summary>
+        public bool DrawTitleInsideBorder { get; set; }
+
+        /// <summary>
+        /// Vertical padding around the title when <see cref="DrawTitleInsideBorder"/> is true.
+        /// </summary>
+        public int TitleInsidePadding { get; set; } = 4;
+
         #endregion
 
         #region Lifecycle
@@ -64,6 +75,25 @@ namespace Bahtinov_Collimator.Custom_Components
         }
 
         /// <summary>
+        /// Reserves client area below the in-border title for child controls.
+        /// </summary>
+        public override Rectangle DisplayRectangle
+        {
+            get
+            {
+                if (!DrawTitleInsideBorder)
+                    return base.DisplayRectangle;
+
+                int top = GetTitleBandHeight();
+                return new Rectangle(
+                    Padding.Left,
+                    top,
+                    Math.Max(0, ClientSize.Width - Padding.Horizontal),
+                    Math.Max(0, ClientSize.Height - top - Padding.Bottom));
+            }
+        }
+
+        /// <summary>
         /// Custom paint routine for drawing the rounded background,
         /// border, and title text.
         /// </summary>
@@ -71,6 +101,55 @@ namespace Bahtinov_Collimator.Custom_Components
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
+            if (DrawTitleInsideBorder)
+                PaintWithTitleInsideBorder(e);
+            else
+                PaintWithTitleOnBorderEdge(e);
+        }
+
+        private void PaintWithTitleInsideBorder(PaintEventArgs e)
+        {
+            int bodyW = Math.Max(0, Width - 1);
+            int bodyH = Math.Max(0, Height - 1);
+            Rectangle outerBody = new Rectangle(0, 0, bodyW, bodyH);
+
+            int t = BorderThickness;
+            int strokeInset = t / 2;
+
+            Rectangle strokeBounds = new Rectangle(
+                outerBody.X + strokeInset,
+                outerBody.Y + strokeInset,
+                Math.Max(0, outerBody.Width - t),
+                Math.Max(0, outerBody.Height - t));
+
+            Rectangle fillBounds = new Rectangle(
+                outerBody.X + t,
+                outerBody.Y + t,
+                Math.Max(0, outerBody.Width - 2 * t),
+                Math.Max(0, outerBody.Height - 2 * t));
+            int innerRadius = Math.Max(0, CornerRadius - t);
+
+            using (GraphicsPath fillPath = GetRoundPath(fillBounds, innerRadius))
+            using (SolidBrush brush = new SolidBrush(BackColor))
+                e.Graphics.FillPath(brush, fillPath);
+
+            using (GraphicsPath strokePath = GetRoundPath(strokeBounds, CornerRadius))
+            using (Pen pen = new Pen(BorderColor, t))
+            {
+                pen.Alignment = PenAlignment.Center;
+                e.Graphics.DrawPath(pen, strokePath);
+            }
+
+            if (string.IsNullOrEmpty(Text))
+                return;
+
+            int titleY = t + TitleInsidePadding;
+            using (SolidBrush textBrush = new SolidBrush(ForeColor))
+                e.Graphics.DrawString(Text, Font, textBrush, 10, titleY);
+        }
+
+        private void PaintWithTitleOnBorderEdge(PaintEventArgs e)
+        {
             float textHeight = e.Graphics.MeasureString(Text, Font).Height;
             int y0 = (int)(textHeight / 2);
 
@@ -96,9 +175,7 @@ namespace Bahtinov_Collimator.Custom_Components
 
             using (GraphicsPath fillPath = GetRoundPath(fillBounds, innerRadius))
             using (SolidBrush brush = new SolidBrush(BackColor))
-            {
                 e.Graphics.FillPath(brush, fillPath);
-            }
 
             using (GraphicsPath strokePath = GetRoundPath(strokeBounds, CornerRadius))
             using (Pen pen = new Pen(BorderColor, t))
@@ -122,6 +199,18 @@ namespace Bahtinov_Collimator.Custom_Components
 
             using (SolidBrush textBrush = new SolidBrush(ForeColor))
                 e.Graphics.DrawString(Text, Font, textBrush, 10, 0);
+        }
+
+        private int GetTitleBandHeight()
+        {
+            if (!DrawTitleInsideBorder)
+                return 0;
+
+            int textHeight = string.IsNullOrEmpty(Text)
+                ? 0
+                : TextRenderer.MeasureText(Text, Font, Size.Empty, TextFormatFlags.NoPadding).Height;
+
+            return BorderThickness + TitleInsidePadding + textHeight + TitleInsidePadding;
         }
 
         #endregion

@@ -167,7 +167,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Corner radius in 96-DPI logical pixels for menu item hover highlights.
         /// </summary>
-        public static int MenuHighlightCornerRadius { get; } = 4;
+        public static int MenuHighlightCornerRadius { get; } = 6;
 
         /// <summary>
         /// Horizontal inset in 96-DPI logical pixels on menu item hover highlights.

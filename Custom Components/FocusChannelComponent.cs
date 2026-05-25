@@ -9,7 +9,11 @@ namespace Bahtinov_Collimator
     {
         #region Constants
 
-        private const int HISTORYBAR_VERTICAL_POSITION = -13;
+        /// <summary>
+        /// Offset in 96-DPI logical px from the vertical centre of the focus channel (group box client area).
+        /// Negative moves up; positive moves down.
+        /// </summary>
+        private const int HISTORYBAR_VERTICAL_POSITION = -0;
 
         #endregion
 
@@ -56,7 +60,7 @@ namespace Bahtinov_Collimator
         private const int MirrorGapToHistoryBarAt96 = -10;
 
         /// <summary>Mirror height as a fraction of <see cref="Control.ClientSize.Height"/> of the group box (scales when the channel resizes).</summary>
-        private const double MirrorHeightFractionOfGroupClient = 0.62;
+        private const double MirrorHeightFractionOfGroupClient = 1.82;
 
         #endregion
 
@@ -71,6 +75,7 @@ namespace Bahtinov_Collimator
             this.UpdateStyles();
 
             InitializeComponent();
+            groupBox1.DrawTitleInsideBorder = true;
             ApplyTheme();
             SubscribeToEvents();
             UpdateHistoryBarLayout();
@@ -293,9 +298,13 @@ namespace Bahtinov_Collimator
                 offsetBarControl1.Width = Math.Min(Math.Max(S(80), innerW), Math.Max(innerW, 1));
             }
 
-            Rectangle content = groupBox1.DisplayRectangle;
-            int targetTop = content.Top + ((content.Height - offsetBarControl1.Height) / 2) + S(HISTORYBAR_VERTICAL_POSITION);
-            targetTop = Math.Max(content.Top, targetTop);
+            // Centre within the full group box (same as the focus channel); not DisplayRectangle,
+            // which starts below the title and previously capped upward movement.
+            int clientH = groupBox1.ClientSize.Height;
+            int barH = offsetBarControl1.Height;
+            int targetTop = (clientH - barH) / 2 + S(HISTORYBAR_VERTICAL_POSITION);
+            int maxTop = Math.Max(0, clientH - barH);
+            targetTop = Math.Max(0, Math.Min(targetTop, maxTop));
 
             if (offsetBarControl1.Top != targetTop)
                 offsetBarControl1.Top = targetTop;
@@ -315,7 +324,7 @@ namespace Bahtinov_Collimator
             int panelWidth = Math.Max(1, maxMirrorW);
 
             int ch = groupBox1.ClientSize.Height;
-            int maxH = Math.Max(0, ch - S(42));
+            int maxH = Math.Max(0, ch - S(35));
             int panelHeight = Math.Max(S(40), Math.Min(maxH, (int)Math.Round(ch * MirrorHeightFractionOfGroupClient)));
 
             int panelX = leftInset;
