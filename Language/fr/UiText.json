@@ -66,6 +66,7 @@
   "AboutDialogTitleFormat": "À propos de {0}",
   "AboutVersionFormat": "Version {0}",
   "AboutDescription": "Cette application est conçue pour aider les astronomes à collimater et à mettre au point leurs télescopes avec facilité et précision. Elle intègre l'algorithme et le code développés par le regretté Niels Noordhoek pour obtenir des réglages précis de mise au point et de collimation.",
+  "AboutLicense": "Licence\r\n\r\nSkyCal - Outil de mise au point et de collimation\r\nCopyright (C) Chris Dowd\r\n\r\nCe programme est un logiciel libre : vous pouvez le redistribuer et/ou le modifier selon les termes de la GNU General Public License telle que publiée par la Free Software Foundation, soit la version 3 de la Licence, soit (à votre choix) toute version ultérieure.\r\n\r\nCe programme est distribué dans l'espoir qu'il vous sera utile, mais SANS AUCUNE GARANTIE, sans même la garantie implicite de QUALITÉ MARCHANDE ou D'ADÉQUATION À UN USAGE PARTICULIER. Pour plus de détails, consultez la GNU General Public License.\r\n\r\nVous devriez avoir reçu une copie de la GNU General Public License avec ce programme. Sinon, consultez https://www.gnu.org/licenses/.\r\n\r\nLe texte intégral de la licence est inclus dans le fichier LICENSE.txt distribué avec cette application.",
 
   "StartupDialogTitle": "Calibration SkyCal",
   "StartupDialogHeading": "La calibration est recommandée :",

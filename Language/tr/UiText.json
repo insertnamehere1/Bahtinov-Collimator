@@ -62,6 +62,7 @@
   "AboutDialogTitleFormat": "{0} Hakkinda",
   "AboutVersionFormat": "Surum {0}",
   "AboutDescription": "Bu uygulama, astronomlarin teleskoplarini kolaylikla ve hassas sekilde kolime edip odaklamalarina yardimci olmak icin tasarlanmistir. Gec merhum Niels Noordhoek tarafindan gelistirilen algoritma ve kodu icerir; boylece hem odak hem de kolimasyon icin dogru ayarlamalar yapilabilir.",
+  "AboutLicense": "Lisans\r\n\r\nSkyCal - Odak ve Kolimasyon Araci\r\nCopyright (C) Chris Dowd\r\n\r\nBu program ozgur yazilimdir: Free Software Foundation tarafindan yayimlanan GNU General Public License'in 3. surumu veya (tercihinize bagli olarak) sonraki bir surumu kosullari altinda cogaltabilir ve/veya degistirebilirsiniz.\r\n\r\nBu program faydali olacagi umidiyle dagitilmaktadir, ancak TICARI ELVERISLILIK veya BELIRLI BIR AMACA UYGUNLUK dahil HICBIR GARANTI OLMAKSIZIN, hatta zimni garantiler olmaksizin dagitilir. Ayrintilar icin GNU General Public License'a bakiniz.\r\n\r\nBu programla birlikte GNU General Public License'in bir kopyasini almis olmalisiniz. Almadiysaniz https://www.gnu.org/licenses/ adresine bakiniz.\r\n\r\nLisansin tam metni, bu uygulamayla birlikte dagitilan LICENSE.txt dosyasinda yer almaktadir.",
   "StartupDialogTitle": "SkyCal Kalibrasyonu",
   "StartupDialogHeading": "Kalibrasyon Onerilir:",
   "StartupDialogBody": "Tri-Bahtinov kalibrasyonu SkyCal'in tum islevlerini etkinlestirir. Kalibrasyon tamamlanana kadar bazi ozellikler kullanilamaz. (Kalibrasyon Kurulum menusunde de mevcuttur.)\r\n\r\nSkyCal'i simdi kalibre etmek ister misiniz?",

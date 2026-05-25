@@ -66,6 +66,7 @@
   "AboutDialogTitleFormat": "关于 {0}",
   "AboutVersionFormat": "版本 {0}",
   "AboutDescription": "该应用旨在帮助天文学家轻松且精准地校准和对焦他们的望远镜。它整合了已故 Niels Noordhoek 开发的算法和代码，以实现对焦与校准的精确调整。",
+  "AboutLicense": "许可证\r\n\r\nSkyCal - 对焦与校准工具\r\n版权所有 (C) Chris Dowd\r\n\r\n本程序为自由软件：您可依据自由软件基金会发布的 GNU 通用公共许可证（第 3 版，或您选择的任何更高版本）的条款，对其进行再发布和/或修改。\r\n\r\n本程序按“希望有用”而发布，但不提供任何担保，包括对适销性或特定用途适用性的默示担保。详情请参阅 GNU 通用公共许可证。\r\n\r\n您应已随本程序收到一份 GNU 通用公共许可证副本。如未收到，请访问 https://www.gnu.org/licenses/。\r\n\r\n完整许可证文本包含在本应用程序所附的 LICENSE.txt 文件中。",
 
   "StartupDialogTitle": "SkyCal 校准",
   "StartupDialogHeading": "建议进行校准：",

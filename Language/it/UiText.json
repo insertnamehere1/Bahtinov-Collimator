@@ -66,6 +66,7 @@
   "AboutDialogTitleFormat": "Informazioni su {0}",
   "AboutVersionFormat": "Versione {0}",
   "AboutDescription": "L'applicazione è progettata per aiutare gli astronomi a collimare e mettere a fuoco i loro telescopi con facilità e precisione. Integra l'algoritmo e il codice sviluppati dal compianto Niels Noordhoek per ottenere regolazioni accurate di messa a fuoco e collimazione.",
+  "AboutLicense": "Licenza\r\n\r\nSkyCal - Strumento di messa a fuoco e collimazione\r\nCopyright (C) Chris Dowd\r\n\r\nQuesto programma è software libero: è possibile redistribuirlo e/o modificarlo secondo i termini della GNU General Public License pubblicata dalla Free Software Foundation, versione 3 o (a scelta) una versione successiva.\r\n\r\nQuesto programma è distribuito nella speranza che sia utile, ma SENZA ALCUNA GARANZIA, neppure la garanzia implicita di COMMERCIABILITÀ o IDONEITÀ A UNO SCOPO SPECIFICO. Per i dettagli, consultare la GNU General Public License.\r\n\r\nDovreste aver ricevuto una copia della GNU General Public License insieme a questo programma. In caso contrario, visitate https://www.gnu.org/licenses/.\r\n\r\nIl testo completo della licenza è incluso nel file LICENSE.txt distribuito con questa applicazione.",
 
   "StartupDialogTitle": "Calibrazione SkyCal",
   "StartupDialogHeading": "La calibrazione è consigliata:",

@@ -77,6 +77,8 @@ namespace Bahtinov_Collimator
         [DataMember] public string AboutDialogTitleFormat { get; set; }
         [DataMember] public string AboutVersionFormat { get; set; }
         [DataMember] public string AboutDescription { get; set; }
+        /// <summary>GPL and related licensing notice shown in the About dialog.</summary>
+        [DataMember] public string AboutLicense { get; set; }
 
         [DataMember] public string StartupDialogTitle { get; set; }
         [DataMember] public string StartupDialogHeading { get; set; }

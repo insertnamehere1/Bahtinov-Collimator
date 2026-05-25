@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Bahtinov_Collimator
@@ -38,8 +39,9 @@ namespace Bahtinov_Collimator
             this.labelVersion.Text = string.Format(UiText.Current.AboutVersionFormat, GetVersion());
             this.labelCopyright.Text = AssemblyCopyright;
             this.labelCompanyName.Text = AssemblyCompany;
-            this.textBoxDescription.Text = UiText.Current.AboutDescription;
+            this.textBoxDescription.Text = BuildAboutDescriptionText();
             this.okButton.Text = UiText.Current.CommonOk;
+            WireDarkScrollBarTheme();
 
             var color = UITheme.DarkBackground;
             int colorValue = color.R | (color.G << 8) | (color.B << 16);
@@ -163,6 +165,18 @@ namespace Bahtinov_Collimator
         #region Helper Methods
 
         /// <summary>
+        /// Applies dark scrollbar chrome to the description text box (re-run when the scrollbar is created).
+        /// </summary>
+        private void WireDarkScrollBarTheme()
+        {
+            textBoxDescription.HandleCreated += (s, e) => DarkScrollBarTheme.Apply(textBoxDescription);
+            textBoxDescription.TextChanged += (s, e) => DarkScrollBarTheme.Apply(textBoxDescription);
+            textBoxDescription.SizeChanged += (s, e) => DarkScrollBarTheme.Apply(textBoxDescription);
+            if (textBoxDescription.IsHandleCreated)
+                DarkScrollBarTheme.Apply(textBoxDescription);
+        }
+
+        /// <summary>
         /// Applies right-to-left layout when the current language requires it.
         /// </summary>
         private void ApplyLayoutDirectionForLanguage()
@@ -170,6 +184,52 @@ namespace Bahtinov_Collimator
             bool isRtl = LanguageLoader.IsCurrentLanguageRightToLeft();
             RightToLeft = isRtl ? RightToLeft.Yes : RightToLeft.No;
             RightToLeftLayout = isRtl;
+        }
+
+        /// <summary>
+        /// Builds the About dialog body: application description plus GPL license notice.
+        /// License text falls back to English when not yet translated for the active language.
+        /// </summary>
+        private static string BuildAboutDescriptionText()
+        {
+            var body = new StringBuilder();
+            string description = UiText.Current.AboutDescription;
+            if (!string.IsNullOrWhiteSpace(description))
+                body.Append(description);
+
+            string license = ResolveAboutLicenseText();
+            if (!string.IsNullOrWhiteSpace(license))
+            {
+                if (body.Length > 0)
+                    body.Append("\r\n\r\n");
+                body.Append(license);
+            }
+
+            return body.ToString();
+        }
+
+        /// <summary>
+        /// Returns license text for the current UI language, or English when unavailable.
+        /// </summary>
+        private static string ResolveAboutLicenseText()
+        {
+            if (!string.IsNullOrWhiteSpace(UiText.Current.AboutLicense))
+                return UiText.Current.AboutLicense;
+
+            if (LanguageLoader.CurrentLanguageCode == LanguageLoader.DefaultLanguageCode)
+                return string.Empty;
+
+            try
+            {
+                UiTextPack englishPack = LanguageLoader.ReadUiTextPackForLanguage(
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    LanguageLoader.DefaultLanguageCode);
+                return englishPack?.AboutLicense ?? string.Empty;
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
         /// <summary>

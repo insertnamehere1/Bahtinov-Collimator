@@ -66,6 +66,7 @@
   "AboutDialogTitleFormat": "Over {0}",
   "AboutVersionFormat": "Versie {0}",
   "AboutDescription": "Deze applicatie is ontworpen om astronomen te helpen hun telescopen eenvoudig en nauwkeurig te collimeren en te focussen. Het bevat het algoritme en de code die zijn ontwikkeld door wijlen Niels Noordhoek, voor nauwkeurige aanpassingen van zowel focus als collimatie.",
+  "AboutLicense": "Licentie\r\n\r\nSkyCal - Focus- en collimatietool\r\nCopyright (C) Chris Dowd\r\n\r\nDit programma is vrije software: u kunt het herverdelen en/of wijzigen onder de voorwaarden van de GNU General Public License zoals gepubliceerd door de Free Software Foundation, versie 3 van de licentie of (naar uw keuze) een latere versie.\r\n\r\nDit programma wordt verspreid in de hoop dat het nuttig is, maar ZONDER ENIGE GARANTIE, zelfs zonder de impliciete garantie van VERKOOPBAARHEID of GESCHIKTHEID VOOR EEN BEPAALD DOEL. Zie de GNU General Public License voor meer informatie.\r\n\r\nU zou een exemplaar van de GNU General Public License bij dit programma moeten hebben ontvangen. Zo niet, zie https://www.gnu.org/licenses/.\r\n\r\nDe volledige licentietekst is opgenomen in het bestand LICENSE.txt dat met deze toepassing wordt geleverd.",
 
   "StartupDialogTitle": "SkyCal-kalibratie",
   "StartupDialogHeading": "Kalibratie wordt aanbevolen:",

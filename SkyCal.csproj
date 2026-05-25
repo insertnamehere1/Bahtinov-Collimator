@@ -277,6 +277,7 @@
     <Compile Include="Custom Components\ToggleSwitch.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Utilities\DarkScrollBarTheme.cs" />
     <Compile Include="Utilities\DpiAwareDialog.cs" />
     <Compile Include="Utilities\Helper.cs" />
     <Compile Include="Image Processing\BahtinovProcessing.cs" />
@@ -347,6 +348,9 @@
       <DependentUpon>DarkMessageBox.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <Content Include="LICENSE.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Language\de\NextStepText_MCT.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -518,6 +522,15 @@
     <Content Include="published\.gitattributes" />
   </ItemGroup>
   <ItemGroup>
+    <PublishFile Include="LICENSE.txt">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>LICENSE.txt</TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
     <PublishFile Include="published\.gitattributes">
       <Visible>False</Visible>
       <Group>

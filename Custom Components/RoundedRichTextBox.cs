@@ -59,50 +59,6 @@ namespace SkyCal.Custom_Components
         [DllImport("user32.dll")]
         private static extern bool HideCaret(IntPtr hWnd);
 
-        /// <summary>Applies dark-style scrollbar / edit chrome (Windows 10 2004+); no-op on failure.</summary>
-        [DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
-        private static extern int SetWindowTheme(IntPtr hwnd, string pszSubAppName, string pszSubIdList);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
-
-        [DllImport("user32.dll")]
-        private static extern bool EnumChildWindows(IntPtr hWndParent, EnumChildProc lpEnumFunc, IntPtr lParam);
-
-        private delegate bool EnumChildProc(IntPtr hWnd, IntPtr lParam);
-
-        /// <summary>Keep delegate alive for native callback lifetime.</summary>
-        private static readonly EnumChildProc ScrollBarThemeEnumCallback = ThemeScrollBarChildrenCallback;
-
-        private static bool ThemeScrollBarChildrenCallback(IntPtr hWnd, IntPtr lParam)
-        {
-            var sb = new StringBuilder(256);
-            if (GetClassName(hWnd, sb, sb.Capacity) > 0 && sb.ToString() == "ScrollBar")
-                SetWindowTheme(hWnd, "DarkMode_Explorer", null);
-            return true;
-        }
-
-        /// <summary>
-        /// RichEdit scrollbars are sometimes separate HWNDs; theme the control and enumerate children.
-        /// Re-run after layout/text changes because the vertical scrollbar may be created later.
-        /// </summary>
-        private static void ApplyDarkScrollBarTheme(RichTextBox rtb)
-        {
-            if (rtb == null || !rtb.IsHandleCreated)
-                return;
-
-            IntPtr h = rtb.Handle;
-            try
-            {
-                SetWindowTheme(h, "DarkMode_Explorer", null);
-                EnumChildWindows(h, ScrollBarThemeEnumCallback, IntPtr.Zero);
-            }
-            catch
-            {
-                // Best-effort; OS may not support DarkMode_Explorer.
-            }
-        }
-
         #endregion
 
         #region DPI scaling
@@ -574,13 +530,13 @@ namespace SkyCal.Custom_Components
             {
                 SuppressCaretIfNeeded();
                 if (!richTextBox.IsDisposed)
-                    ApplyDarkScrollBarTheme(richTextBox);
+                    DarkScrollBarTheme.Apply(richTextBox);
             };
             richTextBox.SelectionChanged += (s, e) => SuppressCaretIfNeeded();
             richTextBox.SizeChanged += (s, e) =>
             {
                 if (!richTextBox.IsDisposed)
-                    ApplyDarkScrollBarTheme(richTextBox);
+                    DarkScrollBarTheme.Apply(richTextBox);
             };
             richTextBox.HandleCreated += (s, e) =>
             {
@@ -589,7 +545,7 @@ namespace SkyCal.Custom_Components
                 richTextBox.BeginInvoke(new Action(() =>
                 {
                     if (!richTextBox.IsDisposed)
-                        ApplyDarkScrollBarTheme(richTextBox);
+                        DarkScrollBarTheme.Apply(richTextBox);
                 }));
             };
 

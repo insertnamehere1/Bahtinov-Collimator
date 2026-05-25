@@ -66,6 +66,7 @@
   "AboutDialogTitleFormat": "Acerca de {0}",
   "AboutVersionFormat": "Versão {0}",
   "AboutDescription": "Esta aplicação foi concebida para ajudar astrónomos a colimar e focar os seus telescópios com facilidade e precisão. Incorpora o algoritmo e o código desenvolvidos pelo falecido Niels Noordhoek, para permitir ajustes precisos de foco e colimação.",
+  "AboutLicense": "Licença\r\n\r\nSkyCal - Ferramenta de foco e colimação\r\nCopyright (C) Chris Dowd\r\n\r\nEste programa é software livre: pode redistribuí-lo e/ou modificá-lo nos termos da GNU General Public License publicada pela Free Software Foundation, seja a versão 3 da Licença ou (à sua escolha) qualquer versão posterior.\r\n\r\nEste programa é distribuído na esperança de que seja útil, mas SEM QUALQUER GARANTIA, inclusive sem garantias implícitas de COMERCIALIZAÇÃO ou ADEQUAÇÃO A UM FIM ESPECÍFICO. Consulte a GNU General Public License para mais detalhes.\r\n\r\nDeveria ter recebido uma cópia da GNU General Public License juntamente com este programa. Se não a recebeu, consulte https://www.gnu.org/licenses/.\r\n\r\nO texto completo da licença está incluído no ficheiro LICENSE.txt distribuído com esta aplicação.",
 
   "StartupDialogTitle": "Calibração do SkyCal",
   "StartupDialogHeading": "Recomenda-se a calibração:",

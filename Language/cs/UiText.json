@@ -62,6 +62,7 @@
   "AboutDialogTitleFormat": "O programu {0}",
   "AboutVersionFormat": "Verze {0}",
   "AboutDescription": "Aplikace je navrzena tak, aby astronomum pomahala s kolimaci a ostrenim teleskopu snadno a presne. Obsahuje algoritmus a kod vyvinuty zesnulym Nielsem Noordhoekem pro presne upravy zaostreni i kolimace.",
+  "AboutLicense": "Licence\r\n\r\nSkyCal - Nastroj pro ostreni a kolimaci\r\nCopyright (C) Chris Dowd\r\n\r\nTento program je svobodny software: muzete jej sirit a/nebo upravovat za podminek GNU General Public License, jak ji vydala Free Software Foundation, bud verze 3 licence, nebo (podle vasi volby) jakekoli pozdejsi verze.\r\n\r\nProgram je siren v nadeji, ze bude uzitecny, avsak BEZ JAKYKOLI ZARUKY, dokonce bez implicitni zaruky OBCHODOVATELNOSTI nebo VHODNOSTI PRO URCITY UCEL. Podrobnosti viz GNU General Public License.\r\n\r\nMel byste obdrzet kopii GNU General Public License spolu s timto programem. Pokud ne, navstivte https://www.gnu.org/licenses/.\r\n\r\nUplny text licence je soucasti souboru LICENSE.txt distribuovaneho s touto aplikaci.",
   "StartupDialogTitle": "Kalibrace SkyCal",
   "StartupDialogHeading": "Kalibrace je doporucena:",
   "StartupDialogBody": "Kalibrace Tri-Bahtinov umoznuje plnou funkcnost SkyCal. Nektere funkce nejsou dostupne, dokud neni kalibrace dokoncena. (Kalibrace je dostupna take v menu Nastaveni.)\r\n\r\nChcete nyni provest kalibraci SkyCal?",

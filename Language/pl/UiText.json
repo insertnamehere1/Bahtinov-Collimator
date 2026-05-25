@@ -66,6 +66,7 @@
   "AboutDialogTitleFormat": "O programie {0}",
   "AboutVersionFormat": "Wersja {0}",
   "AboutDescription": "Ta aplikacja ma pomagać astronomom w kollimacji i ustawianiu ostrości teleskopów z łatwością i precyzją. Wykorzystuje algorytm i kod opracowany przez śp. Nielsa Noordhoeka, aby umożliwić dokładne korekty ostrości i kollimacji.",
+  "AboutLicense": "Licencja\r\n\r\nSkyCal — narzędzie do ostrości i kollimacji\r\nCopyright (C) Chris Dowd\r\n\r\nNiniejszy program jest wolnym oprogramowaniem: możesz je rozprowadzać i/lub modyfikować na warunkach Powszechnej Licencji Publicznej GNU (GNU GPL) opublikowanych przez Free Software Foundation, w wersji 3 lub (według Twojego wyboru) dowolnej późniejszej wersji.\r\n\r\nProgram jest rozpowszechniany w nadziei, że będzie użyteczny, lecz BEZ JAKIEJKOLWIEK GWARANCJI, nawet bez domniemanej gwarancji PRZYDATNOŚCI HANDLOWEJ lub PRZYDATNOŚCI DO OKREŚLONEGO CELU. Szczegóły znajdują się w Powszechnej Licencji Publicznej GNU.\r\n\r\nPowinieneś otrzymać kopię Powszechnej Licencji Publicznej GNU wraz z tym programem. Jeśli nie otrzymałeś, zobacz https://www.gnu.org/licenses/.\r\n\r\nPełny tekst licencji znajduje się w pliku LICENSE.txt dołączonym do tej aplikacji.",
 
   "StartupDialogTitle": "Kalibracja SkyCal",
   "StartupDialogHeading": "Zalecana jest kalibracja:",

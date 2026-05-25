@@ -65,10 +65,10 @@ namespace Bahtinov_Collimator
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45.78754F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.65201F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 52F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(518, 294);
+            this.tableLayoutPanel.Size = new System.Drawing.Size(640, 372);
             this.tableLayoutPanel.TabIndex = 0;
             // 
             // logoPictureBox
@@ -80,7 +80,7 @@ namespace Bahtinov_Collimator
             this.logoPictureBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.logoPictureBox.Name = "logoPictureBox";
             this.tableLayoutPanel.SetRowSpan(this.logoPictureBox, 6);
-            this.logoPictureBox.Size = new System.Drawing.Size(162, 284);
+            this.logoPictureBox.Size = new System.Drawing.Size(203, 362);
             this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.logoPictureBox.TabIndex = 12;
             this.logoPictureBox.TabStop = false;
@@ -90,11 +90,11 @@ namespace Bahtinov_Collimator
             this.labelProductName.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelProductName.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.labelProductName.ForeColor = System.Drawing.Color.LightGray;
-            this.labelProductName.Location = new System.Drawing.Point(179, 0);
+            this.labelProductName.Location = new System.Drawing.Point(220, 0);
             this.labelProductName.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
             this.labelProductName.MaximumSize = new System.Drawing.Size(0, 26);
             this.labelProductName.Name = "labelProductName";
-            this.labelProductName.Size = new System.Drawing.Size(335, 26);
+            this.labelProductName.Size = new System.Drawing.Size(416, 26);
             this.labelProductName.TabIndex = 19;
             this.labelProductName.Text = "Product Name";
             this.labelProductName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -103,11 +103,11 @@ namespace Bahtinov_Collimator
             // 
             this.labelVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelVersion.ForeColor = System.Drawing.Color.LightGray;
-            this.labelVersion.Location = new System.Drawing.Point(179, 29);
+            this.labelVersion.Location = new System.Drawing.Point(220, 35);
             this.labelVersion.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
             this.labelVersion.MaximumSize = new System.Drawing.Size(0, 26);
             this.labelVersion.Name = "labelVersion";
-            this.labelVersion.Size = new System.Drawing.Size(335, 26);
+            this.labelVersion.Size = new System.Drawing.Size(416, 26);
             this.labelVersion.TabIndex = 0;
             this.labelVersion.Text = "Version";
             this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -116,11 +116,11 @@ namespace Bahtinov_Collimator
             // 
             this.labelCopyright.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelCopyright.ForeColor = System.Drawing.Color.LightGray;
-            this.labelCopyright.Location = new System.Drawing.Point(179, 58);
+            this.labelCopyright.Location = new System.Drawing.Point(220, 70);
             this.labelCopyright.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
             this.labelCopyright.MaximumSize = new System.Drawing.Size(0, 26);
             this.labelCopyright.Name = "labelCopyright";
-            this.labelCopyright.Size = new System.Drawing.Size(335, 26);
+            this.labelCopyright.Size = new System.Drawing.Size(416, 26);
             this.labelCopyright.TabIndex = 21;
             this.labelCopyright.Text = "Copyright";
             this.labelCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -129,27 +129,28 @@ namespace Bahtinov_Collimator
             // 
             this.labelCompanyName.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelCompanyName.ForeColor = System.Drawing.Color.LightGray;
-            this.labelCompanyName.Location = new System.Drawing.Point(179, 87);
+            this.labelCompanyName.Location = new System.Drawing.Point(220, 105);
             this.labelCompanyName.Margin = new System.Windows.Forms.Padding(9, 0, 4, 0);
             this.labelCompanyName.MaximumSize = new System.Drawing.Size(0, 26);
             this.labelCompanyName.Name = "labelCompanyName";
-            this.labelCompanyName.Size = new System.Drawing.Size(335, 26);
+            this.labelCompanyName.Size = new System.Drawing.Size(416, 26);
             this.labelCompanyName.TabIndex = 22;
             this.labelCompanyName.Text = "Company Name";
             this.labelCompanyName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // textBoxDescription
             // 
-            this.textBoxDescription.BackColor = UITheme.DarkBackground;
+            this.textBoxDescription.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(44)))), ((int)(((byte)(50)))));
             this.textBoxDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxDescription.ForeColor = System.Drawing.Color.LightGray;
-            this.textBoxDescription.Location = new System.Drawing.Point(179, 121);
+            this.textBoxDescription.Location = new System.Drawing.Point(220, 145);
             this.textBoxDescription.Margin = new System.Windows.Forms.Padding(9, 5, 4, 5);
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.ReadOnly = true;
-            this.textBoxDescription.Size = new System.Drawing.Size(335, 124);
+            this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxDescription.Size = new System.Drawing.Size(416, 176);
             this.textBoxDescription.TabIndex = 23;
             this.textBoxDescription.TabStop = false;
             this.textBoxDescription.Text = "Description";
@@ -171,7 +172,7 @@ namespace Bahtinov_Collimator
             this.okButton.ImageOffsetX = 60;
             this.okButton.ImageOffsetY = 0;
             this.okButton.ImageWidth = 32;
-            this.okButton.Location = new System.Drawing.Point(394, 255);
+            this.okButton.Location = new System.Drawing.Point(516, 333);
             this.okButton.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.okButton.Name = "okButton";
             this.okButton.PressedOverlay = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
@@ -187,11 +188,11 @@ namespace Bahtinov_Collimator
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = UITheme.DarkBackground;
-            this.ClientSize = new System.Drawing.Size(546, 322);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(44)))), ((int)(((byte)(50)))));
+            this.ClientSize = new System.Drawing.Size(668, 400);
             this.Controls.Add(this.tableLayoutPanel);
             this.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.ForeColor = UITheme.DarkForeground;
+            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(80)))), ((int)(((byte)(90)))));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);

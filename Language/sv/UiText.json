@@ -66,6 +66,7 @@
   "AboutDialogTitleFormat": "Om {0}",
   "AboutVersionFormat": "Version {0}",
   "AboutDescription": "Programmet är utformat för att hjälpa astronomer att kollimera och fokusera sina teleskop enkelt och precist. Det innehåller algoritmen och koden som utvecklats av bortgångne Niels Noordhoek för att uppnå exakta justeringar av både fokus och kollimering.",
+  "AboutLicense": "Licens\r\n\r\nSkyCal - Verktyg för fokus och kollimering\r\nCopyright (C) Chris Dowd\r\n\r\nDetta program är fri programvara: du kan vidaredistribuera och/eller modifiera det enligt villkoren i GNU General Public License som publicerats av Free Software Foundation, antingen version 3 av licensen eller (om du vill) en senare version.\r\n\r\nProgrammet distribueras i förhoppningen att det ska vara användbart, men UTAN NÅGON SOM HELST GARANTI, inte ens underförstådd garanti om SÄLJBARHET eller LÄMPLIGHET FÖR ETT VISST ÄNDAMÅL. Se GNU General Public License för mer information.\r\n\r\nDu bör ha fått en kopia av GNU General Public License tillsammans med detta program. Om inte, se https://www.gnu.org/licenses/.\r\n\r\nDen fullständiga licenstexten finns i filen LICENSE.txt som medföljer denna applikation.",
 
   "StartupDialogTitle": "SkyCal-kalibrering",
   "StartupDialogHeading": "Kalibrering rekommenderas:",

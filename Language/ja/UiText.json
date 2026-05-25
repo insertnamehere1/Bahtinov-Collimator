@@ -66,6 +66,7 @@
   "AboutDialogTitleFormat": "{0} について",
   "AboutVersionFormat": "バージョン {0}",
   "AboutDescription": "このアプリケーションは、天文家が望遠鏡のコリメーションとフォーカス調整を簡単かつ正確に行えるよう設計されています。故 Niels Noordhoek が開発したアルゴリズムとコードを組み込み、フォーカスとコリメーションの両方について正確な調整を実現します。",
+  "AboutLicense": "ライセンス\r\n\r\nSkyCal - フォーカス・コリメーションツール\r\nCopyright (C) Chris Dowd\r\n\r\n本プログラムはフリーソフトウェアです。Free Software Foundation によって公開された GNU General Public License の版 3、または（お好みで）それ以降の版の条件に基づいて、再配布および／または変更することができます。\r\n\r\n本プログラムは有用であることを期待して配布されますが、商品性や特定の目的への適合性を含む、明示または黙示を問わずいかなる保証もありません。詳細は GNU General Public License を参照してください。\r\n\r\n本プログラムとともに GNU General Public License の写しを受け取っているはずです。受け取っていない場合は https://www.gnu.org/licenses/ を参照してください。\r\n\r\n完全なライセンス条文は、本アプリケーションと同梱される LICENSE.txt ファイルに含まれています。",
 
   "StartupDialogTitle": "SkyCal キャリブレーション",
   "StartupDialogHeading": "キャリブレーションを推奨します：",

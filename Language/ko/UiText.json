@@ -66,6 +66,7 @@
   "AboutDialogTitleFormat": "{0} 정보",
   "AboutVersionFormat": "버전 {0}",
   "AboutDescription": "이 애플리케이션은 천문가가 망원경의 콜리메이션과 초점을 쉽고 정밀하게 조정하도록 돕기 위해 설계되었습니다. 초점과 콜리메이션 모두에서 정확한 조정을 가능하게 하기 위해 고(故) Niels Noordhoek가 개발한 알고리즘과 코드를 포함하고 있습니다.",
+  "AboutLicense": "라이선스\r\n\r\nSkyCal - 초점 및 콜리메이션 도구\r\nCopyright (C) Chris Dowd\r\n\r\n이 프로그램은 자유 소프트웨어입니다. Free Software Foundation이 공표한 GNU General Public License의 버전 3 또는 (선택에 따라) 이후 버전의 조건에 따라 재배포 및/또는 수정할 수 있습니다.\r\n\r\n이 프로그램은 유용할 것이라는 희망으로 배포되지만, 상품성이나 특정 목적에의 적합성에 대한 묵시적 보증을 포함하여 어떠한 보증도 없습니다. 자세한 내용은 GNU General Public License를 참조하십시오.\r\n\r\n이 프로그램과 함께 GNU General Public License 사본을 받았어야 합니다. 그렇지 않다면 https://www.gnu.org/licenses/ 를 참조하십시오.\r\n\r\n전체 라이선스 문서는 이 응용 프로그램과 함께 배포되는 LICENSE.txt 파일에 포함되어 있습니다.",
 
   "StartupDialogTitle": "SkyCal 캘리브레이션",
   "StartupDialogHeading": "캘리브레이션을 권장합니다:",
