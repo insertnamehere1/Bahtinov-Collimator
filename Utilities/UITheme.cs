@@ -164,6 +164,26 @@ namespace Bahtinov_Collimator
         /// </summary>
         public static Color MenuHighlightBackground { get; } = Color.FromArgb(15, 23, 25);
 
+        /// <summary>
+        /// Corner radius in 96-DPI logical pixels for menu item hover highlights.
+        /// </summary>
+        public static int MenuHighlightCornerRadius { get; } = 4;
+
+        /// <summary>
+        /// Horizontal inset in 96-DPI logical pixels on menu item hover highlights.
+        /// </summary>
+        public static int MenuHighlightPadding { get; } = 2;
+
+        /// <summary>
+        /// Extra height in 96-DPI logical pixels added symmetrically above and below the highlight.
+        /// </summary>
+        public static int MenuHighlightVerticalExpand { get; } = 4;
+
+        /// <summary>
+        /// Corner radius in 96-DPI logical pixels for drop-down menu popup borders and background.
+        /// </summary>
+        public static int MenuDropDownCornerRadius { get; } = 8;
+
         #endregion
 
         #region Button Theme

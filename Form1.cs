@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -1511,18 +1512,84 @@ namespace Bahtinov_Collimator
             }
 
             /// <summary>
-            /// Draws the border around dropdown toolstrip surfaces.
+            /// Paints a rounded background for drop-down menus; defers other toolstrips to the base renderer.
+            /// </summary>
+            protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
+            {
+                if (!(e.ToolStrip is ToolStripDropDown))
+                {
+                    base.OnRenderToolStripBackground(e);
+                    return;
+                }
+
+                DrawDropDownSurface(e.Graphics, e.ToolStrip, fillBackground: true, drawBorder: false);
+            }
+
+            /// <summary>
+            /// Draws a rounded border around drop-down menus.
             /// </summary>
             protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
             {
-                // Only border popup/dropdown menus, not the top menu bar.
                 if (!(e.ToolStrip is ToolStripDropDown))
                     return;
-                Rectangle r = new Rectangle(0, 0, e.ToolStrip.Width - 1, e.ToolStrip.Height - 1);
-                using (var pen = new Pen(UITheme.MenuBorderColor)) // add this in UITheme
+
+                DrawDropDownSurface(e.Graphics, e.ToolStrip, fillBackground: false, drawBorder: true);
+            }
+
+            private static void DrawDropDownSurface(Graphics g, ToolStrip strip, bool fillBackground, bool drawBorder)
+            {
+                Rectangle bounds = GetDropDownBounds(strip);
+                if (bounds.Width <= 0 || bounds.Height <= 0)
+                    return;
+
+                int radius = ScaledDropDownCornerRadius(bounds);
+                SmoothingMode previousSmoothing = g.SmoothingMode;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                try
                 {
-                    e.Graphics.DrawRectangle(pen, r);
+                    using (GraphicsPath path = CreateRoundPath(bounds, radius))
+                    {
+                        ApplyDropDownClipRegion(strip, path);
+
+                        if (fillBackground)
+                        {
+                            using (var brush = new SolidBrush(UITheme.DarkBackground))
+                                g.FillPath(brush, path);
+                        }
+
+                        if (drawBorder)
+                        {
+                            using (var pen = new Pen(UITheme.MenuBorderColor))
+                                g.DrawPath(pen, path);
+                        }
+                    }
                 }
+                finally
+                {
+                    g.SmoothingMode = previousSmoothing;
+                }
+            }
+
+            private static Rectangle GetDropDownBounds(ToolStrip strip)
+            {
+                return new Rectangle(0, 0, strip.Width - 1, strip.Height - 1);
+            }
+
+            private static void ApplyDropDownClipRegion(ToolStrip strip, GraphicsPath path)
+            {
+                Region next = new Region((GraphicsPath)path.Clone());
+                Region previous = strip.Region;
+                strip.Region = next;
+                previous?.Dispose();
+            }
+
+            private static int ScaledDropDownCornerRadius(Rectangle bounds)
+            {
+                int radius = Math.Max(1, (int)Math.Round(UITheme.MenuDropDownCornerRadius * UITheme.DpiScaleFactor));
+                if (bounds.Width <= 0 || bounds.Height <= 0)
+                    return 0;
+                int max = Math.Min(bounds.Width, bounds.Height) / 2;
+                return Math.Max(0, Math.Min(radius, max));
             }
 
             /// <summary>
@@ -1539,30 +1606,95 @@ namespace Bahtinov_Collimator
                     using (var back = new SolidBrush(UITheme.DarkBackground))
                         e.Graphics.FillRectangle(back, rect);
 
-                    // Only draw highlight + border for enabled hot items
+                    // Only draw highlight for enabled hot items
                     if (e.Item.Enabled && (e.Item.Selected || e.Item.Pressed))
-                    {
-                        using (var hi = new SolidBrush(UITheme.MenuHighlightBackground))
-                            e.Graphics.FillRectangle(hi, rect);
-
-                        using (var pen = new Pen(UITheme.Black))
-                        {
-                            rect.Width -= 1;
-                            rect.Height -= 1;
-                            e.Graphics.DrawRectangle(pen, rect);
-                        }
-                    }
+                        FillRoundedHighlight(
+                            e.Graphics,
+                            VerticalExpandedBounds(rect, e.Item.Height),
+                            UITheme.MenuHighlightBackground);
 
                     return;
                 }
 
-                // Top-level menu strip items can use your existing logic
+                // Top-level menu strip items
                 if (e.Item.Enabled && (e.Item.Selected || e.Item.Pressed))
-                {
-                    using (var hi = new SolidBrush(UITheme.MenuHighlightBackground))
-                        e.Graphics.FillRectangle(hi, e.Item.ContentRectangle);
+                    FillRoundedHighlight(
+                        e.Graphics,
+                        VerticalExpandedBounds(e.Item.ContentRectangle, e.Item.Height),
+                        UITheme.MenuHighlightBackground);
+            }
+
+            private static void FillRoundedHighlight(Graphics g, Rectangle bounds, Color color)
+            {
+                Rectangle rect = AdjustHighlightBounds(bounds);
+                if (rect.Width <= 0 || rect.Height <= 0)
                     return;
+
+                int radius = ScaledMenuHighlightCornerRadius(rect);
+                SmoothingMode previousSmoothing = g.SmoothingMode;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                try
+                {
+                    using (GraphicsPath path = CreateRoundPath(rect, radius))
+                    using (var brush = new SolidBrush(color))
+                        g.FillPath(brush, path);
                 }
+                finally
+                {
+                    g.SmoothingMode = previousSmoothing;
+                }
+            }
+
+            private static Rectangle AdjustHighlightBounds(Rectangle bounds)
+            {
+                int padX = Math.Max(0, (int)Math.Round(UITheme.MenuHighlightPadding * UITheme.DpiScaleFactor));
+                Rectangle rect = bounds;
+                rect.Inflate(-padX, 0);
+                return rect;
+            }
+
+            /// <summary>
+            /// Grows <paramref name="bounds"/> symmetrically on Y, clamped to [0, <paramref name="maxHeight"/>).
+            /// </summary>
+            private static Rectangle VerticalExpandedBounds(Rectangle bounds, int maxHeight)
+            {
+                int expandY = Math.Max(0, (int)Math.Round(UITheme.MenuHighlightVerticalExpand * UITheme.DpiScaleFactor));
+                if (expandY == 0 || maxHeight <= 0)
+                    return bounds;
+
+                int y = Math.Max(0, bounds.Y - expandY);
+                int bottom = Math.Min(maxHeight, bounds.Bottom + expandY);
+                int height = Math.Max(0, bottom - y);
+                return new Rectangle(bounds.X, y, bounds.Width, height);
+            }
+
+            private static int ScaledMenuHighlightCornerRadius(Rectangle bounds)
+            {
+                int radius = Math.Max(1, (int)Math.Round(UITheme.MenuHighlightCornerRadius * UITheme.DpiScaleFactor));
+                if (bounds.Width <= 0 || bounds.Height <= 0)
+                    return 0;
+                int max = Math.Min(bounds.Width, bounds.Height) / 2;
+                return Math.Max(0, Math.Min(radius, max));
+            }
+
+            private static GraphicsPath CreateRoundPath(Rectangle r, int radius)
+            {
+                int rad = radius;
+                int d = rad * 2;
+                var path = new GraphicsPath();
+
+                if (rad <= 0)
+                {
+                    path.AddRectangle(r);
+                    return path;
+                }
+
+                path.AddArc(r.X, r.Y, d, d, 180, 90);
+                path.AddArc(r.Right - d, r.Y, d, d, 270, 90);
+                path.AddArc(r.Right - d, r.Bottom - d, d, d, 0, 90);
+                path.AddArc(r.X, r.Bottom - d, d, d, 90, 90);
+                path.CloseFigure();
+                return path;
             }
 
             /// <summary>
