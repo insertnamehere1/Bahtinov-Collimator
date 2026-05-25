@@ -162,7 +162,7 @@ namespace Bahtinov_Collimator
         /// <summary>
         /// Gets the background color for highlighted menu items.
         /// </summary>
-        public static Color MenuHighlightBackground { get; } = Color.Gray;
+        public static Color MenuHighlightBackground { get; } = Color.FromArgb(15, 23, 25);
 
         #endregion
 
