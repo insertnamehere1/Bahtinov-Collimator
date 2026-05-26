@@ -1,10 +1,23 @@
-
-
 <p align="center">
   <img src="https://github.com/insertnamehere1/Bahtinov-Collimator/blob/master/Resources/SkyCal.Icon.ico" alt="SkyCal Logo" width="250">
 </p>
 
 <h1 align="center">🔷 SkyCal Focus and Collimation Tool 🔷</h1>
+
+<h2>⚠️ A Warning for Farpoint Customers</h2>
+
+<p>If you arrived here from <strong>farpointastro.com</strong>, you should know:</p>
+
+<p><strong>This software was not made by Farpoint, and they are not the owner of this repository</strong></p>
+
+<p>Farpoint's website describes this as their <em>"free companion software"</em> and that is incorrect. This application was independently written and is maintained solely by <strong> Chris Dowd</strong>. Farpoint had no involvement in its design, development, or support, and has no ability to help you if you have questions or problems with it.</p>
+
+<p>You are welcome here. This software is genuinely free and always will be. But you deserve to know who actually made the tool you are using. Farpoint is taking credit for work that is not theirs.</p>
+
+<p>For support, bug reports, or feedback, please use the <strong>Issues</strong> tab above. That is where the actual developer can help you.</p>
+
+<h1></h1>
+
 
 ## 🌌 What is SkyCal?
 
